@@ -58,4 +58,9 @@ public class HisPrivacyCAWebService2 {
 	public static void setManager(StatefulWebServiceManager<HisPrivacyCAWebService2> manager) {
 		HisPrivacyCAWebService2.manager = manager;
 	}
+	
+	@WebResult(name = "requestGetEC")
+	public ByteArray requestGetEC(@WebParam(name = "encryptedEkMod") ByteArray encryptedEkMod, ByteArray encryptedSessionKey, int ecValidDays) {
+		return new ByteArray(hisPrivacyCAWebService2.requestGetEC(encryptedEkMod.getBytes(), encryptedSessionKey.getBytes(), ecValidDays));}
+
 }

@@ -236,7 +236,7 @@ public class HisIdentityProvisioner {
 			else
 				//decrypted1 = TpmModuleJava.ActivateIdentity(asym1, sym1, aik, keyAuthRaw, srkAuthRaw, ownerAuthRaw); 
 				//decrypted2 = TpmModuleJava.ActivateIdentity(asym2, sym2, aik, keyAuthRaw, srkAuthRaw, ownerAuthRaw);//Comments  temporarily due to TSSCoreService.jar compiling issue 
-				decrypted2 = TpmModule.activateIdentity(ownerAuthRaw, keyAuthRaw,asym2, sym2, HisIdentityIndex);
+				decrypted2 = TpmModule.activateIdentity(ownerAuthRaw, keyAuthRaw, asym2, sym2, HisIdentityIndex);
 			File outPath = new File(ClientPath);
 			File outFile = new File(ClientPath + "/aik.cer");
 			if(!outPath.isDirectory()){

@@ -30,4 +30,6 @@ public interface IHisPrivacyCAWebService2 {
 	public byte[] identityRequestGetChallenge(byte[] identityRequest, byte[] endorsementCertificate);
 
 	public byte[] identityRequestSubmitResponse(byte[] identityRequestResponseToChallenge);
+	
+	public byte[] requestGetEC(byte[] encryptedEkMod, byte[] encryptedDeskey, int ecValidDays);
 }

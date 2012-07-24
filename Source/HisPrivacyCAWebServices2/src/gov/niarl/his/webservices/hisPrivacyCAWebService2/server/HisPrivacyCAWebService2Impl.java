@@ -18,11 +18,19 @@ import java.security.*;
 import java.security.cert.*;
 import java.security.interfaces.*;
 import java.util.*;
+
 import javax.crypto.*;
 
 import gov.niarl.his.privacyca.*;
-import gov.niarl.his.privacyca.TpmUtils.TpmUnsignedConversionException;
+import gov.niarl.his.privacyca.TpmUtils.*;
 import gov.niarl.his.webservices.hisPrivacyCAWebService2.IHisPrivacyCAWebService2;
+import org.bouncycastle.x509.*;
+import org.bouncycastle.asn1.x509.*;
+import org.bouncycastle.jce.provider.*;
+
+import java.math.*;
+import javax.security.auth.x500.X500Principal;
+import javax.crypto.spec.*;
 
 public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 
@@ -96,6 +104,132 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	/**
+	 * To be implement
+	 */
+	public byte [] requestGetEC(byte [] encryptedEkMod, byte [] encryptedSessionKey, int ecValidDays){
+		try {
+			if(!propFileLoaded)
+				propFileLoaded = readPropertiesFile();
+
+			//Get endorsement p12 file from ClientFiles directory, should be optimized in the future
+			String filePath = System.getProperty("catalina.base") + "/webapps/HisPrivacyCAWebServices2/";
+			String propertiesFileName = filePath + "ClientFiles/" + "OATprovisioner.properties";
+			String EC_P12_FILE = "TpmEndorsmentP12";
+			String EC_P12_PASSWORD = "EndorsementP12Pass";
+			FileInputStream PropertyFile = null;		
+			String TpmEndorsmentP12 = "";
+			String EndorsementP12Pass = "";
+			String FileLocation = "";
+			try {
+				PropertyFile = new FileInputStream(propertiesFileName);
+				Properties HisProvisionerProperties = new Properties();
+				HisProvisionerProperties.load(PropertyFile);			
+				TpmEndorsmentP12 = HisProvisionerProperties.getProperty(EC_P12_FILE, "");
+				EndorsementP12Pass = HisProvisionerProperties.getProperty(EC_P12_PASSWORD, "");
+			} catch (FileNotFoundException e) {
+				System.out.println("Error finding HIS Provisioner properties file (HISprovisionier.properties)");
+			} catch (IOException e) {
+				System.out.println("Error loading HIS Provisioner properties file (HISprovisionier.properties)");
+			}
+			catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+			
+			String errorString = "Properties file \"" + propertiesFileName + "\" contains errors:\n";
+			boolean hasErrors = false;
+			if(TpmEndorsmentP12.length() == 0){
+				errorString += " - \"TpmEndorsmentP12\" value must be the name of a valid PKCS#12 file\n";
+				hasErrors = true;
+			}
+			if(EndorsementP12Pass.length() == 0){
+				errorString += " - \"EndorsementP12Pass\" value must be the password for the TpmEndorsementP12 file\n";
+				hasErrors = true;
+			}
+			
+			if(hasErrors){
+				System.out.println(errorString);
+				System.exit(99);
+				return null;  //need to be optimized here;
+			}
+			
+			//Generate Endorsement certificate
+			FileLocation = filePath + "ClientFiles";
+			X509Certificate endorsementCert = TpmUtils.certFromP12(FileLocation + "/" + TpmEndorsmentP12, EndorsementP12Pass);
+			//X509Certificate endorsementCert = TpmUtils.certFromP12(TpmEndorsmentP12, EndorsementP12Pass);
+			RSAPrivateKey privKey = TpmUtils.privKeyFromP12(FileLocation + "/" + TpmEndorsmentP12, EndorsementP12Pass);
+			StringBuffer sb = new StringBuffer(100);
+			
+		    ///////////////////////////////reconstruct EK Modular start//////////////////////////////////////
+            int n = 0;
+            int encryptSepLength = 256;
+            byte[] ekMod = new byte[256];
+            PropertyFile = new FileInputStream(filePath + "PrivacyCA.properties");
+			Properties HisProvisionerProperties = new Properties();
+			HisProvisionerProperties.load(PropertyFile);
+			EC_P12_FILE = "P12filename";
+			EC_P12_PASSWORD = "P12password";
+			String PrivacyCAP12 = HisProvisionerProperties.getProperty(EC_P12_FILE, "");
+			String PrivacyCAP12Pass = HisProvisionerProperties.getProperty(EC_P12_PASSWORD, "");
+			RSAPrivateKey privacyKey = TpmUtils.privKeyFromP12(filePath +  "/" + PrivacyCAP12, PrivacyCAP12Pass);
+			
+	        try {
+	            ByteArrayInputStream bais = new ByteArrayInputStream(encryptedEkMod);
+	            byte[] readByte = new byte[256];
+	            while ((n = bais.read(readByte)) > 0) {
+	                if (n >= encryptSepLength) {
+	                	sb.append(TpmUtils.byteArrayToHexString(decrypt(readByte, privacyKey)));
+	                } else {
+                        byte[] tt = new byte[n];
+                        for (int i = 0; i < n; i++) {
+                            tt[i] = readByte[i];
+                        }
+                        sb.append(TpmUtils.byteArrayToHexString(decrypt(readByte, privacyKey)));
+	                }
+	            }
+	            ekMod = TpmUtils.hexStringToByteArray(sb.toString());
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+		    /////////////////////////////reconstruct EK Modular end////////////////////////////////////////
+	        
+			byte[] byteSessionKey = decrypt(encryptedSessionKey,privacyKey);
+			Security.addProvider(new BouncyCastleProvider());
+			X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
+			certGen.setSerialNumber(BigInteger.valueOf(System.currentTimeMillis()));
+			certGen.setIssuerDN(endorsementCert.getSubjectX500Principal());
+			certGen.setNotBefore(new java.sql.Time(System.currentTimeMillis()));
+			Calendar expiry = Calendar.getInstance();
+			expiry.add(Calendar.DAY_OF_YEAR, validityDays);
+			certGen.setNotAfter(expiry.getTime());
+			certGen.setSubjectDN(new X500Principal(""));
+			byte [] pubExp = new byte[3];
+			pubExp[0] = (byte)(0x01 & 0xff);
+			pubExp[1] = (byte)(0x00);
+			pubExp[2] = (byte)(0x01 & 0xff);
+			RSAPublicKey pubEk = TpmUtils.makePubKey(ekMod, pubExp);
+			certGen.setPublicKey(pubEk);
+			certGen.setSignatureAlgorithm("SHA1withRSA");
+			certGen.addExtension(org.bouncycastle.asn1.x509.X509Extensions.SubjectAlternativeName, true, new GeneralNames(new GeneralName(GeneralName.rfc822Name, "TPM EK Credential")));
+			X509Certificate cert = certGen.generate(privKey, "BC");	
+					
+			//encrypt endorsement certification by session key, here we propose to use 3DES algorithm
+			SecretKey sessionKey = new SecretKeySpec(byteSessionKey, 0, byteSessionKey.length, "DES");
+			Cipher c;
+			c = Cipher.getInstance("DESede");  
+			c.init(Cipher.ENCRYPT_MODE, sessionKey);  
+			byte[] encryptEndorsementCer = c.doFinal(cert.getEncoded());	
+			
+			return encryptEndorsementCer; 
+			} catch (Exception e){
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+		
+
+	}
+
 	private boolean readPropertiesFile ()
 			throws UnrecoverableKeyException, 
 			KeyStoreException, 
@@ -198,4 +332,10 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 		byte [] symBlob = TpmUtils.concat(TpmUtils.concat(credSize, keyParms.toByteArray()), encryptedBlob);
 		return TpmUtils.concat(asymBlob, symBlob);
 	}
+	
+    private static byte[] decrypt(byte[] src, PrivateKey rk) throws Exception {
+    	Cipher cipher = Cipher.getInstance("RSA", new BouncyCastleProvider());
+        cipher.init(Cipher.DECRYPT_MODE, rk);
+        return cipher.doFinal(src);
+    }
 }
