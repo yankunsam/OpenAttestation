@@ -14,8 +14,6 @@
 package gov.niarl.his.privacyca;
 
 import gov.niarl.his.webservices.hisPrivacyCAWebService2.IHisPrivacyCAWebService2;
-import gov.niarl.his.webservices.hisPrivacyCAWebService2.client.HisPrivacyCAWebServices2ClientInvoker;
-
 
 import java.io.*;
 import java.math.*;

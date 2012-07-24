@@ -40,7 +40,7 @@ LOCK='/var/lock/subsys/tomcat';
 
 start () {
         echo -n $"Starting $PROG: "
-        if [ -e $TOMCAT_PIDFILE ];then
+        if [ -e $TOMCAT_PIDFILE -a `lsof -i:8080` ];then
 		TOMCAT_PID=`cat $TOMCAT_PIDFILE`
 		echo -ne "\033[31m \t [ failed ] \033[0m"
 		echo
