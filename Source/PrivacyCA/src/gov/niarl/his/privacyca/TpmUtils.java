@@ -397,131 +397,37 @@ public class TpmUtils {
 	 * @throws NoSuchProviderException Thrown if the BouncyCastle provider cannot be found.
 	 * @throws InvalidKeyException Passed on from the BouncyCastle certificate generator.
 	 * @throws CertificateEncodingException Passed on from the BouncyCastle certificate generator.
-	 * @throws IOException 
-	 * @throws TpmUnsignedConversionException 
-	 * @throws NoSuchPaddingException 
-	 * @throws InvalidAlgorithmParameterException 
-	 * @throws BadPaddingException 
-	 * @throws IllegalBlockSizeException 
 	 */
-	public static X509Certificate makeEkCert(byte [] pubEkMod, SecretKey deskey, int validityDays) 
-			throws NoSuchAlgorithmException, 
-			InvalidKeySpecException, 
-			SignatureException, 
-			NoSuchProviderException, 
-			InvalidKeyException, 
-			CertificateEncodingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, NoSuchPaddingException, TpmUnsignedConversionException, IOException {
-		String PrivacyCaUrl = "";
-		String propertiesFileName = "./OATprovisioner.properties";
-		FileInputStream PropertyFile = null;
-		String PRIVACY_CA_URL = "PrivacyCaUrl";
-		String PrivacyCaCertFile = "";
-		String PRIVACY_CA_CERT = "PrivacyCaCertFile";
-		String TRUST_STORE = "TrustStore";
-		boolean hasErrors = false;
-		String errorString = "";
-		byte[] encryptCert = null;
-		String TrustStore = "";
-		try {
-			PropertyFile = new FileInputStream(propertiesFileName);
-			Properties HisProvisionerProperties = new Properties();
-			HisProvisionerProperties.load(PropertyFile);
-			PrivacyCaUrl = HisProvisionerProperties.getProperty(PRIVACY_CA_URL, "");
-			PrivacyCaCertFile = HisProvisionerProperties.getProperty(PRIVACY_CA_CERT, "");
-			TrustStore = HisProvisionerProperties.getProperty(TRUST_STORE, "TrustStore.jks");
-		} catch (FileNotFoundException e) { // If the properties file is not found, display error
-			System.out.println("Error finding HIS Provisioner properties file (HISprovisionier.properties); using defaults.");
-		} catch (IOException e) { // If propertied file cannot be read, display error
-			System.out.println("Error loading HIS Provisioner properties file (HISprovisionier.properties); using defaults.");
-		}
-		finally{
-			if (PropertyFile != null)
-				try {
-					PropertyFile.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-		}
-		
-		if(PrivacyCaCertFile.length() == 0 || PrivacyCaUrl.length() == 0 || TrustStore.length() == 0){
-			errorString += "There is a improper configuration in the file of properties, please check the file first\n";
-			hasErrors = true;
-		}
-		
-		// If there were errors that prevent the rest of the class from running, display the error specifics and exit with an error code.
-		if(hasErrors){
-			System.out.println(errorString);
-			System.exit(99);
-			return null;   //should be rewrite in the future. 
-		}
-		
-		//Encrypt EK and session key by CA certification's public key.
-		X509Certificate pcaCert = null;
-		try {
-			pcaCert = TpmUtils.certFromFile(PrivacyCaCertFile);
-		} catch (KeyStoreException e1) {
-			e1.printStackTrace();
-		} catch (java.security.cert.CertificateException e1) {
-			e1.printStackTrace();
-		} catch (CertificateException e1) {
-			e1.printStackTrace();
-		}
-		
-		System.setProperty("javax.net.ssl.trustStore", "./" + TrustStore);
-		System.out.println("print out trust store: " + TrustStore);
-		
-		//maybe we could consider to encrypt the EK modulus and deskey simply via RSA encrypt algorithm
-		//get endorsement certificate from PCA server
-		try {
-			if (pcaCert != null){
-				TpmIdentityRequest encryptedEkMod = new TpmIdentityRequest(pubEkMod, (RSAPublicKey)pcaCert.getPublicKey(), false);
-				//encrypted ek is not null?
-				if (encryptedEkMod != null){
-					System.out.println("EK modulur is not null, we can pin it now");
-				}
-				TpmIdentityRequest encryptedDeskey = new TpmIdentityRequest(deskey.getEncoded(), (RSAPublicKey)pcaCert.getPublicKey(), false);
-				System.out.println("before throwing out error message");
-				//encrypted deskey is not null?
-				if (encryptedDeskey != null){
-					System.out.println("encrypted deskey is not null, we can pin it now");
-				}
-				System.out.println("we can print out access URL: " + PrivacyCaUrl);
-				IHisPrivacyCAWebService2 hisPrivacyCAWebService2 = HisPrivacyCAWebServices2ClientInvoker.getHisPrivacyCAWebService2(PrivacyCaUrl);
-				//we can confirm we got issue in the step above
-				System.out.println("we have got access URL: " + PrivacyCaUrl);
-				encryptCert = hisPrivacyCAWebService2.requestGetEC(encryptedEkMod.toByteArray(), encryptedDeskey.toByteArray(), validityDays);
-				System.out.println("we have got encrypted certification");
-				
-				
-//				IHisPrivacyCAWebService2 hisPrivacyCAWebService2 = HisPrivacyCAWebServices2ClientInvoker.getHisPrivacyCAWebService2(PrivacyCaUrl);
-//				byte[] encrypted1 = hisPrivacyCAWebService2.identityRequestGetChallenge(newId.getIdentityRequest(), encryptedEkCert.toByteArray());
-			}
-		} catch (Exception e){
-			System.out.println("damn you!");
-			System.out.println("print out error message: " + e.toString());
-		}
 
-		System.out.println("point6: dave: print error here, covert issue?");
-		//decrypt certification via the desKey
-		Cipher c;
-		byte[] byteCert = null;
-		c = Cipher.getInstance("DESede");  
-		c.init(Cipher.DECRYPT_MODE, deskey); 
-		byteCert = c.doFinal(encryptCert); 
-		X509Certificate retCert = null;		
-		try {
-			if (byteCert != null){
-				retCert = certFromBytes(byteCert);
-			}
-		} catch (java.security.cert.CertificateException e) {
-			e.printStackTrace();
-		} catch (CertificateException e) {
-			e.printStackTrace();
-		}
-		System.out.println("dave debug: print out certification");
-		System.out.println(byteCert);
-		return retCert;
-	}
+        public static X509Certificate makeEkCert(byte [] pubEkMod, RSAPrivateKey privKey, X509Certificate caCert, int validityDays)
+                        throws NoSuchAlgorithmException,
+                        InvalidKeySpecException,
+                        SignatureException,
+                        NoSuchProviderException,
+                        InvalidKeyException,
+                        CertificateEncodingException {
+                Security.addProvider(new BouncyCastleProvider());
+                X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
+                certGen.setSerialNumber(BigInteger.valueOf(System.currentTimeMillis()));
+                certGen.setIssuerDN(caCert.getSubjectX500Principal());
+                certGen.setNotBefore(new java.sql.Time(System.currentTimeMillis()));
+                Calendar expiry = Calendar.getInstance();
+                expiry.add(Calendar.DAY_OF_YEAR, validityDays);
+                certGen.setNotAfter(expiry.getTime());
+                certGen.setSubjectDN(new X500Principal(""));
+                byte [] pubExp = new byte[3];
+                pubExp[0] = (byte)(0x01 & 0xff);
+//              pubExp[1] = (byte)(0x00 & 0xff);
+                pubExp[1] = (byte)(0x00);
+                pubExp[2] = (byte)(0x01 & 0xff);
+                RSAPublicKey pubEk = TpmUtils.makePubKey(pubEkMod, pubExp);
+                certGen.setPublicKey(pubEk);
+                certGen.setSignatureAlgorithm("SHA1withRSA");
+                certGen.addExtension(org.bouncycastle.asn1.x509.X509Extensions.SubjectAlternativeName, true, new GeneralNames(new GeneralName(GeneralName.rfc822Name, "TPM EK Credential")));
+                X509Certificate cert = certGen.generate(privKey, "BC");
+                return cert;
+        }
+
 	
 	
 	/**
