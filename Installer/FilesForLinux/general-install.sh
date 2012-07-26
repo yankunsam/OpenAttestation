@@ -3,6 +3,14 @@
 # default
 dist="fedora"
 
+#ec storage type, file or NVARM
+ecStorage=-ecs
+sed -i  "s/^ecStorage.*$/ecStorage = NVRAM/g" OATprovisioner.properties
+if [ $# -ge 2 ];then
+  if [ $1 = $ecStorage ];then
+    sed -i  "s/^ecStorage.*$/ecStorage = $2/g" OATprovisioner.properties
+  fi
+fi
 
 # check distrition
 if [ -f /etc/issue ]; then

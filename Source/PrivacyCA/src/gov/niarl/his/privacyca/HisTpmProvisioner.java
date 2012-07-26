@@ -20,6 +20,8 @@ import gov.niarl.his.webservices.hisPrivacyCAWebService2.client.HisPrivacyCAWebS
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.File;
+import java.io.FileOutputStream;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -73,17 +75,20 @@ public class HisTpmProvisioner {
 		final String OWNER_AUTH = "TpmOwnerAuth";
 		final String PRIVACY_CA_URL = "PrivacyCaUrl";
 		final String TRUST_STORE = "TrustStore";
-		
+                final String EC_STORAGE = "ecStorage";		
+ 
 		String PrivacyCaUrl = "";
 		String TpmEndorsmentP12 = "";
 		String EndorsementP12Pass = "";
 		int EcValidityDays = 0;
 		String TrustStore = "";
+                String ecStorage = "";
 		
 		byte [] TpmOwnerAuth = null;
 		byte[] encryptCert = null;
 
 		String propertiesFileName = "./OATprovisioner.properties";
+                 String ecStorageFileName = "./EC.cer";
 
 		FileInputStream PropertyFile = null;
 		try {
@@ -97,6 +102,8 @@ public class HisTpmProvisioner {
 			TpmOwnerAuth = TpmUtils.hexStringToByteArray(HisProvisionerProperties.getProperty(OWNER_AUTH, ""));
 			PrivacyCaUrl = HisProvisionerProperties.getProperty(PRIVACY_CA_URL, "");
 			TrustStore = HisProvisionerProperties.getProperty(TRUST_STORE, "TrustStore.jks");
+                        ecStorage = HisProvisionerProperties.getProperty(EC_STORAGE, "NVRAM");
+                        System.out.println("### ecStorage = "  + ecStorage + "###");
 		} catch (FileNotFoundException e) {
 			System.out.println("Error finding HIS Provisioner properties file (HISprovisionier.properties)");
 		} catch (IOException e) {
@@ -230,16 +237,34 @@ public class HisTpmProvisioner {
 		}
 			
 		// Store the new EC in NV-RAM
-		try{
-			TpmModule.setCredential(TpmOwnerAuth, "EC", ekCert.getEncoded());
-		} catch (TpmModuleException e){
-			System.out.println("Error getting PubEK: " + e.toString());
-		} catch (CertificateEncodingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+               if (ecStorage.equalsIgnoreCase("file"))
+               {
+                System.out.println("--store EC in file--");
+                try{
+       
+                    File ecFile = new File(ecStorageFileName);
+                    FileOutputStream ecFileOut = new FileOutputStream(ecFile);
+                    ecFileOut.write(ekCert.getEncoded());
+                    ecFileOut.flush();
+                    ecFileOut.close();
+       
+                   }catch(Exception e){
+                       System.out.println("FAILED");
+                       e.printStackTrace();
+                       System.exit(1);
+                   }
+               }else{
+         		try{
+         			TpmModule.setCredential(TpmOwnerAuth, "EC", ekCert.getEncoded());
+                                  System.out.println( ekCert.getEncoded().length);
+         		} catch (TpmModuleException e){
+         			System.out.println("Error getting PubEK: " + e.toString());
+         		} catch (CertificateEncodingException e) {
+         			e.printStackTrace();
+         		} catch (IOException e) {
+         			e.printStackTrace();
+         		}
+                }
 		System.out.println("DONE");
 		System.exit(0);
 		return;

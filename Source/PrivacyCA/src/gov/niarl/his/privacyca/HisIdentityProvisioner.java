@@ -79,7 +79,8 @@ public class HisIdentityProvisioner {
 		final String PRIVACY_CA_URL = "PrivacyCaUrl";
 		final String TRUST_STORE = "TrustStore";
 		final String CLIENT_PATH = "ClientPath";
-		
+	        final String EC_STORAGE = "ecStorage";
+ 	
 		// Instantiate variables to be set by properties file
 		byte [] TpmOwnerAuth = null;
 		String HisIdentityLabel = "";
@@ -89,9 +90,11 @@ public class HisIdentityProvisioner {
 		String PrivacyCaUrl = "";
 		String TrustStore = "";
 		String ClientPath = "";
+                String ecStorage = "";
 
 		// Set properties file name
 		String propertiesFileName = "./OATprovisioner.properties";
+                String ecStorageFileName = "./EC.cer";
 
 		// Read the properties file, setting any defaults where it makes sense
 		FileInputStream PropertyFile = null;
@@ -108,6 +111,8 @@ public class HisIdentityProvisioner {
 			PrivacyCaUrl = HisProvisionerProperties.getProperty(PRIVACY_CA_URL, "");
 			TrustStore = HisProvisionerProperties.getProperty(TRUST_STORE, "TrustStore.jks");
 			ClientPath = HisProvisionerProperties.getProperty(CLIENT_PATH, "");
+                        ecStorage =  HisProvisionerProperties.getProperty(EC_STORAGE, "NVRAM");
+
 		} catch (FileNotFoundException e) { // If the properties file is not found, display error
 			System.out.println("Error finding HIS Provisioner properties file (HISprovisionier.properties); using defaults.");
 		} catch (IOException e) { // If propertied file cannot be read, display error
@@ -189,7 +194,28 @@ public class HisIdentityProvisioner {
 				System.exit(99);
 				return;
 			}
-			byte[] ekCert = TpmModule.getCredential(TpmOwnerAuth, "EC");
+			//byte[] ekCert = TpmModule.getCredential(TpmOwnerAuth, "EC");
+                        byte[] ekCert = null;
+                        if (ecStorage.equalsIgnoreCase("file"))
+                        {
+                          try{
+                               File ecFile = new File(ecStorageFileName);
+                               FileInputStream ecFileIn = new FileInputStream(ecFile);
+                               ekCert = new byte[ecFileIn.available()];
+                               ecFileIn.read(ekCert);
+                               System.out.println("--read EC from file--");
+                               ecFileIn.close();
+
+                             }catch(Exception e){
+
+                                System.out.println("FAILED");
+                                e.printStackTrace();
+                                System.exit(1);
+
+                            }
+                        }else{
+                           ekCert = TpmModule.getCredential(TpmOwnerAuth, "EC");
+                        }
 			TpmIdentityRequest encryptedEkCert = new TpmIdentityRequest(ekCert, (RSAPublicKey)pcaCert.getPublicKey(), false); 
 			
 			if (HisIdentityAuth == null){
@@ -236,7 +262,7 @@ public class HisIdentityProvisioner {
 			else
 				//decrypted1 = TpmModuleJava.ActivateIdentity(asym1, sym1, aik, keyAuthRaw, srkAuthRaw, ownerAuthRaw); 
 				//decrypted2 = TpmModuleJava.ActivateIdentity(asym2, sym2, aik, keyAuthRaw, srkAuthRaw, ownerAuthRaw);//Comments  temporarily due to TSSCoreService.jar compiling issue 
-				decrypted2 = TpmModule.activateIdentity(ownerAuthRaw, keyAuthRaw, asym2, sym2, HisIdentityIndex);
+				decrypted2 = TpmModule.activateIdentity(ownerAuthRaw, keyAuthRaw,asym2, sym2, HisIdentityIndex);
 			File outPath = new File(ClientPath);
 			File outFile = new File(ClientPath + "/aik.cer");
 			if(!outPath.isDirectory()){

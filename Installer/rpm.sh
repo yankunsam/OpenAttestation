@@ -5,6 +5,7 @@ RPM_BUILD_SPECS_DIRECTORY=/root/rpmbuild/SPECS
 RPM_BUILD_RPMS_DIRECTORY=/root/rpmbuild/RPMS/x86_64
 OATSOURCE_DIRECTORY=/root/OAT/Source
 TOMCAT_DIRECTORY=/root/OAT/Installer/apache-tomcat-7.0.26
+EC_SIGNING_KEY_SIZE=2048
 RPM_V=NIARL_OAT_Standalone-2.0-1.x86_64.rpm
 SUCCESS_STATUS=1
 
@@ -260,7 +261,7 @@ RePkgInstallOatAppraiserBase()
   if test -e HisPrivacyCAWebServices2.war;then
     rm -rf HisPrivacyCAWebServices2.war
   fi
-  
+
   if test -e $OATSOURCE_DIRECTORY/HisPrivacyCAWebServices2/HisPrivacyCAWebServices2.war;then
     cp $OATSOURCE_DIRECTORY/HisPrivacyCAWebServices2/HisPrivacyCAWebServices2.war .
   else
@@ -272,6 +273,10 @@ RePkgInstallOatAppraiserBase()
   cd HisPrivacyCAWebServices2
   unzip HisPrivacyCAWebServices2.war
   rm -rf HisPrivacyCAWebServices2.war
+
+  echo "\n\r" >> setup.properties
+  echo "ecSigningKeySize=$EC_SIGNING_KEY_SIZE" >> setup.properties
+  echo "ecStorage=NVRAM" >> setup.properties
 
   if test -d CaCerts;then
     rm -rf CaCerts
@@ -528,6 +533,12 @@ if [ -d $TOMCAT_DIRECTORY ]; then
 else
   ShowLogFaild "$TOMCAT_DIRECTORY  No such directory"
 fi
+
+if [ $# -gt 5 -a $5 = "-ks" ];then
+  EC_SIGNING_KEY_SIZE=$6
+fi
+echo "EC_SIGNING_KEY_SIZE=$6"
+
 
 Build_xml
 CreateRPMdirectory

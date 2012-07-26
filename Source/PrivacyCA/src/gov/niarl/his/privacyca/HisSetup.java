@@ -80,6 +80,8 @@ public class HisSetup {
 			final String FILE_LOCATION = "FileLocation";
 			final String CLIENT_PATH = "ClientPath";
 			final String AIK_AUTH = "AikAuth";
+                        final String EC_SIGNING_KEY_SIZE = "ecSigningKeySize";
+                        final String EC_STORAGE = "ecStorage";
 			
 			FileInputStream PropertyFile = null;
 			String PrivacyCaSubjectName = "null";
@@ -97,7 +99,8 @@ public class HisSetup {
 			int ValidityDays;
 			String ClientPath = "";
 			String AikAuth = "";
-
+                        String ecSigningKeySize = "";
+                        String ecStorage = "";
 			String tomcatPath = System.getProperty("catalina.base");
 			String tempPath = "";
 			if (tomcatPath != null){
@@ -121,6 +124,11 @@ public class HisSetup {
 				FileLocation = SetupProperties.getProperty(FILE_LOCATION, "null");
 				ClientPath = SetupProperties.getProperty(CLIENT_PATH, "C:/Program Files/NIARL/HIS");
 				AikAuth = SetupProperties.getProperty(AIK_AUTH, "1111111111111111111111111111111111111111");
+                                ecSigningKeySize =  SetupProperties.getProperty(EC_SIGNING_KEY_SIZE,"2048");
+                                ecStorage =  SetupProperties.getProperty(EC_STORAGE, "NVRAM");
+                                System.out.println("ecSigningKeySize = " + ecSigningKeySize + "\n");
+                                System.out.println("ecStorage = " + ecStorage + "\n");
+
 			} catch (FileNotFoundException e) {
 				System.out.println("Error finding setup.properties file. Setup cannot continue without the information in this file.");
 				return;
@@ -229,6 +237,7 @@ public class HisSetup {
 				EndorsementCaPassword = TpmUtils.byteArrayToHexString(TpmUtils.createRandomBytes(16));
 			String clientPath = "";
 			String ecCaPath = ""; 
+                        int KeySize = 2048;
 			if (tomcatPath != null){
 				InputStream in = null;
 				OutputStream out = null;
@@ -282,11 +291,18 @@ public class HisSetup {
 			 * PrivacyCaUrl = https://replace
 			 * CertValidityDays = 3652
 			 * PrivacyCaCertFileName = PrivCa.cer
-			 * FileLocation = ./HIS_Setup
+			 * FileLocation = ./HIS_Setup .equals
 			 */
 			System.out.print("Creating p12 files...");
-			TpmUtils.createCaP12(2048, PrivacyCaSubjectName, PrivacyCaPassword, FileLocation + "/" + PrivacyCaFileName, ValidityDays);
-			TpmUtils.createCaP12(2048, EndorsementCaSubjectName, EndorsementCaPassword, FileLocation + clientPath + "/" + EndorsementCaFileName, ValidityDays);
+                       // if(Integer.parseInt(ecSigningKeySize) == 1024 || Integer.parseInt(ecSigningKeySize) == 3072)
+                        if(ecSigningKeySize.equals("1024") || ecSigningKeySize.equals("2048") ||  ecSigningKeySize.equals("3072"))
+                        {
+                          KeySize = Integer.parseInt(ecSigningKeySize);  
+                        }
+                          TpmUtils.createCaP12(2048, PrivacyCaSubjectName, PrivacyCaPassword, FileLocation + "/" + PrivacyCaFileName, ValidityDays);
+                          TpmUtils.createCaP12(KeySize, EndorsementCaSubjectName, EndorsementCaPassword, FileLocation + clientPath + "/" + EndorsementCaFileName, ValidityDays);
+                        
+
 			System.out.println("DONE");
 			// Create the Privacy CA certificate file
 			System.out.print("Creating Privacy CA certificate...");
@@ -379,7 +395,7 @@ public class HisSetup {
 				"EndorsementP12Pass = " + EndorsementCaPassword + "\r\n" + 
 				"EcValidityDays = " + CertValidityDays + "\r\n" + 
 				"TpmOwnerAuth = 1111111111111111111111111111111111111111\r\n" + 
-				"#HIS Identity Provisioning Data\r\n" + 
+				"##########HIS Identity Provisioning Data############\r\n" + 
 				"HisIdentityLabel = HIS Identity Key\r\n" + 
 				"HisIdentityIndex = 1\r\n" + 
 				"HisIdentityAuth = " + AikAuth + "\r\n" + 
@@ -388,7 +404,10 @@ public class HisSetup {
 				"HisRegistrationUrl = " + HisRegistrationUrl + "\r\n" + 
 				"TrustStore = TrustStore.jks\r\n" + 
 				"NtruBypass = true\r\n" +
-				"ClientPath = " + ClientPath + "\r\n";
+				"ClientPath = " + ClientPath + "\r\n" + 
+                                "ecStorage = " + ecStorage + "\r\n" +
+                                "ecSigningKeySize = " + ecSigningKeySize + "\r\n";
+                                
 			try {
 				fos.write(toWrite.getBytes("US-ASCII"));
 				fos.flush();
