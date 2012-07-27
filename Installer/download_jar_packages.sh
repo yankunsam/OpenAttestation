@@ -25,8 +25,9 @@ do
 	LOCAL_NAME=`echo "$DOWNLOAD_FILE_NAME" | awk -F "-----" '{print $1;}'`
 	DOWNLOAD_PATH=`echo "$DOWNLOAD_FILE_NAME" | awk -F "-----" '{print $2;}'`
 	echo "$LOCAL_NAME $DOWNLOAD_PATH"
-	echo `wget -t 1 -O ../JAR_SOURCE/$LOCAL_NAME $DOWNLOAD_PATH`
-	if [ -f ../JAR_SOURCE/$LOCAL_NAME ]
+	wget -t 1 -O ../JAR_SOURCE/$LOCAL_NAME $DOWNLOAD_PATH
+	STAT=$?
+	if [ -f ../JAR_SOURCE/$LOCAL_NAME -a "$STAT" -eq 0 ]
 	then
 		if [ 0 -eq `ls -al $JAR_SOURCE_DIRCTORY/$LOCAL_NAME | awk -F " " '{print $5;}'` ] 
 		then

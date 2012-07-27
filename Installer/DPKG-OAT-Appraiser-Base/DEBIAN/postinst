@@ -370,7 +370,7 @@ rm -rf /${name}/ClientInstallForLinux
 
 cp -r -f /${name}/linuxOatInstall /${name}/ClientInstallForLinux
 
-cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/endorsement.p12 /${name}/ClientInstallForLinux/
+#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/endorsement.p12 /${name}/ClientInstallForLinux/
 cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/PrivacyCA.cer /${name}/ClientInstallForLinux/
 cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/TrustStore.jks /${name}/ClientInstallForLinux/
 cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/OATprovisioner.properties /${name}/ClientInstallForLinux/

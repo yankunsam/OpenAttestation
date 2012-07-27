@@ -28,6 +28,12 @@ TOMCAT_PIDFILE=/var/run/tomcat6.init.pid
 # Replace a potential empty string with a fake process so the RH daemon functions are able to parse
 # it properly
 ######
+if [ $PROC ];then
+        TOMCAT_PID=`ps -efc | grep apache.catalina | awk 'BEGIN { FS=" "}; { if( match($9, "java") != 0 ) print $2;}'`
+else
+        TOMCAT_PID=0
+fi
+
 if [[ "$PROC" == '' ]]; then
     PROC='Tomcat_JVM';
 fi
@@ -40,7 +46,7 @@ LOCK='/var/lock/subsys/tomcat';
 
 start () {
         echo -n $"Starting $PROG: "
-        if [ -e $TOMCAT_PIDFILE -a `lsof -i:8080` ];then
+        if [ $TOMCAT_PID -ne 0 ];then
 		TOMCAT_PID=`cat $TOMCAT_PIDFILE`
 		echo -ne "\033[31m \t [ failed ] \033[0m"
 		echo
