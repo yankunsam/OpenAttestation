@@ -122,6 +122,7 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 			String TpmEndorsmentP12 = "";
 			String EndorsementP12Pass = "";
 			String FileLocation = "";
+			Security.addProvider(new BouncyCastleProvider());
 			try {
 				PropertyFile = new FileInputStream(propertiesFileName);
 				Properties HisProvisionerProperties = new Properties();
@@ -159,11 +160,7 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 			X509Certificate endorsementCert = TpmUtils.certFromP12(FileLocation + "/" + TpmEndorsmentP12, EndorsementP12Pass);
 			//X509Certificate endorsementCert = TpmUtils.certFromP12(TpmEndorsmentP12, EndorsementP12Pass);
 			RSAPrivateKey privKey = TpmUtils.privKeyFromP12(FileLocation + "/" + TpmEndorsmentP12, EndorsementP12Pass);
-			StringBuffer sb = new StringBuffer(100);
 			
-		    ///////////////////////////////reconstruct EK Modular start//////////////////////////////////////
-            int n = 0;
-            int encryptSepLength = 256;
             byte[] ekMod = new byte[256];
             PropertyFile = new FileInputStream(filePath + "PrivacyCA.properties");
 			Properties HisProvisionerProperties = new Properties();
@@ -174,28 +171,14 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 			String PrivacyCAP12Pass = HisProvisionerProperties.getProperty(EC_P12_PASSWORD, "");
 			RSAPrivateKey privacyKey = TpmUtils.privKeyFromP12(filePath +  "/" + PrivacyCAP12, PrivacyCAP12Pass);
 			
-	        try {
-	            ByteArrayInputStream bais = new ByteArrayInputStream(encryptedEkMod);
-	            byte[] readByte = new byte[256];
-	            while ((n = bais.read(readByte)) > 0) {
-	                if (n >= encryptSepLength) {
-	                	sb.append(TpmUtils.byteArrayToHexString(decrypt(readByte, privacyKey)));
-	                } else {
-                        byte[] tt = new byte[n];
-                        for (int i = 0; i < n; i++) {
-                            tt[i] = readByte[i];
-                        }
-                        sb.append(TpmUtils.byteArrayToHexString(decrypt(readByte, privacyKey)));
-	                }
-	            }
-	            ekMod = TpmUtils.hexStringToByteArray(sb.toString());
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-		    /////////////////////////////reconstruct EK Modular end////////////////////////////////////////
-	        
-			byte[] byteSessionKey = decrypt(encryptedSessionKey,privacyKey);
-			Security.addProvider(new BouncyCastleProvider());
+			//phase 1: construct sessionKey
+			byte[] deskey = decryptRSA(encryptedSessionKey, privacyKey);
+			SecretKey sessionKey = new SecretKeySpec(deskey, 0, deskey.length, "DES");
+			
+			//phase2: recover EK modular
+			System.out.println("before invoke........................");
+			ekMod = decryptDES(encryptedEkMod, sessionKey);		
+	     
 			X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
 			certGen.setSerialNumber(BigInteger.valueOf(System.currentTimeMillis()));
 			certGen.setIssuerDN(endorsementCert.getSubjectX500Principal());
@@ -215,19 +198,12 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 			X509Certificate cert = certGen.generate(privKey, "BC");	
 					
 			//encrypt endorsement certification by session key, here we propose to use 3DES algorithm
-			SecretKey sessionKey = new SecretKeySpec(byteSessionKey, 0, byteSessionKey.length, "DES");
-			Cipher c;
-			c = Cipher.getInstance("DESede");  
-			c.init(Cipher.ENCRYPT_MODE, sessionKey);  
-			byte[] encryptEndorsementCer = c.doFinal(cert.getEncoded());	
-			
+			byte[] encryptEndorsementCer = encryptDES(cert.getEncoded(), sessionKey);
 			return encryptEndorsementCer; 
 			} catch (Exception e){
 				e.printStackTrace();
 				throw new RuntimeException(e);
 			}
-		
-
 	}
 
 	private boolean readPropertiesFile ()
@@ -333,9 +309,21 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 		return TpmUtils.concat(asymBlob, symBlob);
 	}
 	
-    private static byte[] decrypt(byte[] src, PrivateKey rk) throws Exception {
+    private static byte[] decryptRSA(byte[] src, PrivateKey rk) throws Exception {
     	Cipher cipher = Cipher.getInstance("RSA", new BouncyCastleProvider());
         cipher.init(Cipher.DECRYPT_MODE, rk);
         return cipher.doFinal(src);
+    }
+    
+    private static byte[] decryptDES(byte[] text, SecretKey key) throws Exception {
+    	Cipher cipher = Cipher.getInstance("DESede");
+    	cipher.init(Cipher.DECRYPT_MODE, key);
+        return cipher.doFinal(text);
+    }
+    
+    private static byte[] encryptDES(byte[] text, SecretKey key) throws Exception {
+    	Cipher c = Cipher.getInstance("DESede");  
+		c.init(Cipher.ENCRYPT_MODE, key);  
+		return c.doFinal(text);
     }
 }
