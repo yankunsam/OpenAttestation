@@ -410,6 +410,7 @@ sed -i "s/Options Indexes/Options/" /etc/apache2/sites-available/default
 sed -i "s/Options Indexes/Options/" /etc/apache2/sites-available/default-ssl
 sed -i "s/Options Indexes/Options/" /etc/apache2/mods-available/alias.conf
 sed -i "s/Options Indexes/Options/" /etc/apache2/sites-enabled/000-default
+/etc/init.d/apache2 restart
 #sed -i "s/expose_php = On/expose_php = Off/" /etc/php.ini
 
 #rm -f /etc/httpd/conf.d/welcome.conf
