@@ -53,7 +53,8 @@ start () {
 stop () {
         # stop daemon
         echo -n "Stopping $PROG: "
-        killall $PROC
+#        killall $PROC
+        $TOMCAT_DIR/bin/shutdown.sh 1>/dev/null
         RETVAL=$?
         echo
         [ $RETVAL = 0 ] && rm -f $LOCK
