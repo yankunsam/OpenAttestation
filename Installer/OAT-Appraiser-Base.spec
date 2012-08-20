@@ -261,6 +261,7 @@ keytool -import -keystore $truststore -storepass password -file hostname.cer -no
 #sets up the tomcat6 service
 chmod -R 755 $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/service/*
 cp $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/service/tomcat6 /etc/rc.d/init.d/
+sed -i  "s/killproc \$PROC/daemon \$CATALINA_BIN stop/g" /etc/rc.d/init.d/tomcat6
 chkconfig tomcat6 --add
 chkconfig tomcat6 on
 
