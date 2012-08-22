@@ -192,7 +192,7 @@ public class AttestDao {
 			HibernateUtilHis.beginTransaction();
 			hostName = hostName.toLowerCase();
 			Query query = HibernateUtilHis.getSession().createQuery("from AttestRequest a where a.hostName = :hostName and" +
-					                " a.result is not null order by a.requestTime desc");
+					                " a.result is not null order by a.validateTime desc");
 			query.setString("hostName", hostName);
 			List list = query.list();
 			if (list.size() < 1) {

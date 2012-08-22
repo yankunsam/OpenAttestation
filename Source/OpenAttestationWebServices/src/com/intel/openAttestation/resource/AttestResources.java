@@ -92,6 +92,7 @@ public class AttestResources {
 	    				}
 	    				else{
 	    					req.setNextAction(ActionConverter.getIntFromAction(Action.SEND_REPORT));
+						req.setIsConsumedByPollingWS(false);//this flags must be set at the same time.
 	    					logger.debug("Next Action:" +req.getNextAction());
 	    				}
 	    				dao.updateRequest(req);
