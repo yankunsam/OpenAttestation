@@ -86,28 +86,28 @@
 			keep="true" 
 			destdir="client" 
 			package="gov.niarl.sal.webservices.hisWebServices.clientWsImport"
-			wsdl="http://localhost:8080/HisWebServices/hisWebService?wsdl" />
+			wsdl="LOCAL_WSDL_DIR/wsdl/hisWebService.wsdl" />
 		<wsimport 
 			debug="true" 
 			verbose="true" 
 			keep="true" 
 			destdir="client" 
 			package="gov.niarl.sal.webservices.hisWebServices.clientWsImport"
-			wsdl="http://localhost:8080/HisWebServices/hisWebServiceFactoryService?wsdl" />
+			wsdl="LOCAL_WSDL_DIR/wsdl/hisWebServiceFactoryService.wsdl" />
 		<wsimport 
 			debug="true" 
 			verbose="true" 
 			keep="true" 
 			destdir="client" 
 			package="gov.niarl.sal.webservices.hisWebServices.clientWsImport"
-			wsdl="http://localhost:8080/HisWebServices/hisEnrollmentWebService?wsdl" />
+			wsdl="LOCAL_WSDL_DIR/wsdl/hisEnrollmentWebService.wsdl" />
 		<wsimport 
 			debug="true" 
 			verbose="true" 
 			keep="true" 
 			destdir="client" 
 			package="gov.niarl.sal.webservices.hisWebServices.clientWsImport"
-			wsdl="http://localhost:8080/HisWebServices/hisPollingWebService?wsdl" />
+			wsdl="LOCAL_WSDL_DIR/wsdl/hisPollingWebService.wsdl" />
 		<apt debug="true" verbose="true" destdir="client" sourcedestdir="client" sourcepath="./src">
 			<classpath>
 				<path refid="client.compile.classpath" />

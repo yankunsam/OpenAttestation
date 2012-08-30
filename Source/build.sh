@@ -24,27 +24,27 @@ cp -rf ./HisAppraiser/HisAppraiser.jar  ./OpenAttestationManifestWebServices/Web
 #3. build HisWebServices
 #cp -rf ./HisAppraiser/HisAppraiser.jar ./HisWebServices/WEB-INF/lib/
 ant -file ./HisWebServices/build.xml server
-cp ./HisWebServices/HisWebServices.war $1/webapps/
-sh $1/bin/shutdown.sh
-sh $1/bin/startup.sh
-# This for loop makes the rpm wait until the .war file has unpacked before attempting to access the files that will be created
-for((i = 1; i < 60; i++))
-do
-
-        rm -f ./warLog
-         
-        if test -e $1/webapps/HisWebServices;then
-        echo the HisWebServices was unpacked!
-        rm -f ./warLog
-        sleep 5
-        break
-        fi
-
-        sleep 1
-
-        echo If this file is present after install then unpacking the HisWebServices.war file timed-out >> warLog
-
-done
+#cp ./HisWebServices/HisWebServices.war $1/webapps/
+#sh $1/bin/shutdown.sh
+#sh $1/bin/startup.sh
+## This for loop makes the rpm wait until the .war file has unpacked before attempting to access the files that will be created
+#for((i = 1; i < 60; i++))
+#do
+#
+#        rm -f ./warLog
+#         
+#        if test -e $1/webapps/HisWebServices;then
+#        echo the HisWebServices was unpacked!
+#        rm -f ./warLog
+#        sleep 5
+#        break
+#        fi
+#
+#        sleep 1
+#
+#        echo If this file is present after install then unpacking the HisWebServices.war file timed-out >> warLog
+#
+#done
 
 ant -file ./HisWebServices/build.xml client
 cp -rf ./HisWebServices/clientlib/HisWebServices-client.jar ./PrivacyCA/lib/
@@ -68,23 +68,23 @@ do
 done
 
 ant -file ./HisPrivacyCAWebServices2/build.xml server
-cp ./HisPrivacyCAWebServices2/HisPrivacyCAWebServices2.war $1/webapps/
-#This is for loop makes the rpm wait until the .war file has unpacked before attempting to access the files that will be created
-for((i = 1; i < 60; i++))
-do
-
-         if test -e $1/webapps/HisPrivacyCAWebServices2;then
-        echo the Privacy CA was unpacked!
-        rm -f ./warLog
-        sleep 5
-        break
-        fi
-
-        sleep 1
-
-        echo If this file is present after install then unpacking the Privacy CA war file timed-out >> warLog
-
-done
+#cp ./HisPrivacyCAWebServices2/HisPrivacyCAWebServices2.war $1/webapps/
+##This is for loop makes the rpm wait until the .war file has unpacked before attempting to access the files that will be created
+#for((i = 1; i < 60; i++))
+#do
+#
+#         if test -e $1/webapps/HisPrivacyCAWebServices2;then
+#        echo the Privacy CA was unpacked!
+#        rm -f ./warLog
+#        sleep 5
+#        break
+#        fi
+#
+#        sleep 1
+#
+#        echo If this file is present after install then unpacking the Privacy CA war file timed-out >> warLog
+#
+#done
 ant -file ./HisPrivacyCAWebServices2/build.xml client
 cp -rf ./HisPrivacyCAWebServices2/clientlib/HisPrivacyCAWebServices2-client.jar ./HisPrivacyCAWebServices2/ClientFiles/lib/
 cp -rf ./HisPrivacyCAWebServices2/clientlib/HisPrivacyCAWebServices2-client.jar ./PrivacyCA/lib/
@@ -99,4 +99,4 @@ cp -rf ./PrivacyCA/PrivacyCA.jar ./HisPrivacyCAWebServices2/ClientFiles/lib/
 mkdir ./HisClient/jar
 ant -file ./HisClient/xml/Integrity_Report_Manifest_v1_0/build.xml
 ant -file ./HisClient/build.xml
-rm -rf $1/webapps/*
+#rm -rf $1/webapps/*
