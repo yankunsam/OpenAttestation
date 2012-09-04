@@ -4,7 +4,7 @@ RPM_BUILD_SOURCE_DIRECTORY=/root/rpmbuild/SOURCES
 RPM_BUILD_SPECS_DIRECTORY=/root/rpmbuild/SPECS
 RPM_BUILD_RPMS_DIRECTORY=/root/rpmbuild/RPMS/x86_64
 OATSOURCE_DIRECTORY=/root/OAT/Source
-TOMCAT_DIRECTORY=/root/OAT/Installer/apache-tomcat-7.0.26
+#TOMCAT_DIRECTORY=/root/OAT/Installer/apache-tomcat-7.0.26
 DEFAULT_DIRECTORY=/usr/src/packages
 EC_SIGNING_KEY_SIZE=2048
 
@@ -520,9 +520,9 @@ Build_xml()
 
 #main
 SourceFileOP=-s
-TomCatOP=-t
-if [ $# -lt 4 ];then 
-ShowLogFaild "Parameter ERROR! for example:sh rpm.sh -s /usr/local/src/OAT/Source -t /usr/local/src/apache-tomcat-7.0.26"
+#TomCatOP=-t
+if [ $# -lt 2 ];then 
+ShowLogFaild "Parameter ERROR! for example:sh rpm.sh -s /usr/local/src/OAT/Source "
 fi
 
 if [ $1 = $SourceFileOP ];then
@@ -535,18 +535,34 @@ else
   ShowLogFaild "$OATSOURCE_DIRECTORY  No such directory"
 fi
 
-if [ $3 = $TomCatOP ];then
-  TOMCAT_DIRECTORY=$4
-fi
+#if [ $3 = $TomCatOP ];then
+#  TOMCAT_DIRECTORY=$4
+#fi
+#
+#if [ -d $TOMCAT_DIRECTORY ]; then
+#  ShowLogOK "tomcat"
+#else
+#  ShowLogFaild "$TOMCAT_DIRECTORY  No such directory"
+#fi
+# HisWebServices wsdl
+webs_wsdl_dir="$OATSOURCE_DIRECTORY/HisWebServices/wsdl"
+webs_wsdl_dir_conf=${webs_wsdl_dir//\//\\/}
+for file in $(ls $webs_wsdl_dir);do
+   sed -i "s/LOCAL_WSDL_DIR\/wsdl/$webs_wsdl_dir_conf/g" $webs_wsdl_dir/$file
+done
+sed -i "s/LOCAL_WSDL_DIR/${OATSOURCE_DIRECTORY//\//\\/}\/HisWebServices/g" $OATSOURCE_DIRECTORY/HisWebServices/build.xml
 
-if [ -d $TOMCAT_DIRECTORY ]; then
-  ShowLogOK "tomcat"
-else
-  ShowLogFaild "$TOMCAT_DIRECTORY  No such directory"
-fi
+# HisPrivacyCAWebServices2 wsdl
+pca_wsdl_dir="$OATSOURCE_DIRECTORY/HisPrivacyCAWebServices2/wsdl"
+pca_wsdl_dir_conf=${pca_wsdl_dir//\//\\/}
+for file in $(ls $pca_wsdl_dir);do
+   sed -i "s/LOCAL_WSDL_DIR\/wsdl/$pca_wsdl_dir_conf/g" $pca_wsdl_dir/$file
+done
+sed -i "s/LOCAL_WSDL_DIR/${OATSOURCE_DIRECTORY//\//\\/}\/HisPrivacyCAWebServices2/g" $OATSOURCE_DIRECTORY/HisPrivacyCAWebServices2/build.xml
 
-if [ $# -gt 5 -a $5 = "-ks" ];then
-  EC_SIGNING_KEY_SIZE=$6
+
+if [ $# -gt 3 -a $3 = "-ks" ];then
+  EC_SIGNING_KEY_SIZE=$4
 fi
 
 
