@@ -102,11 +102,13 @@ public class HisSetup {
                         String ecSigningKeySize = "";
                         String ecStorage = "";
 			String tomcatPath = System.getProperty("catalina.base");
-			String tempPath = "";
+			String tempPath = "/etc/oat-appraiser/";
+                        /*
 			if (tomcatPath != null){
 				tempPath = tomcatPath + "/webapps/HisPrivacyCAWebServices2/";
+                                
 			}
-
+                        */
 			try {
 				PropertyFile = new FileInputStream(tempPath + "setup.properties");
 				Properties SetupProperties = new Properties();
