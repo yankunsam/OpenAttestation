@@ -102,15 +102,15 @@ public class HisSetup {
                         String ecSigningKeySize = "";
                         String ecStorage = "";
 			String tomcatPath = System.getProperty("catalina.base");
-			String tempPath = "/etc/oat-appraiser/";
+			String configPath = "/etc/oat-appraiser/";
                         /*
 			if (tomcatPath != null){
-				tempPath = tomcatPath + "/webapps/HisPrivacyCAWebServices2/";
+			         configPath = tomcatPath + "/webapps/HisPrivacyCAWebServices2/";
                                 
 			}
                         */
 			try {
-				PropertyFile = new FileInputStream(tempPath + "setup.properties");
+				PropertyFile = new FileInputStream(configPath + "setup.properties");
 				Properties SetupProperties = new Properties();
 				SetupProperties.load(PropertyFile);
 				PrivacyCaSubjectName = SetupProperties.getProperty(PRIVACY_CA_SUBJECT_NAME, "null");
@@ -350,11 +350,13 @@ public class HisSetup {
 			String PrivacyCaPropertiesFile = "PrivacyCA.properties";
 			String HisProvisionerPropertiesFile = "OATprovisioner.properties";
 			String HisStandalonePropertiesFile = "OAT.properties";
-			
+			String configPath = "/etc/oat-appraiser/";
+
 			/*
 			 * 
 			 */
-			fos = new FileOutputStream(FileLocation + "/" + PrivacyCaPropertiesFile);
+			//fos = new FileOutputStream(FileLocation + "/" + PrivacyCaPropertiesFile);
+			fos = new FileOutputStream(configPath + PrivacyCaPropertiesFile);
 			/*
 			 * #Privacy CA Operation
 			 * P12filename = PrivacyCA.p12

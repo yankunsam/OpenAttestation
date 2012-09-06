@@ -122,6 +122,8 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 			String TpmEndorsmentP12 = "";
 			String EndorsementP12Pass = "";
 			String FileLocation = "";
+                        String configPath = "/etc/oat-appraiser/";
+
 			Security.addProvider(new BouncyCastleProvider());
 			try {
 				PropertyFile = new FileInputStream(propertiesFileName);
@@ -162,7 +164,7 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 			RSAPrivateKey privKey = TpmUtils.privKeyFromP12(FileLocation + "/" + TpmEndorsmentP12, EndorsementP12Pass);
 			
             byte[] ekMod = new byte[256];
-            PropertyFile = new FileInputStream(filePath + "PrivacyCA.properties");
+            PropertyFile = new FileInputStream( configPath + "PrivacyCA.properties");
 			Properties HisProvisionerProperties = new Properties();
 			HisProvisionerProperties.load(PropertyFile);
 			EC_P12_FILE = "P12filename";
@@ -219,8 +221,9 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 		String P12filename = null;
 		String P12password = null;
 		int PrivCaCertValiditydays = 0;
+                String configPath = "/etc/oat-appraiser/";
 		String filePath = System.getProperty("catalina.base") + "/webapps/HisPrivacyCAWebServices2/";
-		String propertiesFileName = filePath + "PrivacyCA.properties";
+		String propertiesFileName = configPath + "PrivacyCA.properties";
 		InputStream PropertyFile = null;
 		try {
 			PropertyFile = new FileInputStream(propertiesFileName);
