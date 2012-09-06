@@ -350,7 +350,6 @@ public class HisSetup {
 			String PrivacyCaPropertiesFile = "PrivacyCA.properties";
 			String HisProvisionerPropertiesFile = "OATprovisioner.properties";
 			String HisStandalonePropertiesFile = "OAT.properties";
-			String configPath = "/etc/oat-appraiser/";
 
 			/*
 			 * 

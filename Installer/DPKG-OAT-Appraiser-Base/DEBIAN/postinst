@@ -167,8 +167,12 @@ cp -R /tmp/OAT_Server_Install/OpenAttestationManifestWebServices $TOMCAT_INSTALL
 cp -R /tmp/OAT_Server_Install/OpenAttestationWebServices $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
 
 echo "$TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties has updated"
+
+mkdir -p /etc/oat-appraiser/
+mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties /etc/oat-appraiser/manifest.properties
 sed -i "s/<server.domain>/$(hostname)/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/OpenAttestation.properties
-sed -i "s/<server.domain>/$(hostname)/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties
+#sed -i "s/<server.domain>/$(hostname)/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties
+sed -i "s/<server.domain>/$(hostname)/g" /etc/oat-appraiser/manifest.properties
 #configuring hibernateHis for OAT appraiser setup
 cp /tmp/OAT_Server_Install/hibernateOat.cfg.xml /tmp/
 sed -i 's/<property name="connection.username">root<\/property>/<property name="connection.username">oatAppraiser<\/property>/' /tmp/hibernateOat.cfg.xml
@@ -187,7 +191,8 @@ sed -i "s/<property name=\"connection.password\">oat-password<\/property>/<prope
 
 sed -i "s/^TrustStore.*$/TrustStore=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/OpenAttestation.properties
 
-sed -i "s/^truststore_path.*$/truststore_path=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties
+#sed -i "s/^truststore_path.*$/truststore_path=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties
+sed -i "s/^truststore_path.*$/truststore_path=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g" /etc/oat-appraiser/manifest.properties
 sed -i "s/^truststore_path.*$/truststore_path=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisWebServices/WEB-INF/classes/OpenAttestation.properties
 
 sed -i "s/^TrustStore.*$/TrustStore=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g"  $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisWebServices/WEB-INF/classes/OpenAttestation.properties

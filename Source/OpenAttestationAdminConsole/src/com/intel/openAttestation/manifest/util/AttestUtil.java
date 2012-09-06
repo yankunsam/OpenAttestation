@@ -32,7 +32,8 @@ public class AttestUtil {
 		FileInputStream manifestPropertyFile = null;
 		try {
 			Properties properties = new Properties();
-			String path = AttestUtil.class.getClassLoader().getResource("/").getPath();
+			//String path = AttestUtil.class.getClassLoader().getResource("/").getPath();
+			String path = "/etc/oat-appraiser/";
 			
 			manifestPropertyFile = new FileInputStream(path + configFile);
 	    	properties.load(manifestPropertyFile);
