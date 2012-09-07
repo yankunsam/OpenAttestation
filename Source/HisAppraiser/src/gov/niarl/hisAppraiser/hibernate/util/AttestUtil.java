@@ -43,7 +43,8 @@ public class AttestUtil {
 		FileInputStream attestationPropertyFile = null;
 	       try {
 	    	   String path = AttestUtil.class.getClassLoader().getResource("/").getPath();
-	    	   attestationPropertyFile = new FileInputStream(path +PROPERTIES_NAME);
+                   String configPath = "/etc/oat-appraiser/";
+	    	   attestationPropertyFile = new FileInputStream(configPath +PROPERTIES_NAME);
 	    	   attestationProperties.load(attestationPropertyFile);
 	    	   String manifesturl = attestationProperties.getProperty("ManifestWebServicesUrl");
 	    	   String truststore = attestationProperties.getProperty("TrustStore");
