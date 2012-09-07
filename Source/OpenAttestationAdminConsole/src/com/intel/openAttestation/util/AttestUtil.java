@@ -31,7 +31,7 @@ public class AttestUtil {
 	private static String clientTrustStorePassword;
 	private static String clientKeyStorePassword;
 	
-	private static String PROPERTIES_NAME = "OpenAttestation.properties";
+	private static String PROPERTIES_NAME = "OpenAttestationAdminConsole.properties";
 	private static Properties attestationProperties = new Properties();
 
 	public static void setPropertiesFileName(String name){
@@ -42,7 +42,8 @@ public class AttestUtil {
 		FileInputStream attestationPropertyFile = null;
 	       try {
 	    	   String path = AttestUtil.class.getClassLoader().getResource("/").getPath();
-	    	   attestationPropertyFile = new FileInputStream(path +PROPERTIES_NAME);
+                   String configPath = "/etc/oat-appraiser/";
+	    	   attestationPropertyFile = new FileInputStream(configPath +PROPERTIES_NAME);
 	    	   attestationProperties.load(attestationPropertyFile);
 	    	   attestationWSURL = attestationProperties.getProperty("AttestationWebServicesUrl");
 	    	   trustStorePath = attestationProperties.getProperty("TrustStore");

@@ -15,7 +15,7 @@
 <%@ include file="header_bar.jsp" %>
 <%String env = getServletConfig().getInitParameter("env");
   if (env.toLowerCase().equals("prd"))
-	  AttestUtil.setPropertiesFileName("OpenAttestation.properties");
+	  AttestUtil.setPropertiesFileName("OpenAttestationAdminConsole.properties");
   else
 	  AttestUtil.setPropertiesFileName("OpenAttestation_dev.properties");
   AttestUtil.loadProp();
