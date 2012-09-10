@@ -59,7 +59,8 @@ public class HisPrivacyCAWebServices2LoadOnStartup extends HttpServlet{
 	public void init() throws ServletException {
 		System.out.println("HisPrivacyCAWebServices2LoadOnStartup init()");
 		String tomcatPath = System.getProperty("catalina.base") + "/webapps/HisPrivacyCAWebServices2/";
-		File test = new File(tomcatPath + "PrivacyCA.p12");
+		String FileLocation = "/var/lib/oat-appraiser/";
+		File test = new File(FileLocation + "PrivacyCA.p12");
 		if(!test.exists()){
 			FileInputStream fis = null;
 			try{
@@ -86,7 +87,7 @@ public class HisPrivacyCAWebServices2LoadOnStartup extends HttpServlet{
 					while(certCN.startsWith(" ")){
 						certCN = certCN.subSequence(1, certCN.length()).toString();
 					}
-					X509Certificate privCaCert = TpmUtils.certFromFile(tomcatPath + "ClientFiles/PrivacyCA.cer");
+					X509Certificate privCaCert = TpmUtils.certFromFile(FileLocation + "ClientFiles/PrivacyCA.cer");
 					HisEnrollmentWebService hisEnrollmentWebService = HisWebServicesClientInvoker.getHisEnrollmentWebService("https://" + certCN + ":8443/HisWebServices");
 					hisEnrollmentWebService.enrollHisMachine("_PrivacyCA", TpmUtils.PEMencodeCert(privCaCert));
 				}

@@ -5,7 +5,17 @@ echo "Making OAT Appraiser"
 #tomcat configure 
 TOMCAT_INSTALL_DIR=/usr/lib
 TOMCAT_NAME=apache-tomcat-6.0.29
-
+if [ -d /var/lib/oat-appraiser ]
+then
+	rm -rf /var/lib/oat-appraiser
+	mkdir /var/lib/oat-appraiser
+	mkdir /var/lib/oat-appraiser/CaCerts
+	mkdir /var/lib/oat-appraiser/ClientFiles
+else
+	mkdir /var/lib/oat-appraiser
+        mkdir /var/lib/oat-appraiser/CaCerts
+        mkdir /var/lib/oat-appraiser/ClientFiles
+fi
 if [ $TOMCAT_DIR -a  -d $TOMCAT_DIR ];then
   if [[ ${TOMCAT_DIR:$((${#TOMCAT_DIR}-1)):1} == / ]];then
     TOMCAT_DIR_TMP=${TOMCAT_DIR:0:$((${#TOMCAT_DIR}-1))}
@@ -298,7 +308,7 @@ do
 
         rm -f ./warLog
 
-        if [ -e $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2 -a -e $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/OATprovisioner.properties ]; then
+        if [ -e /var/lib/oat-appraiser -a -e /var/lib/oat-appraiser/ClientFiles/OATprovisioner.properties ]; then
 
 
         echo the Privacy CA was unpacked!
@@ -378,11 +388,11 @@ rm -rf /${name}/ClientInstallForLinux
 cp -r -f /${name}/linuxOatInstall /${name}/ClientInstallForLinux
 
 #cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/endorsement.p12 /${name}/ClientInstallForLinux/
-cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/PrivacyCA.cer /${name}/ClientInstallForLinux/
-cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/TrustStore.jks /${name}/ClientInstallForLinux/
-cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/OATprovisioner.properties /${name}/ClientInstallForLinux/
+cp -r -f /var/lib/oat-appraiser/ClientFiles/PrivacyCA.cer /${name}/ClientInstallForLinux/
+cp -r -f /var/lib/oat-appraiser/ClientFiles/TrustStore.jks /${name}/ClientInstallForLinux/
+cp -r -f /var/lib/oat-appraiser/ClientFiles/OATprovisioner.properties /${name}/ClientInstallForLinux/
 sed -i '/ClientPath/s/C:.*/\/OAT/' /${name}/ClientInstallForLinux/OATprovisioner.properties
-cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/OAT.properties /${name}/ClientInstallForLinux/
+cp -r -f /var/lib/oat-appraiser/ClientFiles/OAT.properties /${name}/ClientInstallForLinux/
 sed -i 's/NIARL_TPM_Module\.exe/NIARL_TPM_Module/g' /${name}/ClientInstallForLinux/OAT.properties
 sed -i 's/HIS07\.jpg/OAT07\.jpg/g' /${name}/ClientInstallForLinux/OAT.properties
 cd /${name}/; zip -9 -r ClientInstallForLinux.zip ClientInstallForLinux

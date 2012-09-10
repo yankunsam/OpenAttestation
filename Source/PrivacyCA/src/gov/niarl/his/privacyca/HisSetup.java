@@ -95,7 +95,7 @@ public class HisSetup {
 			String CertValidityDays = "null";
 			String PrivacyCaCertFileName = "PrivacyCA.cer";
 			String EndorsementCaCertFileName = "EndorsementCA.cer";
-			String FileLocation = "null";
+			String FileLocation = "/var/lib/oat-appraiser";
 			int ValidityDays;
 			String ClientPath = "";
 			String AikAuth = "";
@@ -244,7 +244,8 @@ public class HisSetup {
 				InputStream in = null;
 				OutputStream out = null;
 				try {
-					FileLocation = tomcatPath + "/webapps/HisPrivacyCAWebServices2/";
+					//FileLocation = tomcatPath + "/webapps/HisPrivacyCAWebServices2/";
+					FileLocation = "/var/lib/oat-appraiser/";
 					clientPath = "ClientFiles";
 					ecCaPath = "CaCerts";
 					//copy the TrustStore:  tomcatPath + "/Certificate/TrustStore.jks"
@@ -388,7 +389,7 @@ public class HisSetup {
 			
 			
 			/*
-			 * File: HISprovisioner.properties
+			 * File: OATprovisioner.properties
 			 * Used by: HisTpmProvisioner, HisIdentityProvisioner, HisRegisterIdentity
 			 */
 			fos = new FileOutputStream(FileLocation + clientPath + "/" + HisProvisionerPropertiesFile);

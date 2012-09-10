@@ -114,7 +114,8 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 				propFileLoaded = readPropertiesFile();
 
 			//Get endorsement p12 file from ClientFiles directory, should be optimized in the future
-			String filePath = System.getProperty("catalina.base") + "/webapps/HisPrivacyCAWebServices2/";
+			//String filePath = System.getProperty("catalina.base") + "/webapps/HisPrivacyCAWebServices2/";
+			String filePath = "/var/lib/oat-appraiser/";
 			String propertiesFileName = filePath + "ClientFiles/" + "OATprovisioner.properties";
 			String EC_P12_FILE = "TpmEndorsmentP12";
 			String EC_P12_PASSWORD = "EndorsementP12Pass";
@@ -222,7 +223,7 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 		String P12password = null;
 		int PrivCaCertValiditydays = 0;
                 String configPath = "/etc/oat-appraiser/";
-		String filePath = System.getProperty("catalina.base") + "/webapps/HisPrivacyCAWebServices2/";
+		String filePath = "/var/lib/oat-appraiser/";
 		String propertiesFileName = configPath + "PrivacyCA.properties";
 		InputStream PropertyFile = null;
 		try {
@@ -230,7 +231,7 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 			Properties PrivacyCaProperties = new Properties();
 			File checkFile = new File(propertiesFileName);
 			if (!checkFile.exists()){
-				System.out.println("Error finding Privacy CA properties file: cannot continue. Please place properties file in: " + filePath + "/.");
+				System.out.println("Error finding Privacy CA properties file: cannot continue. Please place properties file in: " + configPath + "/.");
 				return false;
 			}
 			checkFile = null;
@@ -239,7 +240,7 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 			P12password = PrivacyCaProperties.getProperty(P12_PASSWORD, null);
 			PrivCaCertValiditydays = Integer.parseInt(PrivacyCaProperties.getProperty(PRIVCA_CERT_VALIDITYDAYS, "0"));
 		} catch (FileNotFoundException e) {
-			System.out.println("Error finding Privacy CA properties file: cannot continue. Please place properties file in: " + filePath + "/.");
+			System.out.println("Error finding Privacy CA properties file: cannot continue. Please place properties file in: " + configPath + "/.");
 			System.out.println(e.toString());
 			return false;
 		} catch (IOException e) {
@@ -277,7 +278,8 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 		return true;
 	}
 	private boolean prepEndorsementCaHashMap() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, javax.security.cert.CertificateException{
-		File endorsementCaDir = new File(System.getProperty("catalina.base") + "/webapps/HisPrivacyCAWebServices2/CaCerts");
+		//File endorsementCaDir = new File(System.getProperty("catalina.base") + "/webapps/HisPrivacyCAWebServices2/CaCerts");
+		File endorsementCaDir = new File("/var/lib/oat-appraiser/CaCerts");
 		String[] certList = endorsementCaDir.list();
 		if(certList == null){
 			System.out.println("Problem reading CaCerts directory!");
