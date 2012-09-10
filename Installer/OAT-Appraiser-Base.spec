@@ -185,15 +185,19 @@ rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationManifestWebService
 rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices.war
 
  echo "$TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties has updated"
- sed -i "s/<server.domain>/$(hostname)/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/OpenAttestation.properties
- sed -i "s/<server.domain>/$(hostname)/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties
+mkdir -p /etc/oat-appraiser/
+mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties /etc/oat-appraiser/manifest.properties
+mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/OpenAttestation.properties /etc/oat-appraiser/OpenAttestationAdminConsole.properties
+ sed -i "s/<server.domain>/$(hostname)/g" /etc/oat-appraiser/OpenAttestationAdminConsole.properties
+ sed -i "s/<server.domain>/$(hostname)/g" /etc/oat-appraiser/manifest.properties
 #configuring hibernateHis for OAT appraiser setup
 cp /tmp/OAT_Server_Install/hibernateOat.cfg.xml /tmp/
 sed -i 's/<property name="connection.username">root<\/property>/<property name="connection.username">oatAppraiser<\/property>/' /tmp/hibernateOat.cfg.xml
 sed -i "s/<property name=\"connection.password\">oat-password<\/property>/<property name=\"connection.password\">$randpass3<\/property>/" /tmp/hibernateOat.cfg.xml
 cp /tmp/hibernateOat.cfg.xml $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisWebServices/WEB-INF/classes/
 cp /tmp/OAT_Server_Install/OAT.properties $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisWebServices/WEB-INF/classes/
-sed -i "s/<server.domain>/$(hostname)/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisWebServices/WEB-INF/classes/OpenAttestation.properties
+mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisWebServices/WEB-INF/classes/OpenAttestation.properties /etc/oat-appraiser/
+sed -i "s/<server.domain>/$(hostname)/g" /etc/oat-appraiser/OpenAttestation.properties
 sed -i 's/<property name="connection.username">root<\/property>/<property name="connection.username">oatAppraiser<\/property>/' $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationManifestWebServices/WEB-INF/classes/hibernateOat.cfg.xml
 sed -i "s/<property name=\"connection.password\">oat-password<\/property>/<property name=\"connection.password\">$randpass3<\/property>/" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationManifestWebServices/WEB-INF/classes/hibernateOat.cfg.xml
 
@@ -201,12 +205,12 @@ sed -i 's/<property name="connection.username">root<\/property>/<property name="
 sed -i "s/<property name=\"connection.password\">oat-password<\/property>/<property name=\"connection.password\">$randpass3<\/property>/" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices/WEB-INF/classes/hibernateOat.cfg.xml
 
 ##2012 - 02 - 17
-sed -i "s/^TrustStore.*$/TrustStore=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/OpenAttestation.properties
+sed -i "s/^TrustStore.*$/TrustStore=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g" /etc/oat-appraiser/OpenAttestationAdminConsole.properties
 
-sed -i "s/^truststore_path.*$/truststore_path=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties
-sed -i "s/^truststore_path.*$/truststore_path=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisWebServices/WEB-INF/classes/OpenAttestation.properties
+sed -i "s/^truststore_path.*$/truststore_path=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g" /etc/oat-appraiser/manifest.properties
+sed -i "s/^truststore_path.*$/truststore_path=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g" /etc/oat-appraiser/OpenAttestation.properties
 
-sed -i "s/^TrustStore.*$/TrustStore=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g"  $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisWebServices/WEB-INF/classes/OpenAttestation.properties
+sed -i "s/^TrustStore.*$/TrustStore=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g"  /etc/oat-appraiser/OpenAttestation.properties
 #placing OAT web portal in correct folder to be seen by tomcat6
 rm -rf /%{name}/OAT
 unzip /%{name}/OAT.zip -d /%{name}/
