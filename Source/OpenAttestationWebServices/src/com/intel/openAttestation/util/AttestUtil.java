@@ -23,7 +23,7 @@ import gov.niarl.hisAppraiser.util.HisUtil;
 
 public class AttestUtil {
 	
-	private static String PROPERTIES_NAME = "OpenAttestation.properties";
+	private static String PROPERTIES_NAME = "OpenAttestationWebServices.properties";
 	private static Properties attestationProperties = new Properties();
    
 	private static Long timeout;
@@ -31,8 +31,8 @@ public class AttestUtil {
 	public static void  loadProp(){
 		FileInputStream attestationPropertyFile = null;
 	       try {
-	    	   String path = AttestUtil.class.getClassLoader().getResource("/").getPath();
-	    	   attestationPropertyFile = new FileInputStream(path +PROPERTIES_NAME);
+                   String configPath = "/etc/oat-appraiser/";
+	    	   attestationPropertyFile = new FileInputStream(configPath + PROPERTIES_NAME);
 	    	   attestationProperties.load(attestationPropertyFile);
 	    	   timeout = Long.parseLong(attestationProperties.getProperty("default_attest_timeout"));
 	        	attestationPropertyFile.close();

@@ -193,6 +193,7 @@ rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationManifestWebService
 rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices.war
 
  echo "$TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties has updated"
+mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices/WEB-INF/classes/OpenAttestation.properties /etc/oat-appraiser/OpenAttestationWebServices.properties
 mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties /etc/oat-appraiser/manifest.properties
 mv  $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/OpenAttestation.properties /etc/oat-appraiser/OpenAttestationAdminConsole.properties
  sed -i "s/<server.domain>/$(hostname)/g" /etc/oat-appraiser/OpenAttestationAdminConsole.properties
