@@ -38,6 +38,9 @@ import gov.niarl.hisAppraiser.util.Emailer;
 import java.io.IOException;
 import java.util.Properties;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import javax.mail.internet.InternetAddress;
 
 import org.apache.log4j.Logger;
@@ -48,7 +51,7 @@ public class Constants {
 	/**
 	 * Create properties object using location of properties file.
 	 */
-	private static Properties properties = loadProperties("/OAT.properties");
+	private static Properties properties = loadProperties("/etc/oat-appraiser/OAT.properties");
 	/**
 	 * Determines which alerts to generate. 
 	 */
@@ -79,10 +82,11 @@ public class Constants {
 	 * Creates properties object from file name.
 	 */
 	private static Properties loadProperties(String file) {
-		try {
-			Properties getProperties = new Properties();
-			getProperties.load(ConfigHelper.getResourceAsStream(file));
-			return getProperties;
+                try {
+		        FileInputStream  PropertyFile = new FileInputStream(file);
+                        Properties SetupProperties = new Properties();
+                        SetupProperties.load(PropertyFile);
+                        return SetupProperties;
 		} catch (IOException e) {
 			logger.fatal(e, e);
 			throw new RuntimeException(e);
