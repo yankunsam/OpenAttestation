@@ -95,7 +95,8 @@ public class HisSetup {
 			String CertValidityDays = "null";
 			String PrivacyCaCertFileName = "PrivacyCA.cer";
 			String EndorsementCaCertFileName = "EndorsementCA.cer";
-			String FileLocation = "/var/lib/oat-appraiser";
+			String FileLocation = "";
+			String CredentialLocation = "/var/lib/oat-appraiser/";
 			int ValidityDays;
 			String ClientPath = "";
 			String AikAuth = "";
@@ -147,10 +148,11 @@ public class HisSetup {
 					}
 			}
 			// Populate some strings if running from Tomcat
-			if (tomcatPath != null){
+			if (CredentialLocation != null){
 				// Look for TrustStore.jks in tomcatPath + "/Certificate"
 				KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
-				FileInputStream fis = new FileInputStream(tomcatPath + "/Certificate/TrustStore.jks");
+//				FileInputStream fis = new FileInputStream(tomcatPath + "/Certificate/TrustStore.jks");			
+				FileInputStream fis = new FileInputStream(CredentialLocation + "Certificate/TrustStore.jks");
 				
 				try {
 					ks.load(fis, null);
@@ -245,12 +247,13 @@ public class HisSetup {
 				OutputStream out = null;
 				try {
 					//FileLocation = tomcatPath + "/webapps/HisPrivacyCAWebServices2/";
-					FileLocation = "/var/lib/oat-appraiser/";
+					//FileLocation = "/var/lib/oat-appraiser/";
 					clientPath = "ClientFiles";
 					ecCaPath = "CaCerts";
-					//copy the TrustStore:  tomcatPath + "/Certificate/TrustStore.jks"
-					in = new FileInputStream(new File(tomcatPath + "/Certificate/TrustStore.jks"));
-					out = new FileOutputStream(new File(FileLocation + clientPath + "/TrustStore.jks"));
+					//copy the TrustStore:  FileLocation + "/Certificate/TrustStore.jks"
+					//in = new FileInputStream(new File(tomcatPath + "/Certificate/TrustStore.jks"));
+					in = new FileInputStream(new File(CredentialLocation + "Certificate/TrustStore.jks"));
+					out = new FileOutputStream(new File(CredentialLocation + clientPath + "/TrustStore.jks"));
 					byte[] buf = new byte[1024];
 					int len;
 					while ((len = in.read(buf)) > 0)
@@ -302,15 +305,15 @@ public class HisSetup {
                         {
                           KeySize = Integer.parseInt(ecSigningKeySize);  
                         }
-                          TpmUtils.createCaP12(2048, PrivacyCaSubjectName, PrivacyCaPassword, FileLocation + "/" + PrivacyCaFileName, ValidityDays);
-                          TpmUtils.createCaP12(KeySize, EndorsementCaSubjectName, EndorsementCaPassword, FileLocation + clientPath + "/" + EndorsementCaFileName, ValidityDays);
+                          TpmUtils.createCaP12(2048, PrivacyCaSubjectName, PrivacyCaPassword, CredentialLocation + PrivacyCaFileName, ValidityDays);
+                          TpmUtils.createCaP12(KeySize, EndorsementCaSubjectName, EndorsementCaPassword, CredentialLocation + clientPath + "/" + EndorsementCaFileName, ValidityDays);
                         
 
 			System.out.println("DONE");
 			// Create the Privacy CA certificate file
 			System.out.print("Creating Privacy CA certificate...");
-			X509Certificate pcaCert = TpmUtils.certFromP12(FileLocation + "/" + PrivacyCaFileName, PrivacyCaPassword);
-			FileOutputStream pcaFileOut = new FileOutputStream(new File(FileLocation + clientPath + "/" + PrivacyCaCertFileName));
+			X509Certificate pcaCert = TpmUtils.certFromP12(CredentialLocation + PrivacyCaFileName, PrivacyCaPassword);
+			FileOutputStream pcaFileOut = new FileOutputStream(new File(CredentialLocation + clientPath + "/" + PrivacyCaCertFileName));
 			try {
 				if (pcaCert != null)
 					pcaFileOut.write(pcaCert.getEncoded());
@@ -328,8 +331,8 @@ public class HisSetup {
 			
 			// Create the Endorsement CA certificate file
 			System.out.print("Creating Endorsement CA certificate...");
-			X509Certificate ecCert = TpmUtils.certFromP12(FileLocation + clientPath + "/" + EndorsementCaFileName, EndorsementCaPassword);
-			FileOutputStream ecFileOut = new FileOutputStream(new File(FileLocation + ecCaPath + "/" + EndorsementCaCertFileName));
+			X509Certificate ecCert = TpmUtils.certFromP12(CredentialLocation + clientPath + "/" + EndorsementCaFileName, EndorsementCaPassword);
+			FileOutputStream ecFileOut = new FileOutputStream(new File(CredentialLocation + ecCaPath + "/" + EndorsementCaCertFileName));
 			try {
 				if (ecCert != null)
 					ecFileOut.write(ecCert.getEncoded());
@@ -392,7 +395,7 @@ public class HisSetup {
 			 * File: OATprovisioner.properties
 			 * Used by: HisTpmProvisioner, HisIdentityProvisioner, HisRegisterIdentity
 			 */
-			fos = new FileOutputStream(FileLocation + clientPath + "/" + HisProvisionerPropertiesFile);
+			fos = new FileOutputStream(CredentialLocation + clientPath + "/" + HisProvisionerPropertiesFile);
 			toWrite = 
 				"#TPM Provisioning Data\r\n" + 
 				"TpmEndorsmentP12 = " + EndorsementCaFileName + "\r\n" + 
@@ -430,7 +433,7 @@ public class HisSetup {
 			 * File: HIS.properties
 			 * Used by: HIS Standalone (client reporter)
 			 */
-			fos = new FileOutputStream(FileLocation + clientPath + "/" + HisStandalonePropertiesFile);
+			fos = new FileOutputStream(CredentialLocation + clientPath + "/" + HisStandalonePropertiesFile);
 			toWrite = 
 				"WebServiceUrl=" + HisRegistrationUrl + "\r\n" + 
 				"KeyAuth=" + AikAuth + "\r\n" + 
@@ -457,8 +460,8 @@ public class HisSetup {
 			 * File: install.bat
 			 * Used by: not a properties file, but... assembles a batch file for the client installer
 			 */
-			String WinClientPath = ClientPath.replace("/", "\\");
-			fos = new FileOutputStream(FileLocation + clientPath + "/install.bat");
+			String WinClientPath = CredentialLocation.replace("/", "\\");
+			fos = new FileOutputStream(CredentialLocation + clientPath + "/install.bat");
 			toWrite = 
 				"rem DO NOT EDIT THIS FILE!\r\n" +
 				"rem This file is generated by the Privacy CA installation utility in Java\r\n" +
