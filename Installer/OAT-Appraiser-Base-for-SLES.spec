@@ -46,10 +46,12 @@ then
         mkdir /var/lib/oat-appraiser
         mkdir /var/lib/oat-appraiser/CaCerts
         mkdir /var/lib/oat-appraiser/ClientFiles
+        mkdir /var/lib/oat-appraiser/Certificate
 else
         mkdir /var/lib/oat-appraiser
         mkdir /var/lib/oat-appraiser/CaCerts
         mkdir /var/lib/oat-appraiser/ClientFiles
+        mkdir /var/lib/oat-appraiser/Certificate
 fi
 
 if [ $TOMCAT_DIR -a  -d $TOMCAT_DIR ];then
@@ -136,8 +138,8 @@ fi
 
 rm -rf $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/service
 mv -f /%{name}/service $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/service
-rm -rf $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/Certificate
-mkdir $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/Certificate
+#rm -rf $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/Certificate
+#mkdir $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/Certificate
 
 rm -R -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/*
 
@@ -161,7 +163,7 @@ mysql -u root < /tmp/OAT_Server_Install/init.sql
 sed -i "/<\/Context>/i\\   <Resource name=\"jdbc\/oat\" auth=\"Container\" type=\"javax.sql.DataSource\"\n    username=\"oatAppraiser\" password=\"$randpass3\" driverClassName=\"com.mysql.jdbc.Driver\"\n    url=\"jdbc:mysql:\/\/localhost:3306\/oat_db\"\/>" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/conf/context.xml
 
 #setting up port 8443 in tomcat server.xml
-sed -i "s/ <\/Service>/<Connector port=\"8443\" minSpareThreads=\"5\" maxSpareThreads=\"75\" enableLookups=\"false\" disableUploadTimeout=\"true\" acceptCount=\"100\" maxThreads=\"200\" scheme=\"https\" secure=\"true\" SSLEnabled=\"true\" clientAuth=\"want\" sslProtocol=\"TLS\" ciphers=\"TLS_ECDH_anon_WITH_AES_256_CBC_SHA, TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA, TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA\" keystoreFile=\"$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/keystore.jks\" keystorePass=\"$p12pass\" truststoreFile=\"$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks\" truststorePass=\"password\" \/><\/Service>/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/conf/server.xml
+sed -i "s/ <\/Service>/<Connector port=\"8443\" minSpareThreads=\"5\" maxSpareThreads=\"75\" enableLookups=\"false\" disableUploadTimeout=\"true\" acceptCount=\"100\" maxThreads=\"200\" scheme=\"https\" secure=\"true\" SSLEnabled=\"true\" clientAuth=\"want\" sslProtocol=\"TLS\" ciphers=\"TLS_ECDH_anon_WITH_AES_256_CBC_SHA, TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA, TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA\" keystoreFile=\"\/var\/lib\/oat-appraiser\/Certificate\/keystore.jks\" keystorePass=\"$p12pass\" truststoreFile=\"\/var\/lib\/oat-appraiser\/Certificate\/TrustStore.jks\" truststorePass=\"password\" \/><\/Service>/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/conf/server.xml
 
 
 
@@ -206,12 +208,12 @@ cp /tmp/hibernateOat.cfg.xml $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisWebServ
 cp /tmp/OAT_Server_Install/OAT.properties /etc/oat-appraiser/ 
 mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisWebServices/WEB-INF/classes/OpenAttestation.properties /etc/oat-appraiser/OpenAttestation.properties
 sed -i "s/<server.domain>/$(hostname)/g" /etc/oat-appraiser/OpenAttestation.properties
-sed -i "s/^TrustStore.*$/TrustStore=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g" /etc/oat-appraiser/OpenAttestationAdminConsole.properties
+sed -i "s/^TrustStore.*$/TrustStore=\/var\/lib\/oat-appraiser\/Certificate\/TrustStore.jks/g" /etc/oat-appraiser/OpenAttestationAdminConsole.properties
 
-sed -i "s/^truststore_path.*$/truststore_path=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g" /etc/oat-appraiser/manifest.properties
-sed -i "s/^truststore_path.*$/truststore_path=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g" /etc/oat-appraiser/OpenAttestation.properties
+sed -i "s/^truststore_path.*$/truststore_path=\/var\/lib\/oat-appraiser\/Certificate\/TrustStore.jks/g" /etc/oat-appraiser/manifest.properties
+sed -i "s/^truststore_path.*$/truststore_path=\/var\/lib\/oat-appraiser\/Certificate\/TrustStore.jks/g" /etc/oat-appraiser/OpenAttestation.properties
 
-sed -i "s/^TrustStore.*$/TrustStore=$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME\/Certificate\/TrustStore.jks/g"  /etc/oat-appraiser/OpenAttestation.properties
+sed -i "s/^TrustStore.*$/TrustStore=\/var\/lib\/oat-appraiser\/Certificate\/TrustStore.jks/g"  /etc/oat-appraiser/OpenAttestation.properties
 #placing OAT web portal in correct folder to be seen by tomcat6
 rm -rf /%{name}/OAT
 unzip /%{name}/OAT.zip -d /%{name}/
@@ -247,7 +249,8 @@ service mysql start
 
 
 #this code sets up the certificate attached to this computers hostname
-cd $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/Certificate/
+#cd $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/Certificate/
+cd /var/lib/oat-appraiser/Certificate/
 echo "127.0.0.1       `hostname`" >> /etc/hosts
 if [ "`echo $p12pass | grep $randpass`" ] ; then
   openssl req -x509 -nodes -days 730 -newkey rsa:2048 -keyout hostname.pem -out hostname.cer -subj "/C=US/O=U.S. Government/OU=DoD/CN=`hostname`"
