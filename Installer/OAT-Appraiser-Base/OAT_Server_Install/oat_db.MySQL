@@ -65,4 +65,4 @@ CREATE TABLE system_constants (
 	value text,
 	description text,
   PRIMARY KEY (id)
-);insert into system_constants (key_id, value) values ('default_delay', 10000);
+);insert into system_constants (key_id, value) values ('default_delay', 2500);

@@ -72,7 +72,6 @@ public class HisPollingWebService {
 			AttestRequest attestRequest = attestDao.getFirstRequest(machineName);
 			action = ActionConverter.getActionFromInt(attestRequest.getNextAction() == null? ActionConverter.getIntFromAction(Action.DO_NOTHING) : attestRequest.getNextAction());
 			
-			System.out.println("Next Action:" +ActionConverter.getIntFromAction(action));
 			if (attestRequest.getId()!= null){
 				attestRequest.setNextAction(ActionConverter.getIntFromAction(Action.DO_NOTHING));
 				attestRequest.setIsConsumedByPollingWS(true);

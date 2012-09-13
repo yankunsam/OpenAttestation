@@ -27,6 +27,7 @@ public class AttestUtil {
 	private static Properties attestationProperties = new Properties();
    
 	private static Long timeout;
+	private static Long checkAttestInterval;
    
 	public static void  loadProp(){
 		FileInputStream attestationPropertyFile = null;
@@ -35,6 +36,7 @@ public class AttestUtil {
 	    	   attestationPropertyFile = new FileInputStream(configPath + PROPERTIES_NAME);
 	    	   attestationProperties.load(attestationPropertyFile);
 	    	   timeout = Long.parseLong(attestationProperties.getProperty("default_attest_timeout"));
+	    	   checkAttestInterval = Long.parseLong(attestationProperties.getProperty("check_attest_interval"));
 	        	attestationPropertyFile.close();
 	       } 
 	        catch (IOException e) {
@@ -51,8 +53,11 @@ public class AttestUtil {
 	}
 	
 	public static Long getDefaultAttestTimeout() {
-		loadProp();
 		return timeout;
+	}
+	
+	public static Long getCheckAttestInterval(){
+		return checkAttestInterval;
 	}
 
 	

@@ -99,7 +99,7 @@ public class HisReportUtil {
 	 * @param xmlReport XML string integrity report.
 	 * @return ReportType top level JAXB element.
 	 */
-	public static ReportType unmarshallReport(String xmlReport) {
+	public synchronized static ReportType unmarshallReport(String xmlReport) {
 		try {
 			return ((JAXBElement<ReportType>) unmarshallerIntegrity_Report_Manifest_v1_0.unmarshal(new ByteArrayInputStream(xmlReport.getBytes()))).getValue();
 		} catch (JAXBException e) {

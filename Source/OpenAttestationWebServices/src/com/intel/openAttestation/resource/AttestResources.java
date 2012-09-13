@@ -43,10 +43,16 @@ import com.intel.openAttestation.util.AttestUtil;
 import com.intel.openAttestation.util.ResultConverter;
 import com.intel.openAttestation.util.ResultConverter.AttestResult;
 import com.intel.openAttestation.bean.ReqAsyncStatusBean;
+import com.intel.openAttestation.util.AttestUtil;;
+
 
 @Path("/V1.0")
 public class AttestResources {
 	private static Logger logger = Logger.getLogger("OpenAttestation");
+	
+	static{
+		AttestUtil.loadProp();
+	}
 	/**
 	 * synchronous attest model: client sends hosts and pcrmask to be attested, server attest these hosts and return specific PCR values.
 	 * in this model, the client will always wait the response of server 
@@ -92,7 +98,7 @@ public class AttestResources {
 	    				}
 	    				else{
 	    					req.setNextAction(ActionConverter.getIntFromAction(Action.SEND_REPORT));
-						req.setIsConsumedByPollingWS(false);//this flags must be set at the same time.
+	    					req.setIsConsumedByPollingWS(false);//this flags must be set at the same time.
 	    					logger.debug("Next Action:" +req.getNextAction());
 	    				}
 	    				dao.updateRequest(req);
@@ -124,7 +130,7 @@ public class AttestResources {
 		    					} 
 		    				}
 		    			}
-		    			Thread.sleep(10000/reqs.size()); //@TO DO: better calculation?
+		    			Thread.sleep(AttestUtil.getCheckAttestInterval()); 
 		    		}while(!AttestService.isAllAttested(requestId));
 		    		logger.info("requestId:" +requestId +" has attested");
 	    		}
