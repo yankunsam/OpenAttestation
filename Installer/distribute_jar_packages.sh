@@ -974,7 +974,5 @@ cp -f $JAR_SOURCE/commons-collections-2.1.1.jar $OAT_SOURCE/HisPrivacyCAWebServi
 cp -f $JAR_SOURCE/hibernate3.jar $OAT_SOURCE/PrivacyCA/lib/SALlib_hibernate3.jar
 
 ####### xsd #####
-cp -f $JAR_SOURCE/Core_Integrity_Manifest_v1_0_1.xsd $OAT_SOURCE/HisAppraiser/xml/Integrity_Report_Manifest_v1_0/Core_Integrity_Manifest_v1_0_1.xsd
-cp -f $JAR_SOURCE/Core_Integrity_Manifest_v1_0_1.xsd $OAT_SOURCE/HisClient/xml/Integrity_Report_Manifest_v1_0/Core_Integrity_Manifest_v1_0_1.xsd
-cp -f $JAR_SOURCE/Integrity_Report_Manifest_v1_0.xsd $OAT_SOURCE/HisAppraiser/xml/Integrity_Report_Manifest_v1_0/Integrity_Report_Manifest_v1_0.xsd
-cp -f $JAR_SOURCE/Integrity_Report_Manifest_v1_0.xsd $OAT_SOURCE/HisClient/xml/Integrity_Report_Manifest_v1_0/Integrity_Report_Manifest_v1_0.xsd
+cp -f xsd/*.xsd $OAT_SOURCE/HisAppraiser/xml/Integrity_Report_Manifest_v1_0/
+cp -f xsd/*.xsd $OAT_SOURCE/HisClient/xml/Integrity_Report_Manifest_v1_0/
