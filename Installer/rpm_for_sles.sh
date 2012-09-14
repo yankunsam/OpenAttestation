@@ -547,22 +547,6 @@ fi
 #else
 #  ShowLogFaild "$TOMCAT_DIRECTORY  No such directory"
 #fi
-# HisWebServices wsdl
-webs_wsdl_dir="$OATSOURCE_DIRECTORY/HisWebServices/wsdl"
-webs_wsdl_dir_conf=${webs_wsdl_dir//\//\\/}
-for file in $(ls $webs_wsdl_dir);do
-   sed -i "s/LOCAL_WSDL_DIR\/wsdl/$webs_wsdl_dir_conf/g" $webs_wsdl_dir/$file
-done
-sed -i "s/LOCAL_WSDL_DIR/${OATSOURCE_DIRECTORY//\//\\/}\/HisWebServices/g" $OATSOURCE_DIRECTORY/HisWebServices/build.xml
-
-# HisPrivacyCAWebServices2 wsdl
-pca_wsdl_dir="$OATSOURCE_DIRECTORY/HisPrivacyCAWebServices2/wsdl"
-pca_wsdl_dir_conf=${pca_wsdl_dir//\//\\/}
-for file in $(ls $pca_wsdl_dir);do
-   sed -i "s/LOCAL_WSDL_DIR\/wsdl/$pca_wsdl_dir_conf/g" $pca_wsdl_dir/$file
-done
-sed -i "s/LOCAL_WSDL_DIR/${OATSOURCE_DIRECTORY//\//\\/}\/HisPrivacyCAWebServices2/g" $OATSOURCE_DIRECTORY/HisPrivacyCAWebServices2/build.xml
-
 
 if [ $# -gt 3 -a $3 = "-ks" ];then
   EC_SIGNING_KEY_SIZE=$4
