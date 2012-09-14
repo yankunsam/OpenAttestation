@@ -1,8 +1,8 @@
 #!/bin/bash
-DEB_BUILD_DIRECTORY=/root/debbuild
-DEB_BUILD_SOURCE_DIRECTORY=/root/debbuild/SOURCE
-DEB_BUILD_DPKG_DIRECTORY=/root/debbuild/DPKG
-DEB_BUILD_DEBS_DIRECTORY=/root/debbuild/DEBS/x86_64
+DEB_BUILD_DIRECTORY=/tmp/debbuild
+DEB_BUILD_SOURCE_DIRECTORY=/tmp/debbuild/SOURCE
+DEB_BUILD_DPKG_DIRECTORY=/tmp/debbuild/DPKG
+DEB_BUILD_DEBS_DIRECTORY=/tmp/debbuild/DEBS/x86_64
 OATSOURCE_DIRECTORY=/root/OAT/Source
 #TOMCAT_DIRECTORY=/root/OAT/Installer/apache-tomcat-7.0.26
 EC_SIGNING_KEY_SIZE=2048
@@ -519,21 +519,6 @@ if [ $Lchar == "/" ];then
   OATSOURCE_DIRECTORY=${OATSOURCE_DIRECTORY:0:$((${#OATSOURCE_DIRECTORY}-1))}
 fi
 echo $OATSOURCE_DIRECTORY
-# HisWebServices wsdl 
-webs_wsdl_dir="$OATSOURCE_DIRECTORY/HisWebServices/wsdl"
-webs_wsdl_dir_conf=${webs_wsdl_dir//\//\\/}
-for file in $(ls $webs_wsdl_dir);do
-   sed -i "s/LOCAL_WSDL_DIR\/wsdl/$webs_wsdl_dir_conf/g" $webs_wsdl_dir/$file
-done
-sed -i "s/LOCAL_WSDL_DIR/${OATSOURCE_DIRECTORY//\//\\/}\/HisWebServices/g" $OATSOURCE_DIRECTORY/HisWebServices/build.xml
-
-# HisPrivacyCAWebServices2 wsdl
-pca_wsdl_dir="$OATSOURCE_DIRECTORY/HisPrivacyCAWebServices2/wsdl"
-pca_wsdl_dir_conf=${pca_wsdl_dir//\//\\/}
-for file in $(ls $pca_wsdl_dir);do
-   sed -i "s/LOCAL_WSDL_DIR\/wsdl/$pca_wsdl_dir_conf/g" $pca_wsdl_dir/$file
-done
-sed -i "s/LOCAL_WSDL_DIR/${OATSOURCE_DIRECTORY//\//\\/}\/HisPrivacyCAWebServices2/g" $OATSOURCE_DIRECTORY/HisPrivacyCAWebServices2/build.xml
 
 #if [ $3 = $TomCatOP ];then
 #  TOMCAT_DIRECTORY=$4

@@ -84,14 +84,14 @@
 			keep="true" 
 			destdir="client" 
 			package="gov.niarl.his.webservices.hisPrivacyCAWebServices2.clientWsImport"
-			wsdl="LOCAL_WSDL_DIR/wsdl/hisPrivacyCAWebService2.wsdl" />
+			wsdl="${basedir}/wsdl/hisPrivacyCAWebService2.wsdl" />
 		<wsimport 
 			debug="true" 
 			verbose="true" 
 			keep="true" 
 			destdir="client" 
 			package="gov.niarl.his.webservices.hisPrivacyCAWebServices2.clientWsImport"
-			wsdl="LOCAL_WSDL_DIR/wsdl/hisPrivacyCAWebService2FactoryService.wsdl" />
+			wsdl="${basedir}/wsdl/hisPrivacyCAWebService2FactoryService.wsdl" />
 		<apt debug="true" verbose="true" destdir="client" sourcedestdir="client" sourcepath="./src">
 			<classpath>
 				<path refid="client.compile.classpath" />
