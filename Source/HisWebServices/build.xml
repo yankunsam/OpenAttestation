@@ -24,11 +24,6 @@
 		</fileset>
 	</path>
 
-	<taskdef name="apt" classname="com.sun.tools.ws.ant.Apt">
-		<classpath>
-			<path refid="client.compile.classpath" />
-		</classpath>
-	</taskdef>
 	<taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
 		<classpath>
 			<path refid="client.compile.classpath" />
@@ -51,12 +46,13 @@
 			</fileset>
 		</copy>
 		<!-- Compile-->
-		<apt debug="true" verbose="true" destdir="./WEB-INF/classes" sourcedestdir="./WEB-INF/classes" sourcepath="./src">
+		<javac debug="true" destdir="./WEB-INF/classes" srcdir="./src"
+               source="1.5" target="1.5"
+               includes="**/*.java" excludes="**/hisWebService/client/,MainHisWebServices.java">
 			<classpath>
 				<path refid="compile.classpath" />
 			</classpath>
-			<source dir="./src" includes="**/*.java" excludes="**/hisWebService/client/,MainHisWebServices.java" />
-		</apt>
+		</javac>
 
 		<!-- Build-->
 		<delete file="./HisWebServices.war" />
@@ -108,13 +104,14 @@
 			destdir="client" 
 			package="gov.niarl.sal.webservices.hisWebServices.clientWsImport"
 			wsdl="${basedir}/wsdl/hisPollingWebService.wsdl" />
-		<apt debug="true" verbose="true" destdir="client" sourcedestdir="client" sourcepath="./src">
+		<javac debug="true" destdir="client" srcdir="./src"
+               source="1.5" target="1.5"
+               includes="**/hisWebService/client/**/*.java,**/hisWebService/*">
 			<classpath>
 				<path refid="client.compile.classpath" />
 				<pathelement path="client"/>
 			</classpath>
-			<source dir="./src" includes="**/hisWebService/client/**/*.java,**/hisWebService/*" />
-		</apt>
+		</javac>
 		<jar jarfile="clientlib/HisWebServices-client.jar" basedir="client" />
 		<delete dir="client" />
 	</target>
@@ -127,7 +124,8 @@
 				<include name="MainHisWebServices.java" />
 			</fileset>
 		</copy>
-        <javac srcdir="client" destdir="client" debug="true">
+        <javac srcdir="client" destdir="client"
+               debug="true" source="1.5" target="1.5">
 			<classpath>
 				<fileset dir="./clientlib">
 					<include name="**/*.jar" />
