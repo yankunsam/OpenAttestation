@@ -88,7 +88,7 @@ ant -file ./HisPrivacyCAWebServices2/build.xml server
 ant -file ./HisPrivacyCAWebServices2/build.xml client
 cp -rf ./HisPrivacyCAWebServices2/clientlib/HisPrivacyCAWebServices2-client.jar ./HisPrivacyCAWebServices2/ClientFiles/lib/
 cp -rf ./HisPrivacyCAWebServices2/clientlib/HisPrivacyCAWebServices2-client.jar ./PrivacyCA/lib/
-sh $1/bin/shutdown.sh
+#sh $1/bin/shutdown.sh
 
 #6. build PrivacyCA
 ant -file ./PrivacyCA/build.xml
