@@ -13,9 +13,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 package com.intel.openAttestation.manifest.hibernate.domain;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Java class linked to the PCR_manifest table.
@@ -26,24 +25,26 @@ import javax.xml.bind.annotation.XmlElement;
 
 @XmlRootElement
 
-public class OEM {
-	Long OEMID;
+public class OS {
+	Long ID;
     String Name;
+    String Version;
     String Description;
     
-	public OEM(){}
+	public OS(){}
         
-    public OEM(Long ID, String name, String desc){
+    public OS(Long ID, String name, String version, String desc){
     	this.Name = name;
+    	this.Version = version;
     	this.Description = desc;
     }
     
-	public Long getOEMID() {
-		return OEMID;
+	public Long getID() {
+		return ID;
 	}
 
-	public void setOEMID(Long id) {
-		OEMID = id;
+	public void setID(Long id) {
+		ID = id;
 	}
 	
 	public String getName() {
@@ -53,6 +54,15 @@ public class OEM {
 	@XmlElement(name = "Name")
 	public void setName(String name) {
 		Name = name;
+	}
+	
+	public String getVersion() {
+		return Version;
+	}
+	
+	@XmlElement(name = "Version")
+	public void setVersion(String version) {
+		Version = version;
 	}
 	
 	public String getDescription() {

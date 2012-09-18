@@ -7,7 +7,7 @@
 		<id name="OEMID" column="ID" type="long" unsaved-value="null">
 			<generator class="native" />
 		</id>
-		<property name="OEMName" column="NAME"/>
-		<property name="OEMDesc" column="DESCRIPTION"/>
+		<property name="Name" column="NAME"/>
+		<property name="Description" column="DESCRIPTION"/>
 	</class>
 </hibernate-mapping>

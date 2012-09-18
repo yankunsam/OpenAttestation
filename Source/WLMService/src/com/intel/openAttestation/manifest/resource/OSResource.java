@@ -13,10 +13,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 package com.intel.openAttestation.manifest.resource;
 
-import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -28,9 +26,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import com.intel.openAttestation.manifest.bean.OpenAttestationResponseFault;
-import com.intel.openAttestation.manifest.hibernate.dao.OEMDAO;
-import com.intel.openAttestation.manifest.hibernate.domain.OEM;
-import com.intel.openAttestation.manifest.resource.OEMResource;
+import com.intel.openAttestation.manifest.hibernate.dao.OSDAO;
+import com.intel.openAttestation.manifest.hibernate.domain.OS;
+import com.intel.openAttestation.manifest.resource.OSResource;
 
 
 
@@ -40,37 +38,37 @@ import com.intel.openAttestation.manifest.resource.OEMResource;
  *
  */
 
-@Path("resources/oem")
-public class OEMResource {
+@Path("resources/os")
+public class OSResource {
 	
+
 	
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response addOEM(@Context UriInfo uriInfo, OEM oem,
+	public Response addOS(@Context UriInfo uriInfo, OS os,
 			@Context javax.servlet.http.HttpServletRequest request){
-		System.out.println("Check if the OEM Name exists:" + oem.getName());
         UriBuilder b = uriInfo.getBaseUriBuilder();
-        b = b.path(OEMResource.class);
+        b = b.path(OSResource.class);
 		Response.Status status = Response.Status.OK;
         try{
-			OEMDAO dao = new OEMDAO();
-			System.out.println("Check if the OEM Name exists:" + oem.getName());
-			if (dao.isOEMExisted(oem.getName())){
+			OSDAO dao = new OSDAO();
+			System.out.println("Check if the OS Name exists:" + os.getName());
+			if (dao.isOSExisted(os.getName(), os.getVersion())){
 				status = Response.Status.BAD_REQUEST;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
-				fault.setError_message("Data Error - OEM " + oem.getName()+" already exists in the database");
+				fault.setError_message("Data Error - OS " + os.getName()+ os.getVersion() + " already exists in the database");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
-			dao.addOEMEntry(oem);
+			dao.addOSEntry(os);
 	        return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True")
 	        		.build();
 		}catch (Exception e){
 			status = Response.Status.INTERNAL_SERVER_ERROR;
 			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 					OpenAttestationResponseFault.FaultCode.FAULT_500);
-			fault.setError_message("Add OEM entry failed." + "Exception:" + e.getMessage());
+			fault.setError_message("Add OS entry failed." + "Exception:" + e.getMessage());
 			return Response.status(status).header("Location", b.build()).entity(fault)
 					.build();
 		}
@@ -80,54 +78,54 @@ public class OEMResource {
 	@PUT
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response editOEM(@Context UriInfo uriInfo, OEM oem,
+	public Response editOEM(@Context UriInfo uriInfo, OS os,
 			@Context javax.servlet.http.HttpServletRequest request){
         UriBuilder b = uriInfo.getBaseUriBuilder();
-        b = b.path(OEMResource.class);
+        b = b.path(OSResource.class);
 		Response.Status status = Response.Status.OK;
         try{
-			OEMDAO dao = new OEMDAO();
-			System.out.println("Check if the OEM Name exists:" + oem.getName());
-			if (!dao.isOEMExisted(oem.getName())){
+			OSDAO dao = new OSDAO();
+			System.out.println("Check if the OEM Name exists:" + os.getName());
+			if (!dao.isOSExisted(os.getName(), os.getVersion())){
 				status = Response.Status.BAD_REQUEST;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
-				fault.setError_message("Data Error - OEM " + oem.getName()+" don't exists in the database");
+				fault.setError_message("Data Error - OS " + os.getName() + os.getVersion() + " don't exists in the database");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
-			dao.editOEMEntry(oem);
+			dao.editOSEntry(os);
 	        return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True")
 	        		.build();
 		}catch (Exception e){
 			status = Response.Status.INTERNAL_SERVER_ERROR;
 			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 					OpenAttestationResponseFault.FaultCode.FAULT_500);
-			fault.setError_message("Add OEM entry failed." + "Exception:" + e.getMessage());
+			fault.setError_message("Add OS entry failed." + "Exception:" + e.getMessage());
 			return Response.status(status).header("Location", b.build()).entity(fault)
 					.build();
 		}
 
 	}
-	
+
 	@DELETE
 	@Produces("application/json")
-	public Response deloemEntry(@QueryParam("Name") String Name, @Context UriInfo uriInfo){
+	public Response delOEM(@QueryParam("Name") String Name, @QueryParam("Version") String Version,@Context UriInfo uriInfo){
         UriBuilder b = uriInfo.getBaseUriBuilder();
-        b = b.path(OEMResource.class);
+        b = b.path(OSResource.class);
 		Response.Status status = Response.Status.OK;
 
         try{
-			OEMDAO dao = new OEMDAO();
-			System.out.println("Check if the OEM Name exists:" + Name);
-			if (dao.isOEMExisted(Name)){
-				dao.DeleteOEMEntry(Name);
+			OSDAO dao = new OSDAO();
+			System.out.println("Check if the OS Name exists:" + Name + " " + Version);
+			if (dao.isOSExisted(Name, Version)){
+				dao.deleteOSEntry(Name, Version);
 				return Response.status(status).type(MediaType.TEXT_PLAIN).entity("True")
 		        		.build();
 			}
 			status = Response.Status.BAD_REQUEST;
 			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 					OpenAttestationResponseFault.FaultCode.FAULT_1006);
-			fault.setError_message("Data Error - OEM " + Name +" does not exist in the database");		
+			fault.setError_message("Data Error - OS " + Name + Version + " does not exist in the database");		
 			return Response.status(status).entity(fault)
 					.build();
 
@@ -135,7 +133,7 @@ public class OEMResource {
 			status = Response.Status.INTERNAL_SERVER_ERROR;
 			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 					OpenAttestationResponseFault.FaultCode.FAULT_500);
-			fault.setError_message("Delete OEM entry failed." + "Exception:" + e.getMessage()); 
+			fault.setError_message("Delete OS entry failed." + "Exception:" + e.getMessage()); 
 			return Response.status(status).entity(fault)
 					.build();
 

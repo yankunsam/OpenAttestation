@@ -13,12 +13,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 package com.intel.openAttestation.manifest.hibernate.dao;
 
-import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
+
 import com.intel.openAttestation.manifest.hibernate.domain.OEM;
+import com.intel.openAttestation.manifest.hibernate.domain.OS;
 import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
 
 /**
@@ -28,22 +29,22 @@ import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
  * @version OpenAttestation
  *
  */
-public class OEMDAO {
+public class OSDAO {
 
 	/**
 	 * Constructor to start a hibernate transaction in case one has not
 	 * already been started 
 	 */
-	public OEMDAO() {
+	public OSDAO() {
 	}
 	
-	public OEM addOEMEntry(OEM OEMEntry){
+	public void addOSEntry(OS osEntry){
 		try {
 			HibernateUtilHis.beginTransaction();
 			//OEM.setCreateTime(new Date());
-			HibernateUtilHis.getSession().save(OEMEntry);
+			HibernateUtilHis.getSession().save(osEntry);
 			HibernateUtilHis.commitTransaction();
-			return OEMEntry;
+			//return oemEntry;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
 			e.printStackTrace();
@@ -54,19 +55,20 @@ public class OEMDAO {
 
 	}
 	
-	public void editOEMEntry (OEM oemEntry){
+	public void editOSEntry (OS osEntry){
 		try {
 			HibernateUtilHis.beginTransaction();
 			Session session = HibernateUtilHis.getSession();
 			
-			Query query = session.createQuery("from OEM a where a.Name = :name");
-			query.setString("name", oemEntry.getName());
+			Query query = session.createQuery("from OS a where a.Name = :name and a.Version = :version");
+			query.setString("name", osEntry.getName());
+			query.setString("version", osEntry.getVersion());
 			List list = query.list();
 			if (list.size() < 1){
 				throw new Exception ("Object not found");
 			}
-			OEM oemOld = (OEM)list.get(0);
-			oemOld.setDescription(oemEntry.getDescription());
+			OS osOld = (OS)list.get(0);
+			osOld.setDescription(osEntry.getDescription());
 			HibernateUtilHis.commitTransaction();
 			//return oemEntry;
 		} catch (Exception e) {
@@ -78,20 +80,20 @@ public class OEMDAO {
 		}
 		
 	}
-
 	
-	public void DeleteOEMEntry (String Name){
+	public void deleteOSEntry (String osName, String osVersion){
 		try {
 			HibernateUtilHis.beginTransaction();
 			Session session = HibernateUtilHis.getSession();
-			Query query = session.createQuery("from OEM a where a.Name = :NAME");
-			query.setString("NAME", Name);
+			Query query = session.createQuery("from OS a where a.Name = :name and a.Version = :version");
+			query.setString("name", osName);
+			query.setString("version", osVersion);
 			List list = query.list();
 			if (list.size() < 1){
 				throw new Exception ("Object not found");
 			}
-			OEM OEMEntry = (OEM)list.get(0);
-			session.delete(OEMEntry);
+			OS osEntry = (OS)list.get(0);
+			session.delete(osEntry);
 			HibernateUtilHis.commitTransaction();
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
@@ -103,12 +105,13 @@ public class OEMDAO {
 		
 	}
 
-	public boolean isOEMExisted(String Name){
+	public boolean isOSExisted(String osName, String osVersion){
 		boolean flag =false;
 		try {
 			HibernateUtilHis.beginTransaction();
-			Query query = HibernateUtilHis.getSession().createQuery("from OEM a where a.Name = :value");
-			query.setString("value", Name);
+			Query query = HibernateUtilHis.getSession().createQuery("from OS a where a.Name = :name and a.Version = :version");
+			query.setString("name", osName);
+			query.setString("version", osVersion);
 			List list = query.list();
 		
 			if (list.size() < 1) {
@@ -126,6 +129,5 @@ public class OEMDAO {
 			HibernateUtilHis.closeSession();
 		}
 	}
-
 
 }
