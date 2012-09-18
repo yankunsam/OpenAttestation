@@ -22,11 +22,6 @@
 		</fileset>
 	</path>
 
-	<taskdef name="apt" classname="com.sun.tools.ws.ant.Apt">
-		<classpath>
-			<path refid="client.compile.classpath" />
-		</classpath>
-	</taskdef>
 	<taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
 		<classpath>
 			<path refid="client.compile.classpath" />
@@ -49,12 +44,13 @@
 			</fileset>
 		</copy>
 		<!-- Compile-->
-		<apt debug="true" verbose="true" destdir="./WEB-INF/classes" sourcedestdir="./WEB-INF/classes" sourcepath="./src">
+		<javac debug="true" destdir="./WEB-INF/classes" srcdir="./src"
+               source="1.5" target="1.5"
+               includes="**/*.java" excludes="**/hisPrivacyCAWebService2/client/,Main.java">
 			<classpath>
 				<path refid="compile.classpath" />
 			</classpath>
-			<source dir="./src" includes="**/*.java" excludes="**/hisPrivacyCAWebService2/client/,Main.java" />
-		</apt>
+		</javac>
 
 		<!-- Build-->
 		<delete file="./HisPrivacyCAWebServices2.war" />
@@ -92,13 +88,14 @@
 			destdir="client" 
 			package="gov.niarl.his.webservices.hisPrivacyCAWebServices2.clientWsImport"
 			wsdl="${basedir}/wsdl/hisPrivacyCAWebService2FactoryService.wsdl" />
-		<apt debug="true" verbose="true" destdir="client" sourcedestdir="client" sourcepath="./src">
+		<javac debug="true" destdir="client" srcdir="./src"
+               source="1.5" target="1.5"
+               includes="**/hisPrivacyCAWebService2/client/**/*.java,**/hisPrivacyCAWebService2/*,Main.java">
 			<classpath>
 				<path refid="client.compile.classpath" />
 				<pathelement path="client"/>
 			</classpath>
-			<source dir="./src" includes="**/hisPrivacyCAWebService2/client/**/*.java,**/hisPrivacyCAWebService2/*,Main.java" />
-		</apt>
+		</javac>
 		<jar jarfile="clientlib/HisPrivacyCAWebServices2-client.jar" basedir="client" />
 		<delete dir="client" />
 	</target>
