@@ -13,13 +13,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 package com.intel.openAttestation.manifest.hibernate.dao;
 
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import com.intel.openAttestation.manifest.hibernate.domain.OEM;
-import com.intel.openAttestation.manifest.hibernate.domain.OS;
+
+import com.intel.openAttestation.manifest.hibernate.domain.MLE;
+import com.intel.openAttestation.manifest.hibernate.domain.PcrWhiteList;
 import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
 
 /**
@@ -29,22 +30,22 @@ import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
  * @version OpenAttestation
  *
  */
-public class OEMDAO {
+public class PcrWhiteListDAO {
 
 	/**
 	 * Constructor to start a hibernate transaction in case one has not
 	 * already been started 
 	 */
-	public OEMDAO() {
+	public PcrWhiteListDAO() {
 	}
 	
-	public OEM addOEMEntry(OEM OEMEntry){
+	public void addPcrEntry(PcrWhiteList pcrEntry){
 		try {
 			HibernateUtilHis.beginTransaction();
 			//OEM.setCreateTime(new Date());
-			HibernateUtilHis.getSession().save(OEMEntry);
+			HibernateUtilHis.getSession().save(pcrEntry);
 			HibernateUtilHis.commitTransaction();
-			return OEMEntry;
+			//return oemEntry;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
 			e.printStackTrace();
@@ -55,19 +56,10 @@ public class OEMDAO {
 
 	}
 	
-	public void editOEMEntry (OEM oemEntry){
+	public void editPcrEntry (PcrWhiteList pcrEntry){
 		try {
 			HibernateUtilHis.beginTransaction();
-			Session session = HibernateUtilHis.getSession();
-			
-			Query query = session.createQuery("from OEM a where a.Name = :name");
-			query.setString("name", oemEntry.getName());
-			List list = query.list();
-			if (list.size() < 1){
-				throw new Exception ("Object not found");
-			}
-			OEM oemOld = (OEM)list.get(0);
-			oemOld.setDescription(oemEntry.getDescription());
+			HibernateUtilHis.getSession().saveOrUpdate(pcrEntry);
 			HibernateUtilHis.commitTransaction();
 			//return oemEntry;
 		} catch (Exception e) {
@@ -79,20 +71,20 @@ public class OEMDAO {
 		}
 		
 	}
-
 	
-	public void DeleteOEMEntry (String Name){
+	public void deletePcrEntry (String pcrName, Long mleId){
 		try {
 			HibernateUtilHis.beginTransaction();
 			Session session = HibernateUtilHis.getSession();
-			Query query = session.createQuery("from OEM a where a.Name = :NAME");
-			query.setString("NAME", Name);
+			Query query = session.createQuery("from PcrWhiteList a where a.pcrName = :name and a.mle.MLEID = :mleid");
+			query.setString("name", pcrName);
+			query.setLong("mleid", mleId);
 			List list = query.list();
 			if (list.size() < 1){
 				throw new Exception ("Object not found");
 			}
-			OEM OEMEntry = (OEM)list.get(0);
-			session.delete(OEMEntry);
+			PcrWhiteList pcrEntry = (PcrWhiteList)list.get(0);
+			session.delete(pcrEntry);
 			HibernateUtilHis.commitTransaction();
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
@@ -103,38 +95,14 @@ public class OEMDAO {
 		}
 		
 	}
-
-//	public Long queryOEMidByName (String Name){
-//		OEM oem = new OEM();
-//		List<OEM> oemList=null;
-//		try {
-//			HibernateUtilHis.beginTransaction();
-//			Query query = HibernateUtilHis.getSession().createQuery("from OEM a where a.Name = :name");
-//			query.setString("name", Name);
-//			List list = query.list();
-//			oemList = (List<OEM>)list;
-//			if (list.size() < 1) {
-//				return 0L;
-//			} else {
-//				HibernateUtilHis.commitTransaction();
-//				return oemList.get(0).getOEMID();
-//			}
-//		} catch (Exception e) {
-//			HibernateUtilHis.rollbackTransaction();
-//			e.printStackTrace();
-//			throw new RuntimeException(e);
-//		}finally{
-//			HibernateUtilHis.closeSession();
-//		}
-//		
-//	}
 	
-	public boolean isOEMExisted(String Name){
+	public boolean isPcrExisted(String pcrName, Long mleId){
 		boolean flag =false;
 		try {
 			HibernateUtilHis.beginTransaction();
-			Query query = HibernateUtilHis.getSession().createQuery("from OEM a where a.Name = :value");
-			query.setString("value", Name);
+			Query query = HibernateUtilHis.getSession().createQuery("from PcrWhiteList a where a.pcrName = :name and a.mle.MLEID = :mleid");
+			query.setString("name", pcrName);
+			query.setLong("mleid", mleId);
 			List list = query.list();
 		
 			if (list.size() < 1) {
@@ -153,5 +121,61 @@ public class OEMDAO {
 		}
 	}
 
-
+	public PcrWhiteList queryPcrByOEMid (String Name, String Version, String OEMname, String PcrName){
+		List<PcrWhiteList> pcrList = null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("select c from MLE a, OEM b, PcrWhiteList c where a.Name = :name and a.Version = :version and a.oem.OEMID = b.OEMID and b.Name = :oem_name and a.MLEID = c.mle.MLEID and c.pcrName = :pcr_name");
+			query.setString("name", Name);
+			query.setString("version", Version);
+			query.setString("oem_name", OEMname);
+			query.setString("pcr_name", PcrName);
+			List list = query.list();
+			pcrList = (List<PcrWhiteList>)list;
+			if (list.size() < 1) 
+			{
+				return null;
+			} else {
+				HibernateUtilHis.commitTransaction();
+				return (PcrWhiteList)pcrList.get(0);
+			}
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+		
+	}
+	
+	public PcrWhiteList queryPcrByOSid (String Name, String Version, String OSname, String OSversion, String PcrName){
+		List<PcrWhiteList> pcrList = null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("select c from MLE a, OS b, PcrWhiteList c where a.Name = :name and a.Version = :version and a.os.ID = b.ID and b.Name = :os_name and b.Version = :os_version and a.MLEID = c.mle.MLEID and c.pcrName = :pcr_name");
+			query.setString("name", Name);
+			query.setString("version", Version);
+			query.setString("os_name", OSname);
+			query.setString("os_version", OSversion);
+			query.setString("pcr_name", PcrName);
+			List list = query.list();
+			pcrList = (List<PcrWhiteList>)list;
+			if (list.size() < 1) 
+			{
+				return null;
+			} else {
+				HibernateUtilHis.commitTransaction();
+				return (PcrWhiteList)pcrList.get(0);
+			}
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+		
+	}
+	
 }

@@ -31,5 +31,7 @@
 
 		<mapping resource="com/intel/openAttestation/manifest/hibernate/mapping/OEM.hbm.xml"/>
 		<mapping resource="com/intel/openAttestation/manifest/hibernate/mapping/OS.hbm.xml"/>
+		<mapping resource="com/intel/openAttestation/manifest/hibernate/mapping/PcrWhiteList.hbm.xml"/>
+		<mapping resource="com/intel/openAttestation/manifest/hibernate/mapping/MLE.hbm.xml"/>
 	</session-factory>
 </hibernate-configuration>

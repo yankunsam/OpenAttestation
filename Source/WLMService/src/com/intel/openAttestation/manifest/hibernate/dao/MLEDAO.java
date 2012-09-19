@@ -18,58 +18,37 @@ import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import com.intel.openAttestation.manifest.hibernate.domain.MLE;
 import com.intel.openAttestation.manifest.hibernate.domain.OEM;
-import com.intel.openAttestation.manifest.hibernate.domain.OS;
 import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
 
-/**
- * This class serves as a central location for updates and queries against 
- * the OEM table
- * @author intel
- * @version OpenAttestation
- *
- */
-public class OEMDAO {
+
+public class MLEDAO {
 
 	/**
 	 * Constructor to start a hibernate transaction in case one has not
 	 * already been started 
 	 */
-	public OEMDAO() {
+	public MLEDAO() {
 	}
 	
-	public OEM addOEMEntry(OEM OEMEntry){
+	public MLE queryMLEidByNameAndVersionAndOEMid (String Name, String Version, String OEMname){
+		List<MLE> mleList = null;
 		try {
 			HibernateUtilHis.beginTransaction();
-			//OEM.setCreateTime(new Date());
-			HibernateUtilHis.getSession().save(OEMEntry);
-			HibernateUtilHis.commitTransaction();
-			return OEMEntry;
-		} catch (Exception e) {
-			HibernateUtilHis.rollbackTransaction();
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}finally{
-			HibernateUtilHis.closeSession();
-		}
-
-	}
-	
-	public void editOEMEntry (OEM oemEntry){
-		try {
-			HibernateUtilHis.beginTransaction();
-			Session session = HibernateUtilHis.getSession();
-			
-			Query query = session.createQuery("from OEM a where a.Name = :name");
-			query.setString("name", oemEntry.getName());
+			Query query = HibernateUtilHis.getSession().createQuery("select a from MLE a, OEM b where a.Name = :name and a.Version = :version and a.oem.OEMID = b.OEMID and b.Name = :oem_name");
+			query.setString("name", Name);
+			query.setString("version", Version);
+			query.setString("oem_name", OEMname);
 			List list = query.list();
-			if (list.size() < 1){
-				throw new Exception ("Object not found");
+			mleList = (List<MLE>)list;
+			if (list.size() < 1) 
+			{
+				return null;
+			} else {
+				HibernateUtilHis.commitTransaction();
+				return (MLE)mleList.get(0);
 			}
-			OEM oemOld = (OEM)list.get(0);
-			oemOld.setDescription(oemEntry.getDescription());
-			HibernateUtilHis.commitTransaction();
-			//return oemEntry;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
 			e.printStackTrace();
@@ -79,21 +58,25 @@ public class OEMDAO {
 		}
 		
 	}
-
 	
-	public void DeleteOEMEntry (String Name){
+	public MLE queryMLEidByNameAndVersionAndOSid (String Name, String Version, String OSname, String OSversion){
+		List<MLE> mleList = null;
 		try {
 			HibernateUtilHis.beginTransaction();
-			Session session = HibernateUtilHis.getSession();
-			Query query = session.createQuery("from OEM a where a.Name = :NAME");
-			query.setString("NAME", Name);
+			Query query = HibernateUtilHis.getSession().createQuery("select a from MLE a, OS b where a.Name = :name and a.Version = :version and a.os.ID = b.ID and b.Name = :os_name and b.Version = :os_version");
+			query.setString("name", Name);
+			query.setString("version", Version);
+			query.setString("os_name", OSname);
+			query.setString("os_version", OSversion);
 			List list = query.list();
-			if (list.size() < 1){
-				throw new Exception ("Object not found");
+			mleList = (List<MLE>)list;
+			if (list.size() < 1) 
+			{
+				return null;
+			} else {
+				HibernateUtilHis.commitTransaction();
+				return (MLE)mleList.get(0);
 			}
-			OEM OEMEntry = (OEM)list.get(0);
-			session.delete(OEMEntry);
-			HibernateUtilHis.commitTransaction();
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
 			e.printStackTrace();
@@ -103,8 +86,8 @@ public class OEMDAO {
 		}
 		
 	}
-
-//	public Long queryOEMidByName (String Name){
+//	
+//	public Long queryMLEidByNameAndVersionAndOemid (String Name, String Version, ){
 //		OEM oem = new OEM();
 //		List<OEM> oemList=null;
 //		try {
@@ -129,29 +112,4 @@ public class OEMDAO {
 //		
 //	}
 	
-	public boolean isOEMExisted(String Name){
-		boolean flag =false;
-		try {
-			HibernateUtilHis.beginTransaction();
-			Query query = HibernateUtilHis.getSession().createQuery("from OEM a where a.Name = :value");
-			query.setString("value", Name);
-			List list = query.list();
-		
-			if (list.size() < 1) {
-				flag =  false;
-			} else {
-				flag = true;
-			}
-			HibernateUtilHis.commitTransaction();
-			return flag;
-		} catch (Exception e) {
-			HibernateUtilHis.rollbackTransaction();
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}finally{
-			HibernateUtilHis.closeSession();
-		}
-	}
-
-
 }
