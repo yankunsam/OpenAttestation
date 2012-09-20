@@ -98,9 +98,9 @@ create table HOST
 create table MLE
 (
    ID                   int not null auto_increment,
-   OEM_ID               int not null,
-   HOST_ID              int not null,
-   OS_ID                int not null,
+   OEM_ID               int,
+   HOST_ID              int,
+   OS_ID                int,
    NAME                 varchar(50),
    VERSION              varchar(100),
    ATTESTATION_TYPE     varchar(50),
@@ -138,32 +138,11 @@ create table OS
 create table PCR_WHITE_LIST
 (
    ID                   int not null auto_increment,
-   MLE_ID               int not null,
+   MLE_ID               int,
    PCR_NAME             varchar(10),
    PCR_DIGEST           varchar(100) default NULL,
    primary key (ID)
 );
-
-alter table ATTEST_REQUEST add constraint FK_FK_ATTEST_HOST foreign key (HOST_ID)
-      references HOST (ID) on delete restrict on update restrict;
-
-alter table ATTEST_REQUEST add constraint FK_FK_Attest_Audit foreign key (AUDIT_LOG_ID)
-      references AUDIT_LOG (ID) on delete restrict on update restrict;
-
-alter table ATTEST_REQUEST add constraint FK_FK_Attest_Machine foreign key (MACHINE_ID)
-      references MACHINE_CERT (ID) on delete restrict on update restrict;
-
-alter table MLE add constraint FK_FK_HOST_MLE foreign key (HOST_ID)
-      references HOST (ID) on delete restrict on update restrict;
-
-alter table MLE add constraint FK_FK_MLE_OEM foreign key (OEM_ID)
-      references OEM (ID) on delete restrict on update restrict;
-
-alter table MLE add constraint FK_FK_MLE_OS foreign key (OS_ID)
-      references OS (ID) on delete restrict on update restrict;
-
-alter table PCR_WHITE_LIST add constraint FK_FK_MLE_WHITE_LIST foreign key (MLE_ID)
-      references MLE (ID) on delete restrict on update restrict;
 
 /*==============================================================*/
 /* End 								*/
