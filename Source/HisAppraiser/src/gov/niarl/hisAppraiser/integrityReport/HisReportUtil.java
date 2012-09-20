@@ -264,7 +264,7 @@ public class HisReportUtil {
 	     	if (latestPolledRequest.getId()!=null && latestPolledRequest.getResult()==null)
 	     	{
 				 latestPolledRequest.setAuditLog(newAuditLog);
-				 latestPolledRequest = AttestService.validatePCRReport(latestPolledRequest);
+				 latestPolledRequest = AttestService.validatePCRReport(latestPolledRequest, machineNameInput);
 				 attestDao.updateRequest(latestPolledRequest);
 			 }
 	     	System.out.println("------------------------OpenAttestation complete!------------------------------------------");

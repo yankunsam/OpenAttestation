@@ -103,42 +103,49 @@ public class HostBean {
 		return BIOSName;
 	}
 	
+	@XmlElement(name="BIOS_Name")
 	public void setBIOSName(String bIOSName) {
 		BIOSName = bIOSName;
 	}
 	public String getBIOSVersion() {
 		return BIOSVersion;
 	}
+	@XmlElement(name="BIOS_Version")
 	public void setBIOSVersion(String bIOSVersion) {
 		BIOSVersion = bIOSVersion;
 	}
 	public String getBIOSOem() {
 		return BIOSOem;
 	}
+	@XmlElement(name="BIOS_Oem")
 	public void setBIOSOem(String bIOSOem) {
 		BIOSOem = bIOSOem;
 	}
 	public String getVMMVersion() {
 		return VMMVersion;
 	}
+	@XmlElement(name="VMM_Version")
 	public void setVMMVersion(String vMMVersion) {
 		VMMVersion = vMMVersion;
 	}
 	public String getVMMOSName() {
 		return VMMOSName;
 	}
+	@XmlElement(name="VMM_OSName")
 	public void setVMMOSName(String vMMOSName) {
 		VMMOSName = vMMOSName;
 	}
 	public String getVMMOSVersion() {
 		return VMMOSVersion;
 	}
+	@XmlElement(name="VMM_OSVersion")
 	public void setVMMOSVersion(String vMMOSVersion) {
 		VMMOSVersion = vMMOSVersion;
 	}
 	public String getVMMName() {
 		return VMMName;
 	}
+	@XmlElement(name="VMM_Name")
 	public void setVMMName(String vMMName) {
 		VMMName = vMMName;
 	}

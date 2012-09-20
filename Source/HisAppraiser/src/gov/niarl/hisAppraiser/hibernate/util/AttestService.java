@@ -12,9 +12,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 package gov.niarl.hisAppraiser.hibernate.util;
+import gov.niarl.hisAppraiser.hibernate.dao.AttestDao;
 import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
 import gov.niarl.hisAppraiser.hibernate.domain.AuditLog;
 import gov.niarl.hisAppraiser.hibernate.domain.PCRManifest;
+import gov.niarl.hisAppraiser.hibernate.domain.PcrWhiteList;
 import gov.niarl.hisAppraiser.hibernate.util.ResultConverter.AttestResult;
 
 import java.io.IOException;
@@ -39,23 +41,34 @@ public class AttestService {
 	 * @param attestRequest of intending to validate. 
 	 * @return 
 	 */
-	public static AttestRequest validatePCRReport(AttestRequest attestRequest){
+	public static AttestRequest validatePCRReport(AttestRequest attestRequest,String machineNameInput){
+		attestRequest.getAuditLog();
+		List<PcrWhiteList> whiteList = new ArrayList<PcrWhiteList>();
+		AttestDao dao = new AttestDao();
+		boolean flag = true;
+		whiteList = dao.getPcrValue(machineNameInput);
+		
 		System.out.println(attestRequest.getId() +":" +attestRequest.getAuditLog().getId());
 		
 		 if(attestRequest.getAuditLog()!= null && attestRequest.getIsConsumedByPollingWS()){
-			 AuditLog auditLog = attestRequest.getAuditLog();
+			 
+			AuditLog auditLog = attestRequest.getAuditLog();
 			HashMap<Integer,String> pcrs = new HashMap<Integer, String>();
 			pcrs = generatePcrsByAuditId(auditLog);
-			List<PCRManifest> manifestPcrs = new ArrayList<PCRManifest>();
 			
-			for(Integer i: AttestUtil.generatePcrValidatedPositions()){
-				PCRManifest  pcr = new PCRManifest();
-				pcr.setPCRNumber(i);
-				pcr.setPCRValue(pcrs.get(i));
-				manifestPcrs.add(pcr);
+			if (whiteList!=null && whiteList.size() != 0){
+				for(int i=0; i<whiteList.size(); i++){
+					int pcrNumber = Integer.valueOf(whiteList.get(i).getPcrName()).intValue();
+						if(!whiteList.get(i).getPcrDigest().equalsIgnoreCase(pcrs.get(pcrNumber))){
+							flag = false;
+							break;
+						}
+				}
+			} else {
+				flag = false;
 			}
-//			if (!compareManifestPCR(manifestPcrs) .equals("")){
-			if (compareManifestPCR(manifestPcrs).length() != 0){
+			
+			if (!flag){
 				attestRequest.setResult(ResultConverter.getIntFromResult(AttestResult.UN_TRUSTED));
 			}
 			else
@@ -76,6 +89,7 @@ public class AttestService {
 	public static String compareManifestPCR(List<PCRManifest> manifestPcrs){
 		GenericEntity<List<PCRManifest>> entity = new GenericEntity<List<PCRManifest>>(manifestPcrs) {}; 
 		AttestUtil.loadProp();
+		//manifestPcrs.
 		WebResource resource = AttestUtil.getClient(AttestUtil.getManifestWebServicesUrl());
 	    ClientResponse res = resource.path("/Validate").type("application/json").
   	              accept("application/json").post(ClientResponse.class,entity);

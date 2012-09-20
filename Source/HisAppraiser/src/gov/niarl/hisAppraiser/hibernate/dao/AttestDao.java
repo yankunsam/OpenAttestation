@@ -13,13 +13,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 package gov.niarl.hisAppraiser.hibernate.dao;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 
 
 import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
+import gov.niarl.hisAppraiser.hibernate.domain.MLE;
+import gov.niarl.hisAppraiser.hibernate.domain.PcrWhiteList;
 import gov.niarl.hisAppraiser.hibernate.util.HibernateUtilHis;
 
 public class AttestDao {
@@ -82,5 +86,33 @@ public class AttestDao {
 		} else {
 			return (AttestRequest) list.iterator().next();
 		}
+	}
+	
+	/**
+	 * get pcr_name, pcr_digest from table prc_white_list, mle, host
+	 * @param hostName
+	 * @return
+	 */
+	public List<PcrWhiteList> getPcrValue(String hostName){
+		hostName = hostName.toLowerCase();
+		List<PcrWhiteList> pcrs = new ArrayList<PcrWhiteList>();
+		Long mleId =0L;
+		Query query = HibernateUtilHis.getSession().createQuery("select a from MLE a inner join a.host b where b.HostName = :hostName");
+		query.setString("hostName", hostName);
+		List list = query.list();
+		List prcList;
+		
+		if (list.size()>0) {
+			Iterator iterator  = list.iterator();  
+			while (iterator.hasNext()){
+				mleId = ((MLE)iterator.next()).getMLEID();
+				query = HibernateUtilHis.getSession().createQuery("select a from PcrWhiteList a inner join a.mle b where b.MLEID = :mleId");
+				query.setLong("mleId", mleId);
+				prcList = query.list();
+				pcrs.addAll((List<PcrWhiteList>)prcList);
+			}
+		}
+		
+		return pcrs;
 	}
 }

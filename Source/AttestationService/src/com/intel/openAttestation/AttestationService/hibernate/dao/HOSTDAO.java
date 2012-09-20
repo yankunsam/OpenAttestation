@@ -13,15 +13,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 package com.intel.openAttestation.AttestationService.hibernate.dao;
 
+import gov.niarl.hisAppraiser.hibernate.domain.MachineCert;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import com.intel.openAttestation.AttestationService.hibernate.domain.HOST;
+import gov.niarl.hisAppraiser.hibernate.domain.HOST;
 import com.intel.openAttestation.AttestationService.hibernate.util.HibernateUtilHis;
 //import com.intel.openAttestation.hibernate.domain.AttestRequest;
+import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
 
 /**
  * This class serves as a central location for updates and queries against 
@@ -94,8 +96,8 @@ public class HOSTDAO {
 			if (list.size() < 1){
 				throw new Exception ("Object not found");
 			}
-			HOST OEMEntry = (HOST)list.get(0);
-			session.delete(OEMEntry);
+			HOST hostEntry = (HOST)list.get(0);
+			session.delete(hostEntry);
 			HibernateUtilHis.commitTransaction();
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
@@ -159,5 +161,157 @@ public class HOSTDAO {
 			HibernateUtilHis.closeSession();
 		}
 	}
+	
+	/**
+	 * get requests by requestId
+	 * @param requestId
+	 * @return
+	 */
+	public List<AttestRequest> getRequestsByRequestId(String requestId){
+		System.out.println("dao requestId:"+requestId);
+		List<AttestRequest> reqs = null;
+		try{
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("from AttestRequest a where  a.requestId= :requestId");
+			query.setString("requestId", requestId);
+			List list = query.list();
+			if (list.size() < 1) {
+				reqs =  new ArrayList<AttestRequest>();
+			} else {
+				reqs =  (List<AttestRequest>) list;
+			}
+			HibernateUtilHis.commitTransaction();
+			return reqs;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+			
+	}
+	
+	/**
+	 * Obtain the active MachineCert row for a given machine name.
+	 * @param machineName Name of the machine of interest.
+	 * @return The MachineCert entry or null if the machine name has no
+	 * active registrations
+	 */
+	public MachineCert getMachineCert(String machineName) {
+		machineName = machineName.toLowerCase();
+		MachineCert cert = null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("from MachineCert m where m.machineName = :machineName and m.active = :active");
+			query.setString("machineName", machineName);
+			query.setBoolean("active", true);
+			List list = query.list();
+			if (list.size() < 1) {
+				cert = null;
+			} else {
+				cert = (MachineCert) list.iterator().next();
+			}
+			HibernateUtilHis.commitTransaction();
+			return cert;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}		
+	}
+	
+	/**
+	 * save a request for given request
+	 * @param req
+	 */
+	public  void saveRequest(AttestRequest req){
+		try {
+			HibernateUtilHis.beginTransaction();
+			HibernateUtilHis.getSession().save(req);
+			HibernateUtilHis.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+	}
 
+	/*
+	 * obtain the last attested attestRequest row for a given host name.
+	 * @Param hostName Name of the machine of interest.
+	 * @Return The AttestRequest entry
+	 */
+	public AttestRequest getLastAttestedRequest(String hostName){
+		AttestRequest req = null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			hostName = hostName.toLowerCase();
+			Query query = HibernateUtilHis.getSession().createQuery("from AttestRequest a where a.hostName = :hostName and" +
+					                " a.result is not null order by a.validateTime desc");
+			query.setString("hostName", hostName);
+			List list = query.list();
+			if (list.size() < 1) {
+				req = new AttestRequest();
+			} else {
+				req = (AttestRequest) list.iterator().next();
+			}
+			HibernateUtilHis.commitTransaction();
+			return req;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+	}
+	
+	/*
+	 * update the request row for a given request
+	 * @Param req of the request of interest.
+	 * 
+	 */
+	public AttestRequest updateRequest(AttestRequest req){
+		try {
+			HibernateUtilHis.beginTransaction();
+			Session session = HibernateUtilHis.getSession();
+			session.update(req);
+			HibernateUtilHis.commitTransaction();
+			return  (AttestRequest)session.get(AttestRequest.class, req.getId());
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+	}
+	
+	/**
+	 * get request by id
+	 * @param id
+	 * @return
+	 */
+	public AttestRequest getRequestById(Long id){
+		AttestRequest req = null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("from AttestRequest a where a.id = :id");
+			query.setLong("id", id);
+			List list = query.list();
+			if (list.size() < 1) {
+				req = new AttestRequest();
+			} else {
+				req =  (AttestRequest) list.iterator().next();
+			}
+			HibernateUtilHis.commitTransaction();
+			return req;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+			
+	}
 }

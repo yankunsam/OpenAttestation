@@ -24,10 +24,18 @@
                 <!-- Echo all executed SQL to stdout -->
                 <property name="show_sql">false</property>
 
-
 		<!-- Drop and re-create the database schema on startup -->
 		<!-- <property name="hbm2ddl.auto">create</property> -->
 
-		<mapping resource="com/intel/openAttestation/AttestationService/hibernate/mapping/HOST.hbm.xml"/>
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/HOST.hbm.xml"/>
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/attestRequest.hbm.xml"/>
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/audit_log.hbm.xml"/>
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/machine_cert.hbm.xml"/>
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/alerts.hbm.xml"/>
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/system_constants.hbm.xml"/>
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/MLE.hbm.xml"/>
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/OEM.hbm.xml"/>
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/OS.hbm.xml"/>
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/PcrWhiteList.hbm.xml"/>
 	</session-factory>
 </hibernate-configuration>
