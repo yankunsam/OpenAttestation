@@ -179,11 +179,11 @@ cp -R /tmp/OAT_Server_Install/HisWebServices $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/we
 unzip /tmp/OAT_Server_Install/OpenAttestationAdminConsole.war -d /tmp/OAT_Server_Install/OpenAttestationAdminConsole
 unzip /tmp/OAT_Server_Install/OpenAttestationManifestWebServices.war -d /tmp/OAT_Server_Install/OpenAttestationManifestWebServices
 unzip /tmp/OAT_Server_Install/OpenAttestationWebServices.war -d /tmp/OAT_Server_Install/OpenAttestationWebServices
-
+unzip /tmp/OAT_Server_Install/WLMService.war -d /tmp/OAT_Server_Install/WLMService
 cp -R /tmp/OAT_Server_Install/OpenAttestationAdminConsole $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
 cp -R /tmp/OAT_Server_Install/OpenAttestationManifestWebServices $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
 cp -R /tmp/OAT_Server_Install/OpenAttestationWebServices $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
-
+cp -R /tmp/OAT_Server_Install/WLMService $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
 echo "$TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties has updated"
 
 mkdir -p /etc/oat-appraiser/
@@ -301,7 +301,7 @@ done
 rm -rf $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2.war
 cp /${name}/HisPrivacyCAWebServices2.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
 #unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2.war -d $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2
-
+service tomcat6 restart
 # This for loop makes the rpm wait until the .war file has unpacked before attempting to access the files that will be created
 for((i = 1; i < 60; i++))
 do
