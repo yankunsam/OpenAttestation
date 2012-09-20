@@ -41,8 +41,6 @@ CREATE TABLE `attest_request` (
 /*==============================================================*/
 
 
-drop table if exists ATTEST_REQUEST;
-
 drop table if exists HOST;
 
 drop table if exists MLE;
@@ -53,29 +51,6 @@ drop table if exists OS;
 
 drop table if exists PCR_WHITE_LIST;
 
-/*==============================================================*/
-/* Table: ATTEST_REQUEST                                        */
-/*==============================================================*/
-create table ATTEST_REQUEST
-(
-   ID                   int not null auto_increment,
-   MACHINE_ID           int,
-   HOST_ID              int,
-   AUDIT_LOG_ID         int,
-   REQUEST_ID           varchar(50) default NULL,
-   HOST_NAME            varchar(50) default NULL,
-   REQUEST_TIME         datetime default NULL,
-   NEXT_ACTION          int,
-   IS_CONSUMED_BY_POLLINGWS tinyint(1) default NULL,
-   REQUEST_HOST         varchar(50) default NULL,
-   COUNT                int,
-   PCRMASK              varchar(50) default NULL,
-   RESULT               int,
-   IS_SYNC              tinyint(1) default NULL,
-   VALIDATE_TIME        datetime default NULL,
-   IS_VERIFIED_COMP     tinyint(1),
-   primary key (ID)
-);
 
 /*==============================================================*/
 /* Table: HOST                                                  */
