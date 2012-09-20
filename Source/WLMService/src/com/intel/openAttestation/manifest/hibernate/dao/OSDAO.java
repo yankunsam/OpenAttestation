@@ -105,33 +105,6 @@ public class OSDAO {
 		
 	}
 
-
-//	public Long queryOSidByNameAndVersion (String Name, String Version){
-//		OS os = new OS();
-//		List<OS> osList=null;
-//		try {
-//			HibernateUtilHis.beginTransaction();
-//			Query query = HibernateUtilHis.getSession().createQuery("from OS a where a.Name = :name and a.Version = :version");
-//			query.setString("name", Name);
-//			query.setString("version", Version);
-//			List list = query.list();
-//			osList = (List<OS>)list;
-//			if (list.size() < 1) {
-//				HibernateUtilHis.commitTransaction();
-//				return 0L;
-//			} else {
-//				HibernateUtilHis.commitTransaction();
-//				return osList.get(0).getID();
-//			}
-//		} catch (Exception e) {
-//			HibernateUtilHis.rollbackTransaction();
-//			e.printStackTrace();
-//			throw new RuntimeException(e);
-//		}finally{
-//			HibernateUtilHis.closeSession();
-//		}
-//		
-//	}
 	
 	public boolean isOSExisted(String osName, String osVersion){
 		boolean flag =false;
@@ -149,6 +122,29 @@ public class OSDAO {
 			}
 			HibernateUtilHis.commitTransaction();
 			return flag;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+	}
+       
+      	public OS getOS(String Name, String Version){
+		OS os =null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("from OS os " +
+					"where os.Name = :osName and os.Version= :osVersion");
+			query.setString("osName", Name);
+			query.setString("osVersion", Version);
+			List list = query.list();
+			if (list.size() >= 1) {
+				os = (OS)list.iterator().next();
+			} 
+			HibernateUtilHis.commitTransaction();
+			return os;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
 			e.printStackTrace();

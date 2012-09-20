@@ -177,5 +177,49 @@ public class PcrWhiteListDAO {
 		}
 		
 	}
+
+    public void deletePcrByMleID(Long mleId){
+        try {
+                HibernateUtilHis.beginTransaction();
+                Session session = HibernateUtilHis.getSession();
+                Query query = session.createQuery("from PcrWhiteList a where a.mle.MLEID = :mleid");
+                query.setLong("mleid", mleId);
+                List list = query.list();
+                for(int i=0; i < list.size(); i++){
+                	session.delete((PcrWhiteList)list.get(i));
+                	HibernateUtilHis.commitTransaction();
+                }
+        } catch (Exception e) {
+                HibernateUtilHis.rollbackTransaction();
+                e.printStackTrace();
+                throw new RuntimeException(e);
+        }finally{
+                HibernateUtilHis.closeSession();
+        }
+
+    }
+
+
+    public PcrWhiteList getPcr(String pcrName, Long mleId){
+        try {
+        	PcrWhiteList pcr = null;
+            HibernateUtilHis.beginTransaction();
+                Query query = HibernateUtilHis.getSession().createQuery("from PcrWhiteList a where a.pcrName = :name and a.mle.MLEID = :mleid");
+                query.setString("name", pcrName);
+                query.setLong("mleid", mleId);
+                List list = query.list();
+                if (list.size() >= 1)
+                	pcr = (PcrWhiteList)list.iterator().next();
+                HibernateUtilHis.commitTransaction();
+                return pcr;
+                
+        } catch (Exception e) {
+                HibernateUtilHis.rollbackTransaction();
+                e.printStackTrace();
+                throw new RuntimeException(e);
+        }finally{
+                HibernateUtilHis.closeSession();
+        }
+    }
 	
 }

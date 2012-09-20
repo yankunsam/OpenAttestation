@@ -103,32 +103,6 @@ public class OEMDAO {
 		}
 		
 	}
-
-//	public Long queryOEMidByName (String Name){
-//		OEM oem = new OEM();
-//		List<OEM> oemList=null;
-//		try {
-//			HibernateUtilHis.beginTransaction();
-//			Query query = HibernateUtilHis.getSession().createQuery("from OEM a where a.Name = :name");
-//			query.setString("name", Name);
-//			List list = query.list();
-//			oemList = (List<OEM>)list;
-//			if (list.size() < 1) {
-//				return 0L;
-//			} else {
-//				HibernateUtilHis.commitTransaction();
-//				return oemList.get(0).getOEMID();
-//			}
-//		} catch (Exception e) {
-//			HibernateUtilHis.rollbackTransaction();
-//			e.printStackTrace();
-//			throw new RuntimeException(e);
-//		}finally{
-//			HibernateUtilHis.closeSession();
-//		}
-//		
-//	}
-	
 	public boolean isOEMExisted(String Name){
 		boolean flag =false;
 		try {
@@ -152,6 +126,25 @@ public class OEMDAO {
 			HibernateUtilHis.closeSession();
 		}
 	}
-
+	public OEM getOEM(String Name){
+		OEM oem =null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("from OEM a where a.Name = :value");
+			query.setString("value", Name);
+			List list = query.list();
+			if (list.size() >= 1) {
+				oem = (OEM)list.iterator().next();
+			} 
+			HibernateUtilHis.commitTransaction();
+			return oem;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+	}
 
 }

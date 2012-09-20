@@ -18,8 +18,11 @@ import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
+
+import com.intel.openAttestation.manifest.hibernate.domain.HOST;
 import com.intel.openAttestation.manifest.hibernate.domain.MLE;
 import com.intel.openAttestation.manifest.hibernate.domain.OEM;
+import com.intel.openAttestation.manifest.hibernate.domain.OS;
 import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
 
 
@@ -86,30 +89,174 @@ public class MLEDAO {
 		}
 		
 	}
-//	
-//	public Long queryMLEidByNameAndVersionAndOemid (String Name, String Version, ){
-//		OEM oem = new OEM();
-//		List<OEM> oemList=null;
-//		try {
-//			HibernateUtilHis.beginTransaction();
-//			Query query = HibernateUtilHis.getSession().createQuery("from OEM a where a.Name = :name");
-//			query.setString("name", Name);
-//			List list = query.list();
-//			oemList = (List<OEM>)list;
-//			if (list.size() < 1) {
-//				return 0L;
-//			} else {
-//				HibernateUtilHis.commitTransaction();
-//				return oemList.get(0).getOEMID();
-//			}
-//		} catch (Exception e) {
-//			HibernateUtilHis.rollbackTransaction();
-//			e.printStackTrace();
-//			throw new RuntimeException(e);
-//		}finally{
-//			HibernateUtilHis.closeSession();
-//		}
-//		
-//	}
+
+         public boolean isOEMExisted(String Name){
+		boolean flag =false;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("from OEM a where a.Name = :value");
+			query.setString("value", Name);
+			List list = query.list();
+		
+			if (list.size() < 1) {
+				flag =  false;
+			} else {
+				flag = true;
+			}
+			HibernateUtilHis.commitTransaction();
+			return flag;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+	}
 	
+	
+	
+	public OEM addOEMEntry(OEM OEMEntry){
+		try {
+			HibernateUtilHis.beginTransaction();
+			HibernateUtilHis.getSession().save(OEMEntry);
+			HibernateUtilHis.commitTransaction();
+			return OEMEntry;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+
+	}
+	
+
+	public MLE addMLEEntry(MLE MLEEntry){
+		try {
+			HibernateUtilHis.beginTransaction();
+			HibernateUtilHis.getSession().save(MLEEntry);
+			HibernateUtilHis.commitTransaction();
+			return MLEEntry;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+
+	}
+	
+
+	public MLE getMLE(String Name,String Version){
+		try{
+		    MLE mle = null;
+		    Query query = HibernateUtilHis.getSession().createQuery("from MLE m where m.Name = :name and m.Version = :version");
+		    query.setString("name", Name);
+		    query.setString("version", Version);
+		    List list = query.list();
+		    if (list.size() >= 1) {
+		    	mle=(MLE)list.get(0);
+			} 
+		    return mle;
+		}catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+	}
+	
+	public void editMLEDesc(MLE mle, String Desc){
+		try{
+			HibernateUtilHis.beginTransaction();
+			Session session = HibernateUtilHis.getSession();
+		    Query query = HibernateUtilHis.getSession().createQuery("from MLE m where m.Name = :name and m.Version = :version");
+		    query.setString("name", mle.getName());
+		    query.setString("version", mle.getVersion());
+            List list = query.list();
+            if (list.size() < 1)
+               throw new Exception ("Object not found");
+            MLE mle2 = (MLE)list.get(0);
+            mle2.setDescription(Desc);
+            HibernateUtilHis.commitTransaction();
+		}catch (Exception e) {
+            HibernateUtilHis.rollbackTransaction();
+            e.printStackTrace();
+            throw new RuntimeException(e);
+         }finally{
+            HibernateUtilHis.closeSession();
+         }
+	}
+	
+	public HOST getHostById(Long Id){
+		try {
+			HOST host = null;
+			Query query = HibernateUtilHis.getSession().createQuery("from HOST h where h.ID = :hostId");
+			query.setLong("hostId", Id);
+			List list = query.list();
+			if (list.size() >= 1) {
+				host=(HOST)list.get(0);
+			} 
+			return host;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+	}
+
+	public void DeleteOEMEntry (String OEMName){
+		try {
+			HibernateUtilHis.beginTransaction();
+			Session session = HibernateUtilHis.getSession();
+			Query query = session.createQuery("from OEM a where a.Name = :NAME");
+			query.setString("NAME", OEMName);
+			List list = query.list();
+			if (list.size() < 1){
+				throw new Exception ("Object not found");
+			}
+			OEM OEMEntry = (OEM)list.get(0);
+			session.delete(OEMEntry);
+			HibernateUtilHis.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+		
+	}
+
+
+	public void DeleteMLEEntry (String Name,String Version){
+		try {
+			HibernateUtilHis.beginTransaction();
+			Session session = HibernateUtilHis.getSession();
+			Query query = session.createQuery("from MLE a where a.Name = :NAME and a.Version = :VERSION");
+			query.setString("NAME", Name);
+			query.setString("VERSION", Version);
+			List list = query.list();
+			if (list.size() < 1){
+				throw new Exception ("Object not found");
+			}
+			MLE MLEEntry = (MLE)list.get(0);
+			session.delete(MLEEntry);
+			HibernateUtilHis.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+		
+	}
+
 }
