@@ -456,6 +456,7 @@ Build_xml()
   fi
   if test -d $OATSOURCE_DIRECTORY/AttestationService;then
     cd $OATSOURCE_DIRECTORY/AttestationService
+    cp -rf  $OATSOURCE_DIRECTORY/HisAppraiser/HisAppraiser.jar ./WebContent/WEB-INF/lib/
     ant -file build.xml
   else
     ShowLogFaild "$OATSOURCE_DIRECTORY/AttestationService"
