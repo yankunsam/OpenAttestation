@@ -18,6 +18,15 @@ else
         mkdir /var/lib/oat-appraiser/CaCerts
         mkdir /var/lib/oat-appraiser/ClientFiles
 fi
+
+if [ -d /etc/oat-appraiser ]
+then
+        rm -rf /etc/oat-appraiser
+        mkdir /etc/oat-appraiser
+else
+        mkdir /etc/oat-appraiser
+fi
+
 if [ $TOMCAT_DIR -a  -d $TOMCAT_DIR ];then
   if [[ ${TOMCAT_DIR:$((${#TOMCAT_DIR}-1)):1} == / ]];then
     TOMCAT_DIR_TMP=${TOMCAT_DIR:0:$((${#TOMCAT_DIR}-1))}
@@ -114,7 +123,8 @@ mv -f /$name/service $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/service
 rm -rf /var/lib/oat-appraiser/Certificate
 #mkdir $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/Certificate
 mkdir /var/lib/oat-appraiser/Certificate
-
+unzip /$name/setupProperties.zip -d /$name/
+mv /$name/setup.properties /etc/oat-appraiser/
 rm -R -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/*
 
 #TODO
@@ -303,7 +313,6 @@ done
 rm -rf $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2.war
 cp /${name}/HisPrivacyCAWebServices2.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
 #unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2.war -d $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2
-service tomcat6 restart
 # This for loop makes the rpm wait until the .war file has unpacked before attempting to access the files that will be created
 for((i = 1; i < 60; i++))
 do

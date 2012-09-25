@@ -288,8 +288,8 @@ RePkgInstallOatAppraiserBase()
   echo "ecSigningKeySize=$EC_SIGNING_KEY_SIZE" >> setup.properties
   echo "ecStorage=NVRAM" >> setup.properties
   mkdir -p /etc/oat-appraiser/
-  rm -rf /etc/oat-appraiser/*
-  mv setup.properties /etc/oat-appraiser/
+  zip -9 setupProperties.zip setup.properties
+  mv setupProperties.zip ../
 
   if test -d CaCerts;then
     rm -rf CaCerts

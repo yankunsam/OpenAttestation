@@ -53,6 +53,14 @@ else
         mkdir /var/lib/oat-appraiser/ClientFiles
 fi
 
+if [ -d /etc/oat-appraiser ]
+then
+        rm -rf /etc/oat-appraiser
+        mkdir /etc/oat-appraiser
+else
+        mkdir /etc/oat-appraiser
+fi
+
 if [ $TOMCAT_DIR -a  -d $TOMCAT_DIR ];then
   if [[ ${TOMCAT_DIR:$((${#TOMCAT_DIR}-1)):1} == / ]];then
     TOMCAT_DIR_TMP=${TOMCAT_DIR:0:$((${#TOMCAT_DIR}-1))}
@@ -141,6 +149,8 @@ mv -f /%{name}/service $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/service
 #mkdir $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/Certificate
 rm -rf /var/lib/oat-appraiser/Certificate
 mkdir /var/lib/oat-appraiser/Certificate
+unzip /%{name}/setupProperties.zip -d /%{name}/
+mv /%{name}/setup.properties /etc/oat-appraiser/
 
 rm -R -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/*
 
@@ -317,8 +327,7 @@ done
 
 #moves the war file to webapps folder to unpack it
 rm -rf $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2.war
-cp /%{name}/HisPrivacyCAWebServices2.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/ 
-
+cp /%{name}/HisPrivacyCAWebServices2.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
 
 # This for loop makes the rpm wait until the .war file has unpacked before attempting to access the files that will be created
 for((i = 1; i < 60; i++))
@@ -480,8 +489,19 @@ sed -i "/<\/Service>/d" $TOMCAT_INSTALL_DIR2/$TOMCAT_NAME2/conf/server.xml
 sed -i "/<\/Server>/i\\  <\/Service>"  $TOMCAT_INSTALL_DIR2/$TOMCAT_NAME2/conf/server.xml
 rm -rf /%{name}/
 #remove apache-tomcat
-if [ $TOMCAT_NAME2 == apache-tomcat-6.0.29 ];then
-rm -f -r $TOMCAT_INSTALL_DIR/apache-tomcat-6.0.29.tar.gz
+if [ -d $TOMCAT_INSTALL_DIR2/apache-tomcat-6.0.29 ];then
+rm -f -r $TOMCAT_INSTALL_DIR2/apache-tomcat-6.0.29.tar.gz
+rm -rf $TOMCAT_INSTALL_DIR2/apache-tomcat-6.0.29
+fi
+
+if [ -d /etc/oat-appraiser ]
+then
+rm -rf /etc/oat-appraiser
+fi
+
+if [ -d /var/lib/oat-appraiser ]
+then
+rm -rf /var/lib/oat-appraiser
 fi
 
 #OAT_Server
@@ -530,3 +550,4 @@ rm -rf $RPM_BUILD_ROOT
 /%{name}/OAT.zip
 /%{name}/MySQLdrop.zip
 /%{name}/service.zip
+/%{name}/setupProperties.zip
