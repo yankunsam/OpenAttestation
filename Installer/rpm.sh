@@ -319,6 +319,8 @@ RePkgInstallOatAppraiserBase()
     cp $OATSOURCE_DIRECTORY/OpenAttestationAdminConsole/OpenAttestationAdminConsole.war .
     cp $OATSOURCE_DIRECTORY/OpenAttestationManifestWebServices/OpenAttestationManifestWebServices.war .
     cp $OATSOURCE_DIRECTORY/OpenAttestationWebServices/OpenAttestationWebServices.war .
+    cp $OATSOURCE_DIRECTORY/WLMService/WLMService.war .
+    cp $OATSOURCE_DIRECTORY/AttestationService/AttestationService.war .
 #else
 #    ShowLogFaild "$OATSOURCE_DIRECTORY/OpenAttestationAdminConsole/OpenAttestationAdminConsole.war ^ $OATSOURCE_DIRECTORY/OpenAttestationManifestWebServices/OpenAttestationManifestWebServices.war ^ $OATSOURCE_DIRECTORY/OpenAttestationWebServices/OpenAttestationWebServices.war "  
 #fi
@@ -403,10 +405,18 @@ Build_xml()
     rm -rf $OATSOURCE_DIRECTORY/HisWebServices/clientlib/HisWebServices-client.jar
   fi
 
- if test -e $OATSOURCE_DIRECTORY/HisWebServices/HisWebServices.war;then
+  if test -e $OATSOURCE_DIRECTORY/HisWebServices/HisWebServices.war;then
     rm -rf $OATSOURCE_DIRECTORY/HisWebServices/HisWebServices.war
   fi 
- 
+  
+  if test -e $OATSOURCE_DIRECTORY/WLMService/WLMService.war;then
+    rm -rf $OATSOURCE_DIRECTORY/WLMService/WLMService.war
+  fi
+
+  if test -e $OATSOURCE_DIRECTORY/AttestationService/AttestationService.war;then
+    rm -rf $OATSOURCE_DIRECTORY/AttestationService/AttestationService.war
+  fi
+
   if test -e $OATSOURCE_DIRECTORY/HisPrivacyCAWebServices2/HisPrivacyCAWebServices2.war;then
     rm -rf $OATSOURCE_DIRECTORY/HisPrivacyCAWebServices2/HisPrivacyCAWebServices2.war
   fi
@@ -451,6 +461,21 @@ Build_xml()
     ShowLogFaild "$OATSOURCE_DIRECTORY/OpenAttestationWebServices"
   fi
 
+  if test -d $OATSOURCE_DIRECTORY/WLMService;then
+    cd $OATSOURCE_DIRECTORY/WLMService
+    ant -file build.xml
+  else
+    ShowLogFaild "$OATSOURCE_DIRECTORY/WLMService"
+  fi
+
+  if test -d $OATSOURCE_DIRECTORY/AttestationService;then
+    cd $OATSOURCE_DIRECTORY/AttestationService
+    cp -rf  $OATSOURCE_DIRECTORY/HisAppraiser/HisAppraiser.jar ./WebContent/WEB-INF/lib/
+    ant -file build.xml
+  else
+    ShowLogFaild "$OATSOURCE_DIRECTORY/AttestationService"
+  fi
+
   if test -e $OATSOURCE_DIRECTORY/HisAppraiser/HisAppraiser.jar;then
     ShowLogOK $OATSOURCE_DIRECTORY/HisAppraiser/HisAppraiser.jar
   else
@@ -493,7 +518,18 @@ Build_xml()
     ShowLogFaild  $OATSOURCE_DIRECTORY/HisWebServices/clientlib/HisWebServices-client.jar
   fi
  
- 
+  if test -e $OATSOURCE_DIRECTORY/WLMService/WLMService.war;then
+    ShowLogOK $OATSOURCE_DIRECTORY/WLMService/WLMService.war
+  else
+    ShowLogFaild $OATSOURCE_DIRECTORY/WLMService/WLMService.war
+  fi
+
+  if test -e $OATSOURCE_DIRECTORY/AttestationService/AttestationService.war;then
+    ShowLogOK $OATSOURCE_DIRECTORY/AttestationService/AttestationService.war
+  else
+    ShowLogFaild $OATSOURCE_DIRECTORY/AttestationService/AttestationService.war
+  fi
+
   if test -e $OATSOURCE_DIRECTORY/HisPrivacyCAWebServices2/HisPrivacyCAWebServices2.war;then
     ShowLogOK $OATSOURCE_DIRECTORY/HisPrivacyCAWebServices2/HisPrivacyCAWebServices2.war
   else

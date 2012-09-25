@@ -196,15 +196,19 @@ cp -R /tmp/OAT_Server_Install/HisWebServices $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/we
 cp  /tmp/OAT_Server_Install/OpenAttestationAdminConsole.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
 cp  /tmp/OAT_Server_Install/OpenAttestationManifestWebServices.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
 cp  /tmp/OAT_Server_Install/OpenAttestationWebServices.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
-
+cp  /tmp/OAT_Server_Install/WLMService.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
+cp  /tmp/OAT_Server_Install/AttestationService.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
 unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole.war -d $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole
 unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationManifestWebServices.war -d $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationManifestWebServices
 unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices.war -d $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices
+unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/WLMService.war -d $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/WLMService
+unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/AttestationService.war -d $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/AttestationService
 #delete the OpenAttestation war package
 rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole.war
 rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationManifestWebServices.war
 rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices.war
-
+rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/WLMService.war
+rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/AttestationService.war
  echo "$TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties has updated"
 mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices/WEB-INF/classes/OpenAttestation.properties /etc/oat-appraiser/OpenAttestationWebServices.properties
 mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties /etc/oat-appraiser/manifest.properties
