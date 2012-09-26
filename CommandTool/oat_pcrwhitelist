@@ -1,0 +1,65 @@
+#!/bin/bash
+#create mles/whitelist/pcr script
+ADD_PARM="-a"
+EDIT_PARM="-e"
+DEL_PARM="-d"
+HOST_PARM="-h"
+HOST_NAME=""
+INFO=""
+PORT=8443
+
+if [ $# -lt 4 ];then
+  echo "parm num error!"
+  exit 0
+fi
+
+if [ $2 != $HOST_PARM ];then
+  echo "-h parm error!"
+  exit 1
+else
+  HOST_NAME="$3"
+fi
+
+if [ $1 == $DEL_PARM ];then
+  INFO="`echo $4 | awk -F{ '{print $2}' | awk -F} '{print $1}' | sed  's/\"//g' | \
+         sed 's/:/=/g' | sed 's/,/\&/g' | sed 's/ /%20/g'`"
+else
+  INFO="$4"
+fi
+
+addOS() 
+{
+  curl --cacert certfile.cer -H "Content-Type: application/json" \
+       -X POST -d "$INFO" "https://$HOST_NAME:$PORT/WLMService/resources/mles/whitelist/pcr" -ssl3
+}
+
+editOS()
+{
+  curl --cacert certfile.cer -H "Content-Type: application/json" \
+        -X PUT -d "$INFO" "https://$HOST_NAME:$PORT/WLMService/resources/mles/whitelist/pcr" -ssl3
+}
+
+delOS()
+{
+  curl --cacert certfile.cer \
+        -X DELETE  "https://$HOST_NAME:$PORT/WLMService/resources/mles/whitelist/pcr?$INFO"  -ssl3
+}
+
+case $1 in
+      $ADD_PARM)
+           echo "add PCR:"
+           addOS
+      ;;
+      $EDIT_PARM)
+           echo "edit PCR:"
+           editOS
+      ;;
+      $DEL_PARM)
+           echo "del PCR:"
+           delOS
+      ;;
+      *)
+      echo "Usage oat_pcr {-a|-e|-d}"
+      exit 3
+esac
+echo -e "\n"

@@ -1,0 +1,17 @@
+#!/bin/bash
+#create oat cert
+PARM="-h"
+if [ $# -lt 2 ];then
+  echo "parm num error!"
+  exit 0
+fi
+if [ $1 != $PARM ];then
+  echo "parm error!"
+  exit 0
+fi
+if [ -e ./certfile.cer ];then
+  rm -f certfile.cer
+fi
+
+HOSTNAME="$2"
+openssl  s_client -connect "$HOSTNAME":8443 -cipher DHE-RSA-AES256-SHA|tee  certfile.cer

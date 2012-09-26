@@ -1,0 +1,34 @@
+#cert
+bash oat_cert -h ubt6
+
+#oem
+bash oat_oem -a -h ubt6 '{"Name":"OEM1","Description":"Test id"}'
+bash oat_oem -e -h ubt6 '{"Name":"OEM1","Description":"Test###### id"}'
+bash oat_oem -d -h ubt6 '{"Name":"OEM1"}'
+
+#os
+bash oat_os -a -h ubt6 '{"Name":"OS1","Version":"v1234","Description":"Test1"}'
+bash oat_os -e -h ubt6 '{"Name":"OS1","Version":"v1234","Description":"Test2333dddd3"}'
+bash oat_os -d -h ubt6 '{"Name":"OS1","Version":"v1234"}'
+
+#pcr--oem
+bash oat_pcrwhitelist -a -h ubt6 '{"pcrName":"5","pcrDigest":"DE1343582097C9BC739C9311D60B5B5F5603A", "mleName":"ubuntu","mleVersion":"123", "oemName": "OEM1"}'
+bash oat_pcrwhitelist -e -h ubt6 '{"pcrName":"5","pcrDigest":"###########################", "mleName":"ubuntu","mleVersion":"123", "oemName": "OEM1"}'
+bash oat_pcrwhitelist -d -h ubt6 '{"pcrName":"18","mleName":"ubuntu","mleVersion":"123","oemName":"OEM1"}'
+
+#pcr--os
+bash oat_pcrwhitelist -a -h ubt6 '{"pcrName":"5","pcrDigest":"DE1343582097C9BC739C9311D60B5B5F5603A","mleName":"ubuntu","mleVersion":"123","osName":"OS1","osVersion":"v1234"}'
+bash oat_pcrwhitelist -e -h ubt6 '{"pcrName":"5","pcrDigest":"###########################", "mleName":"ubuntu","mleVersion":"123","osName":"OS1","osVersion":"v1234"}'
+bash oat_pcrwhitelist -d -h ubt6 '{"pcrName":"5","mleName":"ubuntu","mleVersion":"123","osName":"OS1","osVersion":"v1234"}'
+
+
+#host
+bash oat_host -a -h ubt6 '{"HostName":"ubt6","IPAddress":"192.168.1.1","Port":"9999","BIOS_Name":"ubuntu","BIOS_Version":"123","BIOS_Oem":"OEM1","VMM_Name":"ubuntu","VMM_Version":"123","VMM_OSName":"OS1","VMM_OSVersion":"v1234","Email":"","AddOn_Connection_String":"","Description":""}'
+bash oat_host -e -h ubt6 '{"HostName":"ubt6","IPAddress":"192.168.1.1","Port":"9999","BIOS_Name":"ubuntu","BIOS_Version":"123","BIOS_Oem":"OEM1","VMM_Name":"ubuntu","VMM_Version":"123","VMM_OSName":"OS1","VMM_OSVersion":"v1234","Email":"quan.xu@intel.com","AddOn_Connection_String":"###########","Description":"######"}'
+bash oat_host -d -h ubt6 '{"hostName":"ubt6"}'
+
+#mle
+bash oat_mle -a -h ubt6 '{"Name":"ubuntu","Version":"123","OemName":"OEM1","OemDescription":"intel bios for ubuntu","Attestation_Type": "PCR","MLE_Type":"BIOS","Description":"Test ad","MLE_Manifests": [{"Name": "18",  "Value": "876888888888884321"}]}'
+bash oat_mle -e -h ubt6 '{"Name":"ubuntu","Version":"123","OemName":"OEM1","OemDescription":"intel bios for ubuntu","Attestation_Type": "PCR","MLE_Type":"BIOS","Description":"###############","MLE_Manifests": [{"Name": "18",  "Value": "@@@@@@@@@@@@"}]}'
+bash oat_mle -d -h ubt6 '{"mleName":"ubuntu","mleVersion":"123","oemName":"OEM1"}'
+

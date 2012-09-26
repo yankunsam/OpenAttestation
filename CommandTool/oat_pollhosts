@@ -1,0 +1,28 @@
+#!/bin/bash
+#create mles script
+HOST_PARM="-h"
+HOST_NAME=""
+INFO=""
+PORT=8443
+
+if [ $# -lt 3 ];then
+  echo "parm num error!"
+  exit 0
+fi
+
+if [ $1 != $HOST_PARM ];then
+  echo "-h parm error!"
+  exit 1
+else
+  HOST_NAME="$2"
+fi
+
+INFO="$3"
+
+pollHosts()
+{
+  curl --cacert certfile.cer -H "Content-Type: application/json" \
+        -X PUT -d "$INFO" "https://$HOST_NAME:$PORT/AttestationService/resources/PollHosts" -ssl3
+}
+pollHosts
+echo -e "\n"
