@@ -193,28 +193,14 @@ cp -R /tmp/OAT_Server_Install/HisWebServices $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/we
 #  rm -rf $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices.war
 #fi
 
-cp  /tmp/OAT_Server_Install/OpenAttestationAdminConsole.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
-cp  /tmp/OAT_Server_Install/OpenAttestationManifestWebServices.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
-cp  /tmp/OAT_Server_Install/OpenAttestationWebServices.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
 cp  /tmp/OAT_Server_Install/WLMService.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
 cp  /tmp/OAT_Server_Install/AttestationService.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
-unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole.war -d $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole
-unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationManifestWebServices.war -d $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationManifestWebServices
-unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices.war -d $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices
 unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/WLMService.war -d $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/WLMService
 unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/AttestationService.war -d $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/AttestationService
 #delete the OpenAttestation war package
-rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole.war
-rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationManifestWebServices.war
-rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices.war
 rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/WLMService.war
 rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/AttestationService.war
- echo "$TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties has updated"
-mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationWebServices/WEB-INF/classes/OpenAttestation.properties /etc/oat-appraiser/OpenAttestationWebServices.properties
-mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties /etc/oat-appraiser/manifest.properties
-mv  $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/OpenAttestation.properties /etc/oat-appraiser/OpenAttestationAdminConsole.properties
- sed -i "s/<server.domain>/$(hostname)/g" /etc/oat-appraiser/OpenAttestationAdminConsole.properties
- sed -i "s/<server.domain>/$(hostname)/g" /etc/oat-appraiser/manifest.properties
+mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/AttestationService/WEB-INF/classes/OpenAttestationWebServices.properties /etc/oat-appraiser/OpenAttestationWebServices.properties
 #configuring hibernateHis for OAT appraiser setup
 cp /tmp/OAT_Server_Install/hibernateOat.cfg.xml /tmp/
 sed -i 's/<property name="connection.username">root<\/property>/<property name="connection.username">oatAppraiser<\/property>/' /tmp/hibernateOat.cfg.xml
@@ -223,9 +209,7 @@ cp /tmp/hibernateOat.cfg.xml $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisWebServ
 cp /tmp/OAT_Server_Install/OAT.properties /etc/oat-appraiser/ 
 mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisWebServices/WEB-INF/classes/OpenAttestation.properties /etc/oat-appraiser/OpenAttestation.properties
 sed -i "s/<server.domain>/$(hostname)/g" /etc/oat-appraiser/OpenAttestation.properties
-sed -i "s/^TrustStore.*$/TrustStore=\/var\/lib\/oat-appraiser\/Certificate\/TrustStore.jks/g" /etc/oat-appraiser/OpenAttestationAdminConsole.properties
 
-sed -i "s/^truststore_path.*$/truststore_path=\/var\/lib\/oat-appraiser\/Certificate\/TrustStore.jks/g" /etc/oat-appraiser/manifest.properties
 sed -i "s/^truststore_path.*$/truststore_path=\/var\/lib\/oat-appraiser\/Certificate\/TrustStore.jks/g" /etc/oat-appraiser/OpenAttestation.properties
 
 sed -i "s/^TrustStore.*$/TrustStore=\/var\/lib\/oat-appraiser\/Certificate\/TrustStore.jks/g"  /etc/oat-appraiser/OpenAttestation.properties

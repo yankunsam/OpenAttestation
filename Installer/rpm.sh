@@ -316,9 +316,6 @@ RePkgInstallOatAppraiserBase()
 
 # OpenAttestation *.war --> HIS_Server_Install.zip
 #if test -e $CurDir/$OATSOURCE_DIRECTORY/OpenAttestationAdminConsole/OpenAttestationAdminConsole.war -a -e $CurDir/$OATSOURCE_DIRECTORY/OpenAttestationManifestWebServices/OpenAttestationManifestWebServices.war -e $CurDir/$OATSOURCE_DIRECTORY/OpenAttestationWebServices/OpenAttestationWebServices.war;then
-    cp $OATSOURCE_DIRECTORY/OpenAttestationAdminConsole/OpenAttestationAdminConsole.war .
-    cp $OATSOURCE_DIRECTORY/OpenAttestationManifestWebServices/OpenAttestationManifestWebServices.war .
-    cp $OATSOURCE_DIRECTORY/OpenAttestationWebServices/OpenAttestationWebServices.war .
     cp $OATSOURCE_DIRECTORY/WLMService/WLMService.war .
     cp $OATSOURCE_DIRECTORY/AttestationService/AttestationService.war .
 #else
@@ -393,14 +390,6 @@ Build_xml()
     rm -rf $OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar
   fi
   
-  if test -e $OATSOURCE_DIRECTORY/OpenAttestationWebServices/OpenAttestationWebServices.war;then
-    rm -rf $OATSOURCE_DIRECTORY/OpenAttestationWebServices/OpenAttestationWebServices.war
-  fi
-  
-  if test -e $OATSOURCE_DIRECTORY/OpenAttestationManifestWebServices/OpenAttestationManifestWebServices.war;then
-    rm -rf $OATSOURCE_DIRECTORY/OpenAttestationManifestWebServices/OpenAttestationManifestWebServices.war
-  fi
-  
   if test -e $OATSOURCE_DIRECTORY/HisWebServices/clientlib/HisWebServices-client.jar;then
     rm -rf $OATSOURCE_DIRECTORY/HisWebServices/clientlib/HisWebServices-client.jar
   fi
@@ -425,10 +414,6 @@ Build_xml()
     rm -rf $OATSOURCE_DIRECTORY/HisPrivacyCAWebServices2/clientlib/HisPrivacyCAWebServices2-client.jar
   fi
   
-  if test -e $OATSOURCE_DIRECTORY/OpenAttestationAdminConsole/OpenAttestationAdminConsole.war;then
-    rm -rf  $OATSOURCE_DIRECTORY/OpenAttestationAdminConsole/OpenAttestationAdminConsole.war
-  fi 
- 
   if test -e $OATSOURCE_DIRECTORY/build.sh;then
     cd $OATSOURCE_DIRECTORY
 #    sh build.sh $TOMCAT_DIRECTORY
@@ -438,29 +423,6 @@ Build_xml()
   fi
 
   
-  if test -d $OATSOURCE_DIRECTORY/OpenAttestationAdminConsole;then
-    cd $OATSOURCE_DIRECTORY/OpenAttestationAdminConsole
-    ant -file build.xml
-  else
-    ShowLogFaild "$OATSOURCE_DIRECTORY/OpenAttestationAdminConsole"
-  fi
-
-
-  if test -d $OATSOURCE_DIRECTORY/OpenAttestationManifestWebServices;then
-    cd $OATSOURCE_DIRECTORY/OpenAttestationManifestWebServices
-    ant -file build.xml
-  else
-    ShowLogFaild "$OATSOURCE_DIRECTORY/OpenAttestationManifestWebServices"
-  fi
- 
-  if test -d $OATSOURCE_DIRECTORY/OpenAttestationWebServices;then
-    cd $OATSOURCE_DIRECTORY/OpenAttestationWebServices
-    cp -rf  $OATSOURCE_DIRECTORY/HisAppraiser/HisAppraiser.jar ./WebContent/WEB-INF/lib/
-    ant -file build.xml
-  else
-    ShowLogFaild "$OATSOURCE_DIRECTORY/OpenAttestationWebServices"
-  fi
-
   if test -d $OATSOURCE_DIRECTORY/WLMService;then
     cd $OATSOURCE_DIRECTORY/WLMService
     ant -file build.xml
@@ -492,18 +454,6 @@ Build_xml()
     ShowLogOK $OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar
   else
     ShowLogFaild $OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar
-  fi
-  
-  if test -e $OATSOURCE_DIRECTORY/OpenAttestationWebServices/OpenAttestationWebServices.war;then
-    ShowLogOK $OATSOURCE_DIRECTORY/OpenAttestationWebServices/OpenAttestationWebServices.war
-  else
-    ShowLogFaild $OATSOURCE_DIRECTORY/OpenAttestationWebServices/OpenAttestationWebServices.war
-  fi
-  
-  if test -e $OATSOURCE_DIRECTORY/OpenAttestationManifestWebServices/OpenAttestationManifestWebServices.war;then
-    ShowLogOK $OATSOURCE_DIRECTORY/OpenAttestationManifestWebServices/OpenAttestationManifestWebServices.war
-  else
-    ShowLogFaild $OATSOURCE_DIRECTORY/OpenAttestationManifestWebServices/OpenAttestationManifestWebServices.war
   fi
   
   if test -e $OATSOURCE_DIRECTORY/HisWebServices/HisWebServices.war;then
