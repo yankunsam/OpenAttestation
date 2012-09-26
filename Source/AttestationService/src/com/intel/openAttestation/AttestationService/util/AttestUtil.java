@@ -12,6 +12,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 package com.intel.openAttestation.AttestationService.util;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.Properties;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import gov.niarl.hisAppraiser.util.HisUtil;
 
 public class AttestUtil {

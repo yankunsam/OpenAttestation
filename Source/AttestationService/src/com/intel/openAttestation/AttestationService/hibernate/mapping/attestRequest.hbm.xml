@@ -14,8 +14,6 @@
 		<property name="isConsumedByPollingWS" column="is_consumed_by_pollingWS"/>
 		<many-to-one name="auditLog" class="gov.niarl.hisAppraiser.hibernate.domain.AuditLog" lazy="false" column="audit_log_id" unique="true"/>
 		<many-to-one  name="machineCert"  class="gov.niarl.hisAppraiser.hibernate.domain.MachineCert" lazy="false" column="host_id"/>
-		<!--many-to-one  name="machineCert"  class="gov.niarl.hisAppraiser.hibernate.domain.MachineCert" lazy="false" column="machine_id"/-->
-		<!--many-to-one  name="HOST"  class="gov.niarl.hisAppraiser.hibernate.domain.HOST" lazy="false" column="host_id"/-->
 		<property name="requestHost" column="request_host"/>
 	    <property name="count"/>
 	    <property name="PCRMask"></property>

@@ -238,9 +238,6 @@ public class HibernateUtilHis {
         Session session = getSession();
         try {
             threadSession.set(null);
-//            if (session.isConnected() && session.isOpen()) {
-//                session.disconnect();
-//            }
             session.disconnect();
         } catch (HibernateException ex) {
             throw new OATException(ex);
@@ -261,8 +258,7 @@ public class HibernateUtilHis {
     }
 
     private static Interceptor getInterceptor() {
-        Interceptor interceptor =
-                (Interceptor) threadInterceptor.get();
+        Interceptor interceptor = (Interceptor) threadInterceptor.get();
         return interceptor;
     }
 

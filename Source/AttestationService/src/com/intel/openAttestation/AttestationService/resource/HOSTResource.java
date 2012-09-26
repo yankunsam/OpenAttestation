@@ -9,10 +9,12 @@ Redistribution and use in source and binary forms, with or without modification,
     * Neither the name of Intel Corporation nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+@author: wchen106 & lijuan
 */
 
 package com.intel.openAttestation.AttestationService.resource;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +34,7 @@ import javax.ws.rs.core.UriInfo;
 import org.apache.log4j.Logger;
 
 import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
+import gov.niarl.hisAppraiser.hibernate.domain.HOST_MLE;
 import gov.niarl.hisAppraiser.hibernate.domain.MLE;
 import gov.niarl.hisAppraiser.hibernate.domain.HOST;
 
@@ -54,7 +57,7 @@ import com.intel.openAttestation.AttestationService.hibernate.dao.MLEDAO;
 
 /**
  * RESTful web service interface to work with HOST DB.
- * @author xmei1
+ * @author wchen106 & lijuan
  *
  */
 
@@ -70,32 +73,60 @@ public class HOSTResource {
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(HOSTResource.class);
 		Response.Status status = Response.Status.OK;
-		String hostName = "";
-		MLE[] mles=new MLE[2];
+		boolean isAnomaly = false;
+		List<MLE> mles= new ArrayList<MLE>();
         try{
         	
 			HOSTDAO dao = new HOSTDAO();
 			MLEDAO mleDao = new MLEDAO();
-		
-			System.out.println("Check if the HOST Name exists:" + hostName);
+			MLE mle = null;
+			//Check if the HOST Name exists
 			if (dao.isHOSTExisted(hostFullObj.getHostName())){
 				status = Response.Status.BAD_REQUEST;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(2001);
 				fault.setError_message("Data Error - HOST " + hostFullObj.getHostName() +" already exists in the database");
 				return Response.status(status).header("Location", b.build()).entity(fault).build();
 			}
-			if ((mles[0]=mleDao.getMLE(hostFullObj,0))==null){//for BIOS
+			
+			//Constraint check
+			if (hostFullObj.getBIOSName() == null && hostFullObj.getVMMName() == null){
+				isAnomaly = true; 
+			} else if (hostFullObj.getBIOSName() != null && (hostFullObj.getBIOSOem() == null || hostFullObj.getBIOSVersion() == null)){
+				isAnomaly = true;
+			} else if (hostFullObj.getVMMName() != null && (hostFullObj.getVMMOSName() == null || hostFullObj.getVMMOSVersion() == null || hostFullObj.getVMMVersion() == null)){
+				isAnomaly = true;
+			}  
+			
+			if (isAnomaly){
 				status = Response.Status.BAD_REQUEST;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(2001);
-				fault.setError_message("Data Error - HOST " + "proper BIOS  or OEM  is not chosen");
+				fault.setError_message("Data Error - HOST " + "please check the input parameters and provide complete information");
 				return Response.status(status).header("Location", b.build()).entity(fault).build();
 			}
-			if ((mles[1]=mleDao.getMLE(hostFullObj,1))==null){//for OS
-				status = Response.Status.BAD_REQUEST;
-				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(2001);
-				fault.setError_message("Data Error - HOST " + "proper VMM  or OS  is not chosen");
-				return Response.status(status).header("Location", b.build()).entity(fault).build();
-			}
+			
+			if (hostFullObj.getBIOSName() != null) {
+				//relation check for BIOS table
+				mle =  mleDao.getMLE(hostFullObj, 0);
+				if (mle == null){
+                    status = Response.Status.BAD_REQUEST;
+                    OpenAttestationResponseFault fault = new OpenAttestationResponseFault(2001);
+                    fault.setError_message("Data Error - HOST " + "proper BIOS  or OEM  is not chosen");
+                    return Response.status(status).header("Location", b.build()).entity(fault).build();
+				}
+				mles.add(mle);
+				
+			}  
+			if (hostFullObj.getVMMName() != null) {
+				//relation check for VMM MLE
+				mle =  mleDao.getMLE(hostFullObj,1);
+				if (mle == null){
+                    status = Response.Status.BAD_REQUEST;
+                    OpenAttestationResponseFault fault = new OpenAttestationResponseFault(2001);
+                    fault.setError_message("Data Error - HOST " + "proper VMM  or OS  is not chosen");
+                    return Response.status(status).header("Location", b.build()).entity(fault).build();
+				}
+				mles.add(mle);
+			} 
 			
 			HOST host = new HOST();
 			host.setAddOn_Connection_String(hostFullObj.getAddOn_Connection_String());
@@ -107,12 +138,16 @@ public class HOSTResource {
 			
 			dao.addHOSTEntry(host);
 			
-			for(int i =0;i<2;i++){
-				mles[i].setHost(host);
-				mleDao.updateMle(mles[i]);
+			//insert an entry into HOST_MLE;
+			for (int i=0; i<mles.size(); i++){
+				HOST_MLE hostMle = new HOST_MLE();
+				hostMle.setHost(host);
+				hostMle.setMle(mles.get(i));
+				dao.addHostMle(hostMle);
 			}
-					
+
 	        return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True").build();
+	        
 		}catch (Exception e){
 			status = Response.Status.INTERNAL_SERVER_ERROR;
 			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
@@ -122,8 +157,6 @@ public class HOSTResource {
 		}
 	}
 	
-
-	
 	@PUT
 	@Path("/host")
 	@Consumes("application/json")
@@ -132,10 +165,12 @@ public class HOSTResource {
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(HOSTResource.class);
 		Response.Status status = Response.Status.ACCEPTED;
-		MLE[] mles=new MLE[2];
+		boolean isAnomaly = false;
+
 		try{
 			HOSTDAO dao = new HOSTDAO();
 			MLEDAO mleDao = new MLEDAO();
+			MLE mle = null;
 			if (!dao.isHOSTExisted(hostFullObj.getHostName())){
 				status = Response.Status.NOT_FOUND;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(OpenAttestationResponseFault.FaultCode.FAULT_404);
@@ -153,18 +188,40 @@ public class HOSTResource {
 				return Response.status(status).header("Location", b.build()).entity(fault).build();
 			}
 			
-			if ((mles[0]=mleDao.getMLE(hostFullObj,0))==null){//for BIOS
+			if  (hostFullObj.getBIOSName() == null && hostFullObj.getVMMName() == null){
+				isAnomaly = true; 
+			} else if (hostFullObj.getBIOSName() != null && (hostFullObj.getBIOSOem() == null || hostFullObj.getBIOSVersion() == null)){
+				isAnomaly = true;
+			} else if (hostFullObj.getVMMName() != null && (hostFullObj.getVMMOSName() == null || hostFullObj.getVMMOSVersion() == null || hostFullObj.getVMMVersion() == null)){
+				isAnomaly = true;
+			} else if (hostFullObj.getBIOSName() != null) {
+				//relation check for BIOS table
+				mle = mleDao.getMLE(hostFullObj, 0);
+				if (mle == null){
+                    status = Response.Status.BAD_REQUEST;
+                    OpenAttestationResponseFault fault = new OpenAttestationResponseFault(2001);
+                    fault.setError_message("Data Error - HOST " + "proper BIOS  or OEM  is not chosen");
+                    return Response.status(status).header("Location", b.build()).entity(fault).build();
+				}
+				
+			} else if (hostFullObj.getVMMName() != null) {
+				//relation check for VMM MLE 
+				mle = mleDao.getMLE(hostFullObj, 1);
+				if (mle == null){
+                    status = Response.Status.BAD_REQUEST;
+                    OpenAttestationResponseFault fault = new OpenAttestationResponseFault(2001);
+                    fault.setError_message("Data Error - HOST " + "proper VMM  or OS  is not chosen");
+                    return Response.status(status).header("Location", b.build()).entity(fault).build();
+				}
+			} 
+					
+			if (isAnomaly){
 				status = Response.Status.BAD_REQUEST;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(2001);
-				fault.setError_message("Data Error - HOST " + "proper BIOS  or OEM  is not chosen");
+				fault.setError_message("Data Error - HOST " + "please check the input parameters and provide complete information");
 				return Response.status(status).header("Location", b.build()).entity(fault).build();
 			}
-			if ((mles[1]=mleDao.getMLE(hostFullObj,1))==null){//for OS
-				status = Response.Status.BAD_REQUEST;
-				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(2001);
-				fault.setError_message("Data Error - HOST " + "proper VMM  or OS  is not chosen");
-				return Response.status(status).header("Location", b.build()).entity(fault).build();
-			}
+			
 			//update HOST table
 			HOST host = new HOST();
 			host.setAddOn_Connection_String(hostFullObj.getAddOn_Connection_String());
@@ -197,7 +254,8 @@ public class HOSTResource {
 			HOSTDAO dao = new HOSTDAO();
 			System.out.println("Check if the HOST Name exists:" + Name);
 			if (dao.isHOSTExisted(Name)){
-				dao.DeleteHOSTEntry(Name);
+				HOST host = dao.DeleteHOSTEntry(Name);
+				dao.DeleteHostMle(host);
 				return Response.status(status).type(MediaType.TEXT_PLAIN).entity("True").build();
 			}
 			status = Response.Status.BAD_REQUEST;
@@ -207,8 +265,7 @@ public class HOSTResource {
 			return Response.status(status).entity(fault).build();
 		}catch (Exception e){
 			status = Response.Status.INTERNAL_SERVER_ERROR;
-			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
-					OpenAttestationResponseFault.FaultCode.FAULT_500);
+			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(OpenAttestationResponseFault.FaultCode.FAULT_500);
 			fault.setError_message("Delete HOST entry failed." + "Exception:" + e.getMessage()); 
 			return Response.status(status).entity(fault).build();
 		}
@@ -242,61 +299,67 @@ public class HOSTResource {
     		String requestId = addRequests(reqAttestation, requestHost, true);
     		System.out.println("resource requestId:" +requestId);
     		List<AttestRequest> reqs= getRequestsByReqId(requestId);
-    		if (timeThreshold != 0 ){
-    			logger.info("timeThreshold:" + timeThreshold);
-    			for (AttestRequest req: reqs){
-    				AttestRequest lastReq = dao.getLastAttestedRequest(req.getHostName());
-    				long lastValidateTime = lastReq.getId()== null? 0: lastReq.getValidateTime().getTime();
-    				validateInterval = System.currentTimeMillis() - lastValidateTime;
-    				logger.info("validateInterval:" +validateInterval);
-    				if (validateInterval < timeThreshold && lastValidateTime !=0 ){
-    					System.out.println("obtain the trustworthiness of last record");
-    					req.setAuditLog(lastReq.getAuditLog());
-    					req.setResult(lastReq.getResult());
-    					req.setValidateTime(lastReq.getValidateTime());
-    				}
-    				else{
-    					req.setNextAction(CommonUtil.getIntFromAction(Action.SEND_REPORT));
-    					req.setIsConsumedByPollingWS(false);//this flags must be set at the same time.
-    					logger.debug("Next Action:" +req.getNextAction());
-    				}
-    				dao.updateRequest(req);
-    			}
-    			//start a thread to attest the pending request
-    			if (!isAllAttested(requestId)){
-    				logger.info("requestId:" +requestId +"is not attested.");
-		    		CheckAttestThread checkAttestThread = new CheckAttestThread(requestId);
-		     		checkAttestThread.start();
-    			}
-	     		
+    		if (reqs != null){
+    	   		if (timeThreshold != 0 ){
+        			logger.info("timeThreshold:" + timeThreshold);
+        			for (AttestRequest req: reqs){
+        				AttestRequest lastReq = dao.getLastAttestedRequest(req.getHostName());
+        				long lastValidateTime = lastReq.getId()== null? 0: lastReq.getValidateTime().getTime();
+        				validateInterval = System.currentTimeMillis() - lastValidateTime;
+        				logger.info("validateInterval:" +validateInterval);
+        				if (validateInterval < timeThreshold && lastValidateTime !=0 ){
+        					System.out.println("obtain the trustworthiness of last record");
+        					req.setAuditLog(lastReq.getAuditLog());
+        					req.setResult(lastReq.getResult());
+        					req.setValidateTime(lastReq.getValidateTime());
+        				}
+        				else{
+        					req.setNextAction(CommonUtil.getIntFromAction(Action.SEND_REPORT));
+        					req.setIsConsumedByPollingWS(false);//this flags must be set at the same time.
+        					logger.debug("Next Action:" +req.getNextAction());
+        				}
+        				dao.updateRequest(req);
+        			}
+        			//start a thread to attest the pending request
+        			if (!isAllAttested(requestId)){
+        				logger.info("requestId:" +requestId +"is not attested.");
+    		    		CheckAttestThread checkAttestThread = new CheckAttestThread(requestId);
+    		     		checkAttestThread.start();
+        			}	
+        		}
+        		else{// timeThreshold is null
+    	    		do{  //loop until all hosts are finished
+    	    			for (AttestRequest req: reqs){
+    	    				//load the request again because its status may be changed for each loop
+    	    				AttestRequest reqnew = AttestService.loadRequest(req.getId());
+    	    				if (reqnew.getResult() == null){
+    	    					long timeUsed = System.currentTimeMillis() - req.getRequestTime().getTime();
+    	    					if (req.getMachineCert() == null ){
+    	    						req.setResult(ResultConverter.getIntFromResult(AttestResult.UN_KNOWN));
+    	    						req.setValidateTime(new Date());
+    	    						dao.updateRequest(req);
+    	    					}
+    	    					else if (timeUsed > AttestUtil.getDefaultAttestTimeout()){
+    	    						req.setResult(ResultConverter.getIntFromResult(AttestResult.TIME_OUT));
+    	    						req.setValidateTime(new Date());
+    	    						dao.updateRequest(req);
+    	    					} 
+    	    				}
+    	    			}
+    	    			Thread.sleep(10000/reqs.size()); //@TO DO: better calculation?
+    	    		}while(!AttestService.isAllAttested(requestId));
+    	    		logger.info("requestId:" +requestId +" has attested");
+        		}
+        		
+        		RespSyncBean syncResult = AttestService.getRespSyncResult(requestId);
+        		logger.info("requestId:" +requestId +" has returned the attested result");
+    			return Response.status(status).header("Location", b.build()).entity(syncResult).build();    			
+    		} else {
+    			status = Response.Status.INTERNAL_SERVER_ERROR;
+    			AttestationResponseFault fault = new AttestationResponseFault(AttestationResponseFault.FaultName.FAULT_ATTEST_ERROR);
+    			fault.setMessage("cannot fetch an entry from the table of AttestRequest, please check it");
+    			return Response.status(status).header("Location", b.build()).entity(fault).build();
     		}
-    		else{// timeThreshold is null
-	    		do{  //loop until all hosts are finished
-	    			for (AttestRequest req: reqs){
-	    				//load the request again because its status may be changed for each loop
-	    				AttestRequest reqnew = AttestService.loadRequest(req.getId());
-	    				if (reqnew.getResult() == null){
-	    					long timeUsed = System.currentTimeMillis() - req.getRequestTime().getTime();
-	    					if (req.getMachineCert() == null ){
-	    						req.setResult(ResultConverter.getIntFromResult(AttestResult.UN_KNOWN));
-	    						req.setValidateTime(new Date());
-	    						dao.updateRequest(req);
-	    					}
-	    					else if (timeUsed > AttestUtil.getDefaultAttestTimeout()){
-	    						req.setResult(ResultConverter.getIntFromResult(AttestResult.TIME_OUT));
-	    						req.setValidateTime(new Date());
-	    						dao.updateRequest(req);
-	    					} 
-	    				}
-	    			}
-	    			Thread.sleep(10000/reqs.size()); //@TO DO: better calculation?
-	    		}while(!AttestService.isAllAttested(requestId));
-	    		logger.info("requestId:" +requestId +" has attested");
-    		}
-    		
-    		RespSyncBean syncResult = AttestService.getRespSyncResult(requestId);
-    		logger.info("requestId:" +requestId +" has returned the attested result");
-			return Response.status(status).header("Location", b.build()).entity(syncResult).build();
 	    }catch(Exception e){
 	    	status = Response.Status.INTERNAL_SERVER_ERROR;
 			AttestationResponseFault fault = new AttestationResponseFault(AttestationResponseFault.FaultName.FAULT_ATTEST_ERROR);

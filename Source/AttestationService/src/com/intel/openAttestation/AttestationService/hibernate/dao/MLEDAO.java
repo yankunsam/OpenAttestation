@@ -14,7 +14,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 package com.intel.openAttestation.AttestationService.hibernate.dao;
 
 import gov.niarl.hisAppraiser.hibernate.domain.MLE;
-import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Query;
 import com.intel.openAttestation.AttestationService.bean.HostBean;
@@ -37,7 +36,7 @@ public class MLEDAO {
 	}
 	
 	//"BIOS_Name":"EPSD","BIOS_Version":"55","BIOS_Oem":"EPSD","VMM_Name":"Xen","VMM_Version":"4.1.1","VMM_OSName":"RHEL","VMM_OSVersion":"6.1"
-	public MLE getMLE(HostBean hostFullObj,int order){
+	public MLE getMLE(HostBean hostFullObj, int order){
 		MLE mle=null;;
 		String[] queryString = new String[2];
 		try{
@@ -46,21 +45,45 @@ public class MLEDAO {
 			queryString[1]="select m from MLE m inner join m.os o where m.Name=:VMMName and m.Version=:VMMVersion and o.Name=:osName and o.Version=:osVersion";//query VMM information
 			Query query = HibernateUtilHis.getSession().createQuery(queryString[order]);
 			if(order == 0){
-				query.setString("biosName", hostFullObj.getBIOSName());
-				query.setString("biosVersion", hostFullObj.getBIOSVersion());
-				query.setString("oemName", hostFullObj.getBIOSOem());
+				if (hostFullObj.getBIOSName() != null){
+					query.setString("biosName", hostFullObj.getBIOSName());
+				} else {
+					System.out.println("BIOS name is null");
+				}
+				if (hostFullObj.getBIOSVersion() != null){
+					query.setString("biosVersion", hostFullObj.getBIOSVersion());
+				} else {
+					System.out.println("BIOS version is null");
+				}
+				if (hostFullObj.getBIOSOem() !=null){
+					query.setString("oemName", hostFullObj.getBIOSOem());
+				} else {
+					System.out.println("OEM is null");
+				}
 			}
 			else if(order ==1){
-				query.setString("VMMName", hostFullObj.getVMMName());
-				query.setString("VMMVersion", hostFullObj.getVMMVersion());
-				query.setString("osName", hostFullObj.getVMMOSName());
-				query.setString("osVersion", hostFullObj.getVMMOSVersion());
-			}
-			System.out.println("VMMName:" +hostFullObj.getVMMName());
-			System.out.println("VMMVersion" +hostFullObj.getVMMVersion());
-			System.out.println("osName" +hostFullObj.getVMMOSName());
-			System.out.println("osVersion" +hostFullObj.getVMMOSVersion());
-			
+				if (hostFullObj.getVMMName() != null){
+					query.setString("VMMName", hostFullObj.getVMMName());
+				} else {
+					System.out.println("VMM name is null");
+				}
+				if (hostFullObj.getVMMVersion() != null){
+					query.setString("VMMVersion", hostFullObj.getVMMVersion());
+				} else {
+					System.out.println("VMM version is null");
+				}
+				if (hostFullObj.getVMMOSName() != null){
+					query.setString("osName", hostFullObj.getVMMOSName());
+				} else {
+					System.out.println("VMM OS name is null");
+				}
+				if (hostFullObj.getVMMOSVersion() != null){
+					query.setString("osVersion", hostFullObj.getVMMOSVersion());
+				} else {
+					System.out.println("VMM OS version is null");
+				}
+
+			}		
 			List list = query.list();
 			if(list.size()>0)
 				mle= (MLE)list.iterator().next();
@@ -73,44 +96,6 @@ public class MLEDAO {
 			HibernateUtilHis.closeSession();
 		}
 	}
-
-//	public List<MLE> getMLE(HostBean hostFullObj){
-//		List<MLE> mles = new ArrayList<MLE>();
-//		String[] queryString = new String[2];
-//		try{
-//			HibernateUtilHis.beginTransaction();
-//			queryString[0]="select m from MLE m inner join m.oem o where m.Name=:biosName and m.Version=:biosVersion and o.Name =:oemName";//query BIOS information
-//			queryString[1]="select m from MLE m inner join m.os o where m.Name=:VMMName and m.Version=:VMMVersion and o.Name=:osName and o.Version=:osVersion";//query VMM information
-//			Query query1 = HibernateUtilHis.getSession().createQuery(queryString[0]);
-//			Query query2 = HibernateUtilHis.getSession().createQuery(queryString[1]);
-//			query1.setString("biosName", hostFullObj.getBIOSName());
-//			query1.setString("biosVersion", hostFullObj.getBIOSVersion());
-//			query1.setString("oemName", hostFullObj.getBIOSOem());
-//			query2.setString("VMMName", hostFullObj.getVMMName());
-//			query2.setString("VMMVersion", hostFullObj.getVMMVersion());
-//			query2.setString("osName", hostFullObj.getVMMOSName());
-//			query2.setString("osVersion", hostFullObj.getVMMOSVersion());
-//			
-//			
-//			System.out.println("biosName:" +hostFullObj.getBIOSName());
-//			System.out.println("biosVersion:"+hostFullObj.getBIOSVersion());
-//			System.out.println("oemName:"+hostFullObj.getBIOSOem());
-//			
-//			List list1 = query1.list();
-//			List list2 = query2.list();
-//			if (list1.size()>0 && list1.size()>0) {
-//				mles.add((MLE)list1.iterator().next());
-//				mles.add((MLE)list2.iterator().next());
-//			} 
-//			HibernateUtilHis.commitTransaction();
-//			return mles;
-//		} catch (Exception e) {
-//			HibernateUtilHis.rollbackTransaction();
-//			throw new RuntimeException(e);
-//		}finally{
-//			HibernateUtilHis.closeSession();
-//		}
-//	}
 	
 	public void updateMle(MLE mle) {
 		try {

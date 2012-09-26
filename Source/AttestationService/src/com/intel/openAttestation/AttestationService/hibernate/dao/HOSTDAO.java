@@ -17,13 +17,16 @@ import gov.niarl.hisAppraiser.hibernate.domain.MachineCert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 
 import gov.niarl.hisAppraiser.hibernate.domain.HOST;
-import com.intel.openAttestation.AttestationService.hibernate.util.HibernateUtilHis;
-//import com.intel.openAttestation.hibernate.domain.AttestRequest;
 import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
+import gov.niarl.hisAppraiser.hibernate.domain.HOST_MLE;
+
+import com.intel.openAttestation.AttestationService.hibernate.util.HibernateUtilHis;
 
 /**
  * This class serves as a central location for updates and queries against 
@@ -71,7 +74,6 @@ public class HOSTDAO {
 			hostOld.setAddOn_Connection_String(host.getAddOn_Connection_String());
 			hostOld.setDescription(host.getDescription());
 			hostOld.setEmail(host.getEmail());
-			//hostOld.setHostName(host.getHostName());
 			hostOld.setIPAddress(host.getIPAddress());
 			hostOld.setPort(host.getPort());
 			HibernateUtilHis.commitTransaction();
@@ -86,7 +88,7 @@ public class HOSTDAO {
 		
 	}
 	
-	public void DeleteHOSTEntry (String HostName){
+	public HOST DeleteHOSTEntry (String HostName){
 		try {
 			HibernateUtilHis.beginTransaction();
 			Session session = HibernateUtilHis.getSession();
@@ -99,6 +101,7 @@ public class HOSTDAO {
 			HOST hostEntry = (HOST)list.get(0);
 			session.delete(hostEntry);
 			HibernateUtilHis.commitTransaction();
+			return hostEntry;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
 			e.printStackTrace();
@@ -114,8 +117,7 @@ public class HOSTDAO {
 			HibernateUtilHis.beginTransaction();
 			Query query = HibernateUtilHis.getSession().createQuery("from HOST a where a.HostName = :value");
 			query.setString("value", Name);
-			List list = query.list();
-		
+			List list = query.list();		
 			if (list.size() < 1) {
 				flag =  false;
 			} else {
@@ -314,4 +316,72 @@ public class HOSTDAO {
 		}
 			
 	}
+	
+	
+	public boolean checkOEM(HashMap<String, String> attributes){
+		boolean flag =false;
+		try {
+			HibernateUtilHis.beginTransaction();
+			//Query query = HibernateUtilHis.getSession().createQuery("from OEM a where a.Name = :value");
+			String name = attributes.get("BIOSName");
+			String version  = attributes.get("BIOSVersion");
+			String biosOem = attributes.get("BIOSOem");
+			Query query = HibernateUtilHis.getSession().createQuery("select a from MLE a inner join a.oem b where a.Name = :name and a.Version = :version and " +
+					"b.Name = :biosOem and a.MLE_Type = BIOS");
+			query.setString("name", name);
+			query.setString("version", version);
+			query.setString("biosOem", biosOem);
+			
+			List list = query.list();		
+			if (list.size() < 1) {
+				flag =  false;
+			} else {
+				flag = true;
+			}
+			HibernateUtilHis.commitTransaction();
+			return flag;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+	}
+
+	public void addHostMle(HOST_MLE hostMle) {
+		try {
+			HibernateUtilHis.beginTransaction();
+			HibernateUtilHis.getSession().save(hostMle);
+			HibernateUtilHis.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+		
+	}
+	
+	public void DeleteHostMle(HOST host) {
+		try {
+		    HibernateUtilHis.beginTransaction();
+		    Session session = HibernateUtilHis.getSession();
+		    Query query = session.createQuery("from HOST_MLE a where a.host = :host");
+		    query.setEntity("host", host);
+		    List list = query.list();
+		    for(int i=0; i < list.size(); i++){
+		       session.delete((HOST_MLE)list.get(i));
+		    }
+		    HibernateUtilHis.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}   
+}
+
+
 }

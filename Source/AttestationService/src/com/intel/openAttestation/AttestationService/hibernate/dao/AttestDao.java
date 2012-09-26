@@ -85,7 +85,7 @@ public class AttestDao {
 			HibernateUtilHis.beginTransaction();
 			Query query = HibernateUtilHis.getSession().createQuery("from AttestRequest a where  a.requestId= :requestId");
 			query.setString("requestId", requestId);
-			List list = query.list();
+			List<AttestRequest> list = query.list();
 			if (list.size() < 1) {
 				reqs =  new ArrayList<AttestRequest>();
 			} else {
@@ -238,7 +238,5 @@ public class AttestDao {
 		}finally{
 			HibernateUtilHis.closeSession();
 		}
-		
-		
 	}
 }

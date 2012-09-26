@@ -14,9 +14,6 @@ package com.intel.openAttestation.AttestationService.util;
 
 import java.util.HashMap;
 
-//import com.intel.openAttestation.util.AttestResult;
-
-
 public class ResultConverter {
 	
 	public static enum AttestResult {

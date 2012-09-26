@@ -20,10 +20,11 @@ import org.apache.log4j.Logger;
 
 import com.intel.openAttestation.AttestationService.util.AttestUtil;
 import com.intel.openAttestation.AttestationService.hibernate.dao.AttestDao;
-import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
 import com.intel.openAttestation.AttestationService.resource.AttestService;
 import com.intel.openAttestation.AttestationService.util.ResultConverter;
 import com.intel.openAttestation.AttestationService.util.ResultConverter.AttestResult;
+
+import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
 
 public class CheckAttestThread extends Thread {
 	

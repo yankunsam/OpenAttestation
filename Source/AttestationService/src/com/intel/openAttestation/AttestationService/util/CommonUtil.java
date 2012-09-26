@@ -4,6 +4,7 @@ package com.intel.openAttestation.AttestationService.util;
 import java.util.HashMap;
 
 import gov.niarl.hisAppraiser.util.HisUtil;
+
 import com.intel.openAttestation.AttestationService.util.ActionDelay.Action;
 
 public class CommonUtil {

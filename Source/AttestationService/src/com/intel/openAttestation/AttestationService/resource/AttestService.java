@@ -20,14 +20,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+
 import com.intel.openAttestation.AttestationService.util.AttestUtil;
 import com.intel.openAttestation.AttestationService.bean.Host;
 import com.intel.openAttestation.AttestationService.bean.PCRValue;
 import com.intel.openAttestation.AttestationService.bean.RespSyncBean;
 import com.intel.openAttestation.AttestationService.util.ResultConverter;
 import com.intel.openAttestation.AttestationService.util.ResultConverter.AttestResult;
-import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
 import com.intel.openAttestation.AttestationService.hibernate.dao.AttestDao;
+
+import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
 
 public class AttestService {
 	
