@@ -178,27 +178,26 @@ public class PcrWhiteListDAO {
 		
 	}
 
-    public void deletePcrByMleID(Long mleId){
-        try {
-                HibernateUtilHis.beginTransaction();
-                Session session = HibernateUtilHis.getSession();
-                Query query = session.createQuery("from PcrWhiteList a where a.mle.MLEID = :mleid");
-                query.setLong("mleid", mleId);
-                List list = query.list();
-                for(int i=0; i < list.size(); i++){
-                	session.delete((PcrWhiteList)list.get(i));
-                	HibernateUtilHis.commitTransaction();
-                }
-        } catch (Exception e) {
-                HibernateUtilHis.rollbackTransaction();
-                e.printStackTrace();
-                throw new RuntimeException(e);
-        }finally{
-                HibernateUtilHis.closeSession();
-        }
+	public void deletePcrByMleID(Long mleId){
+		try {
+            HibernateUtilHis.beginTransaction();
+            Session session = HibernateUtilHis.getSession();
+            Query query = session.createQuery("from PcrWhiteList a where a.mle.MLEID = :mleid");
+            query.setLong("mleid", mleId);
+            List list = query.list();
+            for(int i=0; i < list.size(); i++){
+                 session.delete((PcrWhiteList)list.get(i));
+	        }
+            HibernateUtilHis.commitTransaction();
+	    } catch (Exception e) {
+	            HibernateUtilHis.rollbackTransaction();
+	            e.printStackTrace();
+	            throw new RuntimeException(e);
+	    }finally{
+	            HibernateUtilHis.closeSession();
+	    }
 
-    }
-
+	}        
 
     public PcrWhiteList getPcr(String pcrName, Long mleId){
         try {
@@ -221,5 +220,22 @@ public class PcrWhiteListDAO {
                 HibernateUtilHis.closeSession();
         }
     }
+    
+    public void addPcrList(List<PcrWhiteList> pcrList){
+		try {
+			HibernateUtilHis.beginTransaction();
+			Session session = HibernateUtilHis.getSession();
+			for (PcrWhiteList pcr: pcrList)
+				session.save(pcr);
+			HibernateUtilHis.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+
+	}
 	
 }

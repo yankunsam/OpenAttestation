@@ -103,6 +103,13 @@ public class MLEResource {
 					return Response.status(status).header("Location", b.build()).entity(fault)
 								.build();
 			    }
+			    if(dao.isMLEExisted(mleBean.getName(), mleBean.getVersion())){
+			    	status = Response.Status.BAD_REQUEST;
+					OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
+					fault.setError_message("Data Error - MLE Name " + mleBean.getName()+ " Version "+mleBean.getVersion() + " already exists in the database");
+					return Response.status(status).header("Location", b.build()).entity(fault)
+								.build();
+			    }
 			    
 			    mle.setName(mleBean.getName());
 			    mle.setVersion(mleBean.getVersion());
@@ -145,52 +152,30 @@ public class MLEResource {
 			MLEDAO mleDao = new MLEDAO();
 			OSDAO osDao = new  OSDAO();
 			OEMDAO oemDao =new OEMDAO();
+			List<PcrWhiteList> pcrList = new ArrayList<PcrWhiteList>(); 
 			PcrWhiteListDAO pcrDao = new PcrWhiteListDAO();
-			
-			System.out.println("Check if the MLE exists:" + mleBean.getName());
-			
-			MLE mle = mleDao.getMLE(mleBean.getName(), mleBean.getVersion());
-			if (mle != null)
-			{
-				//OS
-				if (mleBean.getOsName() != null && mleBean.getOsVersion() != null){
-					OS os = osDao.getOS(mleBean.getOsName(), mleBean.getOsVersion());
-					if( os == null )
-						throw new Exception ("os not found");
+			if (!mleDao.isMLEExisted(mleBean.getName(),mleBean.getVersion(),mleBean.getOsName(),mleBean.getOsVersion(),mleBean.getOemName())){
+        		status = Response.Status.BAD_REQUEST;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1007);
+				fault.setError_message("WLM Service Error - MLE not found in attestation data to update");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+							.build();
+        	}
+			MLE mle = mleDao.getMLE(mleBean.getName(),mleBean.getVersion());
+			if(mleBean.getDescription()!=null)    //update description
+				mleDao.editMLEDesc(mleBean.getName(),mleBean.getVersion(), mleBean.getDescription());
+			if (mleBean.getMLE_Manifests()!=null){  //update whitelist
+				pcrDao.deletePcrByMleID(mle.getMLEID());
+				for (MLE_Manifest mleManifest: mleBean.getMLE_Manifests()){
+					PcrWhiteList pcr = new PcrWhiteList();
+					pcr.setMle(mle);
+					pcr.setPcrName(mleManifest.getName());
+					pcr.setPcrDigest(mleManifest.getValue());
+					pcrList.add(pcr);
+					
 				}
-				//OEM
-				else if (mleBean.getOemName() != null){
-					OEM oem = oemDao.getOEM(mleBean.getOemName());
-					if( oem == null )
-						throw new Exception ("oem not found");
-				}
-				//throw
-				else{
-					throw new Exception ("oem | os not found");
-				}
-				//desc
-				System.out.println(" updateMLE.DESCRIPTION:" + mleBean.getDescription());
-				mleDao.editMLEDesc(mle, mleBean.getDescription());
-				//white list
-				if (mleBean.getMLE_Manifests()!=null){
-					for(MLE_Manifest mle_manifest:mleBean.getMLE_Manifests()){
-						System.out.println("##pcr name = " + mle_manifest.getName() + "mle id = " + mle.getMLEID() );
-						if( pcrDao.isPcrExisted(mle_manifest.getName(), mle.getMLEID()))
-						{
-							System.out.println("##Del : pcr name = " + mle_manifest.getName() + "mle id = " + mle.getMLEID() );
-							pcrDao.deletePcrEntry(mle_manifest.getName(), mle.getMLEID());
-						}
-					    System.out.println("##ADD: MLE_ID = " +  mle.getMLEID() + "PCR_NAME = " + mle_manifest.getName());
-						PcrWhiteList addPcr = new PcrWhiteList();
-						addPcr.setPcrName(mle_manifest.getName());
-						addPcr.setPcrDigest(mle_manifest.getValue());
-						addPcr.setMle(mle);
-						pcrDao.editPcrEntry(addPcr);
-					}
-				}
-				
+				pcrDao.addPcrList(pcrList);
 			}
-			
 			return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True")
 	        		.build();
 		}catch (Exception e){
@@ -205,32 +190,27 @@ public class MLEResource {
 		
 	@DELETE
 	@Produces("application/json")
-	public Response delMLEEntry(@QueryParam("mleName") String name, @QueryParam("mleVersion") String version, @QueryParam("osName") String osName, @QueryParam("osVersion") String osVersion,@QueryParam("oemName") String oemName,@Context UriInfo uriInfo){
+	public Response delMLEEntry(@QueryParam("mleName") String name, @QueryParam("mleVersion") String version, @QueryParam("osName") String osName, 
+			@QueryParam("osVersion") String osVersion,@QueryParam("oemName") String oemName,@Context UriInfo uriInfo){
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(MLEResource.class);
 		Response.Status status = Response.Status.OK;
-
+		MLEDAO mleDao = new MLEDAO();
+		PcrWhiteListDAO pcrDao = new PcrWhiteListDAO();
+    	
         try{	
-        	System.out.println("##Check name:" + name);
-        	System.out.println("##Check version:" + version);
-        	System.out.println("##Check name:" + osName);
-        	System.out.println("##Check version:" + osVersion);
-        	System.out.println("##Check name:" + oemName);
-        	
-        	MLEDAO mleDao = new MLEDAO();
-            MLE mle = mleDao.getMLE(name, version);
-			if (mle != null)
-			    mleDao.DeleteMLEEntry(name, version);
-			else
-				throw new Exception ("mle not found");
-			
-			PcrWhiteListDAO pcrDao = new PcrWhiteListDAO();
-			System.out.println("##Check mle id:" + mle.getMLEID());
-			pcrDao.deletePcrByMleID(mle.getMLEID());
-        	
+        	if (!mleDao.isMLEExisted(name,version,osName, osVersion,oemName)){
+        		status = Response.Status.BAD_REQUEST;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1007);
+				fault.setError_message("WLM Service Error - MLE not found in attestation data to delete");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+							.build();
+        	}
+        	MLE mle= mleDao.DeleteMLEEntry(name, version);
+            System.out.println("##Check mle id:" + mle.getMLEID());
+            pcrDao.deletePcrByMleID(mle.getMLEID());
         	return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True")
             		.build();
-
 		}catch (Exception e){
 			status = Response.Status.INTERNAL_SERVER_ERROR;
 			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(

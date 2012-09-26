@@ -90,7 +90,7 @@ public class MLEDAO {
 		
 	}
 
-         public boolean isOEMExisted(String Name){
+    public boolean isOEMExisted(String Name){
 		boolean flag =false;
 		try {
 			HibernateUtilHis.beginTransaction();
@@ -114,7 +114,26 @@ public class MLEDAO {
 		}
 	}
 	
-	
+    public boolean isMLEExisted(String Name,String version){
+		boolean flag =false;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("from MLE m where m.Name = :mleName and m.Version = :mleVersion");
+			query.setString("mleName", Name);
+			query.setString("mleVersion", version);
+			List list = query.list();
+		    if (list.size() > 0 )
+		    	flag = true;
+			HibernateUtilHis.commitTransaction();
+			return flag;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+	}
 	
 	public OEM addOEMEntry(OEM OEMEntry){
 		try {
@@ -170,18 +189,19 @@ public class MLEDAO {
 		}
 	}
 	
-	public void editMLEDesc(MLE mle, String Desc){
+	public void editMLEDesc(String mleName, String mleVersion, String description){
 		try{
 			HibernateUtilHis.beginTransaction();
 			Session session = HibernateUtilHis.getSession();
 		    Query query = HibernateUtilHis.getSession().createQuery("from MLE m where m.Name = :name and m.Version = :version");
-		    query.setString("name", mle.getName());
-		    query.setString("version", mle.getVersion());
+		    query.setString("name",mleName);
+		    query.setString("version", mleVersion);
             List list = query.list();
             if (list.size() < 1)
                throw new Exception ("Object not found");
-            MLE mle2 = (MLE)list.get(0);
-            mle2.setDescription(Desc);
+            MLE mle = (MLE)list.get(0);
+            mle.setDescription(description);
+            session.update(mle);
             HibernateUtilHis.commitTransaction();
 		}catch (Exception e) {
             HibernateUtilHis.rollbackTransaction();
@@ -235,13 +255,13 @@ public class MLEDAO {
 	}
 
 
-	public void DeleteMLEEntry (String Name,String Version){
+	public MLE DeleteMLEEntry (String name,String version){
 		try {
 			HibernateUtilHis.beginTransaction();
 			Session session = HibernateUtilHis.getSession();
-			Query query = session.createQuery("from MLE a where a.Name = :NAME and a.Version = :VERSION");
-			query.setString("NAME", Name);
-			query.setString("VERSION", Version);
+			Query query = session.createQuery("from MLE a where a.Name = :name and a.Version = :version");
+			query.setString("name", name);
+			query.setString("version",version);
 			List list = query.list();
 			if (list.size() < 1){
 				throw new Exception ("Object not found");
@@ -249,6 +269,7 @@ public class MLEDAO {
 			MLE MLEEntry = (MLE)list.get(0);
 			session.delete(MLEEntry);
 			HibernateUtilHis.commitTransaction();
+			return MLEEntry;
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
 			e.printStackTrace();
@@ -257,6 +278,43 @@ public class MLEDAO {
 			HibernateUtilHis.closeSession();
 		}
 		
+	}
+
+	public boolean isMLEExisted(String name, String version, String osName,
+			String osVersion, String oemName) {
+		
+		String[] queryString = new String[2];
+		int order =0;
+		boolean flag= false;
+		try{
+			HibernateUtilHis.beginTransaction();
+			queryString[0]="select m from MLE m inner join m.oem o where m.Name=:name and m.Version=:version and o.Name =:oemName";//query oem information
+			queryString[1]="select m from MLE m inner join m.os o where m.Name=:name and m.Version=:version and o.Name=:osName and o.Version=:osVersion";//query os information
+			if (oemName!=null)
+				order = 0;
+			else if (osName!=null && osVersion !=null)
+				order =1;
+			Query query = HibernateUtilHis.getSession().createQuery(queryString[order]);
+			query.setString("name", name);
+			query.setString("version", version);
+			if (order ==0)
+				query.setString("oemName", oemName);
+			else if(order ==1){
+				query.setString("osName", osName);
+				query.setString("osVersion", osVersion);
+			}
+			
+			List list = query.list();
+			if(list.size()>0)
+				flag =true;
+			HibernateUtilHis.commitTransaction();
+			return flag;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
 	}
 
 }
