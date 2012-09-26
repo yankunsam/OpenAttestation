@@ -13,11 +13,9 @@ public class MLE {
 	private String Version;
 	private OEM oem;
 	private OS os;
-	private HOST host;
 	private String Attestation_Type;
 	private String MLE_Type;
 	private String Description;
-	
 	
 	public Long getMLEID() {
 		return MLEID;
@@ -86,13 +84,4 @@ public class MLE {
 	public void setDescription(String description) {
 		Description = description;
 	}
-
-	public HOST getHost() {
-		return host;
-	}
-
-	public void setHost(HOST host) {
-		this.host = host;
-	}
-
 }

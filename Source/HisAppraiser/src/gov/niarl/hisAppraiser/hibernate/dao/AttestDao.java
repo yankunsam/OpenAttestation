@@ -23,6 +23,8 @@ import org.hibernate.Session;
 
 import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
 import gov.niarl.hisAppraiser.hibernate.domain.MLE;
+//import gov.niarl.hisAppraiser.hibernate.domain.
+import gov.niarl.hisAppraiser.hibernate.domain.HOST_MLE;
 import gov.niarl.hisAppraiser.hibernate.domain.PcrWhiteList;
 import gov.niarl.hisAppraiser.hibernate.util.HibernateUtilHis;
 
@@ -97,7 +99,16 @@ public class AttestDao {
 		hostName = hostName.toLowerCase();
 		List<PcrWhiteList> pcrs = new ArrayList<PcrWhiteList>();
 		Long mleId =0L;
-		Query query = HibernateUtilHis.getSession().createQuery("select a from MLE a inner join a.host b where b.HostName = :hostName");
+		
+		
+		
+		
+//		Query query = HibernateUtilHis.getSession().createQuery("select a from MLE a inner join a.host b where b.HostName = :hostName");
+//		query.setString("hostName", hostName);
+//		List list = query.list();
+//		List prcList;
+		
+		Query query = HibernateUtilHis.getSession().createQuery("select a from HOST_MLE a inner join a.host b where b.HostName = :hostName");
 		query.setString("hostName", hostName);
 		List list = query.list();
 		List prcList;
@@ -105,7 +116,7 @@ public class AttestDao {
 		if (list.size()>0) {
 			Iterator iterator  = list.iterator();  
 			while (iterator.hasNext()){
-				mleId = ((MLE)iterator.next()).getMLEID();
+				mleId = ((HOST_MLE)iterator.next()).getMle().getMLEID();
 				query = HibernateUtilHis.getSession().createQuery("select a from PcrWhiteList a inner join a.mle b where b.MLEID = :mleId");
 				query.setLong("mleId", mleId);
 				prcList = query.list();

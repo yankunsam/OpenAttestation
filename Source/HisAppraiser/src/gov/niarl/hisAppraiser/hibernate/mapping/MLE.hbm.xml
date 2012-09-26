@@ -10,7 +10,6 @@
 		<property name="Version" column="VERSION"/>
 		<many-to-one name="oem" class="gov.niarl.hisAppraiser.hibernate.domain.OEM" column="OEM_ID"/>
 		<many-to-one name="os" class="gov.niarl.hisAppraiser.hibernate.domain.OS" column="OS_ID"/>
-		<many-to-one name="host" class="gov.niarl.hisAppraiser.hibernate.domain.HOST" column="HOST_ID"/>
 		<property name="Attestation_Type" column="ATTESTATION_TYPE"/>
 		<property name="MLE_Type" column="MLE_TYPE"/>
 		<property name="Description" column="DESCRIPTION"/>
