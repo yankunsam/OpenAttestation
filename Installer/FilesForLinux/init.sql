@@ -74,7 +74,6 @@ create table MLE
 (
    ID                   int not null auto_increment,
    OEM_ID               int,
-   HOST_ID              int,
    OS_ID                int,
    NAME                 varchar(50),
    VERSION              varchar(100),
@@ -83,6 +82,18 @@ create table MLE
    DESCRIPTION          varchar(100),
    primary key (ID)
 );
+
+/*==============================================================*/
+/* Table: HOST_MLE                                              */
+/*==============================================================*/
+create table HOST_MLE
+(
+   ID int not null auto_increment,
+   HOST_ID int ,
+   MLE_ID int ,
+   primary key (ID)
+);
+
 
 /*==============================================================*/
 /* Table: OEM                                                   */

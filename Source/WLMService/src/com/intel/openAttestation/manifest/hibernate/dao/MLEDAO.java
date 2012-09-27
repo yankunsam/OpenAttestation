@@ -18,8 +18,6 @@ import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
-
-import com.intel.openAttestation.manifest.hibernate.domain.HOST;
 import com.intel.openAttestation.manifest.hibernate.domain.MLE;
 import com.intel.openAttestation.manifest.hibernate.domain.OEM;
 import com.intel.openAttestation.manifest.hibernate.domain.OS;
@@ -212,25 +210,6 @@ public class MLEDAO {
          }
 	}
 	
-	public HOST getHostById(Long Id){
-		try {
-			HOST host = null;
-			Query query = HibernateUtilHis.getSession().createQuery("from HOST h where h.ID = :hostId");
-			query.setLong("hostId", Id);
-			List list = query.list();
-			if (list.size() >= 1) {
-				host=(HOST)list.get(0);
-			} 
-			return host;
-		} catch (Exception e) {
-			HibernateUtilHis.rollbackTransaction();
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}finally{
-			HibernateUtilHis.closeSession();
-		}
-	}
-
 	public void DeleteOEMEntry (String OEMName){
 		try {
 			HibernateUtilHis.beginTransaction();
