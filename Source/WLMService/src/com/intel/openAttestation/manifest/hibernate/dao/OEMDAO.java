@@ -146,5 +146,26 @@ public class OEMDAO {
 			HibernateUtilHis.closeSession();
 		}
 	}
-
+	
+	public boolean isRefMle(String name){
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("select m from MLE m inner join m.oem o where o.Name = :name");
+			query.setString("name", name);
+			List list = query.list();
+			if (list.size() >= 1) {
+				HibernateUtilHis.commitTransaction();
+				return true;
+			} else {
+				HibernateUtilHis.commitTransaction();
+				return false;
+			}
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+	}
 }

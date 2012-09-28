@@ -13,10 +13,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 package com.intel.openAttestation.manifest.resource;
 
-import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -119,11 +117,22 @@ public class OEMResource {
         try{
 			OEMDAO dao = new OEMDAO();
 			System.out.println("Check if the OEM Name exists:" + Name);
+			
+			//check if the OEM has the reference with MLE 
+			 if (dao.isRefMle(Name)) {
+					status = Response.Status.BAD_REQUEST;
+					OpenAttestationResponseFault fault = new OpenAttestationResponseFault(2012);
+					fault.setError_message("Data Error - OEM " + Name +" reference with MLE, delete failed");
+					return Response.status(status).header("Location", b.build()).entity(fault)
+							.build();
+			 }
+			
 			if (dao.isOEMExisted(Name)){
 				dao.DeleteOEMEntry(Name);
 				return Response.status(status).type(MediaType.TEXT_PLAIN).entity("True")
 		        		.build();
 			}
+			
 			status = Response.Status.BAD_REQUEST;
 			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 					OpenAttestationResponseFault.FaultCode.FAULT_1006);
