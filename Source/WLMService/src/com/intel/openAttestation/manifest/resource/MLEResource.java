@@ -76,8 +76,8 @@ public class MLEResource {
 			    	else{
 						status = Response.Status.BAD_REQUEST;
 						OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
-						fault.setError_message("Data Error - OS[" + os.getName() + 
-								"] Version[" +os.getVersion() +"] does not exist");
+						fault.setError_message("Data Error - OS[" + mleBean.getOsName() + 
+								"] Version[" + mleBean.getOsVersion() +"] does not exist");
 						return Response.status(status).header("Location", b.build()).entity(fault)
 									.build();
 			    	}
