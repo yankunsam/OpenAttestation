@@ -32,3 +32,6 @@ bash oat_mle -a -h ubt6 '{"Name":"ubuntu","Version":"123","OemName":"OEM1","OemD
 bash oat_mle -e -h ubt6 '{"Name":"ubuntu","Version":"123","OemName":"OEM1","OemDescription":"intel bios for ubuntu","Attestation_Type": "PCR","MLE_Type":"BIOS","Description":"###############","MLE_Manifests": [{"Name": "18",  "Value": "@@@@@@@@@@@@"}]}'
 bash oat_mle -d -h ubt6 '{"mleName":"ubuntu","mleVersion":"123","oemName":"OEM1"}'
 
+#pollhosts
+bash oat_pollhosts -h ubt6 '{"hosts":["ubt6"]}'
+
