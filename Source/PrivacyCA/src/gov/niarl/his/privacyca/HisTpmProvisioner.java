@@ -67,8 +67,6 @@ public class HisTpmProvisioner {
 	 */
 	public static void main(String[] args){// throws InvalidKeyException, CertificateEncodingException, UnrecoverableKeyException, NoSuchAlgorithmException, InvalidKeySpecException, SignatureException, NoSuchProviderException, KeyStoreException, CertificateException, IOException, javax.security.cert.CertificateException {
 		//get properties file info
-		final String EC_P12_FILE = "TpmEndorsmentP12";
-		final String EC_P12_PASSWORD = "EndorsementP12Pass";
 		final String EC_VALIDITY = "EcValidityDays";
 		final String OWNER_AUTH = "TpmOwnerAuth";
 		final String PRIVACY_CA_URL = "PrivacyCaUrl";
@@ -77,8 +75,6 @@ public class HisTpmProvisioner {
         final String PRIVACY_CA_CERT = "PrivacyCaCertFile";
  
 		String PrivacyCaUrl = "";
-		String TpmEndorsmentP12 = "";
-		String EndorsementP12Pass = "";
 		int EcValidityDays = 0;
 		String TrustStore = "";
         String ecStorage = "";
@@ -99,8 +95,6 @@ public class HisTpmProvisioner {
 			Properties HisProvisionerProperties = new Properties();
 			HisProvisionerProperties.load(PropertyFile);
 			
-			TpmEndorsmentP12 = HisProvisionerProperties.getProperty(EC_P12_FILE, "");
-			EndorsementP12Pass = HisProvisionerProperties.getProperty(EC_P12_PASSWORD, "");
 			EcValidityDays = Integer.parseInt(HisProvisionerProperties.getProperty(EC_VALIDITY, ""));
 			TpmOwnerAuth = TpmUtils.hexStringToByteArray(HisProvisionerProperties.getProperty(OWNER_AUTH, ""));
 			PrivacyCaUrl = HisProvisionerProperties.getProperty(PRIVACY_CA_URL, "");
@@ -127,14 +121,6 @@ public class HisTpmProvisioner {
 		}
 		String errorString = "Properties file \"" + propertiesFileName + "\" contains errors:\n";
 		boolean hasErrors = false;
-		if(TpmEndorsmentP12.length() == 0){
-			errorString += " - \"TpmEndorsmentP12\" value must be the name of a valid PKCS#12 file\n";
-			hasErrors = true;
-		}
-		if(EndorsementP12Pass.length() == 0){
-			errorString += " - \"EndorsementP12Pass\" value must be the password for the TpmEndorsementP12 file\n";
-			hasErrors = true;
-		}
 		if(EcValidityDays == 0){
 			errorString += " - \"EcValidityDays\" value must be the number of validity days for the Endorsement Credential\n";
 			hasErrors = true;
