@@ -27,19 +27,19 @@ else
   INFO="$4"
 fi
 
-addOEM() 
+addMLE() 
 {
   curl --cacert certfile.cer -H "Content-Type: application/json" \
        -X POST -d "$INFO" "https://$HOST_NAME:$PORT/WLMService/resources/mles" -ssl3
 }
 
-editOEM()
+editMLE()
 {
   curl --cacert certfile.cer -H "Content-Type: application/json" \
         -X PUT -d "$INFO" "https://$HOST_NAME:$PORT/WLMService/resources/mles" -ssl3
 }
 
-delOEM()
+delMLE()
 {
   curl --cacert certfile.cer \
         -X DELETE  "https://$HOST_NAME:$PORT/WLMService/resources/mles?$INFO"  -ssl3
@@ -47,16 +47,16 @@ delOEM()
 
 case $1 in
       $ADD_PARM)
-           echo "add OEM:"
-           addOEM
+           echo "add MLE:"
+           addMLE
       ;;
       $EDIT_PARM)
-           echo "edit OEM:"
-           editOEM
+           echo "edit MLE:"
+           editMLE
       ;;
       $DEL_PARM)
-           echo "del OEM:"
-           delOEM
+           echo "del MLE:"
+           delMLE
       ;;
       *)
       echo "Usage oat_mles {-a|-e|-d}"
