@@ -194,7 +194,14 @@ public class HOSTResource {
 				isAnomaly = true;
 			} else if (hostFullObj.getVMMName() != null && (hostFullObj.getVMMOSName() == null || hostFullObj.getVMMOSVersion() == null || hostFullObj.getVMMVersion() == null)){
 				isAnomaly = true;
-			} else if (hostFullObj.getBIOSName() != null) {
+			} 
+			if (isAnomaly){
+				status = Response.Status.BAD_REQUEST;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(2001);
+				fault.setError_message("Data Error - HOST " + "please check the input parameters and provide complete information");
+				return Response.status(status).header("Location", b.build()).entity(fault).build();
+			}
+			if (hostFullObj.getBIOSName() != null) {
 				//relation check for BIOS table
 				mle = mleDao.getMLE(hostFullObj, 0);
 				if (mle == null){
@@ -204,7 +211,8 @@ public class HOSTResource {
                     return Response.status(status).header("Location", b.build()).entity(fault).build();
 				}
 				
-			} else if (hostFullObj.getVMMName() != null) {
+			}
+			if (hostFullObj.getVMMName() != null) {
 				//relation check for VMM MLE 
 				mle = mleDao.getMLE(hostFullObj, 1);
 				if (mle == null){
@@ -214,14 +222,6 @@ public class HOSTResource {
                     return Response.status(status).header("Location", b.build()).entity(fault).build();
 				}
 			} 
-					
-			if (isAnomaly){
-				status = Response.Status.BAD_REQUEST;
-				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(2001);
-				fault.setError_message("Data Error - HOST " + "please check the input parameters and provide complete information");
-				return Response.status(status).header("Location", b.build()).entity(fault).build();
-			}
-			
 			//update HOST table
 			HOST host = new HOST();
 			host.setAddOn_Connection_String(hostFullObj.getAddOn_Connection_String());
