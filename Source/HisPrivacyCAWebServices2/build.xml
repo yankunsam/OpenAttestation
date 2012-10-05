@@ -73,24 +73,32 @@
 	<target name="client">
 		<delete dir="client" />
 		<mkdir dir="client" />
+		<delete dir="clientsrc" />
+		<mkdir dir="clientsrc" />
 		<delete dir="clientlib/HisPrivacyCAWebServices2-client.jar" />
 		<wsimport 
 			debug="true" 
 			verbose="true" 
 			keep="true" 
-			destdir="client" 
+			sourcedestdir="clientsrc" 
 			package="gov.niarl.his.webservices.hisPrivacyCAWebServices2.clientWsImport"
-			wsdl="${basedir}/wsdl/hisPrivacyCAWebService2.wsdl" />
+			wsdl="${basedir}/wsdl/hisPrivacyCAWebService2.wsdl"
+			xnocompile="true" />
 		<wsimport 
 			debug="true" 
 			verbose="true" 
 			keep="true" 
-			destdir="client" 
+			sourcedestdir="clientsrc" 
 			package="gov.niarl.his.webservices.hisPrivacyCAWebServices2.clientWsImport"
-			wsdl="${basedir}/wsdl/hisPrivacyCAWebService2FactoryService.wsdl" />
-		<javac debug="true" destdir="client" srcdir="./src"
-               source="1.5" target="1.5"
-               includes="**/hisPrivacyCAWebService2/client/**/*.java,**/hisPrivacyCAWebService2/*,Main.java">
+			wsdl="${basedir}/wsdl/hisPrivacyCAWebService2FactoryService.wsdl"
+			xnocompile="true" />
+		<javac debug="true" destdir="client"
+			source="1.5" target="1.5">
+			<src path="src"/>
+			<src path="clientsrc"/>
+			<include name="**/hisPrivacyCAWebService2/client/**/*.java"/>
+			<include name="**/hisPrivacyCAWebService2/*,Main.java"/>
+			<include name="**/clientWsImport/*"/>
 			<classpath>
 				<path refid="client.compile.classpath" />
 				<pathelement path="client"/>
