@@ -15,11 +15,10 @@ make -C ./TPMModule/plain/linux/
 ant -file ./HisAppraiser/xml/Integrity_Report_Manifest_v1_0/build.xml
 ant -file ./HisAppraiser/xml/PCR_Difference/build.xml
 ant -file ./HisAppraiser/build.xml
-cp -rf ./HisAppraiser/HisAppraiser.jar ./OpenAttestationWebServices/WebContent/WEB-INF/lib/
+cp -rf ./HisAppraiser/HisAppraiser.jar ./AttestationService/WebContent/WEB-INF/lib/
 cp -rf ./HisAppraiser/HisAppraiser.jar ./HisWebServices/clientlib/
 cp -rf ./HisAppraiser/HisAppraiser.jar ./HisWebServices/WEB-INF/lib/HisAppraiser.jar
-cp -rf ./HisAppraiser/HisAppraiser.jar ./OpenAttestationAdminConsole/WebContent/WEB-INF/lib/
-cp -rf ./HisAppraiser/HisAppraiser.jar  ./OpenAttestationManifestWebServices/WebContent/WEB-INF/lib/
+cp -rf ./HisAppraiser/HisAppraiser.jar ./WLMService/WebContent/WEB-INF/lib/
 
 #3. build HisWebServices
 #cp -rf ./HisAppraiser/HisAppraiser.jar ./HisWebServices/WEB-INF/lib/
