@@ -47,8 +47,8 @@
 		</copy>
 		<!-- Compile-->
 		<javac debug="true" destdir="./WEB-INF/classes" srcdir="./src"
-               source="1.5" target="1.5"
-               includes="**/*.java" excludes="**/hisWebService/client/,MainHisWebServices.java">
+			source="1.5" target="1.5"
+			includes="**/*.java" excludes="**/hisWebService/client/,MainHisWebServices.java">
 			<classpath>
 				<path refid="compile.classpath" />
 			</classpath>
@@ -75,38 +75,48 @@
 	<target name="client">
 		<delete dir="client" />
 		<mkdir dir="client" />
+        <delete dir="clientsrc" />
+        <mkdir dir="clientsrc"/>
 		<!-- <delete file="clientlib/HisWebServices-client.jar" />-->
 		<wsimport 
 			debug="true" 
 			verbose="true" 
 			keep="true" 
-			destdir="client" 
+			sourcedestdir="clientsrc" 
 			package="gov.niarl.sal.webservices.hisWebServices.clientWsImport"
-			wsdl="${basedir}/wsdl/hisWebService.wsdl" />
+			wsdl="${basedir}/wsdl/hisWebService.wsdl"
+			xnocompile="true" />
 		<wsimport 
 			debug="true" 
 			verbose="true" 
 			keep="true" 
-			destdir="client" 
+			sourcedestdir="clientsrc" 
 			package="gov.niarl.sal.webservices.hisWebServices.clientWsImport"
-			wsdl="${basedir}/wsdl/hisWebServiceFactoryService.wsdl" />
+			wsdl="${basedir}/wsdl/hisWebServiceFactoryService.wsdl"
+			xnocompile="true" />
 		<wsimport 
 			debug="true" 
 			verbose="true" 
 			keep="true" 
-			destdir="client" 
+			sourcedestdir="clientsrc" 
 			package="gov.niarl.sal.webservices.hisWebServices.clientWsImport"
-			wsdl="${basedir}/wsdl/hisEnrollmentWebService.wsdl" />
+			wsdl="${basedir}/wsdl/hisEnrollmentWebService.wsdl"
+			xnocompile="true" />
 		<wsimport 
 			debug="true" 
 			verbose="true" 
 			keep="true" 
-			destdir="client" 
+			sourcedestdir="clientsrc" 
 			package="gov.niarl.sal.webservices.hisWebServices.clientWsImport"
-			wsdl="${basedir}/wsdl/hisPollingWebService.wsdl" />
-		<javac debug="true" destdir="client" srcdir="./src"
-               source="1.5" target="1.5"
-               includes="**/hisWebService/client/**/*.java,**/hisWebService/*">
+			wsdl="${basedir}/wsdl/hisPollingWebService.wsdl"
+			xnocompile="true" />
+		<javac debug="true" destdir="client"
+			source="1.5" target="1.5">
+			<src path="src"/>
+			<src path="clientsrc"/>
+			<include name="**/hisWebService/client/**/*.java"/>
+			<include name="**/hisWebService/*"/>
+			<include name="**/clientWsImport/*"/>
 			<classpath>
 				<path refid="client.compile.classpath" />
 				<pathelement path="client"/>

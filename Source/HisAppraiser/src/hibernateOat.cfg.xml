@@ -28,6 +28,7 @@
 		<!-- Drop and re-create the database schema on startup -->
 		<!-- <property name="hbm2ddl.auto">create</property> -->
 
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/HOST.hbm.xml"/>
 		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/audit_log.hbm.xml"/>
 		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/machine_cert.hbm.xml"/>
 		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/alerts.hbm.xml"/>
