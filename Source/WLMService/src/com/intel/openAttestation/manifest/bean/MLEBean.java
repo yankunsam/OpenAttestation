@@ -1,12 +1,9 @@
 package com.intel.openAttestation.manifest.bean;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import com.intel.openAttestation.manifest.hibernate.domain.PcrWhiteList;
 
 @XmlRootElement
 public class MLEBean {
@@ -104,6 +101,4 @@ public class MLEBean {
 		MLE_Manifests = mLE_Manifests;
 	}
 	
-	
-
 }

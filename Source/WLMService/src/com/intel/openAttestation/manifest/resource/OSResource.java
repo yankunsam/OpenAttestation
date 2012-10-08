@@ -13,8 +13,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 package com.intel.openAttestation.manifest.resource;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -140,5 +144,27 @@ public class OSResource {
 		}
 	}
 	
+	
+	@GET
+	@Produces("application/json")
+	public List<OS> getOSEntry(@QueryParam("index") String index,
+			@QueryParam("CompName") String name,@QueryParam("CompDesc") String desc){
+		OSDAO dao = new OSDAO();
+		List<OS> emptyList = new ArrayList<OS>();
+		if (index == null && name == null && desc == null)
+			return dao.getAllOSEntries();
+		else if ( index != null)
+			//@TODO 
+			return emptyList;
+		else if (name != null && desc == null)
+			//@TODO 
+			return emptyList;
+		else if (name == null && desc != null)
+			//@TODO 
+			return emptyList;
+		else
+			//@TODO 
+			return emptyList;
+	}
 
 }

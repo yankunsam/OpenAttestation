@@ -14,12 +14,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 package com.intel.openAttestation.manifest.hibernate.dao;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import com.intel.openAttestation.manifest.hibernate.domain.OEM;
-import com.intel.openAttestation.manifest.hibernate.domain.OS;
 import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
 
 /**
@@ -168,4 +166,26 @@ public class OEMDAO {
 			HibernateUtilHis.closeSession();
 		}
 	}
+	
+	public List<OEM> getAllOEMEntries(){
+		try{
+			HibernateUtilHis.beginTransaction();
+			ArrayList<OEM> OEMList = new ArrayList<OEM>();
+			Query query = HibernateUtilHis.getSession().createQuery("from OEM oem");
+			System.out.println("query:"+query.toString());
+			List list = query.list();
+			for (int i=0;i<list.size();i++){
+				OEMList.add((OEM)list.get(i));
+			}
+			HibernateUtilHis.commitTransaction();
+			return OEMList;
+		}catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+		
+	}   
 }

@@ -13,8 +13,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 package com.intel.openAttestation.manifest.hibernate.dao;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -38,6 +36,8 @@ public class MLEDAO {
 		try {
 			HibernateUtilHis.beginTransaction();
 			Query query = HibernateUtilHis.getSession().createQuery("select a from MLE a, OEM b where a.Name = :name and a.Version = :version and a.oem.OEMID = b.OEMID and b.Name = :oem_name");
+			//Query query = HibernateUtilHis.getSession().createQuery("select new MLE(a.Name, a.Version, a.Attestation_Type, a.MLE_Type, a.Description, b) from MLE a, OEM b where a.Name = :name and a.Version = :version and a.oem.OEMID = b.OEMID and b.Name = :oem_name");
+
 			query.setString("name", Name);
 			query.setString("version", Version);
 			query.setString("oem_name", OEMname);
@@ -294,6 +294,61 @@ public class MLEDAO {
 		}finally{
 			HibernateUtilHis.closeSession();
 		}
+	}
+	
+	public OEM queryOEMByNameAndVersionAndOEMid(String Name, String Version, String OEMname){
+		List<OEM> OEMList = null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("select b from MLE a, OEM b where a.Name = :name and a.Version = :version and a.oem.OEMID = b.OEMID and b.Name = :oem_name");
+			query.setString("name", Name);
+			query.setString("version", Version);
+			query.setString("oem_name", OEMname);
+			List list = query.list();
+			OEMList = (List<OEM>)list;
+			if (list.size() < 1) 
+			{
+				return null;
+			} else {
+				HibernateUtilHis.commitTransaction();
+				return (OEM)OEMList.get(0);
+			}
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+		
+	}
+	
+	public OS queryOSByNameAndVersionAndOSid (String Name, String Version, String OSname, String OSversion){
+		List<OS> OSList = null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("select b from MLE a, OS b where a.Name = :name and a.Version = :version and a.os.ID = b.ID and b.Name = :os_name and b.Version = :os_version");
+			query.setString("name", Name);
+			query.setString("version", Version);
+			query.setString("os_name", OSname);
+			query.setString("os_version", OSversion);
+			List list = query.list();
+			OSList = (List<OS>)list;
+			if (list.size() < 1) 
+			{
+				return null;
+			} else {
+				HibernateUtilHis.commitTransaction();
+				return (OS)OSList.get(0);
+			}
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+		
 	}
 
 }

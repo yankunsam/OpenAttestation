@@ -14,11 +14,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 package com.intel.openAttestation.manifest.hibernate.dao;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import com.intel.openAttestation.manifest.hibernate.domain.OEM;
 import com.intel.openAttestation.manifest.hibernate.domain.OS;
 import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
 
@@ -55,7 +55,7 @@ public class OSDAO {
 
 	}
 	
-	public void editOSEntry (OS osEntry){
+	public void editOSEntry(OS osEntry){
 		try {
 			HibernateUtilHis.beginTransaction();
 			Session session = HibernateUtilHis.getSession();
@@ -131,7 +131,7 @@ public class OSDAO {
 		}
 	}
        
-      	public OS getOS(String Name, String Version){
+	public OS getOS(String Name, String Version){
 		OS os =null;
 		try {
 			HibernateUtilHis.beginTransaction();
@@ -139,19 +139,42 @@ public class OSDAO {
 					"where os.Name = :osName and os.Version= :osVersion");
 			query.setString("osName", Name);
 			query.setString("osVersion", Version);
+				List list = query.list();
+				if (list.size() >= 1) {
+					os = (OS)list.iterator().next();
+				} 
+				HibernateUtilHis.commitTransaction();
+				return os;
+			} catch (Exception e) {
+				HibernateUtilHis.rollbackTransaction();
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}finally{
+				HibernateUtilHis.closeSession();
+			}
+	}
+      	
+      	
+	public List<OS> getAllOSEntries(){
+		try{
+			HibernateUtilHis.beginTransaction();
+			ArrayList<OS> OSList = new ArrayList<OS>();
+			Query query = HibernateUtilHis.getSession().createQuery("from OS os");
+			System.out.println("query:"+query.toString());
 			List list = query.list();
-			if (list.size() >= 1) {
-				os = (OS)list.iterator().next();
-			} 
+			for (int i=0;i<list.size();i++){
+				OSList.add((OS)list.get(i));
+			}
 			HibernateUtilHis.commitTransaction();
-			return os;
-		} catch (Exception e) {
+			return OSList;
+		}catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}finally{
 			HibernateUtilHis.closeSession();
 		}
-	}
+		
+	}     	
 
 }

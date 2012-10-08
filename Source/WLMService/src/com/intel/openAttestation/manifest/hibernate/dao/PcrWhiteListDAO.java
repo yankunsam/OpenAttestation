@@ -237,5 +237,30 @@ public class PcrWhiteListDAO {
 		}
 
 	}
+    
+	public List<PcrWhiteList> queryPcrByMLEid (long mleID){
+		List<PcrWhiteList> pcrList = null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("select a from PcrWhiteList a where a.mle.MLEID = :mleID");
+			query.setLong("mleID", mleID);
+			List<PcrWhiteList> list = query.list();
+			pcrList = (List<PcrWhiteList>)list;
+			if (list.size() < 1) 
+			{
+				return null;
+			} else {
+				HibernateUtilHis.commitTransaction();
+				return pcrList;
+			}
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+		
+	}
 	
 }

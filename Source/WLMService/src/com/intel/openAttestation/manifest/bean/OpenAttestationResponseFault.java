@@ -47,6 +47,7 @@ public class OpenAttestationResponseFault {
 		public static int FAULT_401 = 401;
 		public static int FAULT_404 = 404;
 		public static int FAULT_500 = 500;
+		public static int FAULT_2001 = 2001;
 	}
 
 
