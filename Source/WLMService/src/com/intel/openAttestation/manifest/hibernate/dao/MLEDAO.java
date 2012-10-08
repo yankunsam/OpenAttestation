@@ -13,6 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 package com.intel.openAttestation.manifest.hibernate.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -351,4 +352,112 @@ public class MLEDAO {
 		
 	}
 
+	public List<MLE> getAllMLEEntries(){
+		try{
+			HibernateUtilHis.beginTransaction();
+			ArrayList<MLE> MLEList = new ArrayList<MLE>();
+			Query query = HibernateUtilHis.getSession().createQuery("from MLE mle");
+			System.out.println("query:"+query.toString());
+			List list = query.list();
+			for (int i=0;i<list.size();i++){
+				MLEList.add((MLE)list.get(i));
+			}
+			HibernateUtilHis.commitTransaction();
+			return MLEList;
+		}catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+		
+	}    	
+	
+	public OEM queryOEMByMLEID(long id){
+		List<OEM> OEMList = null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("select a.oem from MLE a inner join a.oem o where a.MLEID = :id");
+			query.setLong("id", id);
+			List list = query.list();
+			OEMList = (List<OEM>)list;
+			if (list.size() < 1) 
+			{
+				return null;
+			} else {
+				HibernateUtilHis.commitTransaction();
+				return (OEM)OEMList.get(0);
+			}
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+		
+	}
+
+	public OS queryOSByMLEID(long id){
+		List<OS> OSList = null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("select a.os from MLE a inner join a.os o where a.MLEID = :id");
+			query.setLong("id", id);
+			List list = query.list();
+			OSList = (List<OS>)list;
+			if (list.size() < 1) 
+			{
+				HibernateUtilHis.commitTransaction();
+				return null;
+			} else {
+				HibernateUtilHis.commitTransaction();
+				return (OS)OSList.get(0);
+			}
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+		
+	}
+	
+	public MLE queryMLEByCriteria(String criteria, String type, Long mleID){
+		List<MLE> mleList = null;
+		Query query;
+		try {
+			HibernateUtilHis.beginTransaction();
+	        if (type.equalsIgnoreCase("oem")){
+				query = HibernateUtilHis.getSession().createQuery("select a from MLE a inner join a.oem b where a.Name like '%"+criteria+"%' or a.Version like '%"+criteria+"%'" +
+						" or a.Description like '%"+criteria+"%' or a.oem.Name like '%"+criteria+"%' and a.MLEID = :value ");
+				query.setLong("value", mleID);
+	        } else if (type.equalsIgnoreCase("os")){
+				query = HibernateUtilHis.getSession().createQuery("select a from MLE a inner join a.os b where a.Name like '%"+criteria+"%' or a.Version like '%"+criteria+"%'" +
+						" or a.Description like '%"+criteria+"%' or a.os.Name like '%"+criteria+"%' or a.os.Version like '%"+criteria+"%' and a.MLEID = :value ");
+				query.setLong("value", mleID);
+	        } else {
+	        	return null;
+	        }
+			List list = query.list();
+			mleList = (List<MLE>)list;
+			if (list.size() < 1) 
+			{
+				HibernateUtilHis.commitTransaction();
+				return null;
+			} else {
+				HibernateUtilHis.commitTransaction();
+				return (MLE)mleList.get(0);
+			}
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+		
+	}
 }

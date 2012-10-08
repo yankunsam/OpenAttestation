@@ -223,11 +223,128 @@ public class MLEResource {
 	}
 
 	@GET
+	@Produces("application/json")
+	public List<MLEBean> searchMLE(@QueryParam("searchCriteria") String criteria){
+		MLEDAO mleDao = new MLEDAO();
+		List<MLE> mleList = new ArrayList(); 
+		List<MLEBean> mleBeanList = new ArrayList();
+		MLEBean mleBean = new MLEBean();
+		ArrayList<PcrWhiteList> prcList = new ArrayList();
+		PcrWhiteListDAO pcrDao = new PcrWhiteListDAO();
+		MLE mle = null;
+		OEM oem = null;
+		OS os = null;
+		mleList = mleDao.getAllMLEEntries();
+		for (int i=0; i<mleList.size(); i++){
+			if (criteria == null){
+				mleBean = new MLEBean();
+	        	mleBean.setName(mleList.get(i).getName());
+	        	mleBean.setVersion(mleList.get(i).getVersion());
+	        	mleBean.setDescription(mleList.get(i).getDescription());
+	        	mleBean.setAttestation_Type(mleList.get(i).getAttestation_Type());
+				if (mleList.get(i).getOem() != null){
+					oem = mleDao.queryOEMByMLEID(mleList.get(i).getMLEID());
+					mleBean.setOemName(oem.getName());
+	    			mleBean.setOsName("null");
+	    			mleBean.setOsVersion("null");		
+				} else if (mleList.get(i).getOs() != null){
+					os = mleDao.queryOSByMLEID(mleList.get(i).getMLEID());
+	    			mleBean.setOsName(os.getName());
+	    			mleBean.setOsVersion(os.getVersion());
+	       			mleBean.setOemName("null");
+				}
+				
+	    		//Get pcr white list;
+	    		prcList = new ArrayList(pcrDao.queryPcrByMLEid(mleList.get(i).getMLEID().longValue()));
+	    		List<MLE_Manifest> mleManifest = new ArrayList();
+	    		for (int j=0; j<prcList.size(); j++){
+	    			MLE_Manifest entry = new MLE_Manifest();
+	    			entry.setName(prcList.get(i).getPcrName());
+	    			entry.setValue(prcList.get(i).getPcrDigest());
+	    			mleManifest.add(entry);
+	    		}
+	    		mleBean.setMLE_Manifests(mleManifest);
+	    		mleBean.setMLE_Type(mleList.get(i).getMLE_Type());
+	    		mleBeanList.add(mleBean);
+			} else {
+				if (mleList.get(i).getOem() != null){
+					mle = mleDao.queryMLEByCriteria(criteria, "oem", mleList.get(i).getMLEID());
+					if (mle != null){
+						mleBean = new MLEBean();
+			        	mleBean.setName(mleList.get(i).getName());
+			        	mleBean.setVersion(mleList.get(i).getVersion());
+			        	mleBean.setDescription(mleList.get(i).getDescription());
+			        	mleBean.setAttestation_Type(mleList.get(i).getAttestation_Type());
+						if (mleList.get(i).getOem() != null){
+							oem = mleDao.queryOEMByMLEID(mleList.get(i).getMLEID());
+							mleBean.setOemName(oem.getName());
+			    			mleBean.setOsName("null");
+			    			mleBean.setOsVersion("null");		
+						} else if (mleList.get(i).getOs() != null){
+							os = mleDao.queryOSByMLEID(mleList.get(i).getMLEID());
+			    			mleBean.setOsName(os.getName());
+			    			mleBean.setOsVersion(os.getVersion());
+			       			mleBean.setOemName("null");
+						}
+			    		//Get pcr white list;
+			    		prcList = new ArrayList(pcrDao.queryPcrByMLEid(mleList.get(i).getMLEID().longValue()));
+
+			    		List<MLE_Manifest> mleManifest = new ArrayList();
+			    		for (int j=0; j<prcList.size(); j++){
+			    			MLE_Manifest entry = new MLE_Manifest();
+			    			entry.setName(prcList.get(i).getPcrName());
+			    			entry.setValue(prcList.get(i).getPcrDigest());
+			    			mleManifest.add(entry);
+			    		}
+			    		mleBean.setMLE_Manifests(mleManifest);
+			    		mleBean.setMLE_Type(mleList.get(i).getMLE_Type());
+			    		mleBeanList.add(mleBean);
+					}
+					
+				} else if (mleList.get(i).getOs() != null){
+					mle = mleDao.queryMLEByCriteria(criteria, "os", mleList.get(i).getMLEID());
+					if (mle != null){
+						mleBean = new MLEBean();
+			        	mleBean.setName(mle.getName());
+			        	mleBean.setVersion(mle.getVersion());
+			        	mleBean.setDescription(mle.getDescription());
+			        	mleBean.setAttestation_Type(mle.getAttestation_Type());
+						if (mle.getOem() != null){
+							oem = mleDao.queryOEMByMLEID(mle.getMLEID());
+							mleBean.setOemName(oem.getName());
+			    			mleBean.setOsName("null");
+			    			mleBean.setOsVersion("null");		
+						} else if (mle.getOs() != null){
+							os = mleDao.queryOSByMLEID(mle.getMLEID());
+			    			mleBean.setOsName(os.getName());
+			    			mleBean.setOsVersion(os.getVersion());
+			       			mleBean.setOemName("null");
+						}
+						
+			    		//Get pcr white list;
+			    		prcList = new ArrayList(pcrDao.queryPcrByMLEid(mle.getMLEID().longValue()));
+			    		List<MLE_Manifest> mleManifest = new ArrayList();
+			    		for (int j=0; j<prcList.size(); j++){
+			    			MLE_Manifest entry = new MLE_Manifest();
+			    			entry.setName(prcList.get(i).getPcrName());
+			    			entry.setValue(prcList.get(i).getPcrDigest());
+			    			mleManifest.add(entry);
+			    		}
+			    		mleBean.setMLE_Manifests(mleManifest);
+			    		mleBean.setMLE_Type(mle.getMLE_Type());
+			    		mleBeanList.add(mleBean);
+					}
+				}	
+			}
+		}
+		return mleBeanList;
+	}
+	
+	@GET
 	@Path("/manifest")
 	@Produces("application/json")
 	public MLEBean getMLEEntry(@QueryParam("mleName") String name, @QueryParam("mleVersion") String version, @QueryParam("osName") String osName, 
-			@QueryParam("osVersion") String osVersion,@QueryParam("oemName") String oemName,@Context UriInfo uriInfo){
-		
+			@QueryParam("osVersion") String osVersion, @QueryParam("oemName") String oemName, @Context UriInfo uriInfo){	
 		ArrayList<PcrWhiteList> prcList = new ArrayList();
 		MLEDAO mleDao = new MLEDAO();
 		PcrWhiteListDAO pcrDao = new PcrWhiteListDAO();
@@ -288,4 +405,5 @@ public class MLEResource {
         }
         return mleBean;
 	}
+	
 }
