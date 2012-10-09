@@ -352,59 +352,59 @@ public class MLEResource {
 		OEM oem = null;
 		OS os = null;
 		MLEBean mleBean = new MLEBean();
-		ArrayList<MLEBean> mleList = new ArrayList<MLEBean>();
         try{
-        	if (oemName != null){
-        		mle = mleDao.queryMLEidByNameAndVersionAndOEMid(name, version, oemName);
-        		//query oem
-        		oem = mleDao.queryOEMByNameAndVersionAndOEMid(name, version, oemName);
-        		//oem = mle.getOem();
-        		
-        	} else if (osName != null){
-        		mle = mleDao.queryMLEidByNameAndVersionAndOSid(name, version, osName, osVersion);
-        		//query os
-        		os = mleDao.queryOSByNameAndVersionAndOSid(name, version, osName, osVersion);
-        		//os = mle.getOs();
-        		
-        		
-        	} else {
-        		System.out.println("please check the input parameters and provide complete information");
-        	}
-        	
-        	mleBean.setName(mle.getName());
-        	mleBean.setVersion(mle.getVersion());
-        	mleBean.setDescription(mle.getDescription());
-        	mleBean.setAttestation_Type(mle.getAttestation_Type());
-    		if (os != null){
-    			mleBean.setOsName(os.getName());
-    			mleBean.setOsVersion(os.getVersion());
-    		} else {
-    			mleBean.setOsName("null");
-    			mleBean.setOsVersion("null");
-    		}
-
-    		if (oem != null){
-    			mleBean.setOemName(oem.getName());
-    		} else {
-    			mleBean.setOemName("null");
-    		}
-
-    		//Get pcr white list;
-    		prcList = new ArrayList(pcrDao.queryPcrByMLEid(mle.getMLEID().longValue()));
-
-    		List<MLE_Manifest> mleManifest = new ArrayList();
-    		for (int i=0; i<prcList.size(); i++){
-    			MLE_Manifest entry = new MLE_Manifest();
-    			entry.setName(prcList.get(i).getPcrName());
-    			entry.setValue(prcList.get(i).getPcrDigest());
-    			mleManifest.add(entry);
-    		}
-    		
-    		mleBean.setMLE_Manifests(mleManifest);
-    		mleBean.setMLE_Type(mle.getMLE_Type());
-        }catch (Exception e){
-        	System.out.println("Encountered an exception with detail message: " + e.getMessage());
-        }
+			if (oemName != null){
+				mle = mleDao.queryMLEidByNameAndVersionAndOEMid(name, version, oemName);
+				//query oem
+				oem = mleDao.queryOEMByNameAndVersionAndOEMid(name, version, oemName);
+				//oem = mle.getOem();
+				
+			} else if (osName != null && osVersion != null){
+				mle = mleDao.queryMLEidByNameAndVersionAndOSid(name, version, osName, osVersion);
+				//query os
+				os = mleDao.queryOSByNameAndVersionAndOSid(name, version, osName, osVersion);
+				//os = mle.getOs();
+			} else {
+				System.out.println("please check the input parameters and provide complete information");
+				return mleBean;
+			}
+			
+			if (mle != null){
+				mleBean.setName(mle.getName());
+				mleBean.setVersion(mle.getVersion());
+				mleBean.setDescription(mle.getDescription());
+				mleBean.setAttestation_Type(mle.getAttestation_Type());
+				if (os != null){
+					mleBean.setOsName(os.getName());
+					mleBean.setOsVersion(os.getVersion());
+				} else {
+					mleBean.setOsName("null");
+					mleBean.setOsVersion("null");
+				}
+				
+				if (oem != null){
+					mleBean.setOemName(oem.getName());
+				} else {
+					mleBean.setOemName("null");
+				}
+				
+				//Get pcr white list;
+				prcList = new ArrayList(pcrDao.queryPcrByMLEid(mle.getMLEID().longValue()));
+				
+				List<MLE_Manifest> mleManifest = new ArrayList();
+				for (int i=0; i<prcList.size(); i++){
+					MLE_Manifest entry = new MLE_Manifest();
+					entry.setName(prcList.get(i).getPcrName());
+					entry.setValue(prcList.get(i).getPcrDigest());
+					mleManifest.add(entry);
+				}
+				
+				mleBean.setMLE_Manifests(mleManifest);
+				mleBean.setMLE_Type(mle.getMLE_Type());
+			}
+		}catch (Exception e){
+			System.out.println("Encountered an exception with detail message: " + e.getMessage());
+		}
         return mleBean;
 	}
 	
