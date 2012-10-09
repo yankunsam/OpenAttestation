@@ -259,8 +259,8 @@ public class MLEResource {
 	    		List<MLE_Manifest> mleManifest = new ArrayList();
 	    		for (int j=0; j<prcList.size(); j++){
 	    			MLE_Manifest entry = new MLE_Manifest();
-	    			entry.setName(prcList.get(i).getPcrName());
-	    			entry.setValue(prcList.get(i).getPcrDigest());
+	    			entry.setName(prcList.get(j).getPcrName());
+	    			entry.setValue(prcList.get(j).getPcrDigest());
 	    			mleManifest.add(entry);
 	    		}
 	    		mleBean.setMLE_Manifests(mleManifest);
@@ -292,8 +292,8 @@ public class MLEResource {
 			    		List<MLE_Manifest> mleManifest = new ArrayList();
 			    		for (int j=0; j<prcList.size(); j++){
 			    			MLE_Manifest entry = new MLE_Manifest();
-			    			entry.setName(prcList.get(i).getPcrName());
-			    			entry.setValue(prcList.get(i).getPcrDigest());
+			    			entry.setName(prcList.get(j).getPcrName());
+			    			entry.setValue(prcList.get(j).getPcrDigest());
 			    			mleManifest.add(entry);
 			    		}
 			    		mleBean.setMLE_Manifests(mleManifest);
