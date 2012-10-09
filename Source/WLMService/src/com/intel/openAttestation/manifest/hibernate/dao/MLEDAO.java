@@ -46,6 +46,7 @@ public class MLEDAO {
 			mleList = (List<MLE>)list;
 			if (list.size() < 1) 
 			{
+				HibernateUtilHis.commitTransaction();
 				return null;
 			} else {
 				HibernateUtilHis.commitTransaction();
@@ -74,6 +75,7 @@ public class MLEDAO {
 			mleList = (List<MLE>)list;
 			if (list.size() < 1) 
 			{
+				HibernateUtilHis.commitTransaction();
 				return null;
 			} else {
 				HibernateUtilHis.commitTransaction();
@@ -196,8 +198,10 @@ public class MLEDAO {
 		    query.setString("name",mleName);
 		    query.setString("version", mleVersion);
             List list = query.list();
-            if (list.size() < 1)
-               throw new Exception ("Object not found");
+            if (list.size() < 1){
+            	HibernateUtilHis.rollbackTransaction();
+                throw new Exception ("Object not found");
+            }
             MLE mle = (MLE)list.get(0);
             mle.setDescription(description);
             session.update(mle);
@@ -219,6 +223,7 @@ public class MLEDAO {
 			query.setString("NAME", OEMName);
 			List list = query.list();
 			if (list.size() < 1){
+				HibernateUtilHis.rollbackTransaction();
 				throw new Exception ("Object not found");
 			}
 			OEM OEMEntry = (OEM)list.get(0);
@@ -244,6 +249,7 @@ public class MLEDAO {
 			query.setString("version",version);
 			List list = query.list();
 			if (list.size() < 1){
+				HibernateUtilHis.rollbackTransaction();
 				throw new Exception ("Object not found");
 			}
 			MLE MLEEntry = (MLE)list.get(0);
@@ -309,6 +315,7 @@ public class MLEDAO {
 			OEMList = (List<OEM>)list;
 			if (list.size() < 1) 
 			{
+				HibernateUtilHis.commitTransaction();
 				return null;
 			} else {
 				HibernateUtilHis.commitTransaction();
@@ -337,6 +344,7 @@ public class MLEDAO {
 			OSList = (List<OS>)list;
 			if (list.size() < 1) 
 			{
+				HibernateUtilHis.commitTransaction();
 				return null;
 			} else {
 				HibernateUtilHis.commitTransaction();
@@ -384,6 +392,7 @@ public class MLEDAO {
 			OEMList = (List<OEM>)list;
 			if (list.size() < 1) 
 			{
+				HibernateUtilHis.commitTransaction();
 				return null;
 			} else {
 				HibernateUtilHis.commitTransaction();

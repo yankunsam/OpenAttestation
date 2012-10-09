@@ -62,6 +62,7 @@ public class OEMDAO {
 			query.setString("name", oemEntry.getName());
 			List list = query.list();
 			if (list.size() < 1){
+				HibernateUtilHis.rollbackTransaction();
 				throw new Exception ("Object not found");
 			}
 			OEM oemOld = (OEM)list.get(0);
@@ -87,6 +88,7 @@ public class OEMDAO {
 			query.setString("NAME", Name);
 			List list = query.list();
 			if (list.size() < 1){
+				HibernateUtilHis.rollbackTransaction();
 				throw new Exception ("Object not found");
 			}
 			OEM OEMEntry = (OEM)list.get(0);

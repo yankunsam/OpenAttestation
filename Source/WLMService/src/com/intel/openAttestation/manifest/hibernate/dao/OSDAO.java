@@ -65,6 +65,7 @@ public class OSDAO {
 			query.setString("version", osEntry.getVersion());
 			List list = query.list();
 			if (list.size() < 1){
+				HibernateUtilHis.rollbackTransaction();
 				throw new Exception ("Object not found");
 			}
 			OS osOld = (OS)list.get(0);
@@ -90,6 +91,7 @@ public class OSDAO {
 			query.setString("version", osVersion);
 			List list = query.list();
 			if (list.size() < 1){
+				HibernateUtilHis.rollbackTransaction();
 				throw new Exception ("Object not found");
 			}
 			OS osEntry = (OS)list.get(0);

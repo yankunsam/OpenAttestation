@@ -81,6 +81,7 @@ public class PcrWhiteListDAO {
 			query.setLong("mleid", mleId);
 			List list = query.list();
 			if (list.size() < 1){
+				HibernateUtilHis.rollbackTransaction();
 				throw new Exception ("Object not found");
 			}
 			PcrWhiteList pcrEntry = (PcrWhiteList)list.get(0);
@@ -134,6 +135,7 @@ public class PcrWhiteListDAO {
 			pcrList = (List<PcrWhiteList>)list;
 			if (list.size() < 1) 
 			{
+				HibernateUtilHis.commitTransaction();
 				return null;
 			} else {
 				HibernateUtilHis.commitTransaction();
@@ -163,6 +165,7 @@ public class PcrWhiteListDAO {
 			pcrList = (List<PcrWhiteList>)list;
 			if (list.size() < 1) 
 			{
+				HibernateUtilHis.commitTransaction();
 				return null;
 			} else {
 				HibernateUtilHis.commitTransaction();
@@ -248,6 +251,7 @@ public class PcrWhiteListDAO {
 			pcrList = (List<PcrWhiteList>)list;
 			if (list.size() < 1) 
 			{
+				HibernateUtilHis.commitTransaction();
 				return null;
 			} else {
 				HibernateUtilHis.commitTransaction();
