@@ -326,8 +326,8 @@ public class MLEResource {
 			    		List<MLE_Manifest> mleManifest = new ArrayList();
 			    		for (int j=0; j<prcList.size(); j++){
 			    			MLE_Manifest entry = new MLE_Manifest();
-			    			entry.setName(prcList.get(i).getPcrName());
-			    			entry.setValue(prcList.get(i).getPcrDigest());
+			    			entry.setName(prcList.get(j).getPcrName());
+			    			entry.setValue(prcList.get(j).getPcrDigest());
 			    			mleManifest.add(entry);
 			    		}
 			    		mleBean.setMLE_Manifests(mleManifest);
@@ -358,11 +358,13 @@ public class MLEResource {
         		mle = mleDao.queryMLEidByNameAndVersionAndOEMid(name, version, oemName);
         		//query oem
         		oem = mleDao.queryOEMByNameAndVersionAndOEMid(name, version, oemName);
+        		//oem = mle.getOem();
         		
         	} else if (osName != null){
         		mle = mleDao.queryMLEidByNameAndVersionAndOSid(name, version, osName, osVersion);
         		//query os
         		os = mleDao.queryOSByNameAndVersionAndOSid(name, version, osName, osVersion);
+        		//os = mle.getOs();
         		
         		
         	} else {
