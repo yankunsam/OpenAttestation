@@ -16,6 +16,7 @@ package com.intel.openAttestation.AttestationService.resource;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -80,6 +81,64 @@ public class HOSTResource {
 			HOSTDAO dao = new HOSTDAO();
 			MLEDAO mleDao = new MLEDAO();
 			MLE mle = null;
+			
+			//Check the length of input parameters
+			HashMap parameters = new HashMap();
+			if (hostFullObj.getHostName() != null){
+				parameters.put(hostFullObj.getHostName(), 50);
+			}
+			
+			if (hostFullObj.getIPAddress() != null){
+				parameters.put(hostFullObj.getIPAddress(), 50);
+			}
+
+			if (hostFullObj.getPort() != null){
+				parameters.put(hostFullObj.getPort(), 50);
+			}
+			
+			if (hostFullObj.getBIOSName() != null){
+				parameters.put(hostFullObj.getBIOSName(), 50);
+			}
+
+			if (hostFullObj.getBIOSVersion() != null){
+				parameters.put(hostFullObj.getBIOSVersion(), 100);
+			}
+
+			if (hostFullObj.getBIOSOem() != null){
+				parameters.put(hostFullObj.getBIOSOem(), 50);
+			}
+
+			if (hostFullObj.getVMMName() != null){
+				parameters.put(hostFullObj.getVMMName(), 50);
+			}
+			
+			if (hostFullObj.getVMMVersion() != null){
+				parameters.put(hostFullObj.getVMMVersion(), 100);
+			}
+
+			if (hostFullObj.getVMMOSName() != null){
+				parameters.put(hostFullObj.getVMMOSName(), 50);
+			}
+
+			
+			if (hostFullObj.getVMMOSVersion() != null){
+				parameters.put(hostFullObj.getVMMOSVersion(), 50);
+			}
+			
+			if (hostFullObj.getAddOn_Connection_String() != null){
+				parameters.put(hostFullObj.getAddOn_Connection_String(), 100);
+			}
+			
+			if (hostFullObj.getHostName().length() < 1 || !CommonUtil.validLength(parameters)){
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+						OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Add HOST entry failed, please check the length for each parameters");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			
+			
 			//Check if the HOST Name exists
 			if (dao.isHOSTExisted(hostFullObj.getHostName())){
 				status = Response.Status.BAD_REQUEST;
@@ -104,7 +163,7 @@ public class HOSTResource {
 				return Response.status(status).header("Location", b.build()).entity(fault).build();
 			}
 			
-			if (hostFullObj.getBIOSName() != null) {
+			if (hostFullObj.getBIOSName() != null && hostFullObj.getBIOSName().length() > 0) {
 				//relation check for BIOS table
 				mle =  mleDao.getMLE(hostFullObj, 0);
 				if (mle == null){
@@ -116,7 +175,7 @@ public class HOSTResource {
 				mles.add(mle);
 				
 			}  
-			if (hostFullObj.getVMMName() != null) {
+			if (hostFullObj.getVMMName() != null && hostFullObj.getVMMName().length() >0 ) {
 				//relation check for VMM MLE
 				mle =  mleDao.getMLE(hostFullObj,1);
 				if (mle == null){
@@ -171,6 +230,62 @@ public class HOSTResource {
 			HOSTDAO dao = new HOSTDAO();
 			MLEDAO mleDao = new MLEDAO();
 			MLE mle = null;
+			
+			HashMap parameters = new HashMap();
+			if (hostFullObj.getHostName() != null){
+				parameters.put(hostFullObj.getHostName(), 50);
+			}
+			
+			if (hostFullObj.getIPAddress() != null){
+				parameters.put(hostFullObj.getIPAddress(), 50);
+			}
+
+			if (hostFullObj.getPort() != null){
+				parameters.put(hostFullObj.getPort(), 50);
+			}
+			
+			if (hostFullObj.getBIOSName() != null){
+				parameters.put(hostFullObj.getBIOSName(), 50);
+			}
+
+			if (hostFullObj.getBIOSVersion() != null){
+				parameters.put(hostFullObj.getBIOSVersion(), 100);
+			}
+
+			if (hostFullObj.getBIOSOem() != null){
+				parameters.put(hostFullObj.getBIOSOem(), 50);
+			}
+
+			if (hostFullObj.getVMMName() != null){
+				parameters.put(hostFullObj.getVMMName(), 50);
+			}
+			
+			if (hostFullObj.getVMMVersion() != null){
+				parameters.put(hostFullObj.getVMMVersion(), 100);
+			}
+
+			if (hostFullObj.getVMMOSName() != null){
+				parameters.put(hostFullObj.getVMMOSName(), 50);
+			}
+
+			
+			if (hostFullObj.getVMMOSVersion() != null){
+				parameters.put(hostFullObj.getVMMOSVersion(), 50);
+			}
+			
+			if (hostFullObj.getAddOn_Connection_String() != null){
+				parameters.put(hostFullObj.getAddOn_Connection_String(), 100);
+			}
+			
+			if (hostFullObj.getHostName().length() < 1 || !CommonUtil.validLength(parameters)){
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+						OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Add HOST entry failed, please check the length for each parameter");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			
 			if (!dao.isHOSTExisted(hostFullObj.getHostName())){
 				status = Response.Status.NOT_FOUND;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(OpenAttestationResponseFault.FaultCode.FAULT_404);
@@ -252,6 +367,21 @@ public class HOSTResource {
 		Response.Status status = Response.Status.OK;
         try{
 			HOSTDAO dao = new HOSTDAO();
+			
+			HashMap parameters = new HashMap();
+			if (Name != null){
+				parameters.put(Name, 50);
+			}
+			
+			if (Name.length() < 1 || !CommonUtil.validLength(parameters)){
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+						OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Delete HOST entry failed, please check the length for each parameter");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			
 			System.out.println("Check if the HOST Name exists:" + Name);
 			if (dao.isHOSTExisted(Name)){
 				HOST host = dao.DeleteHOSTEntry(Name);
@@ -292,10 +422,31 @@ public class HOSTResource {
 	    String requestHost = request.getRemoteHost();
 	    long timeThreshold = reqAttestation.getTimeThreshold() == null ? 0 :reqAttestation.getTimeThreshold();
 	    long validateInterval = 0;
+	    boolean isValid = true;
 	    AttestUtil.loadProp();
 	    try{
 			HOSTDAO dao = new HOSTDAO();
 
+			//List hsreqAttestation.getHosts()
+			
+			List<String> host = reqAttestation.getHosts();
+			HashMap parameters = new HashMap();
+			for(int i=0; i<host.size(); i++){
+				parameters.put(host.get(i), 50);
+				if (host.get(i).length() == 0){
+					isValid = false;
+				}
+			}
+			
+			if (!CommonUtil.validLength(parameters) || !isValid){
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+						OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Pull HOST failed, please check the length for each parameter");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			
     		String requestId = addRequests(reqAttestation, requestHost, true);
     		System.out.println("resource requestId:" +requestId);
     		List<AttestRequest> reqs= getRequestsByReqId(requestId);

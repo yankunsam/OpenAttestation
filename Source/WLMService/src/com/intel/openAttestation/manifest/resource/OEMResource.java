@@ -14,6 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 package com.intel.openAttestation.manifest.resource;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -33,6 +34,7 @@ import com.intel.openAttestation.manifest.bean.OpenAttestationResponseFault;
 import com.intel.openAttestation.manifest.hibernate.dao.OEMDAO;
 import com.intel.openAttestation.manifest.hibernate.domain.OEM;
 import com.intel.openAttestation.manifest.resource.OEMResource;
+import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
 
 
 
@@ -65,6 +67,25 @@ public class OEMResource {
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
+			
+			HashMap parameters = new HashMap();
+			if (oem.getName()!=null){
+				parameters.put(oem.getName(), 50);
+			}
+			
+			if (oem.getDescription()!=null){
+				parameters.put(oem.getDescription(), 100);
+			}
+
+			if (oem.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+						OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Add OEM entry failed, please check the length for each parameter");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			
 			dao.addOEMEntry(oem);
 	        return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True")
 	        		.build();
@@ -90,6 +111,21 @@ public class OEMResource {
         try{
 			OEMDAO dao = new OEMDAO();
 			System.out.println("Check if the OEM Name exists:" + oem.getName());
+			
+			HashMap parameters = new HashMap();			
+			if (oem.getDescription()!=null){
+				parameters.put(oem.getDescription(), 100);
+			}
+			
+			if (oem.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+						OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Edit OEM entry failed, please check the length for each parameter");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			
 			if (!dao.isOEMExisted(oem.getName())){
 				status = Response.Status.BAD_REQUEST;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
@@ -120,6 +156,21 @@ public class OEMResource {
 
         try{
 			OEMDAO dao = new OEMDAO();
+			
+			HashMap parameters = new HashMap();
+			if (Name !=null){
+				parameters.put(Name, 50);
+			}
+
+			if (Name.length() < 1 || !HibernateUtilHis.validLength(parameters)){
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+						OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Delte OEM entry failed, please check the length for each parameter");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			
 			System.out.println("Check if the OEM Name exists:" + Name);
 			
 			//check if the OEM has the reference with MLE 

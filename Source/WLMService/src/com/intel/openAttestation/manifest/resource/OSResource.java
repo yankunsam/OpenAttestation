@@ -13,6 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 package com.intel.openAttestation.manifest.resource;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -32,6 +33,7 @@ import javax.ws.rs.core.UriInfo;
 import com.intel.openAttestation.manifest.bean.OpenAttestationResponseFault;
 import com.intel.openAttestation.manifest.hibernate.dao.OSDAO;
 import com.intel.openAttestation.manifest.hibernate.domain.OS;
+import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
 import com.intel.openAttestation.manifest.resource.OSResource;
 
 
@@ -65,6 +67,27 @@ public class OSResource {
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
+			
+			HashMap parameters = new HashMap();
+			if (os.getName()!=null){
+				parameters.put(os.getName(), 50);
+			}
+			if (os.getVersion()!=null){
+				parameters.put(os.getVersion(), 50);
+			}
+			if (os.getDescription()!=null){
+				parameters.put(os.getDescription(), 100);
+			}
+			
+			if (os.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+						OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Add OS entry failed, please check the length for each parameter");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			
 			dao.addOSEntry(os);
 	        return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True")
 	        		.build();
@@ -97,6 +120,27 @@ public class OSResource {
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
+			
+			HashMap parameters = new HashMap();
+			if (os.getName()!=null){
+				parameters.put(os.getName(), 50);
+			}
+			if (os.getVersion()!=null){
+				parameters.put(os.getVersion(), 50);
+			}
+			if (os.getDescription()!=null){
+				parameters.put(os.getDescription(), 100);
+			}
+			
+			if (os.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+						OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Edit OS entry failed, please check the length for each parameters");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			
 			dao.editOSEntry(os);
 	        return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True")
 	        		.build();
@@ -113,19 +157,39 @@ public class OSResource {
 
 	@DELETE
 	@Produces("application/json")
-	public Response delOEM(@QueryParam("Name") String Name, @QueryParam("Version") String Version,@Context UriInfo uriInfo){
+	public Response delOS(@QueryParam("Name") String Name, @QueryParam("Version") String Version,@Context UriInfo uriInfo){
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(OSResource.class);
 		Response.Status status = Response.Status.OK;
 
         try{
 			OSDAO dao = new OSDAO();
+
+			HashMap parameters = new HashMap();
+			if (Name != null){
+				parameters.put(Name, 50);
+			}
+
+			if (Version != null){
+				parameters.put(Version, 50);
+			}
+			
+			if (Name.length() < 1 || !HibernateUtilHis.validLength(parameters)){
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+						OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Delete OS entry failed, please check the length for each parameter");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			
 			System.out.println("Check if the OS Name exists:" + Name + " " + Version);
 			if (dao.isOSExisted(Name, Version)){
 				dao.deleteOSEntry(Name, Version);
 				return Response.status(status).type(MediaType.TEXT_PLAIN).entity("True")
 		        		.build();
 			}
+			
 			status = Response.Status.BAD_REQUEST;
 			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 					OpenAttestationResponseFault.FaultCode.FAULT_1006);

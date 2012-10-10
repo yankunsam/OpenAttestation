@@ -13,6 +13,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 package com.intel.openAttestation.manifest.resource;
 
+import java.util.HashMap;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
@@ -31,6 +33,7 @@ import com.intel.openAttestation.manifest.hibernate.dao.*;
 import com.intel.openAttestation.manifest.hibernate.domain.PcrWhiteList;
 import com.intel.openAttestation.manifest.resource.PcrWhiteListResource;
 import com.intel.openAttestation.manifest.hibernate.domain.MLE;
+import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
 
 
 
@@ -58,6 +61,25 @@ public class PcrWhiteListResource {
 			PcrWhiteList pcr = new PcrWhiteList();
 			MLEDAO daoMLE = new MLEDAO();
 			MLE mle = null;
+			
+			HashMap parameters = new HashMap();
+			if (pcrbean.getPcrName()!=null){
+				parameters.put(pcrbean.getPcrName(), 10);
+			}
+			
+			if (pcrbean.getPcrDigest()!=null){
+				parameters.put(pcrbean.getPcrDigest(), 100);
+			}
+			
+			if (pcrbean.getPcrName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+						OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Add PCR entry failed, please check the length for each parameter");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			
 			if(pcrbean.getPcrName() != null && pcrbean.getPcrDigest() != null && pcrbean.getMLEName() != null && pcrbean.getMLEVersion() != null && pcrbean.getOEMName() != null)
 			{
 				mle = daoMLE.queryMLEidByNameAndVersionAndOEMid(pcrbean.getMLEName(), pcrbean.getMLEVersion(), pcrbean.getOEMName());
@@ -98,7 +120,7 @@ public class PcrWhiteListResource {
 	@PUT
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response editOEM(@Context UriInfo uriInfo, PcrWhiteListBean pcrbean,
+	public Response editPcrWhiteList(@Context UriInfo uriInfo, PcrWhiteListBean pcrbean,
 			@Context javax.servlet.http.HttpServletRequest request){
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(PcrWhiteListResource.class);
@@ -106,6 +128,26 @@ public class PcrWhiteListResource {
         try{
         	PcrWhiteListDAO dao = new PcrWhiteListDAO();
 			PcrWhiteList pcr = null;
+			
+			HashMap parameters = new HashMap();
+			
+			if (pcrbean.getPcrName()!=null){
+				parameters.put(pcrbean.getPcrName(), 10);
+			}
+			
+			if (pcrbean.getPcrDigest()!=null){
+				parameters.put(pcrbean.getPcrDigest(), 100);
+			}
+
+			if (pcrbean.getPcrName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+						OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Edit PCR entry failed, please check the length for each parameter");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			
 			if(pcrbean.getPcrName() != null && pcrbean.getPcrDigest() != null && pcrbean.getMLEName() != null && pcrbean.getMLEVersion() != null && pcrbean.getOEMName() != null)
 			{
 				pcr = dao.queryPcrByOEMid(pcrbean.getMLEName(), pcrbean.getMLEVersion(), pcrbean.getOEMName(), pcrbean.getPcrName());
@@ -153,6 +195,33 @@ public class PcrWhiteListResource {
         try{
         	PcrWhiteListDAO dao = new PcrWhiteListDAO();
 			PcrWhiteList pcr = null;
+			
+			HashMap parameters = new HashMap();
+			if (pcrName!=null){
+				parameters.put(pcrName, 10);
+			}
+
+			if (mleName!=null){
+				parameters.put(mleName, 50);
+			}
+
+			if(mleVersion!=null){
+				parameters.put(mleVersion, 100);
+			}
+			
+			if(oemName !=null){
+				parameters.put(oemName, 50);
+			}
+
+			if (!HibernateUtilHis.validLength(parameters)){
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+						OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Delete PCR entry failed, please check the length for each parameter");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			
 			if(pcrName != null && mleName != null && mleVersion != null && oemName != null)
 			{
 				pcr = dao.queryPcrByOEMid(mleName, mleVersion, oemName, pcrName);

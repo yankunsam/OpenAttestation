@@ -2,6 +2,7 @@ package com.intel.openAttestation.AttestationService.util;
 
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import gov.niarl.hisAppraiser.util.HisUtil;
 
@@ -25,4 +26,16 @@ public class CommonUtil {
 		return actionIntegerHashMap.get(action);
 	}
 
+    public static boolean validLength(HashMap parameters) {
+    	for (Iterator iter = parameters.keySet().iterator(); iter.hasNext();){
+    		String key = (String)iter.next();
+    		Integer value = (Integer)parameters.get(key);
+    		if (key.length() > value.intValue()){
+    			return false;
+    		} else {
+    			return true;
+    		}
+    	}
+    	return true;
+    }
 }
