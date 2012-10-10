@@ -1,0 +1,30 @@
+#!/bin/bash
+#create oat cert
+HOST_PARM="-h"
+HOST_NAME=""
+INFO=""
+PORT=8443
+
+if [ $# -lt 3 ];then
+  echo "parm num error!"
+  exit 0
+fi
+
+if [ $1 != $HOST_PARM ];then
+  echo "-h parm error!"
+  exit 1
+else
+  HOST_NAME="$2"
+fi
+
+INFO="`echo "$3" | awk -F{ '{print $2}'| awk -F} '{print $1}'\
+     | sed 's/\"//g' | sed 's/:/=/g' | sed 's/,/\&/g'| sed 's/ /%20/g'`"
+
+view_mle()
+{
+     curl --cacert ./certfile.cer -H "Content-Type: application/json" \
+     -X GET "https://$HOSTNAME:$PORT/WLMService/resources/mles/manifest?$INFO" -ssl3
+}
+
+view_mle
+echo -e "\n"

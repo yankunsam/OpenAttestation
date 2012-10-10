@@ -1,0 +1,22 @@
+#!/bin/bash
+#create oat cert
+PARM="-h"
+PORT="8443"
+if [ $# -lt 2 ];then
+  echo "parm num error!"
+  exit 0
+fi
+if [ $1 != $PARM ];then
+  echo "parm error!"
+  exit 0
+fi
+
+HOSTNAME="$2"
+view_os()
+{
+     curl --cacert ./certfile.cer -H "Content-Type: application/json" \
+     -X GET https://$HOSTNAME:$PORT/WLMService/resources/os -ssl3
+}
+
+view_os
+echo -e "\n"
