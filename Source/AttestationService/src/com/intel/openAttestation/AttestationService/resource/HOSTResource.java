@@ -76,6 +76,7 @@ public class HOSTResource {
 		Response.Status status = Response.Status.OK;
 		boolean isAnomaly = false;
 		List<MLE> mles= new ArrayList<MLE>();
+		boolean isValidKey = true;
         try{
         	
 			HOSTDAO dao = new HOSTDAO();
@@ -86,6 +87,8 @@ public class HOSTResource {
 			HashMap parameters = new HashMap();
 			if (hostFullObj.getHostName() != null){
 				parameters.put(hostFullObj.getHostName(), 50);
+			} else {
+				isValidKey = false;
 			}
 			
 			if (hostFullObj.getIPAddress() != null){
@@ -120,7 +123,6 @@ public class HOSTResource {
 				parameters.put(hostFullObj.getVMMOSName(), 50);
 			}
 
-			
 			if (hostFullObj.getVMMOSVersion() != null){
 				parameters.put(hostFullObj.getVMMOSVersion(), 50);
 			}
@@ -129,7 +131,7 @@ public class HOSTResource {
 				parameters.put(hostFullObj.getAddOn_Connection_String(), 100);
 			}
 			
-			if (hostFullObj.getHostName().length() < 1 || !CommonUtil.validLength(parameters)){
+			if (!isValidKey || hostFullObj.getHostName().length() < 1 || !CommonUtil.validLength(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
@@ -137,7 +139,6 @@ public class HOSTResource {
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
-			
 			
 			//Check if the HOST Name exists
 			if (dao.isHOSTExisted(hostFullObj.getHostName())){
@@ -225,6 +226,7 @@ public class HOSTResource {
         b = b.path(HOSTResource.class);
 		Response.Status status = Response.Status.ACCEPTED;
 		boolean isAnomaly = false;
+		boolean isValidKey = true;
 
 		try{
 			HOSTDAO dao = new HOSTDAO();
@@ -234,6 +236,8 @@ public class HOSTResource {
 			HashMap parameters = new HashMap();
 			if (hostFullObj.getHostName() != null){
 				parameters.put(hostFullObj.getHostName(), 50);
+			} else {
+				isValidKey = false;
 			}
 			
 			if (hostFullObj.getIPAddress() != null){
@@ -277,7 +281,7 @@ public class HOSTResource {
 				parameters.put(hostFullObj.getAddOn_Connection_String(), 100);
 			}
 			
-			if (hostFullObj.getHostName().length() < 1 || !CommonUtil.validLength(parameters)){
+			if (!isValidKey || hostFullObj.getHostName().length() < 1 || !CommonUtil.validLength(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
@@ -365,15 +369,18 @@ public class HOSTResource {
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(HOSTResource.class);
 		Response.Status status = Response.Status.OK;
+		boolean isValidKey = true;
         try{
 			HOSTDAO dao = new HOSTDAO();
 			
 			HashMap parameters = new HashMap();
 			if (Name != null){
 				parameters.put(Name, 50);
+			} else {
+				isValidKey = false;
 			}
 			
-			if (Name.length() < 1 || !CommonUtil.validLength(parameters)){
+			if (!isValidKey || Name.length() < 1 || !CommonUtil.validLength(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
@@ -426,8 +433,6 @@ public class HOSTResource {
 	    AttestUtil.loadProp();
 	    try{
 			HOSTDAO dao = new HOSTDAO();
-
-			//List hsreqAttestation.getHosts()
 			
 			List<String> host = reqAttestation.getHosts();
 			HashMap parameters = new HashMap();
@@ -438,7 +443,7 @@ public class HOSTResource {
 				}
 			}
 			
-			if (!CommonUtil.validLength(parameters) || !isValid){
+			if (host == null || !CommonUtil.validLength(parameters) || !isValid){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);

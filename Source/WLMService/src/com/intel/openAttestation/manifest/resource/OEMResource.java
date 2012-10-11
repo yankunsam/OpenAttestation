@@ -57,31 +57,34 @@ public class OEMResource {
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(OEMResource.class);
 		Response.Status status = Response.Status.OK;
+		boolean isValidKey = true;
         try{
 			OEMDAO dao = new OEMDAO();
-			System.out.println("Check if the OEM Name exists:" + oem.getName());
-			if (dao.isOEMExisted(oem.getName())){
-				status = Response.Status.BAD_REQUEST;
-				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
-				fault.setError_message("Data Error - OEM " + oem.getName()+" already exists in the database");
-				return Response.status(status).header("Location", b.build()).entity(fault)
-						.build();
-			}
 			
 			HashMap parameters = new HashMap();
 			if (oem.getName()!=null){
 				parameters.put(oem.getName(), 50);
+			} else {
+				isValidKey = false;
 			}
 			
 			if (oem.getDescription()!=null){
 				parameters.put(oem.getDescription(), 100);
 			}
 
-			if (oem.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (!isValidKey || oem.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
 				fault.setError_message("Add OEM entry failed, please check the length for each parameter");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			System.out.println("Check if the OEM Name exists:" + oem.getName());
+			if (dao.isOEMExisted(oem.getName())){
+				status = Response.Status.BAD_REQUEST;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
+				fault.setError_message("Data Error - OEM " + oem.getName()+" already exists in the database");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
@@ -108,6 +111,7 @@ public class OEMResource {
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(OEMResource.class);
 		Response.Status status = Response.Status.OK;
+		boolean isValidKey = true;
         try{
 			OEMDAO dao = new OEMDAO();
 			System.out.println("Check if the OEM Name exists:" + oem.getName());
@@ -117,7 +121,12 @@ public class OEMResource {
 				parameters.put(oem.getDescription(), 100);
 			}
 			
-			if (oem.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (oem.getName()!=null){
+				parameters.put(oem.getName(), 100);
+			} else {
+				isValidKey = false;
+			}
+			if (!isValidKey || oem.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
@@ -153,16 +162,19 @@ public class OEMResource {
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(OEMResource.class);
 		Response.Status status = Response.Status.OK;
-
+		boolean isValidKey = true;
+		
         try{
 			OEMDAO dao = new OEMDAO();
 			
 			HashMap parameters = new HashMap();
 			if (Name !=null){
 				parameters.put(Name, 50);
+			} else {
+				isValidKey = false;
 			}
-
-			if (Name.length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			
+			if (!isValidKey || Name.length() < 1 || !HibernateUtilHis.validLength(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);

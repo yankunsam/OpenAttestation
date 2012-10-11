@@ -56,6 +56,7 @@ public class PcrWhiteListResource {
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(PcrWhiteListResource.class);
 		Response.Status status = Response.Status.OK;
+		boolean isValidKey = true;
         try{
 			PcrWhiteListDAO dao = new PcrWhiteListDAO();
 			PcrWhiteList pcr = new PcrWhiteList();
@@ -65,13 +66,15 @@ public class PcrWhiteListResource {
 			HashMap parameters = new HashMap();
 			if (pcrbean.getPcrName()!=null){
 				parameters.put(pcrbean.getPcrName(), 10);
+			} else {
+				isValidKey = false;
 			}
 			
 			if (pcrbean.getPcrDigest()!=null){
 				parameters.put(pcrbean.getPcrDigest(), 100);
 			}
 			
-			if (pcrbean.getPcrName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (! isValidKey || pcrbean.getPcrName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
@@ -125,6 +128,7 @@ public class PcrWhiteListResource {
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(PcrWhiteListResource.class);
 		Response.Status status = Response.Status.OK;
+		boolean isValidKey = true;
         try{
         	PcrWhiteListDAO dao = new PcrWhiteListDAO();
 			PcrWhiteList pcr = null;
@@ -133,13 +137,15 @@ public class PcrWhiteListResource {
 			
 			if (pcrbean.getPcrName()!=null){
 				parameters.put(pcrbean.getPcrName(), 10);
+			} else {
+				isValidKey = false;
 			}
 			
 			if (pcrbean.getPcrDigest()!=null){
 				parameters.put(pcrbean.getPcrDigest(), 100);
 			}
 
-			if (pcrbean.getPcrName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (!isValidKey || pcrbean.getPcrName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
@@ -191,6 +197,7 @@ public class PcrWhiteListResource {
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(PcrWhiteListResource.class);
 		Response.Status status = Response.Status.OK;
+		boolean isValidKey = true;
 
         try{
         	PcrWhiteListDAO dao = new PcrWhiteListDAO();
@@ -199,6 +206,8 @@ public class PcrWhiteListResource {
 			HashMap parameters = new HashMap();
 			if (pcrName!=null){
 				parameters.put(pcrName, 10);
+			} else {
+				isValidKey = false;
 			}
 
 			if (mleName!=null){
@@ -213,7 +222,7 @@ public class PcrWhiteListResource {
 				parameters.put(oemName, 50);
 			}
 
-			if (!HibernateUtilHis.validLength(parameters)){
+			if (! isValidKey || pcrName.length() < 1 || !HibernateUtilHis.validLength(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);

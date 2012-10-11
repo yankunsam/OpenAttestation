@@ -60,6 +60,7 @@ public class MLEResource {
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(MLEResource.class);
 		Response.Status status = Response.Status.OK;
+		boolean isValidKey = true;
 		try{
 			    MLEDAO dao = new MLEDAO();
 			    PcrWhiteListDAO pcrDao = new PcrWhiteListDAO();
@@ -69,16 +70,31 @@ public class MLEResource {
 			    OS os = new OS();
 			    OEM oem = new OEM();
 			    List<PcrWhiteList> pcrs = new ArrayList(); 
-			    
 				HashMap parameters = new HashMap();
 				if (mleBean.getName() != null){
 					parameters.put(mleBean.getName(), 50);
+				} else {
+					isValidKey = false;
 				}
 				
 				if (mleBean.getVersion() != null){
 					parameters.put(mleBean.getVersion(), 50);
+				} else {
+					isValidKey = false;
 				}
 
+				if (mleBean.getOsName() != null){
+					parameters.put(mleBean.getOsName(), 50);
+				}
+				
+				if (mleBean.getOsVersion() != null){
+					parameters.put(mleBean.getOsVersion(), 50);
+				}
+				
+				if (mleBean.getOemName() != null){
+					parameters.put(mleBean.getOemName(), 50);
+				}
+				
 				if (mleBean.getMLE_Type() != null){
 					parameters.put(mleBean.getMLE_Type(), 50);
 				}
@@ -87,7 +103,7 @@ public class MLEResource {
 					parameters.put(mleBean.getDescription(), 100);
 				}
 
-				if (mleBean.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+				if (!isValidKey || mleBean.getName().length() < 1 || mleBean.getVersion().length() < 1 || !HibernateUtilHis.validLength(parameters)){
 					status = Response.Status.INTERNAL_SERVER_ERROR;
 					OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 							OpenAttestationResponseFault.FaultCode.FAULT_500);
@@ -117,8 +133,7 @@ public class MLEResource {
 			    	else{
 						status = Response.Status.BAD_REQUEST;
 						OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
-						fault.setError_message("Data Error - OEM[" + oem.getName() + 
-								"] Description[" +oem.getDescription() +"] does not exist");
+						fault.setError_message("Data Error - OEM[" + mleBean.getOemName() + "] does not exist");
 						return Response.status(status).header("Location", b.build()).entity(fault)
 									.build();
 						
@@ -176,6 +191,7 @@ public class MLEResource {
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(MLEResource.class);
 		Response.Status status = Response.Status.OK;
+		boolean isValidKey = true;
 		try{
 			MLEDAO mleDao = new MLEDAO();
 			OSDAO osDao = new  OSDAO();
@@ -186,10 +202,14 @@ public class MLEResource {
 			HashMap parameters = new HashMap();
 			if (mleBean.getName() != null){
 				parameters.put(mleBean.getName(), 50);
+			} else {
+				isValidKey = false;
 			}
 			
 			if (mleBean.getVersion() != null){
 				parameters.put(mleBean.getVersion(), 50);
+			} else {
+				isValidKey = false;
 			}
 
 			if (mleBean.getMLE_Type() != null){
@@ -200,7 +220,7 @@ public class MLEResource {
 				parameters.put(mleBean.getDescription(), 100);
 			}
 
-			if (mleBean.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (!isValidKey || mleBean.getVersion().length() < 1 ||  mleBean.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
@@ -209,28 +229,36 @@ public class MLEResource {
 						.build();
 			}
 			
-			if (!mleDao.isMLEExisted(mleBean.getName(),mleBean.getVersion(),mleBean.getOsName(),mleBean.getOsVersion(),mleBean.getOemName())){
-        		status = Response.Status.BAD_REQUEST;
-				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1007);
-				fault.setError_message("WLM Service Error - MLE not found in attestation data to update");
-				return Response.status(status).header("Location", b.build()).entity(fault)
-							.build();
-        	}
-			MLE mle = mleDao.getMLE(mleBean.getName(),mleBean.getVersion());
-			if(mleBean.getDescription()!=null)    //update description
-				mleDao.editMLEDesc(mleBean.getName(),mleBean.getVersion(), mleBean.getDescription());
-			if (mleBean.getMLE_Manifests()!=null){  //update whitelist
-				pcrDao.deletePcrByMleID(mle.getMLEID());
-				for (MLE_Manifest mleManifest: mleBean.getMLE_Manifests()){
-					PcrWhiteList pcr = new PcrWhiteList();
-					pcr.setMle(mle);
-					pcr.setPcrName(mleManifest.getName());
-					pcr.setPcrDigest(mleManifest.getValue());
-					pcrList.add(pcr);
-					
+			if (mleBean.getMLE_Type().equalsIgnoreCase("bios") || mleBean.getMLE_Type().equalsIgnoreCase("vmm")){
+				if (!mleDao.isMLEExisted(mleBean.getName(),mleBean.getVersion(),mleBean.getOsName(),mleBean.getOsVersion(),mleBean.getOemName())){
+	        		status = Response.Status.BAD_REQUEST;
+					OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1007);
+					fault.setError_message("WLM Service Error - MLE not found in attestation data to update");
+					return Response.status(status).header("Location", b.build()).entity(fault)
+								.build();
+	        	}
+				MLE mle = mleDao.getMLE(mleBean.getName(),mleBean.getVersion());
+				if(mleBean.getDescription()!=null)    //update description
+					mleDao.editMLEDesc(mleBean.getName(),mleBean.getVersion(), mleBean.getDescription());
+				if (mleBean.getMLE_Manifests()!=null){  //update whitelist
+					pcrDao.deletePcrByMleID(mle.getMLEID());
+					for (MLE_Manifest mleManifest: mleBean.getMLE_Manifests()){
+						PcrWhiteList pcr = new PcrWhiteList();
+						pcr.setMle(mle);
+						pcr.setPcrName(mleManifest.getName());
+						pcr.setPcrDigest(mleManifest.getValue());
+						pcrList.add(pcr);
+						
+					}
+					pcrDao.addPcrList(pcrList);
 				}
-				pcrDao.addPcrList(pcrList);
+			} else {
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Add MLE entry failed, pleae check the type of MLE");
+				return Response.status(status).header("Location", b.build()).entity(fault).build();
 			}
+
 			return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True")
 	        		.build();
 		}catch (Exception e){
@@ -252,18 +280,23 @@ public class MLEResource {
 		Response.Status status = Response.Status.OK;
 		MLEDAO mleDao = new MLEDAO();
 		PcrWhiteListDAO pcrDao = new PcrWhiteListDAO();
-    	
+		boolean isValidKey = true;
+		
         try{	
 			HashMap parameters = new HashMap();
 			if (name != null){
 				parameters.put(name, 50);
+			} else {
+				isValidKey = false;
 			}
 			
 			if (version != null){
 				parameters.put(version, 50);
+			} else {
+				isValidKey = false;
 			}
 
-			if (name.length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (!isValidKey || name.length() < 1 || version.length() < 1 || !HibernateUtilHis.validLength(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);

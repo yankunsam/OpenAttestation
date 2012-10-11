@@ -57,33 +57,40 @@ public class OSResource {
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(OSResource.class);
 		Response.Status status = Response.Status.OK;
+		boolean isValidKey = true;
         try{
 			OSDAO dao = new OSDAO();
 			System.out.println("Check if the OS Name exists:" + os.getName());
-			if (dao.isOSExisted(os.getName(), os.getVersion())){
-				status = Response.Status.BAD_REQUEST;
-				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
-				fault.setError_message("Data Error - OS " + os.getName()+ os.getVersion() + " already exists in the database");
-				return Response.status(status).header("Location", b.build()).entity(fault)
-						.build();
-			}
 			
 			HashMap parameters = new HashMap();
-			if (os.getName()!=null){
+			if (os.getName() != null){
 				parameters.put(os.getName(), 50);
+			} else {
+				isValidKey = false;
 			}
-			if (os.getVersion()!=null){
+			if (os.getVersion() != null){
 				parameters.put(os.getVersion(), 50);
+			} else {
+				isValidKey = false;
 			}
-			if (os.getDescription()!=null){
+			if (os.getDescription() != null){
 				parameters.put(os.getDescription(), 100);
 			}
 			
-			if (os.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if ( !isValidKey  || os.getName().length() < 1 || os.getVersion().length() < 1 || !HibernateUtilHis.validLength(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
 				fault.setError_message("Add OS entry failed, please check the length for each parameter");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			
+			
+			if (dao.isOSExisted(os.getName(), os.getVersion())){
+				status = Response.Status.BAD_REQUEST;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
+				fault.setError_message("Data Error - OS " + os.getName()+ os.getVersion() + " already exists in the database");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
@@ -110,8 +117,34 @@ public class OSResource {
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(OSResource.class);
 		Response.Status status = Response.Status.OK;
+		boolean isValidKey = true;
         try{
 			OSDAO dao = new OSDAO();
+			
+			HashMap parameters = new HashMap();
+			if (os.getName()!=null){
+				parameters.put(os.getName(), 50);
+			} else {
+				isValidKey = false;
+			}
+			if (os.getVersion()!=null){
+				parameters.put(os.getVersion(), 50);
+			} else {
+				isValidKey = false;
+			}
+			if (os.getDescription()!=null){
+				parameters.put(os.getDescription(), 100);
+			}
+			
+			if (!isValidKey || os.getName().length() < 1 || os.getVersion().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+						OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Edit OS entry failed, please check the length for each parameters");
+				return Response.status(status).header("Location", b.build()).entity(fault)
+						.build();
+			}
+			
 			System.out.println("Check if the OEM Name exists:" + os.getName());
 			if (!dao.isOSExisted(os.getName(), os.getVersion())){
 				status = Response.Status.BAD_REQUEST;
@@ -121,25 +154,7 @@ public class OSResource {
 						.build();
 			}
 			
-			HashMap parameters = new HashMap();
-			if (os.getName()!=null){
-				parameters.put(os.getName(), 50);
-			}
-			if (os.getVersion()!=null){
-				parameters.put(os.getVersion(), 50);
-			}
-			if (os.getDescription()!=null){
-				parameters.put(os.getDescription(), 100);
-			}
-			
-			if (os.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
-				status = Response.Status.INTERNAL_SERVER_ERROR;
-				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
-						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Edit OS entry failed, please check the length for each parameters");
-				return Response.status(status).header("Location", b.build()).entity(fault)
-						.build();
-			}
+
 			
 			dao.editOSEntry(os);
 	        return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True")
@@ -161,20 +176,25 @@ public class OSResource {
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(OSResource.class);
 		Response.Status status = Response.Status.OK;
-
+		boolean isValidKey = true;
+		
         try{
 			OSDAO dao = new OSDAO();
 
 			HashMap parameters = new HashMap();
 			if (Name != null){
 				parameters.put(Name, 50);
+			} else {
+				isValidKey = false;
 			}
 
 			if (Version != null){
 				parameters.put(Version, 50);
+			} else {
+				isValidKey = false;
 			}
 			
-			if (Name.length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (!isValidKey || Name.length() < 1 || Version.length() < 1 || !HibernateUtilHis.validLength(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
@@ -186,13 +206,14 @@ public class OSResource {
 			System.out.println("Check if the OS Name exists:" + Name + " " + Version);
 			
 			 if (dao.isRefMle(Name, Version)) {
-					status = Response.Status.BAD_REQUEST;
-					OpenAttestationResponseFault fault = new OpenAttestationResponseFault(2012);
-					fault.setError_message("Data Error - OS " + Name + " & Version & " + Version + " reference with MLE, delete failed");
-					return Response.status(status).header("Location", b.build()).entity(fault)
-							.build();
-			 }
-			
+                 status = Response.Status.BAD_REQUEST;
+                 OpenAttestationResponseFault fault = new OpenAttestationResponseFault(2012);
+                 fault.setError_message("Data Error - OS " + Name + " & Version & " + Version + " reference with MLE, delete failed");
+                 return Response.status(status).header("Location", b.build()).entity(fault)
+                                 .build();
+                 }
+
+
 			if (dao.isOSExisted(Name, Version)){
 				dao.deleteOSEntry(Name, Version);
 				return Response.status(status).type(MediaType.TEXT_PLAIN).entity("True")
@@ -216,7 +237,6 @@ public class OSResource {
 
 		}
 	}
-	
 	
 	@GET
 	@Produces("application/json")
