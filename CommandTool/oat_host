@@ -7,14 +7,25 @@ HOST_PARM="-h"
 HOST_NAME=""
 INFO=""
 PORT=8443
+ShowHostExample()
+{
+  echo "Host Example:"
+  echo -e "Add  Host example:\n\033[31;49;5;1m bash oat_host -a -h HOSTNAME_OF_OAT-APPRAISER '{"HostName":"HOSTNAME-CLIENT","IPAddress":"IP_ADDRESS","Port":"PORT","BIOS_Name":"MLE_NAME_OF_BIOS_TYPE","BIOS_Version":"MLE_VERSION","BIOS_Oem":"OEM_NAME","VMM_Name":"MLE_NAME_OF_VMM_TYPE","VMM_Version":"MLE_VERSION","VMM_OSName":"OS_NAME","VMM_OSVersion":"OS_VERSION","Email":"","AddOn_Connection_String":"","Description":""}'\033[0m"
+
+  echo -e "Edit Host example:\n\033[31;49;5;1m bash oat_host -e -h HOSTNAME_OF_OAT-APPRAISER '{"HostName":"HOSTNAME-CLIENT","IPAddress":"IP_ADDRESS","Port":"PORT","BIOS_Name":"MLE_NAME_OF_BIOS_TYPE","BIOS_Version":"MLE_VERSION","BIOS_Oem":"OEM_NAME","VMM_Name":"MLE_NAME_OF_VMM_TYPE","VMM_Version":"MLE_VERSION","VMM_OSName":"OS_NAME","VMM_OSVersion":"OS_VERSION","Email":"E-MAIL","AddOn_Connection_String":"Moooooodify","Description":"Moooooodify"}'\033[0m"
+
+  echo -e "Del  Host example:\n\033[31;49;5;1m bash oat_host -d -h HOSTNAME_OF_OAT-APPRAISER '{"hostName":"HOSTNAME-CLIENT"}'\033[0m"
+}
 
 if [ $# -lt 4 ];then
   echo "parm num error!"
+  ShowHostExample
   exit 0
 fi
 
 if [ $2 != $HOST_PARM ];then
   echo "-h parm error!"
+  ShowHostExample
   exit 1
 else
   HOST_NAME="$3"
@@ -62,6 +73,7 @@ case $1 in
       ;;
       *)
       echo "Usage oat_pcr {-a|-e|-d}"
+      ShowHostExample
       exit 3
 esac
 echo -e "\n"
