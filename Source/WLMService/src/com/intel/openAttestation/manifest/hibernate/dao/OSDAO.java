@@ -156,6 +156,28 @@ public class OSDAO {
 			}
 	}
       	
+	public boolean isRefMle(String name, String version){
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("select m from MLE m inner join m.os o where o.Name = :name and o.Version = :version");
+			query.setString("name", name);
+			query.setString("version", version);
+			List list = query.list();
+			if (list.size() >= 1) {
+				HibernateUtilHis.commitTransaction();
+				return true;
+			} else {
+				HibernateUtilHis.commitTransaction();
+				return false;
+			}
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+	}
       	
 	public List<OS> getAllOSEntries(){
 		try{

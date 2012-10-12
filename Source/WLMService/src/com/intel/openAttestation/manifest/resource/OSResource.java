@@ -184,6 +184,15 @@ public class OSResource {
 			}
 			
 			System.out.println("Check if the OS Name exists:" + Name + " " + Version);
+			
+			 if (dao.isRefMle(Name, Version)) {
+					status = Response.Status.BAD_REQUEST;
+					OpenAttestationResponseFault fault = new OpenAttestationResponseFault(2012);
+					fault.setError_message("Data Error - OS " + Name + " & Version & " + Version + " reference with MLE, delete failed");
+					return Response.status(status).header("Location", b.build()).entity(fault)
+							.build();
+			 }
+			
 			if (dao.isOSExisted(Name, Version)){
 				dao.deleteOSEntry(Name, Version);
 				return Response.status(status).type(MediaType.TEXT_PLAIN).entity("True")
