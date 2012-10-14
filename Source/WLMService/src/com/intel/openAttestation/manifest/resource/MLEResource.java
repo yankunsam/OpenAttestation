@@ -444,6 +444,8 @@ public class MLEResource {
 							List tempList = pcrDao.queryPcrByMLEid(mle.getMLEID().longValue());
 							if (tempList != null){
 								pcrList = new ArrayList(tempList);
+							} else {
+								pcrList = new ArrayList();
 							}
 				    		List<MLE_Manifest> mleManifest = new ArrayList();
 				    		for (int j=0; j<pcrList.size(); j++){
