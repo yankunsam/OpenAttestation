@@ -418,7 +418,7 @@ public class HOSTResource {
 	 * @param uriInfo
 	 * @return
 	 */
-	@PUT
+	@POST
 	@Path("/PollHosts")
 	@Consumes("application/json")
 	@Produces("application/json")
