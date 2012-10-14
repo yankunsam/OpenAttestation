@@ -380,6 +380,7 @@ public class MLEResource {
 		    		mleBeanList.add(mleBean);
 				} else {
 					if (mleList.get(i).getOem() != null){
+						mle = new MLE();
 						mle = mleDao.queryMLEByCriteria(criteria, "oem", mleList.get(i).getMLEID());
 						if (mle != null){
 							mleBean = new MLEBean();
@@ -419,6 +420,7 @@ public class MLEResource {
 						}
 						
 					} else if (mleList.get(i).getOs() != null){
+						mle = new MLE();
 						mle = mleDao.queryMLEByCriteria(criteria, "os", mleList.get(i).getMLEID());
 						if (mle != null){
 							mleBean = new MLEBean();

@@ -440,12 +440,12 @@ public class MLEDAO {
 		try {
 			HibernateUtilHis.beginTransaction();
 	        if (type.equalsIgnoreCase("oem")){
-				query = HibernateUtilHis.getSession().createQuery("select a from MLE a inner join a.oem b where a.Name like '%"+criteria+"%' or a.Version like '%"+criteria+"%'" +
-						" or a.Description like '%"+criteria+"%' or a.oem.Name like '%"+criteria+"%' and a.MLEID = :value ");
+				query = HibernateUtilHis.getSession().createQuery("select a from MLE a inner join a.oem b where (a.Name like '%"+criteria+"%' or a.Version like '%"+criteria+"%'" +
+						" or a.Description like '%"+criteria+"%' or a.oem.Name like '%"+criteria+"%') and a.MLEID = :value ");
 				query.setLong("value", mleID);
 	        } else if (type.equalsIgnoreCase("os")){
-				query = HibernateUtilHis.getSession().createQuery("select a from MLE a inner join a.os b where a.Name like '%"+criteria+"%' or a.Version like '%"+criteria+"%'" +
-						" or a.Description like '%"+criteria+"%' or a.os.Name like '%"+criteria+"%' or a.os.Version like '%"+criteria+"%' and a.MLEID = :value ");
+				query = HibernateUtilHis.getSession().createQuery("select a from MLE a inner join a.os b where (a.Name like '%"+criteria+"%' or a.Version like '%"+criteria+"%'" +
+						" or a.Description like '%"+criteria+"%' or a.os.Name like '%"+criteria+"%' or a.os.Version like '%"+criteria+"%') and a.MLEID = :value ");
 				query.setLong("value", mleID);
 	        } else {
 	        	return null;
