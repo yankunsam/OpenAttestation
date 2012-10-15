@@ -18,11 +18,11 @@ if [ $1 != $PARM ];then
   exit 0
 fi
 
-HOSTNAME="$2"
+HOST_NAME="$2"
 view_os()
 {
      curl --cacert ./certfile.cer -H "Content-Type: application/json" \
-     -X GET https://$HOSTNAME:$PORT/WLMService/resources/os -ssl3
+     -X GET https://$HOST_NAME:$PORT/WLMService/resources/os -ssl3
 }
 
 view_os

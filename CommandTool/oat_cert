@@ -1,6 +1,7 @@
 #!/bin/bash
 #create oat cert
 PARM="-h"
+PORT="8443"
 ShowExample()
 {
   echo -e "Create cert example:\033[31;49;5;1m$1\033[0m"
@@ -20,5 +21,5 @@ if [ -e ./certfile.cer ];then
   rm -f certfile.cer
 fi
 
-HOSTNAME="$2"
-openssl  s_client -connect "$HOSTNAME":8443 -cipher DHE-RSA-AES256-SHA|tee  certfile.cer
+HOST_NAME="$2"
+openssl  s_client -connect "$HOST_NAME":$PORT -cipher DHE-RSA-AES256-SHA|tee  certfile.cer
