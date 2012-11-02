@@ -27,15 +27,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+
+import gov.niarl.hisAppraiser.util.HisUtil;
+
 import com.intel.openAttestation.manifest.bean.OpenAttestationResponseFault;
 import com.intel.openAttestation.manifest.bean.PcrWhiteListBean;
 import com.intel.openAttestation.manifest.hibernate.dao.*;
 import com.intel.openAttestation.manifest.hibernate.domain.PcrWhiteList;
 import com.intel.openAttestation.manifest.resource.PcrWhiteListResource;
 import com.intel.openAttestation.manifest.hibernate.domain.MLE;
-import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
-
-
 
 /**
  * RESTful web service interface to work with OEM DB.
@@ -45,9 +45,7 @@ import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
 
 @Path("resources/mles/whitelist/pcr")
 public class PcrWhiteListResource {
-	
 
-	
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
@@ -74,11 +72,12 @@ public class PcrWhiteListResource {
 				parameters.put(pcrbean.getPcrDigest(), 100);
 			}
 			
-			if (! isValidKey || pcrbean.getPcrName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (! isValidKey || pcrbean.getPcrName().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Add PCR entry failed, please check the length for each parameter");
+				fault.setError_message("Add PCR entry failed, please check the length for each parameters" +
+						" and remove all of the unwanted characters belonged to [# & + : \" \']");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
@@ -145,13 +144,13 @@ public class PcrWhiteListResource {
 				parameters.put(pcrbean.getPcrDigest(), 100);
 			}
 
-			if (!isValidKey || pcrbean.getPcrName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (!isValidKey || pcrbean.getPcrName().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Edit PCR entry failed, please check the length for each parameter");
-				return Response.status(status).header("Location", b.build()).entity(fault)
-						.build();
+				fault.setError_message("Edit PCR entry failed, please check the length for each parameters" +
+						" and remove all of the unwanted characters belonged to [# & + : \" \']");
+				return Response.status(status).header("Location", b.build()).entity(fault).build();
 			}
 			
 			if(pcrbean.getPcrName() != null && pcrbean.getPcrDigest() != null && pcrbean.getMLEName() != null && pcrbean.getMLEVersion() != null && pcrbean.getOEMName() != null)
@@ -222,11 +221,12 @@ public class PcrWhiteListResource {
 				parameters.put(oemName, 50);
 			}
 
-			if (! isValidKey || pcrName.length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (! isValidKey || pcrName.length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Delete PCR entry failed, please check the length for each parameter");
+				fault.setError_message("Delete PCR entry failed, please check the length for each parameters" +
+						" and remove all of the unwanted characters belonged to [# & + : \" \']");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
@@ -259,8 +259,7 @@ public class PcrWhiteListResource {
 			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 					OpenAttestationResponseFault.FaultCode.FAULT_500);
 			fault.setError_message("Delete PCR entry failed." + "Exception:" + e.getMessage()); 
-			return Response.status(status).entity(fault)
-					.build();
+			return Response.status(status).entity(fault).build();
 
 		}
 	}

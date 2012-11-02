@@ -29,6 +29,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+
+import gov.niarl.hisAppraiser.util.HisUtil;
+
 import com.intel.openAttestation.manifest.bean.MLEBean;
 import com.intel.openAttestation.manifest.bean.MLE_Manifest;
 import com.intel.openAttestation.manifest.bean.OpenAttestationResponseFault;
@@ -40,7 +43,6 @@ import com.intel.openAttestation.manifest.hibernate.domain.MLE;
 import com.intel.openAttestation.manifest.hibernate.domain.OEM;
 import com.intel.openAttestation.manifest.hibernate.domain.OS;
 import com.intel.openAttestation.manifest.hibernate.domain.PcrWhiteList;
-import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
 import com.intel.openAttestation.manifest.resource.MLEResource;
 
 
@@ -103,11 +105,12 @@ public class MLEResource {
 					parameters.put(mleBean.getDescription(), 100);
 				}
 
-				if (!isValidKey || mleBean.getName().length() < 1 || mleBean.getVersion().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+				if (!isValidKey || mleBean.getName().length() < 1 || mleBean.getVersion().length() < 1 || !HisUtil.validParas(parameters)){
 					status = Response.Status.INTERNAL_SERVER_ERROR;
 					OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 							OpenAttestationResponseFault.FaultCode.FAULT_500);
-					fault.setError_message("Add MLE entry failed, please check the length for each parameter");
+					fault.setError_message("Add MLE entry failed, please check the length for each parameters" +
+							" and remove all of the unwanted characters belonged to [# & + : \" \']");
 					return Response.status(status).header("Location", b.build()).entity(fault)
 							.build();
 				}
@@ -220,11 +223,12 @@ public class MLEResource {
 				parameters.put(mleBean.getDescription(), 100);
 			}
 
-			if (!isValidKey || mleBean.getVersion().length() < 1 ||  mleBean.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (!isValidKey || mleBean.getVersion().length() < 1 ||  mleBean.getName().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Add MLE entry failed, please check the length for each parameter");
+				fault.setError_message("Update MLE entry failed, please check the length for each parameters" +
+						" and remove all of the unwanted characters belonged to [# & + : \" \']");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
@@ -255,7 +259,7 @@ public class MLEResource {
 			} else {
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Add MLE entry failed, pleae check the type of MLE");
+				fault.setError_message("Update MLE entry failed, pleae check the type of MLE");
 				return Response.status(status).header("Location", b.build()).entity(fault).build();
 			}
 
@@ -265,7 +269,7 @@ public class MLEResource {
 			status = Response.Status.INTERNAL_SERVER_ERROR;
 			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 					OpenAttestationResponseFault.FaultCode.FAULT_500);
-			fault.setError_message("Add MLE entry failed." + "Exception:" + e.getMessage());
+			fault.setError_message("Update MLE entry failed." + "Exception:" + e.getMessage());
 			return Response.status(status).header("Location", b.build()).entity(fault)
 					.build();
 	}
@@ -296,11 +300,12 @@ public class MLEResource {
 				isValidKey = false;
 			}
 
-			if (!isValidKey || name.length() < 1 || version.length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (!isValidKey || name.length() < 1 || version.length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Delete MLE entry failed, please check the length for each parameter");
+				fault.setError_message("Delete MLE entry failed, please check the length for each parameters" +
+						" and remove all of the unwanted characters belonged to [# & + : \" \']");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}

@@ -30,13 +30,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+
+import gov.niarl.hisAppraiser.util.HisUtil;
+
 import com.intel.openAttestation.manifest.bean.OpenAttestationResponseFault;
 import com.intel.openAttestation.manifest.hibernate.dao.OEMDAO;
 import com.intel.openAttestation.manifest.hibernate.domain.OEM;
 import com.intel.openAttestation.manifest.resource.OEMResource;
-import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
-
-
 
 /**
  * RESTful web service interface to work with OEM DB.
@@ -72,11 +72,12 @@ public class OEMResource {
 				parameters.put(oem.getDescription(), 100);
 			}
 
-			if (!isValidKey || oem.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (!isValidKey || oem.getName().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Add OEM entry failed, please check the length for each parameter");
+				fault.setError_message("Add OEM entry failed, please check the length for each parameters" +
+						" and remove all of the unwanted characters belonged to [# & + : \" \']");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
@@ -126,11 +127,12 @@ public class OEMResource {
 			} else {
 				isValidKey = false;
 			}
-			if (!isValidKey || oem.getName().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (!isValidKey || oem.getName().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Edit OEM entry failed, please check the length for each parameter");
+				fault.setError_message("Edit OEM entry failed, please check the length for each parameters" +
+						" and remove all of the unwanted characters belonged to [# & + : \" \']");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
@@ -149,7 +151,7 @@ public class OEMResource {
 			status = Response.Status.INTERNAL_SERVER_ERROR;
 			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 					OpenAttestationResponseFault.FaultCode.FAULT_500);
-			fault.setError_message("Add OEM entry failed." + "Exception:" + e.getMessage());
+			fault.setError_message("Edit OEM entry failed." + "Exception:" + e.getMessage());
 			return Response.status(status).header("Location", b.build()).entity(fault)
 					.build();
 		}
@@ -174,11 +176,12 @@ public class OEMResource {
 				isValidKey = false;
 			}
 			
-			if (!isValidKey || Name.length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (!isValidKey || Name.length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Delte OEM entry failed, please check the length for each parameter");
+				fault.setError_message("Delte OEM entry failed, please check the length for each parameters" +
+						" and remove all of the unwanted characters belonged to [# & + : \" \']");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}

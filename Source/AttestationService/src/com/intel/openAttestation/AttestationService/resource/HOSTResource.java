@@ -45,7 +45,9 @@ import com.intel.openAttestation.AttestationService.bean.HostBean;
 import com.intel.openAttestation.AttestationService.bean.RespSyncBean;
 import com.intel.openAttestation.AttestationService.bean.ReqAttestationBean;
 import com.intel.openAttestation.AttestationService.util.ActionConverter;
-import com.intel.openAttestation.AttestationService.util.CommonUtil;
+
+import gov.niarl.hisAppraiser.util.HisUtil;
+
 import com.intel.openAttestation.AttestationService.util.ActionDelay.Action;
 import com.intel.openAttestation.AttestationService.util.ResultConverter;
 import com.intel.openAttestation.AttestationService.util.ResultConverter.AttestResult;
@@ -58,7 +60,6 @@ import com.intel.openAttestation.AttestationService.hibernate.dao.MLEDAO;
 
 /**
  * RESTful web service interface to work with HOST DB.
- * @author wchen106 & lijuan
  *
  */
 
@@ -131,14 +132,17 @@ public class HOSTResource {
 				parameters.put(hostFullObj.getAddOn_Connection_String(), 100);
 			}
 			
-			if (!isValidKey || hostFullObj.getHostName().length() < 1 || !CommonUtil.validLength(parameters)){
+			if (!isValidKey || hostFullObj.getHostName().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Add HOST entry failed, please check the length for each parameters");
+				fault.setError_message("Add HOST entry failed, please check the length for each parameters" +
+						" and remove all of the unwanted characters belonged to [# & + : \" \']");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
+			
+
 			
 			//Check if the HOST Name exists
 			if (dao.isHOSTExisted(hostFullObj.getHostName())){
@@ -281,11 +285,12 @@ public class HOSTResource {
 				parameters.put(hostFullObj.getAddOn_Connection_String(), 100);
 			}
 			
-			if (!isValidKey || hostFullObj.getHostName().length() < 1 || !CommonUtil.validLength(parameters)){
+			if (!isValidKey || hostFullObj.getHostName().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Add HOST entry failed, please check the length for each parameter");
+				fault.setError_message("Update HOST entry failed, please check the length for each parameters" +
+						" and remove all of the unwanted characters belonged to [# & + : \" \']");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
@@ -380,11 +385,12 @@ public class HOSTResource {
 				isValidKey = false;
 			}
 			
-			if (!isValidKey || Name.length() < 1 || !CommonUtil.validLength(parameters)){
+			if (!isValidKey || Name.length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Delete HOST entry failed, please check the length for each parameter");
+				fault.setError_message("Delete HOST entry failed, please check the length for each parameters" +
+						" and remove all of the unwanted characters belonged to [# & + : \" \']");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
@@ -443,11 +449,12 @@ public class HOSTResource {
 				}
 			}
 			
-			if (host == null || !CommonUtil.validLength(parameters) || !isValid){
+			if (host == null || !HisUtil.validParas(parameters) || !isValid){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Pull HOST failed, please check the length for each parameter");
+				fault.setError_message("Poll Hosts failed, please check the length for each parameters" +
+						" and remove all of the unwanted characters belonged to [# & + : \" \']");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
@@ -470,7 +477,7 @@ public class HOSTResource {
         					req.setValidateTime(lastReq.getValidateTime());
         				}
         				else{
-        					req.setNextAction(CommonUtil.getIntFromAction(Action.SEND_REPORT));
+        					req.setNextAction(ActionConverter.getIntFromAction(Action.SEND_REPORT));
         					req.setIsConsumedByPollingWS(false);//this flags must be set at the same time.
         					logger.debug("Next Action:" +req.getNextAction());
         				}
@@ -530,9 +537,9 @@ public class HOSTResource {
 		HOSTDAO dao = new HOSTDAO();
 		String requestId;
 		if (isSync)
-			requestId = CommonUtil.generateRequestId("PollHostsRequestId");
+			requestId = AttestUtil.generateRequestId("PollHostsRequestId");
 		else
-			requestId = CommonUtil.generateRequestId("PostHostsRequestId");
+			requestId = AttestUtil.generateRequestId("PostHostsRequestId");
 		Date requestTime = new Date();
 		List<String> host = reqAttestation.getHosts();
 		int hostNum = host.size();
@@ -546,7 +553,7 @@ public class HOSTResource {
 			if (reqAttestation.getTimeThreshold() ==null)
 				attestRequests[i].setNextAction(ActionConverter.getIntFromAction(Action.SEND_REPORT));
 			else
-				attestRequests[i].setNextAction(CommonUtil.getIntFromAction(Action.DO_NOTHING));
+				attestRequests[i].setNextAction(ActionConverter.getIntFromAction(Action.DO_NOTHING));
 			attestRequests[i].setIsConsumedByPollingWS(false);
 			
 			attestRequests[i].setMachineCert(dao.getMachineCert(reqAttestation.getHosts().get(i)));

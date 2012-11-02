@@ -40,8 +40,12 @@ import java.security.SecureRandom;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -238,4 +242,19 @@ public class HisUtil {
 		Collections.sort(arrayList);
 		return Collections.unmodifiableSortedSet(new TreeSet<Integer>(arrayList));
 	}
+	
+    public static boolean validParas(HashMap parameters) {
+    	String regex="[#&+:\"\']";
+    	Pattern p = Pattern.compile(regex);
+    	for (Iterator iter = parameters.keySet().iterator(); iter.hasNext();){
+    		String key = (String)iter.next();
+    		Integer value = (Integer)parameters.get(key);
+    		Matcher m = p.matcher(key);
+    		if (key.length() > value.intValue() || m.find() ){
+    			return false;
+    		}
+    		
+    	}
+    	return true;
+    }
 }

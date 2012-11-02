@@ -1,8 +1,5 @@
 package com.intel.openAttestation.manifest.hibernate.util;
 
-import java.util.HashMap;
-import java.util.Iterator;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
@@ -241,9 +238,6 @@ public class HibernateUtilHis {
         Session session = getSession();
         try {
             threadSession.set(null);
-//            if (session.isConnected() && session.isOpen()) {
-//                session.disconnect();
-//            }
             session.disconnect();
         } catch (HibernateException ex) {
             throw new OATException(ex);
@@ -269,14 +263,4 @@ public class HibernateUtilHis {
         return interceptor;
     }
 
-    public static boolean validLength(HashMap parameters) {
-    	for (Iterator iter = parameters.keySet().iterator(); iter.hasNext();){
-    		String key = (String)iter.next();
-    		Integer value = (Integer)parameters.get(key);
-    		if (key.length() > value.intValue()){
-    			return false;
-    		} 
-    	}
-    	return true;
-    }
 }

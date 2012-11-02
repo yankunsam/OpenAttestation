@@ -30,13 +30,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+
+import gov.niarl.hisAppraiser.util.HisUtil;
+
 import com.intel.openAttestation.manifest.bean.OpenAttestationResponseFault;
 import com.intel.openAttestation.manifest.hibernate.dao.OSDAO;
 import com.intel.openAttestation.manifest.hibernate.domain.OS;
-import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
 import com.intel.openAttestation.manifest.resource.OSResource;
-
-
 
 /**
  * RESTful web service interface to work with OEM DB.
@@ -46,14 +46,11 @@ import com.intel.openAttestation.manifest.resource.OSResource;
 
 @Path("resources/os")
 public class OSResource {
-	
-
-	
+		
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response addOS(@Context UriInfo uriInfo, OS os,
-			@Context javax.servlet.http.HttpServletRequest request){
+	public Response addOS(@Context UriInfo uriInfo, OS os, @Context javax.servlet.http.HttpServletRequest request){
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(OSResource.class);
 		Response.Status status = Response.Status.OK;
@@ -77,11 +74,12 @@ public class OSResource {
 				parameters.put(os.getDescription(), 100);
 			}
 			
-			if ( !isValidKey  || os.getName().length() < 1 || os.getVersion().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if ( !isValidKey  || os.getName().length() < 1 || os.getVersion().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Add OS entry failed, please check the length for each parameter");
+				fault.setError_message("Add OS entry failed, please check the length for each parameters" +
+						" and remove all of the unwanted characters belonged to [# & + : \" \']");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
@@ -112,8 +110,7 @@ public class OSResource {
 	@PUT
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response editOEM(@Context UriInfo uriInfo, OS os,
-			@Context javax.servlet.http.HttpServletRequest request){
+	public Response editOS(@Context UriInfo uriInfo, OS os, @Context javax.servlet.http.HttpServletRequest request){
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(OSResource.class);
 		Response.Status status = Response.Status.OK;
@@ -136,11 +133,12 @@ public class OSResource {
 				parameters.put(os.getDescription(), 100);
 			}
 			
-			if (!isValidKey || os.getName().length() < 1 || os.getVersion().length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (!isValidKey || os.getName().length() < 1 || os.getVersion().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Edit OS entry failed, please check the length for each parameters");
+				fault.setError_message("Edit OS entry failed, please check the length for each parameters" +
+						" and remove all of the unwanted characters belonged to [# & + : \" \']");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
@@ -194,11 +192,12 @@ public class OSResource {
 				isValidKey = false;
 			}
 			
-			if (!isValidKey || Name.length() < 1 || Version.length() < 1 || !HibernateUtilHis.validLength(parameters)){
+			if (!isValidKey || Name.length() < 1 || Version.length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Delete OS entry failed, please check the length for each parameter");
+				fault.setError_message("Delete OS entry failed, please check the length for each parameters" +
+						" and remove all of the unwanted characters belonged to [# & + : \" \']");
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
