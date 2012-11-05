@@ -246,7 +246,25 @@ public class MLEResource {
 					mleDao.editMLEDesc(mleBean.getName(),mleBean.getVersion(), mleBean.getDescription());
 				if (mleBean.getMLE_Manifests()!=null){  //update whitelist
 					pcrDao.deletePcrByMleID(mle.getMLEID());
-					for (MLE_Manifest mleManifest: mleBean.getMLE_Manifests()){
+					for (MLE_Manifest mleManifest: mleBean.getMLE_Manifests()){					
+						parameters.clear();
+						if (mleManifest.getName() != null){
+							parameters.put(mleManifest.getName(), 10);
+						}
+						
+						if (mleManifest.getValue() != null){
+							parameters.put(mleManifest.getValue(), 100);	
+						}
+						
+						if (!HisUtil.validParas(parameters)){
+							status = Response.Status.INTERNAL_SERVER_ERROR;
+							OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+									OpenAttestationResponseFault.FaultCode.FAULT_500);
+							fault.setError_message("Update MLE entry failed, please check the length for each parameters" +
+									" and remove all of the unwanted characters belonged to [# & + : \" \']");
+							return Response.status(status).header("Location", b.build()).entity(fault).build();
+						}
+						
 						PcrWhiteList pcr = new PcrWhiteList();
 						pcr.setMle(mle);
 						pcr.setPcrName(mleManifest.getName());
