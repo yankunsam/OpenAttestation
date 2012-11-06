@@ -161,16 +161,12 @@ public class PcrWhiteListResource {
 			{
 				pcr = dao.queryPcrByOSid(pcrbean.getMLEName(), pcrbean.getMLEVersion(), pcrbean.getOSName(), pcrbean.getOSVersion(), pcrbean.getPcrName());
 			}
-			if(pcr == null || !dao.isPcrExisted(pcrbean.getPcrName(), pcr.getMle().getMLEID()))
+			if(pcr == null)
 			{
 				status = Response.Status.BAD_REQUEST;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
-				if(pcr == null)
-					fault.setError_message("Data Error - PCR " + pcrbean.getPcrName() +" does not exist in the database");
-				else
-					fault.setError_message("Data Error - PCR " + pcrbean.getPcrName() +" does not exist in the database");
-				return Response.status(status).header("Location", b.build()).entity(fault)
-						.build();
+				fault.setError_message("Data Error - PCR combined with the specified MLE and related information does not exist in the database");
+				return Response.status(status).header("Location", b.build()).entity(fault).build();
 				
 			}
 			pcr.setPcrDigest(pcrbean.getPcrDigest());
@@ -239,21 +235,18 @@ public class PcrWhiteListResource {
 			{
 				pcr = dao.queryPcrByOSid(mleName, mleVersion, osName, osVersion, pcrName);
 			}	
-			if(pcr == null || !dao.isPcrExisted(pcrName, pcr.getMle().getMLEID()))
+			
+			if(pcr == null)
 			{
 				status = Response.Status.BAD_REQUEST;	
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
-				if(pcr == null)
-					fault.setError_message("Data Error - PCR " + pcrName +" does not exist in the database");
-				else
-					fault.setError_message("Data Error - PCR " + pcrName +" does not exist in the database");
-				return Response.status(status).header("Location", b.build()).entity(fault)
-						.build();
+				fault.setError_message("Data Error - PCR combined with the specified MLE and related information does not exist in the database");
+				return Response.status(status).header("Location", b.build()).entity(fault).build();
 				
 			}
+			
 			dao.deletePcrEntry(pcrName, pcr.getMle().getMLEID());
-			return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True")
-	        		.build();
+			return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True").build();
 		}catch (Exception e){
 			status = Response.Status.INTERNAL_SERVER_ERROR;
 			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
