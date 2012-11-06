@@ -367,7 +367,7 @@ public class MLEResource {
 		pcrList = new ArrayList();
 		try {
 			for (int i=0; i<mleList.size(); i++){
-				if (criteria == null){
+				if (criteria == null || criteria.trim() == ""){
 					mleBean = new MLEBean();
 		        	mleBean.setName(mleList.get(i).getName());
 		        	mleBean.setVersion(mleList.get(i).getVersion());
