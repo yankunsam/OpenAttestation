@@ -441,6 +441,15 @@ public class HOSTResource {
 			HOSTDAO dao = new HOSTDAO();
 			
 			List<String> host = reqAttestation.getHosts();
+			
+			if (host == null || host.size() == 0){
+				status = Response.Status.INTERNAL_SERVER_ERROR;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+						OpenAttestationResponseFault.FaultCode.FAULT_500);
+				fault.setError_message("Poll Hosts failed, please make sure the host information is correct");
+				return Response.status(status).header("Location", b.build()).entity(fault).build();
+			}
+			
 			HashMap parameters = new HashMap();
 			for(int i=0; i<host.size(); i++){
 				parameters.put(host.get(i), 50);
@@ -455,8 +464,7 @@ public class HOSTResource {
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
 				fault.setError_message("Poll Hosts failed, please check the length for each parameters" +
 						" and remove all of the unwanted characters belonged to [# & + : \" \']");
-				return Response.status(status).header("Location", b.build()).entity(fault)
-						.build();
+				return Response.status(status).header("Location", b.build()).entity(fault).build();
 			}
 			
     		String requestId = addRequests(reqAttestation, requestHost, true);
