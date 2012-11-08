@@ -32,6 +32,7 @@ public class HostBean {
 	private String VMMVersion;
 	private String VMMOSName;
 	private String VMMOSVersion;
+	private String Location;
 	
 	
 	public Long getID() {
@@ -145,6 +146,14 @@ public class HostBean {
 	@XmlElement(name="VMM_Name")
 	public void setVMMName(String vMMName) {
 		VMMName = vMMName;
+	}
+
+	public String getLocation() {
+		return Location;
+	}
+	@XmlElement(name="Location")
+	public void setLocation(String location) {
+		Location = location;
 	}
 
 	

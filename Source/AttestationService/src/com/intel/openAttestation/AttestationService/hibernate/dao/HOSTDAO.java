@@ -25,6 +25,7 @@ import org.hibernate.Session;
 import gov.niarl.hisAppraiser.hibernate.domain.HOST;
 import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
 import gov.niarl.hisAppraiser.hibernate.domain.HOST_MLE;
+import gov.niarl.hisAppraiser.hibernate.domain.MLE;
 
 import com.intel.openAttestation.AttestationService.hibernate.util.HibernateUtilHis;
 
@@ -180,7 +181,7 @@ public class HOSTDAO {
 			if (list.size() < 1) {
 				reqs =  new ArrayList<AttestRequest>();
 			} else {
-				reqs =  (List<AttestRequest>) list;
+				reqs = (List<AttestRequest>) list;
 			}
 			HibernateUtilHis.commitTransaction();
 			return reqs;
@@ -381,7 +382,53 @@ public class HOSTDAO {
 		}finally{
 			HibernateUtilHis.closeSession();
 		}   
-}
-
+	}
+	
+	public List<HOST> getAllHostEntries(){
+		try{
+			ArrayList  hostList = new ArrayList();
+			Query query = HibernateUtilHis.getSession().createQuery("from HOST host");
+			System.out.println("query:"+query.toString());
+			List list = query.list();
+			for (int i=0;i<list.size();i++){
+				hostList.add((HOST)list.get(i));
+			}
+			HibernateUtilHis.commitTransaction();
+			return list;
+		}catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	} 
+	
+	public List<MLE> getMLEList(HOST host){
+		try {
+			ArrayList hostList = new ArrayList();
+			Query query = HibernateUtilHis.getSession().createQuery("select a.mle from HOST_MLE a where a.host = :host");
+			query.setEntity("host", host);
+			List list = query.list();
+			return (List<MLE>)list;
+		} catch (Exception e){
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+//	public String getOEM(Long oemid) {
+//		// TODO Auto-generated method stub
+//		try {
+//			ArrayList hostList = new ArrayList();
+//			Query query = HibernateUtilHis.getSession().createQuery("select a.Name from OEM a where a.OEMID = :id");
+//			query.setLong("id", oemid);
+//			//query.setEntity("id", oemid);
+//			List list = query.list();
+//			return (String)list.get(0);
+//		}catch (Exception e){
+//			HibernateUtilHis.rollbackTransaction();
+//			e.printStackTrace();
+//			throw new RuntimeException(e);
+//		}
+//	}
 
 }

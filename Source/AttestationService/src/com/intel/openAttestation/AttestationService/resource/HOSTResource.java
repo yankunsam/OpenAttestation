@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -38,6 +39,8 @@ import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
 import gov.niarl.hisAppraiser.hibernate.domain.HOST_MLE;
 import gov.niarl.hisAppraiser.hibernate.domain.MLE;
 import gov.niarl.hisAppraiser.hibernate.domain.HOST;
+import gov.niarl.hisAppraiser.hibernate.domain.OEM;
+import gov.niarl.hisAppraiser.hibernate.domain.OS;
 
 import com.intel.openAttestation.AttestationService.resource.HOSTResource;
 import com.intel.openAttestation.AttestationService.resource.AttestService;
@@ -56,6 +59,8 @@ import com.intel.openAttestation.AttestationService.bean.AttestationResponseFaul
 import com.intel.openAttestation.AttestationService.bean.OpenAttestationResponseFault;
 import com.intel.openAttestation.AttestationService.hibernate.dao.HOSTDAO;
 import com.intel.openAttestation.AttestationService.hibernate.dao.MLEDAO;
+import com.intel.openAttestation.AttestationService.hibernate.util.HibernateUtilHis;
+
 
 
 /**
@@ -541,6 +546,62 @@ public class HOSTResource {
 	    }
 	}
 
+	@GET
+	@Path("/hosts")
+	@Produces("application/json")
+	public List<HostBean> searchHost(@QueryParam("searchCriteria") String criteria){
+		HOSTDAO dao = new HOSTDAO();
+		List<HOST> hostList = new ArrayList<HOST>(); 
+		List<HostBean> hostBeanList = new ArrayList<HostBean>();
+		HibernateUtilHis.beginTransaction();
+		hostList = dao.getAllHostEntries();
+		List<MLE> MLEList = new ArrayList<MLE>();
+		MLE mle = null;
+		HOST host = null; 
+		OEM oem = null;
+		OS os = null;
+		try {
+			for (int i=0; i<hostList.size(); i++){
+				if (criteria == null || criteria.trim() == "" || hostList.get(i).getHostName().matches(".*" + criteria + ".*")){
+					HostBean hostBean = new HostBean();
+					host = hostList.get(i);
+					hostBean.setHostName(host.getHostName());
+					hostBean.setIPAddress(host.getIPAddress());
+					hostBean.setPort(host.getPort());
+					hostBean.setAddOn_Connection_String(host.getAddOn_Connection_String());
+					hostBean.setDescription(host.getDescription());
+					hostBean.setEmail(host.getEmail());
+					//Query HOST_MLE
+					MLEList = dao.getMLEList(host);
+					//Query MLE
+					for (int j=0; j<MLEList.size(); j++){
+						mle = (MLE)MLEList.get(j);
+						if (mle.getOem() != null){
+							hostBean.setBIOSName(mle.getName());
+							hostBean.setBIOSVersion(mle.getVersion());
+							oem = mle.getOem();
+							hostBean.setBIOSOem(oem.getName());
+						}
+						if (mle.getOs() != null){
+							hostBean.setVMMName(mle.getName());
+							hostBean.setVMMVersion(mle.getVersion());
+							os = mle.getOs();
+							hostBean.setVMMOSName(os.getName());
+							hostBean.setVMMOSVersion(os.getVersion());
+						}
+					}
+					hostBean.setLocation("null");
+					hostBeanList.add(hostBean);
+				}
+			}
+		}catch (Exception e){
+			System.out.println("Encountered an exception with detail message: " + e.getMessage());
+		}finally{
+			HibernateUtilHis.closeSession();
+		}
+		return hostBeanList;
+	}
+	
 	public static String addRequests(ReqAttestationBean reqAttestation, String requestHost, boolean isSync) {
 		HOSTDAO dao = new HOSTDAO();
 		String requestId;
