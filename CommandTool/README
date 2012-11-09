@@ -44,6 +44,7 @@ bash oat_host -e -h his8 '{"HostName":"his8","IPAddress":"192.168.1.1","Port":"9
 
 bash oat_host -d -h his8 '{"hostName":"his8"}'
 
+bash oat_host -s -h his8 '{rhel}'
 
 ^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*
 ^*                                          POLLHOSTS                                               ^*
