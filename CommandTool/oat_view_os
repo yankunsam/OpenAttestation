@@ -21,6 +21,20 @@ fi
 HOST_NAME="$2"
 view_os()
 {
+     res=`ping -c 1 $HOST_NAME > /dev/null 2>&1`
+     if [ $? != 0 ];then
+       echo "host is unreachable"
+       exit 0
+     fi
+     if [ -z $HOST_NAME ];then
+       echo "invalid hostname"
+       exit 0
+     fi
+     len=`expr length $HOST_NAME`
+     if [ $len -gt 50 ];then
+       echo "size of host name exceeds the max number allowed"
+       exit 0
+     fi
      curl --cacert ./certfile.cer -H "Content-Type: application/json" \
      -X GET https://$HOST_NAME:$PORT/WLMService/resources/os -ssl3
 }
