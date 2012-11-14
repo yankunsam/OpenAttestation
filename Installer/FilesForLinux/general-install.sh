@@ -39,12 +39,12 @@ mkdir /OAT/
 fi
 chmod -R a+w /OAT/
 
-tar vfxz NIARL_OAT_Standalone.tar.gz -C /
 cp shells/$dist.sh /OAT/OAT.sh
 chmod +x /OAT/OAT.sh
-
+cp -f OAT_Standalone.jar /OAT
+touch /OAT/log4j.properties
+cp -rf lib/ /OAT 
 cp -f /OAT/OAT.sh /etc/init.d/OATClient
-
 cp -f OAT.properties /OAT
 cp -f TrustStore.jks /OAT
 cp -f NIARL_TPM_Module /OAT

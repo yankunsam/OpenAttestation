@@ -40,8 +40,8 @@ CreateRPMdirectory()
 #Install HIS-Appraiser-Base.tar.gz
 InstallOatAppraiserBase()
 {
-  if test -d ./OAT-Appraiser-Base;then
-    cd ./OAT-Appraiser-Base
+  if test -d ./OAT-Appraiser-Configure;then
+    cd ./OAT-Appraiser-Configure
     zip -9 clientInstallRefresh.zip clientInstallRefresh.sh
     rm -f clientInstallRefresh.sh
     zip -9 linuxClientInstallRefresh.zip linuxClientInstallRefresh.sh
@@ -56,15 +56,15 @@ InstallOatAppraiserBase()
     zip -9 -r service.zip service/
     rm -rf service/
     cd ../
-    tar -czvf OAT-Appraiser-Base.tar.gz ./OAT-Appraiser-Base/
-    rm -rf ./OAT-Appraiser-Base/
+    tar -czvf OAT-Appraiser-Configure.tar.gz ./OAT-Appraiser-Configure/
   fi
 
-  if test -e ./OAT-Appraiser-Base.tar.gz;then
-    cp OAT-Appraiser-Base.tar.gz $RPM_BUILD_SOURCE_DIRECTORY
-    ShowLogOK "./OAT-Appraiser-Base.tar.gz"
+  if test -e ./OAT-Appraiser-Configure.tar.gz;then
+    cp OAT-Appraiser-Configure.tar.gz $RPM_BUILD_SOURCE_DIRECTORY
+    ShowLogOK "./OAT-Appraiser-Configure.tar.gz"
+    rm -rf ./OAT-Appraiser-Configure
   else
-    ShowLogFaild "./OAT-Appraiser-Base.tar.gz"
+    ShowLogFaild "./OAT-Appraiser-Configure.tar.gz"
   fi
 }
 
@@ -100,11 +100,6 @@ CreatNiarlOatStandalone()
     ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/log4j.properties"
   fi
 
-#  if test -e $OATSOURCE_DIRECTORY/HisClient/OAT.properties;then
-#    cp $OATSOURCE_DIRECTORY/HisClient/OAT.properties  NIARL_OAT_Standalone
-#  else
-#    ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/OAT.properties"
-#  fi
 
   if test -d  $OATSOURCE_DIRECTORY/HisClient/lib/;then
     cp -r  $OATSOURCE_DIRECTORY/HisClient/lib/ NIARL_OAT_Standalone
@@ -112,27 +107,6 @@ CreatNiarlOatStandalone()
     ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/lib/"
   fi
 
-
-  tar -zcvf NIARL_OAT_Standalone.tar.gz  NIARL_OAT_Standalone
-  mv NIARL_OAT_Standalone.tar.gz $RPM_BUILD_SOURCE_DIRECTORY
-  rm -rf OAT
-  mv NIARL_OAT_Standalone OAT
-  tar -zcvf NIARL_OAT_Standalone.tar.gz OAT
-  ShowLogOK "NIARL_OAT_Standalone.tar.gz"
-
-  if test -e ./OAT-Standalone.spec;then
-  cp -r ./OAT-Standalone.spec $RPM_BUILD_SPECS_DIRECTORY
-  else
-    ShowLogFaild "./OAT-Standalone.spec"
-  fi
-
-  rpmbuild -bb $RPM_BUILD_SPECS_DIRECTORY/OAT-Standalone.spec
-
-  if test -e `$RPM_BUILD_DIRECTORY/RPMS/x86_64/$RPM_V`;then
-    ShowLogOK "$RPM_V"
-  else
-    ShowLogFaild "$RPM_V"
-  fi
 }
 
 
@@ -161,11 +135,11 @@ LinuxOatInstall()
     ShowLogFaild "./FilesForLinux/shells"
   fi
   
-  if test -e $RPM_BUILD_RPMS_DIRECTORY/$RPM_V;then
-    cp $RPM_BUILD_RPMS_DIRECTORY/$RPM_V  linuxOatInstall
-  else
-    ShowLogFaild "$RPM_BUILD_RPMS_DIRECTORY/$RPM_V"
-  fi
+#  if test -e $RPM_BUILD_RPMS_DIRECTORY/$RPM_V;then
+#    cp $RPM_BUILD_RPMS_DIRECTORY/$RPM_V  linuxOatInstall
+#  else
+#    ShowLogFaild "$RPM_BUILD_RPMS_DIRECTORY/$RPM_V"
+#  fi
 
   if test -e $OATSOURCE_DIRECTORY/PrivacyCA/provisioner.sh;then
     cp $OATSOURCE_DIRECTORY/PrivacyCA/provisioner.sh linuxOatInstall
@@ -211,13 +185,6 @@ LinuxOatInstall()
   else
     ShowLogFaild "$OATSOURCE_DIRECTORY/TPMModule/plain/linux/NIARL_TPM_Module"
   fi
-
-
-  if test -e ./NIARL_OAT_Standalone.tar.gz;then
-    cp ./NIARL_OAT_Standalone.tar.gz linuxOatInstall
-  else
-    ShowLogFaild "./NIARL_OAT_Standalone.tar.gz" 
-  fi
   
   if test -e ./ClientInstallForLinux.zip;then
     rm -rf ClientInstallForLinux.zip
@@ -230,33 +197,54 @@ LinuxOatInstall()
 RePkgInstallOatAppraiserBase()
 {
   CurDir=$(pwd)
-  if test -e $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base.tar.gz;then
+  if test -e $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Configure.tar.gz;then
      cd  $RPM_BUILD_SOURCE_DIRECTORY
-     rm -rf OAT-Appraiser-Base
-     tar -zxvf OAT-Appraiser-Base.tar.gz
+     rm -rf OAT-Appraiser-Configure
+     tar -zxvf OAT-Appraiser-Configure.tar.gz
   else
-     ShowLogFaild "$RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base.tar.gz"
+     ShowLogFaild "$RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Configure.tar.gz"
   fi
- 
+
+###########################
+    echo "$RPM_BUILD_SOURCE_DIRECTORY"
+    if test -e $CurDir/FilesForLinux/OAT.sh;then
+      cp $CurDir/FilesForLinux/OAT.sh  $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Configure
+    else
+      ShowLogFaild "./FilesForLinux/OAT.sh"
+    fi
+    if test -e $OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar;then
+      cp $OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Configure
+    else
+      ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar"
+    fi
+
+    if test -e $OATSOURCE_DIRECTORY/HisClient/log4j.properties;then
+      cp $OATSOURCE_DIRECTORY/HisClient/log4j.properties  $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Configure
+    else
+      ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/log4j.properties"
+    fi
+
+
+    if test -d  $OATSOURCE_DIRECTORY/HisClient/lib/;then
+      cp -r  $OATSOURCE_DIRECTORY/HisClient/lib/ $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Configure
+    else
+      ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/lib/"
+    fi
+##########################
   
    if test -e $CurDir/FilesForLinux/apache-tomcat-6.0.29.tar.gz;then
-     cp $CurDir/FilesForLinux/apache-tomcat-6.0.29.tar.gz $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
+     cp $CurDir/FilesForLinux/apache-tomcat-6.0.29.tar.gz $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Configure
    else
      ShowLogFaild "$CurDir/FilesForLinux/apache-tomcat-6.0.29.tar.gz"
    fi
  
-#  if test -e $CurDir/FilesForLinux/linuxClientInstallRefresh.zip;then 
-#    cp $CurDir/FilesForLinux/linuxClientInstallRefresh.zip  $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
-#  else
-#    ShowLogFaild "$CurDir/FilesForLinux/linuxClientInstallRefresh.zip"
-#  fi
   if test -e $CurDir/ClientInstallForLinux.zip;then
-    cp $CurDir/ClientInstallForLinux.zip $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
+    cp $CurDir/ClientInstallForLinux.zip $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Configure
   else
      ShowLogFaild "$CurDir/ClientInstallForLinux.zip"
   fi
 
-  cd $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
+  cd $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Configure
   
   if test -e HisPrivacyCAWebServices2.war;then
     rm -rf HisPrivacyCAWebServices2.war
@@ -293,7 +281,7 @@ RePkgInstallOatAppraiserBase()
   fi
 
 ###HIS_Server_Install.zip####
- cd $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
+ cd $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Configure
  if test -e OAT_Server_Install.zip;then
    unzip OAT_Server_Install.zip
    rm -rf OAT_Server_Install.zip
@@ -329,7 +317,7 @@ else
    ShowLogFaild "$CurDir/FilesForLinux/init.sql"
 fi
 
- cd $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
+ cd $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Configure
 
  zip -9 -r OAT_Server_Install.zip OAT_Server_Install
 
@@ -351,11 +339,11 @@ rm -rf OAT
 #############
 
   cd $RPM_BUILD_SOURCE_DIRECTORY
-  rm -rf OAT-Appraiser-Base.tar.gz
-  tar -zcvf OAT-Appraiser-Base.tar.gz OAT-Appraiser-Base
-  rm -rf OAT-Appraiser-Base
+  rm -rf OAT-Appraiser-Configure.tar.gz
+  tar -zcvf OAT-Appraiser-Configure.tar.gz OAT-Appraiser-Configure
+  rm -rf OAT-Appraiser-Configure
   cd $CurDir
-  ShowLogOK "repackage OAT-Appraiser-Base.tar.gz"
+  ShowLogOK "repackage OAT-Appraiser-Configure.tar.gz"
 }
 
 RPMbuild()
@@ -366,8 +354,8 @@ RPMbuild()
     ShowLogFaild "./OAT-Appraiser-Base.spec"
   fi
   
-  if test -d /OAT-Appraiser-Base;then
-  rm -rf /OAT-Appraiser-Base
+  if test -d /OAT-Appraiser-Configure;then
+  rm -rf /OAT-Appraiser-Configure
   fi
   
   cd $RPM_BUILD_SPECS_DIRECTORY
@@ -531,6 +519,7 @@ echo "EC_SIGNING_KEY_SIZE=$4"
 
 Build_xml
 CreateRPMdirectory
+echo "########install oat base########"
 InstallOatAppraiserBase
 CreatNiarlOatStandalone
 LinuxOatInstall

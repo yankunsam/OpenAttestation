@@ -888,7 +888,7 @@ else
 fi
 
 if test -e $JAR_SOURCE/apache-tomcat-6.0.29.tar.gz;then
-  cp -f $JAR_SOURCE/apache-tomcat-6.0.29.tar.gz ./FilesForLinux
+  cp -f $JAR_SOURCE/apache-tomcat-6.0.29.tar.gz ../Installer/FilesForLinux
 else
   ShowLogFaild "$JAR_SOURCE/apache-tomcat-6.0.29.tar.gz"
 fi

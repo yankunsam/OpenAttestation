@@ -5,8 +5,8 @@ Release: 2%{?dist}
 License: DoD
 Group: Department of Defense
 Vendor: Department of Defense
-Source0: OAT-Appraiser-Base.tar.gz
-BuildRoot: /var/tmp/%{name}-%{PACKAGE_VERSION}
+Source0: OAT-Appraiser-Configure.tar.gz
+BuildRoot: /var/tmp/OAT-Appraiser-Configure-%{PACKAGE_VERSION}
 
 %description
 Host Integrity at Startup (OAT) is a project that explores how software and processes on standard desktop computers can be measured to detect and report important and specific changes which highlight potential compromise of the host platform. OAT provides the first examples of effective Measurement and Attestation on the path toward trusted platforms.
@@ -20,10 +20,10 @@ Requires: mysql, mysql-server, php, php-mysql
 The Host Integrity at Startup Installation 
 of the OAT Appraiser Server Base Install
 %prep
-%setup -n %{name}
+%setup -n OAT-Appraiser-Configure
 rm -rf $RPM_BUILD_ROOT
 mkdir $RPM_BUILD_ROOT/
-cp -R $RPM_BUILD_DIR/%{name} $RPM_BUILD_ROOT
+cp -R $RPM_BUILD_DIR/OAT-Appraiser-Configure $RPM_BUILD_ROOT
 
 %post OATapp
 echo -n "Making OAT Appraiser\n"
@@ -80,7 +80,7 @@ echo $TOMCAT_DIR_COFNIG_TYPE >> ~/rpm.log
 ip12="internal.p12"
 ipassfile="internal.pass"
 idomfile="internal.domain"
-iloc="/%{name}/"
+iloc="/OAT-Appraiser-Configure/"
 p12file="$loc$ip12"
 RAND1=$(dd if=/dev/urandom bs=1 count=1024)
 RAND2=$(dd if=/dev/urandom bs=1 count=1024 | awk '{print $1}')
@@ -131,11 +131,11 @@ service mysqld stop
 #setting up tomcat at $TOMCAT_INSTALL_DIR/
 if [ $TOMCAT_NAME == apache-tomcat-6.0.29 ];then
 rm -f $TOMCAT_INSTALL_DIR/apache-tomcat-6.0.29.tar.gz
-mv /%{name}/apache-tomcat-6.0.29.tar.gz $TOMCAT_INSTALL_DIR/.
+mv /OAT-Appraiser-Configure/apache-tomcat-6.0.29.tar.gz $TOMCAT_INSTALL_DIR/.
 fi
 
-unzip /%{name}/service.zip -d /%{name}/
-rm -f /%{name}/service.zip
+unzip /OAT-Appraiser-Configure/service.zip -d /OAT-Appraiser-Configure/
+rm -f /OAT-Appraiser-Configure/service.zip
 
 #mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME $TOMCAT_INSTALL_DIR/apache-tomcat-old
 if [ $TOMCAT_NAME == apache-tomcat-6.0.29 ];then
@@ -144,13 +144,13 @@ tar -zxf $TOMCAT_INSTALL_DIR/apache-tomcat-6.0.29.tar.gz -C $TOMCAT_INSTALL_DIR/
 fi
 
 rm -rf $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/service
-mv -f /%{name}/service $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/service
+mv -f /OAT-Appraiser-Configure/service $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/service
 #rm -rf $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/Certificate
 #mkdir $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/Certificate
 rm -rf /var/lib/oat-appraiser/Certificate
 mkdir /var/lib/oat-appraiser/Certificate
-unzip /%{name}/setupProperties.zip -d /%{name}/
-mv /%{name}/setup.properties /etc/oat-appraiser/
+unzip /OAT-Appraiser-Configure/setupProperties.zip -d /OAT-Appraiser-Configure/
+mv /OAT-Appraiser-Configure/setup.properties /etc/oat-appraiser/
 
 rm -R -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/*
 
@@ -163,13 +163,13 @@ chkconfig mysqld on
 service mysqld start
 
 #running OAT database full setup
-#rm -rf /%{name}/MySQLdrop.txt
-#unzip /%{name}/MySQLdrop.zip -d /%{name}/
-#mysql -u root < /%{name}/MySQLdrop.txt
-rm -rf /%{name}/OAT_Server_Install
-unzip /%{name}/OAT_Server_Install.zip -d /%{name}/
+#rm -rf /OAT-Appraiser-Configure/MySQLdrop.txt
+#unzip /OAT-Appraiser-Configure/MySQLdrop.zip -d /OAT-Appraiser-Configure/
+#mysql -u root < /OAT-Appraiser-Configure/MySQLdrop.txt
+rm -rf /OAT-Appraiser-Configure/OAT_Server_Install
+unzip /OAT-Appraiser-Configure/OAT_Server_Install.zip -d /OAT-Appraiser-Configure/
 rm -rf /tmp/OAT_Server_Install
-mv -f /%{name}/OAT_Server_Install /tmp/OAT_Server_Install
+mv -f /OAT-Appraiser-Configure/OAT_Server_Install /tmp/OAT_Server_Install
 mysql -u root --execute="DROP DATABASE IF EXISTS oat_db;"
 mysql -u root < /tmp/OAT_Server_Install/oat_db.MySQL
 mysql -u root < /tmp/OAT_Server_Install/init.sql
@@ -217,10 +217,10 @@ sed -i "s/^truststore_path.*$/truststore_path=\/var\/lib\/oat-appraiser\/Certifi
 
 sed -i "s/^TrustStore.*$/TrustStore=\/var\/lib\/oat-appraiser\/Certificate\/TrustStore.jks/g"  /etc/oat-appraiser/OpenAttestation.properties
 #placing OAT web portal in correct folder to be seen by tomcat6
-rm -rf /%{name}/OAT
-unzip /%{name}/OAT.zip -d /%{name}/
+rm -rf /OAT-Appraiser-Configure/OAT
+unzip /OAT-Appraiser-Configure/OAT.zip -d /OAT-Appraiser-Configure/
 rm -rf /var/www/html/OAT
-mv -f /%{name}/OAT /var/www/html/OAT
+mv -f /OAT-Appraiser-Configure/OAT /var/www/html/OAT
 
 #setting all files in the OAT portal to be compiant to selinux
 /sbin/restorecon -R '/var/www/html/OAT'
@@ -230,9 +230,9 @@ sed -i 's/user = "root"/user = "oatAppraiser"/g' /var/www/html/OAT/includes/dbco
 sed -i "s/pass = \"newpwd\"/pass = \"$randpass3\"/g" /var/www/html/OAT/includes/dbconnect.php
 
 #setting up OAT database to talk with the web portal correctly
-rm -f /%{name}/oatSetup.txt
-unzip /%{name}/oatSetup.zip -d /%{name}/
-mysql -u root --database=oat_db < /%{name}/oatSetup.txt
+rm -f /OAT-Appraiser-Configure/oatSetup.txt
+unzip /OAT-Appraiser-Configure/oatSetup.zip -d /OAT-Appraiser-Configure/
+mysql -u root --database=oat_db < /OAT-Appraiser-Configure/oatSetup.txt
 
 
 #  This is setting the OAT mysql user to the password given to the Appraiser
@@ -277,10 +277,10 @@ chkconfig tomcat6 on
 rm -rf $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2.war
 
 # TOAT IS THE BEGINNING OF THE PCA PORTION
-#rm -rf /%{name}/OAT_PrivacyCA_Install
-#unzip /%{name}/OAT_PrivacyCA_Install.zip -d /%{name}/
+#rm -rf /OAT-Appraiser-Configure/OAT_PrivacyCA_Install
+#unzip /OAT-Appraiser-Configure/OAT_PrivacyCA_Install.zip -d /OAT-Appraiser-Configure/
 #rm -rf /tmp/OAT_PrivacyCA_Install
-#mv /%{name}/OAT_PrivacyCA_Install /tmp/OAT_PrivacyCA_Install
+#mv /OAT-Appraiser-Configure/OAT_PrivacyCA_Install /tmp/OAT_PrivacyCA_Install
 
 chmod 777 /tmp
 sleep 10
@@ -315,7 +315,7 @@ done
 
 #moves the war file to webapps folder to unpack it
 rm -rf $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2.war
-cp /%{name}/HisPrivacyCAWebServices2.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
+cp /OAT-Appraiser-Configure/HisPrivacyCAWebServices2.war $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/
 
 # This for loop makes the rpm wait until the .war file has unpacked before attempting to access the files that will be created
 for((i = 1; i < 60; i++))
@@ -339,12 +339,12 @@ do
 done
 
 #this is a script to re-run certificate creation using new p12 files after installation
-rm -rf /%{name}/clientInstallRefresh.sh
-rm -rf /%{name}/linuxClientInstallRefresh.sh
+rm -rf /OAT-Appraiser-Configure/clientInstallRefresh.sh
+rm -rf /OAT-Appraiser-Configure/linuxClientInstallRefresh.sh
 cur_dir=$(pwd)
-unzip /%{name}/clientInstallRefresh.zip -d /%{name}/
-unzip /%{name}/linuxClientInstallRefresh.zip -d /%{name}/
-cd /%{name}/
+unzip /OAT-Appraiser-Configure/clientInstallRefresh.zip -d /OAT-Appraiser-Configure/
+unzip /OAT-Appraiser-Configure/linuxClientInstallRefresh.zip -d /OAT-Appraiser-Configure/
+cd /OAT-Appraiser-Configure/
 sed -i "s/\/usr\/lib\/apache-tomcat-6.0.29/$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME/g" clientInstallRefresh.sh
 sed -i "s/\/usr\/lib\/apache-tomcat-6.0.29/$TOMCAT_DIR_COFNIG_TYPE\/$TOMCAT_NAME/g" linuxClientInstallRefresh.sh
 
@@ -360,78 +360,33 @@ zip -9 clientInstallRefresh.zip    clientInstallRefresh.sh
 cp -rf linuxClientInstallRefresh.zip /tmp
 cd $cur_dir
 
-rm -rf /%{name}/installers
-#unzip /%{name}/ClientInstall.zip -d /%{name}/
-unzip /%{name}/ClientInstallForLinux.zip -d /%{name}/
+rm -rf /OAT-Appraiser-Configure/installers
+#unzip /OAT-Appraiser-Configure/ClientInstall.zip -d /OAT-Appraiser-Configure/
+unzip /OAT-Appraiser-Configure/ClientInstallForLinux.zip -d /OAT-Appraiser-Configure/
 
 sleep 5
 
-# zky: similar from here
-#rm -f /%{name}/ClientInstallOld.zip
-#mv /%{name}/ClientInstall.zip /%{name}/ClientInstallOld.zip
+mv /OAT-Appraiser-Configure/ClientInstallForLinux.zip /OAT-Appraiser-Configure/ClientInstallForLinuxOld.zip
 
-#rm -rf /%{name}/ClientInstall
-#mkdir /%{name}/ClientInstall
+rm -rf /OAT-Appraiser-Configure/ClientInstallForLinux
 
-#This code grabs all of the needed files from the privacy CA folder and packages them into a Client Installation folder
-#cp -r -f /%{name}/installers /%{name}/ClientInstall
-
-#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/endorsement.p12 /%{name}/ClientInstall/installers/hisInstall/
-#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/lib /%{name}/ClientInstall/installers/hisInstall/
-#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/TPMModule.properties /%{name}/ClientInstall/installers/hisInstall/
-#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/exe /%{name}/ClientInstall/installers/hisInstall/
-#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/PrivacyCA.cer /%{name}/ClientInstall/installers/hisInstall/
-#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/TrustStore.jks /%{name}/ClientInstall/installers/hisInstall/
-#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/OATprovisioner.properties /%{name}/ClientInstall/installers/hisInstall/
-##DWC added two following lines for Chris
-#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/install.bat /%{name}/ClientInstall/installers/hisInstall/
-#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/OAT.properties /%{name}/ClientInstall/installers/hisInstall/
-#
-##privacy.jar for windows
-#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/lib/PrivacyCA.jar /%{name}/ClientInstall/installers/hisInstall/lib
+cp -r -f /OAT-Appraiser-Configure/linuxOatInstall /OAT-Appraiser-Configure/ClientInstallForLinux
 
 
-#cd /%{name}/; zip -9 -r ClientInstall.zip ClientInstall
-
+cp -rf   /OAT-Appraiser-Configure/OAT_Standalone.jar /OAT-Appraiser-Configure/ClientInstallForLinux/
+cp -rf   /OAT-Appraiser-Configure/lib  /OAT-Appraiser-Configure/ClientInstallForLinux/
+cp -r -f /var/lib/oat-appraiser/ClientFiles/PrivacyCA.cer /OAT-Appraiser-Configure/ClientInstallForLinux/
+cp -r -f /var/lib/oat-appraiser/ClientFiles/TrustStore.jks /OAT-Appraiser-Configure/ClientInstallForLinux/
+cp -r -f /var/lib/oat-appraiser/ClientFiles/OATprovisioner.properties /OAT-Appraiser-Configure/ClientInstallForLinux/
+cp -r -f /var/lib/oat-appraiser/ClientFiles/OAT.properties /OAT-Appraiser-Configure/ClientInstallForLinux/
+sed -i '/ClientPath/s/C:.*/\/OAT/' /OAT-Appraiser-Configure/ClientInstallForLinux/OATprovisioner.properties
+#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/OAT.properties /OAT-Appraiser-Configure/ClientInstallForLinux/
+sed -i 's/NIARL_TPM_Module\.exe/NIARL_TPM_Module/g' /OAT-Appraiser-Configure/ClientInstallForLinux/OAT.properties
+sed -i 's/HIS07\.jpg/OAT07\.jpg/g' /OAT-Appraiser-Configure/ClientInstallForLinux/OAT.properties
+cd /OAT-Appraiser-Configure/; zip -9 -r ClientInstallForLinux.zip ClientInstallForLinux
 
 #places the client installation folder up for tomcat6 to display
-#cp -f /%{name}/ClientInstall.zip /var/www/html/
-
-#zky: for linux, do similar things
-rm -f /%{name}/ClientInstallForLinuxOld.zip
-mv /%{name}/ClientInstallForLinux.zip /%{name}/ClientInstallForLinuxOld.zip
-
-rm -rf /%{name}/ClientInstallForLinux
-
-cp -r -f /%{name}/linuxOatInstall /%{name}/ClientInstallForLinux
-
-#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/endorsement.p12 /%{name}/ClientInstallForLinux/
-#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/PrivacyCA.cer /%{name}/ClientInstallForLinux/
-#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/TrustStore.jks /%{name}/ClientInstallForLinux/
-#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/OATprovisioner.properties /%{name}/ClientInstallForLinux/
-cp -r -f /var/lib/oat-appraiser/ClientFiles/PrivacyCA.cer /%{name}/ClientInstallForLinux/
-cp -r -f /var/lib/oat-appraiser/ClientFiles/TrustStore.jks /%{name}/ClientInstallForLinux/
-cp -r -f /var/lib/oat-appraiser/ClientFiles/OATprovisioner.properties /%{name}/ClientInstallForLinux/
-cp -r -f /var/lib/oat-appraiser/ClientFiles/OAT.properties /%{name}/ClientInstallForLinux/
-sed -i '/ClientPath/s/C:.*/\/OAT/' /%{name}/ClientInstallForLinux/OATprovisioner.properties
-
-#remove credential information here
-sed -i '/TpmEndorsmentP12/d' /%{name}/ClientInstallForLinux/OATprovisioner.properties
-sed -i '/EndorsementP12Pass/d' /%{name}/ClientInstallForLinux/OATprovisioner.properties
-#end remove
-
-#cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/OAT.properties /%{name}/ClientInstallForLinux/
-sed -i 's/NIARL_TPM_Module\.exe/NIARL_TPM_Module/g' /%{name}/ClientInstallForLinux/OAT.properties
-sed -i 's/HIS07\.jpg/OAT07\.jpg/g' /%{name}/ClientInstallForLinux/OAT.properties
-cd /%{name}/; zip -9 -r ClientInstallForLinux.zip ClientInstallForLinux
-
-#Test
-cp -f /%{name}/ClientInstallForLinux.zip /tmp/
-#
-
-
-#places the client installation folder up for tomcat6 to display
-cp -f /%{name}/ClientInstallForLinux.zip /var/www/html/
+cp -f /OAT-Appraiser-Configure/ClientInstallForLinux.zip /var/www/html/
 
 
 #creates the web page that allows access for the download of the client files folder
@@ -459,7 +414,7 @@ echo "" >> /etc/httpd/conf.d/welcome.conf
 
 /sbin/restorecon -R '/var/www/html/OAT'
 
-
+service tomcat6 restart
 #######################################################################
 printf "done\n"
 
@@ -481,7 +436,7 @@ fi
 
 sed -i "/<\/Service>/d" $TOMCAT_INSTALL_DIR2/$TOMCAT_NAME2/conf/server.xml
 sed -i "/<\/Server>/i\\  <\/Service>"  $TOMCAT_INSTALL_DIR2/$TOMCAT_NAME2/conf/server.xml
-rm -rf /%{name}/
+rm -rf /OAT-Appraiser-Configure/
 #remove apache-tomcat
 if [ -d $TOMCAT_INSTALL_DIR2/apache-tomcat-6.0.29 ];then
 rm -f -r $TOMCAT_INSTALL_DIR2/apache-tomcat-6.0.29.tar.gz
@@ -532,16 +487,18 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files OATapp
-/%{name}/apache-tomcat-6.0.29.tar.gz
-/%{name}/clientInstallRefresh.zip
-/%{name}/linuxClientInstallRefresh.zip
-#/%{name}/ClientInstall.zip
-/%{name}/ClientInstallForLinux.zip
-#/%{name}/OAT_PrivacyCA_Install.zip
-/%{name}/HisPrivacyCAWebServices2.war
-/%{name}/OAT_Server_Install.zip
-/%{name}/oatSetup.zip
-/%{name}/OAT.zip
-/%{name}/MySQLdrop.zip
-/%{name}/service.zip
-/%{name}/setupProperties.zip
+/OAT-Appraiser-Configure/apache-tomcat-6.0.29.tar.gz
+/OAT-Appraiser-Configure/clientInstallRefresh.zip
+/OAT-Appraiser-Configure/linuxClientInstallRefresh.zip
+/OAT-Appraiser-Configure/ClientInstallForLinux.zip
+/OAT-Appraiser-Configure/HisPrivacyCAWebServices2.war
+/OAT-Appraiser-Configure/OAT_Server_Install.zip
+/OAT-Appraiser-Configure/oatSetup.zip
+/OAT-Appraiser-Configure/OAT.zip
+/OAT-Appraiser-Configure/MySQLdrop.zip
+/OAT-Appraiser-Configure/service.zip
+/OAT-Appraiser-Configure/setupProperties.zip
+/OAT-Appraiser-Configure/OAT.sh
+/OAT-Appraiser-Configure/OAT_Standalone.jar
+/OAT-Appraiser-Configure/lib
+/OAT-Appraiser-Configure/log4j.properties
