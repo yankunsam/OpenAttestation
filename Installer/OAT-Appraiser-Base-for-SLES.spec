@@ -401,6 +401,10 @@ cp -r -f /%{name}/linuxOatInstall /%{name}/ClientInstallForLinux
 #cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/PrivacyCA.cer /%{name}/ClientInstallForLinux/
 #cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/TrustStore.jks /%{name}/ClientInstallForLinux/
 #cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/OATprovisioner.properties /%{name}/ClientInstallForLinux/
+
+cp -rf   /OAT-Appraiser-Base/OAT_Standalone.jar /OAT-Appraiser-Base/ClientInstallForLinux/
+cp -rf   /OAT-Appraiser-Base/lib  /OAT-Appraiser-Base/ClientInstallForLinux/
+
 cp -r -f /var/lib/oat-appraiser/ClientFiles/PrivacyCA.cer /%{name}/ClientInstallForLinux/
 cp -r -f /var/lib/oat-appraiser/ClientFiles/TrustStore.jks /%{name}/ClientInstallForLinux/
 cp -r -f /var/lib/oat-appraiser/ClientFiles/OATprovisioner.properties /%{name}/ClientInstallForLinux/
@@ -476,8 +480,8 @@ sed -i "/<\/Server>/i\\  <\/Service>"  $TOMCAT_INSTALL_DIR2/$TOMCAT_NAME2/conf/s
 rm -rf /%{name}/
 #remove apache-tomcat
 if [ $TOMCAT_NAME2 == apache-tomcat-6.0.29 ];then
-rm -f -r $TOMCAT_INSTALL_DIR/apache-tomcat-6.0.29.tar.gz
-rm -rf  $TOMCAT_INSTALL_DIR/apache-tomcat-6.0.29
+rm -f -r $TOMCAT_INSTALL_DIR2/apache-tomcat-6.0.29.tar.gz
+rm -rf  $TOMCAT_INSTALL_DIR2/apache-tomcat-6.0.29
 fi
 
 if [ -d /etc/oat-appraiser ]
@@ -537,3 +541,8 @@ rm -rf $RPM_BUILD_ROOT
 /%{name}/MySQLdrop.zip
 /%{name}/service.zip
 /%{name}/setupProperties.zip
+/%{name}/OAT.sh
+/%{name}/OAT_Standalone.jar
+/%{name}/log4j.properties
+/%{name}/lib/
+

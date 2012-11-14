@@ -29,7 +29,15 @@ CreateRPMdirectory()
   if test -d $RPM_BUILD_DIRECTORY;then
     rm -rf $RPM_BUILD_DIRECTORY
   fi
+  [[ -d $DEFAULT_DIRECTORY ]] && rm -rf $DEFAULT_DIRECTORY
     mkdir $RPM_BUILD_DIRECTORY
+    mkdir $DEFAULT_DIRECTORY
+    mkdir $DEFAULT_DIRECTORY/BUILD 
+    mkdir $DEFAULT_DIRECTORY/RPMS 
+    mkdir $DEFAULT_DIRECTORY/SOURCES
+    mkdir $DEFAULT_DIRECTORY/SPEC
+    mkdir $DEFAULT_DIRECTORY/SRPMS 
+
   if test -d $DEFAULT_DIRECTORY;then
     ln -fs $DEFAULT_DIRECTORY/BUILD $RPM_BUILD_DIRECTORY/BUILD
     ln -fs $DEFAULT_DIRECTORY/RPMS $RPM_BUILD_DIRECTORY/RPMS
@@ -43,8 +51,8 @@ CreateRPMdirectory()
 #Install HIS-Appraiser-Base.tar.gz
 InstallOatAppraiserBase()
 {
-  if test -d ./OAT-Appraiser-Base;then
-    cd ./OAT-Appraiser-Base
+  if test -d ./OAT-Appraiser-Configure;then
+    cd ./OAT-Appraiser-Configure
     zip -9 clientInstallRefresh.zip clientInstallRefresh.sh
     rm -f clientInstallRefresh.sh
     zip -9 linuxClientInstallRefresh.zip linuxClientInstallRefresh.sh
@@ -59,8 +67,9 @@ InstallOatAppraiserBase()
     zip -9 -r service.zip service/
     rm -rf service/
     cd ../
+    mv ./OAT-Appraiser-Configure ./OAT-Appraiser-Base
     tar -czvf OAT-Appraiser-Base.tar.gz ./OAT-Appraiser-Base/
-    rm -rf ./OAT-Appraiser-Base/
+    rm -rf ./OAT-Appraiser-Configure/
   fi
 
   if test -e ./OAT-Appraiser-Base.tar.gz;then
@@ -80,70 +89,70 @@ InstallOatAppraiserBase()
 
 
 #NIARL_HIS_Standalone.tar.gz
-CreatNiarlOatStandalone()
-{
-  if test -d NIARL_OAT_Standalone;then
-   rm -rf  NIARL_OAT_Standalone
-  fi
-  mkdir NIARL_OAT_Standalone
- 
-  if test -e $OATSOURCE_DIRECTORY/HisClient/OAT07.jpg;then
-    cp $OATSOURCE_DIRECTORY/HisClient/OAT07.jpg  NIARL_OAT_Standalone
-  else
-    ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/OAT07.jpg"
-  fi
-
-  if test -e ./FilesForLinux/OAT.sh;then
-    cp ./FilesForLinux/OAT.sh  NIARL_OAT_Standalone
-  else
-    ShowLogFaild "./FilesForLinux/OAT.sh"
-  fi
- if test -e $OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar;then
-    cp $OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar NIARL_OAT_Standalone
-  else
-    ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar"
-  fi
-
-  if test -e $OATSOURCE_DIRECTORY/HisClient/log4j.properties;then
-    cp $OATSOURCE_DIRECTORY/HisClient/log4j.properties  NIARL_OAT_Standalone
-  else
-    ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/log4j.properties"
-  fi
-
-#  if test -e $OATSOURCE_DIRECTORY/HisClient/OAT.properties;then
-#    cp $OATSOURCE_DIRECTORY/HisClient/OAT.properties  NIARL_OAT_Standalone
-#  else
-#    ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/OAT.properties"
+#CreatNiarlOatStandalone()
+#{
+#  if test -d NIARL_OAT_Standalone;then
+#   rm -rf  NIARL_OAT_Standalone
 #  fi
-
-  if test -d  $OATSOURCE_DIRECTORY/HisClient/lib/;then
-    cp -r  $OATSOURCE_DIRECTORY/HisClient/lib/ NIARL_OAT_Standalone
-  else
-    ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/lib/"
-  fi
-
-
-  tar -zcvf NIARL_OAT_Standalone.tar.gz  NIARL_OAT_Standalone
-  mv NIARL_OAT_Standalone.tar.gz $RPM_BUILD_SOURCE_DIRECTORY
-  rm -rf OAT
-  mv NIARL_OAT_Standalone OAT
-  tar -zcvf NIARL_OAT_Standalone.tar.gz OAT
-  ShowLogOK "NIARL_OAT_Standalone.tar.gz"
-
-#  if test -e ./OAT-Standalone-for-SLES.spec;then
-#  cp -r ./OAT-Standalone-for-SLES.spec $RPM_BUILD_SPECS_DIRECTORY
+#  mkdir NIARL_OAT_Standalone
+# 
+#  if test -e $OATSOURCE_DIRECTORY/HisClient/OAT07.jpg;then
+#    cp $OATSOURCE_DIRECTORY/HisClient/OAT07.jpg  NIARL_OAT_Standalone
 #  else
-#    ShowLogFaild "./OAT-Standalone-for-SLES.spec"
+#    ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/OAT07.jpg"
 #  fi
 #
-#  rpmbuild -bb $RPM_BUILD_SPECS_DIRECTORY/OAT-Standalone.spec
-#
-#  if test -e $RPM_BUILD_DIRECTORY/RPMS/x86_64/$RPM_V;then
-#    ShowLogOK "$RPM_V"
+#  if test -e ./FilesForLinux/OAT.sh;then
+#    cp ./FilesForLinux/OAT.sh  NIARL_OAT_Standalone
 #  else
-#    ShowLogFaild "$RPM_V"
+#    ShowLogFaild "./FilesForLinux/OAT.sh"
 #  fi
-}
+# if test -e $OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar;then
+#    cp $OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar NIARL_OAT_Standalone
+#  else
+#    ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar"
+#  fi
+#
+#  if test -e $OATSOURCE_DIRECTORY/HisClient/log4j.properties;then
+#    cp $OATSOURCE_DIRECTORY/HisClient/log4j.properties  NIARL_OAT_Standalone
+#  else
+#    ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/log4j.properties"
+#  fi
+#
+##  if test -e $OATSOURCE_DIRECTORY/HisClient/OAT.properties;then
+##    cp $OATSOURCE_DIRECTORY/HisClient/OAT.properties  NIARL_OAT_Standalone
+##  else
+##    ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/OAT.properties"
+##  fi
+#
+#  if test -d  $OATSOURCE_DIRECTORY/HisClient/lib/;then
+#    cp -r  $OATSOURCE_DIRECTORY/HisClient/lib/ NIARL_OAT_Standalone
+#  else
+#    ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/lib/"
+#  fi
+#
+#
+#  tar -zcvf NIARL_OAT_Standalone.tar.gz  NIARL_OAT_Standalone
+#  mv NIARL_OAT_Standalone.tar.gz $RPM_BUILD_SOURCE_DIRECTORY
+#  rm -rf OAT
+#  mv NIARL_OAT_Standalone OAT
+#  tar -zcvf NIARL_OAT_Standalone.tar.gz OAT
+#  ShowLogOK "NIARL_OAT_Standalone.tar.gz"
+#
+##  if test -e ./OAT-Standalone-for-SLES.spec;then
+##  cp -r ./OAT-Standalone-for-SLES.spec $RPM_BUILD_SPECS_DIRECTORY
+##  else
+##    ShowLogFaild "./OAT-Standalone-for-SLES.spec"
+##  fi
+##
+##  rpmbuild -bb $RPM_BUILD_SPECS_DIRECTORY/OAT-Standalone.spec
+##
+##  if test -e $RPM_BUILD_DIRECTORY/RPMS/x86_64/$RPM_V;then
+##    ShowLogOK "$RPM_V"
+##  else
+##    ShowLogFaild "$RPM_V"
+##  fi
+#}
 
 
 LinuxOatInstall()
@@ -223,11 +232,11 @@ LinuxOatInstall()
   fi
 
 
-  if test -e ./NIARL_OAT_Standalone.tar.gz;then
-    cp ./NIARL_OAT_Standalone.tar.gz linuxOatInstall
-  else
-    ShowLogFaild "./NIARL_OAT_Standalone.tar.gz" 
-  fi
+#  if test -e ./NIARL_OAT_Standalone.tar.gz;then
+#    cp ./NIARL_OAT_Standalone.tar.gz linuxOatInstall
+#  else
+#    ShowLogFaild "./NIARL_OAT_Standalone.tar.gz" 
+#  fi
   
   if test -e ./ClientInstallForLinux.zip;then
     rm -rf ClientInstallForLinux.zip
@@ -248,6 +257,33 @@ RePkgInstallOatAppraiserBase()
      ShowLogFaild "$RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base.tar.gz"
   fi
  
+
+#####################################################################################
+    echo "$RPM_BUILD_SOURCE_DIRECTORY"
+    if test -e $CurDir/FilesForLinux/OAT.sh;then
+      cp $CurDir/FilesForLinux/OAT.sh  $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
+    else
+      ShowLogFaild "./FilesForLinux/OAT.sh"
+    fi
+    if test -e $OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar;then
+      cp $OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
+    else
+      ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar"
+    fi
+
+    if test -e $OATSOURCE_DIRECTORY/HisClient/log4j.properties;then
+      cp $OATSOURCE_DIRECTORY/HisClient/log4j.properties  $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
+    else
+      ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/log4j.properties"
+    fi
+
+
+    if test -d  $OATSOURCE_DIRECTORY/HisClient/lib/;then
+      cp -r  $OATSOURCE_DIRECTORY/HisClient/lib/ $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
+    else
+      ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/lib/"
+    fi
+######################################################################################
   
    if test -e $CurDir/FilesForLinux/apache-tomcat-6.0.29.tar.gz;then
      cp $CurDir/FilesForLinux/apache-tomcat-6.0.29.tar.gz $RPM_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
@@ -363,6 +399,7 @@ rm -rf OAT
 
   cd $RPM_BUILD_SOURCE_DIRECTORY
   rm -rf OAT-Appraiser-Base.tar.gz
+  mv OAT-Appraiser-Configure OAT-Appraiser-Base
   tar -zcvf OAT-Appraiser-Base.tar.gz OAT-Appraiser-Base
   rm -rf OAT-Appraiser-Base
   cd $CurDir
@@ -377,8 +414,8 @@ RPMbuild()
     ShowLogFaild "./OAT-Appraiser-Base-for-SLES.spec"
   fi
   
-  if test -d /OAT-Appraiser-Base;then
-  rm -rf /OAT-Appraiser-Base
+  if test -d /OAT-Appraiser-Configure;then
+  rm -rf /OAT-Appraiser-Configure
   fi
   
   cd $RPM_BUILD_SPECS_DIRECTORY
@@ -542,7 +579,7 @@ fi
 Build_xml
 CreateRPMdirectory
 InstallOatAppraiserBase
-CreatNiarlOatStandalone
+####CreatNiarlOatStandalone
 LinuxOatInstall
 RePkgInstallOatAppraiserBase
 RPMbuild
