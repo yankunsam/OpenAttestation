@@ -43,8 +43,8 @@ CreateDEBdirectory()
 #Install HIS-Appraiser-Base.tar.gz
 InstallOatAppraiserBase()
 {
-  if test -d ./OAT-Appraiser-Base;then
-    cd ./OAT-Appraiser-Base
+  if test -d ./OAT-Appraiser-Configure;then
+    cd ./OAT-Appraiser-Configure
     zip -9 clientInstallRefresh.zip clientInstallRefresh.sh
     rm -f clientInstallRefresh.sh
     zip -9 linuxClientInstallRefresh.zip linuxClientInstallRefresh.sh
@@ -59,6 +59,7 @@ InstallOatAppraiserBase()
     zip -9 -r service.zip service/
     rm -rf service/
     cd ../
+    mv ./OAT-Appraiser-Configure ./OAT-Appraiser-Base
     tar -czvf OAT-Appraiser-Base.tar.gz ./OAT-Appraiser-Base/
     rm -rf ./OAT-Appraiser-Base/
   fi
@@ -197,11 +198,11 @@ LinuxOatInstall()
   fi
 
 
-  if test -e ./NIARL_OAT_Standalone.tar.gz;then
-    cp ./NIARL_OAT_Standalone.tar.gz linuxOatInstall
-  else
-    ShowLogFaild "./NIARL_OAT_Standalone.tar.gz" 
-  fi
+#  if test -e ./NIARL_OAT_Standalone.tar.gz;then
+#    cp ./NIARL_OAT_Standalone.tar.gz linuxOatInstall
+#  else
+#    ShowLogFaild "./NIARL_OAT_Standalone.tar.gz" 
+#  fi
   
   if test -e ./ClientInstallForLinux.zip;then
     rm -rf ClientInstallForLinux.zip
@@ -221,6 +222,36 @@ RePkgInstallOatAppraiserBase()
   else
      ShowLogFaild "$DEB_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base.tar.gz"
   fi
+
+#####################################################################################
+  echo "$DEB_BUILD_SOURCE_DIRECTORY"
+  if test -e $CurDir/FilesForLinux/OAT.sh;then
+    cp $CurDir/FilesForLinux/OAT.sh  $DEB_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
+  else
+    ShowLogFaild "./FilesForLinux/OAT.sh"
+  fi
+  if test -e $OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar;then
+    cp $OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar $DEB_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
+    echo "dave print out the location of OAT_Standalong.jar" 
+    echo -e '\n'
+    echo $DEB_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
+  else
+    ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/jar/OAT_Standalone.jar"
+  fi
+
+  if test -e $OATSOURCE_DIRECTORY/HisClient/log4j.properties;then
+    cp $OATSOURCE_DIRECTORY/HisClient/log4j.properties  $DEB_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
+  else
+    ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/log4j.properties"
+  fi
+
+
+  if test -d  $OATSOURCE_DIRECTORY/HisClient/lib/;then
+    cp -r  $OATSOURCE_DIRECTORY/HisClient/lib/ $DEB_BUILD_SOURCE_DIRECTORY/OAT-Appraiser-Base
+  else
+    ShowLogFaild "$OATSOURCE_DIRECTORY/HisClient/lib/"
+  fi
+######################################################################################
 
   cp $DEB_BUILD_SOURCE_DIRECTORY/tomcat6.deb OAT-Appraiser-Base
   
@@ -521,7 +552,7 @@ fi
 Build_xml
 CreateDEBdirectory
 InstallOatAppraiserBase
-CreatNiarlOatStandalone
+#CreatNiarlOatStandalone
 LinuxOatInstall
 RePkgInstallOatAppraiserBase
 debbuild
