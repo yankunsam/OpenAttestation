@@ -43,6 +43,7 @@ import com.intel.openAttestation.manifest.hibernate.domain.MLE;
 import com.intel.openAttestation.manifest.hibernate.domain.OEM;
 import com.intel.openAttestation.manifest.hibernate.domain.OS;
 import com.intel.openAttestation.manifest.hibernate.domain.PcrWhiteList;
+import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
 import com.intel.openAttestation.manifest.resource.MLEResource;
 
 
@@ -355,137 +356,57 @@ public class MLEResource {
 	@Produces("application/json")
 	public List<MLEBean> searchMLE(@QueryParam("searchCriteria") String criteria){
 		MLEDAO mleDao = new MLEDAO();
-		List<MLE> mleList = new ArrayList(); 
-		List<MLEBean> mleBeanList = new ArrayList();
+		List<MLE> mleList = new ArrayList<MLE>(); 
+		List<MLEBean> mleBeanList = new ArrayList<MLEBean>();
 		MLEBean mleBean = new MLEBean();
-		ArrayList<PcrWhiteList> pcrList = new ArrayList();
+		ArrayList<PcrWhiteList> pcrList = new ArrayList<PcrWhiteList>();
 		PcrWhiteListDAO pcrDao = new PcrWhiteListDAO();
 		MLE mle = null;
-		OEM oem = null;
-		OS os = null;
-		mleList = mleDao.getAllMLEEntries();
-		pcrList = new ArrayList();
+		pcrList = new ArrayList<PcrWhiteList>();
 		try {
+			HibernateUtilHis.getSession();
+			mleList = mleDao.getAllMLEEntries();
 			for (int i=0; i<mleList.size(); i++){
-				if (criteria == null || criteria.trim() == ""){
-					mleBean = new MLEBean();
-		        	mleBean.setName(mleList.get(i).getName());
-		        	mleBean.setVersion(mleList.get(i).getVersion());
-		        	mleBean.setDescription(mleList.get(i).getDescription());
-		        	mleBean.setAttestation_Type(mleList.get(i).getAttestation_Type());
-					if (mleList.get(i).getOem() != null){
-						oem = mleDao.queryOEMByMLEID(mleList.get(i).getMLEID());
-						mleBean.setOemName(oem.getName());
-		    			mleBean.setOsName("null");
-		    			mleBean.setOsVersion("null");		
-					} else if (mleList.get(i).getOs() != null){
-						os = mleDao.queryOSByMLEID(mleList.get(i).getMLEID());
-		    			mleBean.setOsName(os.getName());
-		    			mleBean.setOsVersion(os.getVersion());
-		       			mleBean.setOemName("null");
+				mleBean = new MLEBean();
+				mle = mleDao.queryMLEByCriteria(criteria, mleList.get(i), mleList.get(i).getMLEID());
+				if (criteria == null || criteria.trim().equalsIgnoreCase("") || mle != null){
+			       	mleBean.setName(mle.getName());
+			    	mleBean.setVersion(mle.getVersion());
+				   	mleBean.setDescription(mle.getDescription());
+				    mleBean.setAttestation_Type(mle.getAttestation_Type());
+					if (mle.getOem() != null){
+						mleBean.setOemName(mle.getOem().getName());
+					   	mleBean.setOsName("null");
+					   	mleBean.setOsVersion("null");		
+					} else if (mle.getOs() != null){
+					   	mleBean.setOsName(mle.getOs().getName());
+					   	mleBean.setOsVersion(mle.getOs().getVersion());
+					   	mleBean.setOemName("null");
 					}
-					
-		    		//Get pcr white list;
-					List tempList = pcrDao.queryPcrByMLEid(mleList.get(i).getMLEID().longValue());
+		       		//Get pcr white list;
+					List<PcrWhiteList> tempList = pcrDao.queryPcrByMLEid(mleList.get(i).getMLEID().longValue());
 					if (tempList != null){
-						pcrList = new ArrayList(tempList);
+						pcrList = new ArrayList<PcrWhiteList>(tempList);
 					}
-					
-		    		List<MLE_Manifest> mleManifest = new ArrayList();
-		    		for (int j=0; j<pcrList.size(); j++){
-		    			MLE_Manifest entry = new MLE_Manifest();
-		    			entry.setName(pcrList.get(j).getPcrName());
-		    			entry.setValue(pcrList.get(j).getPcrDigest());
-		    			mleManifest.add(entry);
-		    		}
-		    		mleBean.setMLE_Manifests(mleManifest);
-		    		mleBean.setMLE_Type(mleList.get(i).getMLE_Type());
-		    		mleBeanList.add(mleBean);
-				} else {
-					if (mleList.get(i).getOem() != null){
-						mle = new MLE();
-						mle = mleDao.queryMLEByCriteria(criteria, "oem", mleList.get(i).getMLEID());
-						if (mle != null){
-							mleBean = new MLEBean();
-				        	mleBean.setName(mle.getName());
-				        	mleBean.setVersion(mle.getVersion());
-				        	mleBean.setDescription(mle.getDescription());
-				        	mleBean.setAttestation_Type(mle.getAttestation_Type());
-							if (mle.getOem() != null){
-								oem = mleDao.queryOEMByMLEID(mle.getMLEID());
-								mleBean.setOemName(oem.getName());
-				    			mleBean.setOsName("null");
-				    			mleBean.setOsVersion("null");		
-							} else if (mle.getOs() != null){
-								os = mleDao.queryOSByMLEID(mle.getMLEID());
-				    			mleBean.setOsName(os.getName());
-				    			mleBean.setOsVersion(os.getVersion());
-				       			mleBean.setOemName("null");
-							}
-							
-				    		//Get pcr white list;
-							List tempList = pcrDao.queryPcrByMLEid(mle.getMLEID().longValue());
-							if (tempList != null){
-								pcrList = new ArrayList(tempList);
-							}
-							
-				    		//pcrList = new ArrayList(pcrDao.queryPcrByMLEid(mleList.get(i).getMLEID().longValue()));
-				    		List<MLE_Manifest> mleManifest = new ArrayList();
-				    		for (int j=0; j<pcrList.size(); j++){
-				    			MLE_Manifest entry = new MLE_Manifest();
-				    			entry.setName(pcrList.get(j).getPcrName());
-				    			entry.setValue(pcrList.get(j).getPcrDigest());
-				    			mleManifest.add(entry);
-				    		}
-				    		mleBean.setMLE_Manifests(mleManifest);
-				    		mleBean.setMLE_Type(mle.getMLE_Type());
-				    		mleBeanList.add(mleBean);
-						}
-						
-					} else if (mleList.get(i).getOs() != null){
-						mle = new MLE();
-						mle = mleDao.queryMLEByCriteria(criteria, "os", mleList.get(i).getMLEID());
-						if (mle != null){
-							mleBean = new MLEBean();
-				        	mleBean.setName(mle.getName());
-				        	mleBean.setVersion(mle.getVersion());
-				        	mleBean.setDescription(mle.getDescription());
-				        	mleBean.setAttestation_Type(mle.getAttestation_Type());
-							if (mle.getOem() != null){
-								oem = mleDao.queryOEMByMLEID(mle.getMLEID());
-								mleBean.setOemName(oem.getName());
-				    			mleBean.setOsName("null");
-				    			mleBean.setOsVersion("null");		
-							} else if (mle.getOs() != null){
-								os = mleDao.queryOSByMLEID(mle.getMLEID());
-				    			mleBean.setOsName(os.getName());
-				    			mleBean.setOsVersion(os.getVersion());
-				       			mleBean.setOemName("null");
-							}
-							
-				    		//Get pcr white list;
-							List tempList = pcrDao.queryPcrByMLEid(mle.getMLEID().longValue());
-							if (tempList != null){
-								pcrList = new ArrayList(tempList);
-							} else {
-								pcrList = new ArrayList();
-							}
-				    		List<MLE_Manifest> mleManifest = new ArrayList();
-				    		for (int j=0; j<pcrList.size(); j++){
-				    			MLE_Manifest entry = new MLE_Manifest();
-				    			entry.setName(pcrList.get(j).getPcrName());
-				    			entry.setValue(pcrList.get(j).getPcrDigest());
-				    			mleManifest.add(entry);
-				    		}
-				    		mleBean.setMLE_Manifests(mleManifest);
-				    		mleBean.setMLE_Type(mle.getMLE_Type());
-				    		mleBeanList.add(mleBean);
-						}
-					}	
-				}
-			}			
+					else{
+						pcrList = new ArrayList<PcrWhiteList>();
+					}
+			    	List<MLE_Manifest> mleManifest = new ArrayList<MLE_Manifest>();
+			    	for (int j=0; j<pcrList.size(); j++){
+			    		MLE_Manifest entry = new MLE_Manifest();
+			    		entry.setName(pcrList.get(j).getPcrName());
+			    		entry.setValue(pcrList.get(j).getPcrDigest());
+			    		mleManifest.add(entry);
+			    	}
+			    	mleBean.setMLE_Manifests(mleManifest);
+					mleBean.setMLE_Type(mle.getMLE_Type());
+			    	mleBeanList.add(mleBean);
+				}		
+			}
 		}catch (Exception e){
 			System.out.println("Encountered an exception with detail message: " + e.getMessage());
+		}finally {
+			HibernateUtilHis.closeSession();
 		}
 		return mleBeanList;
 	}
@@ -504,7 +425,7 @@ public class MLEResource {
 		MLEBean mleBean = new MLEBean();
 		pcrList = new ArrayList();
         try{
-			
+			HibernateUtilHis.getSession();
 			if (oemName != null){
 				mle = mleDao.queryMLEidByNameAndVersionAndOEMid(name, version, oemName);
 				//query oem
@@ -564,6 +485,8 @@ public class MLEResource {
 			}
 		}catch (Exception e){
 			System.out.println("Encountered an exception with detail message: " + e.getMessage());
+		}finally{
+			HibernateUtilHis.closeSession();
 		}
         return mleBean;
 	}

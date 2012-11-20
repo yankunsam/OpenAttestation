@@ -21,6 +21,7 @@ import com.intel.openAttestation.manifest.hibernate.domain.MLE;
 import com.intel.openAttestation.manifest.hibernate.domain.OEM;
 import com.intel.openAttestation.manifest.hibernate.domain.OS;
 import com.intel.openAttestation.manifest.hibernate.util.HibernateUtilHis;
+//import de.laliluna.hibernate.SessionFactoryUtil;
 
 
 public class MLEDAO {
@@ -362,24 +363,17 @@ public class MLEDAO {
 
 	public List<MLE> getAllMLEEntries(){
 		try{
-			HibernateUtilHis.beginTransaction();
 			ArrayList<MLE> MLEList = new ArrayList<MLE>();
 			Query query = HibernateUtilHis.getSession().createQuery("from MLE mle");
-			System.out.println("query:"+query.toString());
 			List list = query.list();
 			for (int i=0;i<list.size();i++){
 				MLEList.add((MLE)list.get(i));
 			}
-			HibernateUtilHis.commitTransaction();
 			return MLEList;
 		}catch (Exception e) {
-			HibernateUtilHis.rollbackTransaction();
 			e.printStackTrace();
 			throw new RuntimeException(e);
-		}finally{
-			HibernateUtilHis.closeSession();
 		}
-		
 	}    	
 	
 	public OEM queryOEMByMLEID(long id){
@@ -434,16 +428,15 @@ public class MLEDAO {
 		
 	}
 	
-	public MLE queryMLEByCriteria(String criteria, String type, Long mleID){
+	public MLE queryMLEByCriteria(String criteria, MLE inst, Long mleID){
 		List<MLE> mleList = null;
 		Query query;
 		try {
-			HibernateUtilHis.beginTransaction();
-	        if (type.equalsIgnoreCase("oem")){
+			if (inst.getOem() != null){
 				query = HibernateUtilHis.getSession().createQuery("select a from MLE a inner join a.oem b where (a.Name like '%"+criteria+"%' or a.Version like '%"+criteria+"%'" +
 						" or a.Description like '%"+criteria+"%' or a.oem.Name like '%"+criteria+"%') and a.MLEID = :value ");
 				query.setLong("value", mleID);
-	        } else if (type.equalsIgnoreCase("os")){
+			} else if (inst.getOs() != null){
 				query = HibernateUtilHis.getSession().createQuery("select a from MLE a inner join a.os b where (a.Name like '%"+criteria+"%' or a.Version like '%"+criteria+"%'" +
 						" or a.Description like '%"+criteria+"%' or a.os.Name like '%"+criteria+"%' or a.os.Version like '%"+criteria+"%') and a.MLEID = :value ");
 				query.setLong("value", mleID);
@@ -454,19 +447,17 @@ public class MLEDAO {
 			mleList = (List<MLE>)list;
 			if (list.size() < 1) 
 			{
-				HibernateUtilHis.commitTransaction();
 				return null;
 			} else {
-				HibernateUtilHis.commitTransaction();
 				return (MLE)mleList.get(0);
 			}
 		} catch (Exception e) {
-			HibernateUtilHis.rollbackTransaction();
 			e.printStackTrace();
 			throw new RuntimeException(e);
-		}finally{
-			HibernateUtilHis.closeSession();
 		}
+	}
+	
+	public void openTransaction(){
 		
 	}
 }
