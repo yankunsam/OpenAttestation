@@ -39,11 +39,7 @@
  */
 package com.intel.openAttestation.AttestationService.resource;
 
-import com.intel.openAttestation.AttestationService.bean.AttestationResponseFault;
-import com.intel.openAttestation.AttestationService.bean.Host;
 import com.intel.openAttestation.AttestationService.bean.ReqAttestationBean;
-import com.intel.openAttestation.AttestationService.bean.RequestBean;
-import com.intel.openAttestation.AttestationService.bean.PCRValue;
 import com.intel.openAttestation.AttestationService.bean.RespSyncBean;
 import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.api.json.JSONJAXBContext;
@@ -59,12 +55,16 @@ import javax.xml.bind.JAXBContext;
 public class JAXBContextResolver implements ContextResolver<JAXBContext> {
 
     private JAXBContext context;
-    private Class[] types = {Host.class, AttestationResponseFault.class, PCRValue.class, ReqAttestationBean.class, RequestBean.class, RespSyncBean.class};
+    private Class[] types = {ReqAttestationBean.class,RespSyncBean.class};
+
+//    public JAXBContextResolver() throws Exception {
+//        this.context = new JSONJAXBContext(JSONConfiguration.natural().build(), types);
+//    }
 
     public JAXBContextResolver() throws Exception {
-        this.context = new JSONJAXBContext(JSONConfiguration.natural().build(), types);
+    	this.context = new JSONJAXBContext(JSONConfiguration.mapped().arrays("hosts").build(), types);
     }
-
+    
     public JAXBContext getContext(Class<?> objectType) {
         for (Class type : types) {
             if (type == objectType) {

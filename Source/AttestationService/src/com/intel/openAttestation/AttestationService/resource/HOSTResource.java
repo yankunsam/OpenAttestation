@@ -562,7 +562,7 @@ public class HOSTResource {
 		OS os = null;
 		try {
 			for (int i=0; i<hostList.size(); i++){
-				if (criteria == null || criteria.trim() == "" || hostList.get(i).getHostName().matches(".*" + criteria + ".*")){
+				if (criteria == null || criteria.trim().equalsIgnoreCase("") || hostList.get(i).getHostName().matches(".*" + criteria + ".*")){
 					HostBean hostBean = new HostBean();
 					host = hostList.get(i);
 					hostBean.setHostName(host.getHostName());
