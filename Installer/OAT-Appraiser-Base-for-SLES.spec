@@ -402,6 +402,12 @@ cp -r -f /%{name}/linuxOatInstall /%{name}/ClientInstallForLinux
 cp -r -f /var/lib/oat-appraiser/ClientFiles/PrivacyCA.cer /%{name}/ClientInstallForLinux/
 cp -r -f /var/lib/oat-appraiser/ClientFiles/TrustStore.jks /%{name}/ClientInstallForLinux/
 cp -r -f /var/lib/oat-appraiser/ClientFiles/OATprovisioner.properties /%{name}/ClientInstallForLinux/
+
+#remove credential information here
+sed -i '/TpmEndorsmentP12/d' /%{name}/ClientInstallForLinux/OATprovisioner.properties
+sed -i '/EndorsementP12Pass/d' /%{name}/ClientInstallForLinux/OATprovisioner.properties
+#end remove
+
 cp -r -f /var/lib/oat-appraiser/ClientFiles/OAT.properties /%{name}/ClientInstallForLinux/
 sed -i '/ClientPath/s/C:.*/\/OAT/' /%{name}/ClientInstallForLinux/OATprovisioner.properties
 #cp -r -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/HisPrivacyCAWebServices2/ClientFiles/OAT.properties /%{name}/ClientInstallForLinux/

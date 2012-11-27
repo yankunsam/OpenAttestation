@@ -394,6 +394,10 @@ cp -r -f /var/lib/oat-appraiser/ClientFiles/PrivacyCA.cer /${name}/ClientInstall
 cp -r -f /var/lib/oat-appraiser/ClientFiles/TrustStore.jks /${name}/ClientInstallForLinux/
 cp -r -f /var/lib/oat-appraiser/ClientFiles/OATprovisioner.properties /${name}/ClientInstallForLinux/
 sed -i '/ClientPath/s/C:.*/\/OAT/' /${name}/ClientInstallForLinux/OATprovisioner.properties
+#remove credential information here
+sed -i '/TpmEndorsmentP12/d' /${name}/ClientInstallForLinux/OATprovisioner.properties
+sed -i '/EndorsementP12Pass/d' /${name}/ClientInstallForLinux/OATprovisioner.properties
+#end remove
 cp -r -f /var/lib/oat-appraiser/ClientFiles/OAT.properties /${name}/ClientInstallForLinux/
 sed -i 's/NIARL_TPM_Module\.exe/NIARL_TPM_Module/g' /${name}/ClientInstallForLinux/OAT.properties
 sed -i 's/HIS07\.jpg/OAT07\.jpg/g' /${name}/ClientInstallForLinux/OAT.properties
