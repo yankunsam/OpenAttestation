@@ -60,7 +60,6 @@ public class PcrWhiteListResource {
 			PcrWhiteList pcr = new PcrWhiteList();
 			MLEDAO daoMLE = new MLEDAO();
 			MLE mle = null;
-			
 			HashMap parameters = new HashMap();
 			if (pcrbean.getPcrName()!=null){
 				parameters.put(pcrbean.getPcrName(), 10);
@@ -72,14 +71,17 @@ public class PcrWhiteListResource {
 				parameters.put(pcrbean.getPcrDigest(), 100);
 			}
 			
-			if (! isValidKey || pcrbean.getPcrName().length() < 1 || !HisUtil.validParas(parameters)){
+			if (! isValidKey || pcrbean.getPcrName().length() < 1 || !HisUtil.validParas(parameters) || pcrbean.getPcrDigest() == null || pcrbean.getPcrDigest().length() == 0 ){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Add PCR entry failed, please check the length for each parameters" +
-						" and remove all of the unwanted characters belonged to [# & + : \" \']");
-				return Response.status(status).header("Location", b.build()).entity(fault)
-						.build();
+				if (pcrbean.getPcrDigest() == null  || pcrbean.getPcrDigest().length() == 0){
+					fault.setError_message("Valid PCR disgest required");
+				} else {
+					fault.setError_message("Add PCR entry failed, please check the length for each parameters" +
+							" and remove all of the unwanted characters belonged to [# & + : \" \']");
+				}
+				return Response.status(status).header("Location", b.build()).entity(fault).build();
 			}
 			
 			if(pcrbean.getPcrName() != null && pcrbean.getPcrDigest() != null && pcrbean.getMLEName() != null && pcrbean.getMLEVersion() != null && pcrbean.getOEMName() != null)

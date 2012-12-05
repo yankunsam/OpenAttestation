@@ -73,7 +73,7 @@ public class MLEResource {
 		    OEM oem = new OEM();
 			HashMap parameters = new HashMap();
 			
-			if (mleBean.getName() != null && mleBean.getVersion() != null && mleBean.getAttestation_Type() != null &&  mleBean.getAttestation_Type().equalsIgnoreCase("PCR")){
+			if (mleBean.getName() != null && mleBean.getVersion() != null && mleBean.getAttestation_Type() != null &&  mleBean.getAttestation_Type().equals("PCR")){
 				parameters.put(mleBean.getName(), 50);
 				parameters.put(mleBean.getVersion(), 100);
 				parameters.put(mleBean.getAttestation_Type(), 50);			
@@ -100,12 +100,20 @@ public class MLEResource {
 			if (mleBean.getDescription() != null){
 				parameters.put(mleBean.getDescription(), 100);
 			}
-
+			
+			if (mleBean.getMLE_Manifests() != null){
+				List<MLE_Manifest> pcrList = mleBean.getMLE_Manifests();
+				for (MLE_Manifest list : pcrList){
+					parameters.put(list.getValue(), 100);
+				}
+			}
+			
+			parameters.put(mleBean.getDescription(), 100);
 			if (!isValidKey || mleBean.getName().length() < 1 || mleBean.getVersion().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				if (mleBean.getAttestation_Type() == null || !mleBean.getAttestation_Type().equalsIgnoreCase("PCR")){
+				if (mleBean.getAttestation_Type() == null || !mleBean.getAttestation_Type().equals("PCR")){
 					fault.setError_message("Invalid put for Attestation type");
 				} else {
 					fault.setError_message("Add MLE entry failed, please check the length for each parameters" +
@@ -228,7 +236,7 @@ public class MLEResource {
 						.build();
 			}
 			
-			if (mleBean.getMLE_Type().equalsIgnoreCase("bios") || mleBean.getMLE_Type().equalsIgnoreCase("vmm")){
+			if (mleBean.getMLE_Type().equals("BIOS") || mleBean.getMLE_Type().equals("VMM")){
 				if (!mleDao.isMLEExisted(mleBean.getName(),mleBean.getVersion(),mleBean.getOsName(),mleBean.getOsVersion(),mleBean.getOemName())){
 	        		status = Response.Status.BAD_REQUEST;
 					OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1007);
