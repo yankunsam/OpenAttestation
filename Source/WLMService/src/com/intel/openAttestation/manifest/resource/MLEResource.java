@@ -58,131 +58,125 @@ public class MLEResource {
 	@POST
 	@Consumes("application/json")
 	@Produces("application/json")
-	public Response addMLE(@Context UriInfo uriInfo, MLEBean mleBean,
-			@Context javax.servlet.http.HttpServletRequest request){
+	public Response addMLE(@Context UriInfo uriInfo, MLEBean mleBean,@Context javax.servlet.http.HttpServletRequest request){
         UriBuilder b = uriInfo.getBaseUriBuilder();
         b = b.path(MLEResource.class);
 		Response.Status status = Response.Status.OK;
 		boolean isValidKey = true;
 		try{
-			    MLEDAO dao = new MLEDAO();
-			    PcrWhiteListDAO pcrDao = new PcrWhiteListDAO();
-			    OSDAO osDao = new OSDAO();
-			    OEMDAO oemDao = new OEMDAO();
-			    MLE mle = new MLE();
-			    OS os = new OS();
-			    OEM oem = new OEM();
-			    List<PcrWhiteList> pcrs = new ArrayList(); 
-				HashMap parameters = new HashMap();
-				if (mleBean.getName() != null){
-					parameters.put(mleBean.getName(), 50);
-				} else {
-					isValidKey = false;
-				}
-				
-				if (mleBean.getVersion() != null){
-					parameters.put(mleBean.getVersion(), 50);
-				} else {
-					isValidKey = false;
-				}
+		    MLEDAO dao = new MLEDAO();
+		    PcrWhiteListDAO pcrDao = new PcrWhiteListDAO();
+		    OSDAO osDao = new OSDAO();
+		    OEMDAO oemDao = new OEMDAO();
+		    MLE mle = new MLE();
+		    OS os = new OS();
+		    OEM oem = new OEM();
+			HashMap parameters = new HashMap();
+			
+			if (mleBean.getName() != null && mleBean.getVersion() != null && mleBean.getAttestation_Type() != null &&  mleBean.getAttestation_Type().equalsIgnoreCase("PCR")){
+				parameters.put(mleBean.getName(), 50);
+				parameters.put(mleBean.getVersion(), 100);
+				parameters.put(mleBean.getAttestation_Type(), 50);			
+			} else {
+				isValidKey = false;
+			}
 
-				if (mleBean.getOsName() != null){
-					parameters.put(mleBean.getOsName(), 50);
-				}
-				
-				if (mleBean.getOsVersion() != null){
-					parameters.put(mleBean.getOsVersion(), 50);
-				}
-				
-				if (mleBean.getOemName() != null){
-					parameters.put(mleBean.getOemName(), 50);
-				}
-				
-				if (mleBean.getMLE_Type() != null){
-					parameters.put(mleBean.getMLE_Type(), 50);
-				}
+			if (mleBean.getOsName() != null){
+				parameters.put(mleBean.getOsName(), 50);
+			}
+			
+			if (mleBean.getOsVersion() != null){
+				parameters.put(mleBean.getOsVersion(), 50);
+			}
+			
+			if (mleBean.getOemName() != null){
+				parameters.put(mleBean.getOemName(), 50);
+			}
+			
+			if (mleBean.getMLE_Type() != null){
+				parameters.put(mleBean.getMLE_Type(), 50);
+			}
 
-				if (mleBean.getDescription() != null){
-					parameters.put(mleBean.getDescription(), 100);
-				}
+			if (mleBean.getDescription() != null){
+				parameters.put(mleBean.getDescription(), 100);
+			}
 
-				if (!isValidKey || mleBean.getName().length() < 1 || mleBean.getVersion().length() < 1 || !HisUtil.validParas(parameters)){
-					status = Response.Status.INTERNAL_SERVER_ERROR;
-					OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
-							OpenAttestationResponseFault.FaultCode.FAULT_500);
-					fault.setError_message("Add MLE entry failed, please check the length for each parameters" +
-							" and remove all of the unwanted characters belonged to [# & + : \" \']");
-					return Response.status(status).header("Location", b.build()).entity(fault)
-							.build();
-				}
-				
-			    if (mleBean.getMLE_Type().equals("VMM")){
-			    	System.out.println("The OS Name exists:" + mleBean.getOsName());
-			    	if ( (os = osDao.getOS(mleBean.getOsName(), mleBean.getOsVersion()))!= null){
-			    		mle.setOs(os);
-			    	}
-			    	else{
-						status = Response.Status.BAD_REQUEST;
-						OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
-						fault.setError_message("Data Error - OS[" + mleBean.getOsName() + 
-								"] Version[" + mleBean.getOsVersion() +"] does not exist");
-						return Response.status(status).header("Location", b.build()).entity(fault)
-									.build();
-			    	}
-			    }
-			    else if(mleBean.getMLE_Type().equals("BIOS")){
-			    	if((oem = oemDao.getOEM(mleBean.getOemName())) != null){
-			    		mle.setOem(oem);
-			    	}
-			    	else{
-						status = Response.Status.BAD_REQUEST;
-						OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
-						fault.setError_message("Data Error - OEM[" + mleBean.getOemName() + "] does not exist");
-						return Response.status(status).header("Location", b.build()).entity(fault)
-									.build();
-						
-				    }
-			    }
-			    else{
-			    	status = Response.Status.BAD_REQUEST;
-					OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
-					fault.setError_message("Data Error - MLE_Type is error:" + mleBean.getMLE_Type());
-					return Response.status(status).header("Location", b.build()).entity(fault)
-								.build();
-			    }
-			    if(dao.isMLEExisted(mleBean.getName(), mleBean.getVersion())){
-			    	status = Response.Status.BAD_REQUEST;
-					OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
-					fault.setError_message("Data Error - MLE Name " + mleBean.getName()+ " Version "+mleBean.getVersion() + " already exists in the database");
-					return Response.status(status).header("Location", b.build()).entity(fault)
-								.build();
-			    }
-			    
-			    mle.setName(mleBean.getName());
-			    mle.setVersion(mleBean.getVersion());
-			    mle.setAttestation_Type(mleBean.getAttestation_Type());
-			    mle.setDescription(mleBean.getDescription());
-			    mle.setMLE_Type(mleBean.getMLE_Type());
-				dao.addMLEEntry(mle);
-				if (mleBean.getMLE_Manifests()!=null){
-					for(MLE_Manifest mle_manifest:mleBean.getMLE_Manifests()){
-						PcrWhiteList pcr = new PcrWhiteList();
-						pcr.setPcrName(mle_manifest.getName());
-						pcr.setPcrDigest(mle_manifest.getValue());
-						pcr.setMle(mle);
-						pcrDao.addPcrEntry(pcr);
-					}
-					
-				}
-		        return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True")
-		        		.build();
-			}catch (Exception e){
+			if (!isValidKey || mleBean.getName().length() < 1 || mleBean.getVersion().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
-				fault.setError_message("Add MLE entry failed." + "Exception:" + e.getMessage());
+				if (mleBean.getAttestation_Type() == null || !mleBean.getAttestation_Type().equalsIgnoreCase("PCR")){
+					fault.setError_message("Invalid put for Attestation type");
+				} else {
+					fault.setError_message("Add MLE entry failed, please check the length for each parameters" +
+							" and remove all of the unwanted characters belonged to [# & + : " + "\" \']");
+				}
+				return Response.status(status).header("Location", b.build()).entity(fault).build();
+			}
+			
+		    if (mleBean.getMLE_Type().equals("VMM")){
+		    	System.out.println("The OS Name exists:" + mleBean.getOsName());
+		    	if ( (os = osDao.getOS(mleBean.getOsName(), mleBean.getOsVersion()))!= null){
+		    		mle.setOs(os);
+		    	}
+		    	else{
+					status = Response.Status.BAD_REQUEST;
+					OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
+					fault.setError_message("Data Error - OS[" + mleBean.getOsName() + 
+							"] Version[" + mleBean.getOsVersion() +"] does not exist");
+					return Response.status(status).header("Location", b.build()).entity(fault)
+								.build();
+		    	}
+		    }
+		    else if(mleBean.getMLE_Type().equals("BIOS")){
+		    	if((oem = oemDao.getOEM(mleBean.getOemName())) != null){
+		    		mle.setOem(oem);
+		    	}
+		    	else{
+					status = Response.Status.BAD_REQUEST;
+					OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
+					fault.setError_message("Data Error - OEM[" + mleBean.getOemName() + "] does not exist");
+					return Response.status(status).header("Location", b.build()).entity(fault)
+								.build();
+					
+			    }
+		    }
+		    else{
+		    	status = Response.Status.BAD_REQUEST;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
+				fault.setError_message("Data Error - MLE_Type is error:" + mleBean.getMLE_Type());
 				return Response.status(status).header("Location", b.build()).entity(fault)
-						.build();
+							.build();
+		    }
+		    if(dao.isMLEExisted(mleBean.getName(), mleBean.getVersion())){
+		    	status = Response.Status.BAD_REQUEST;
+				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1006);
+				fault.setError_message("Data Error - MLE Name " + mleBean.getName()+ " Version "+mleBean.getVersion() + " already exists in the database");
+				return Response.status(status).header("Location", b.build()).entity(fault).build();
+		    }
+		    
+		    mle.setName(mleBean.getName());
+		    mle.setVersion(mleBean.getVersion());
+		    mle.setAttestation_Type(mleBean.getAttestation_Type());
+		    mle.setDescription(mleBean.getDescription());
+		    mle.setMLE_Type(mleBean.getMLE_Type());
+			dao.addMLEEntry(mle);
+			if (mleBean.getMLE_Manifests()!=null){
+				for(MLE_Manifest mle_manifest:mleBean.getMLE_Manifests()){
+					PcrWhiteList pcr = new PcrWhiteList();
+					pcr.setPcrName(mle_manifest.getName());
+					pcr.setPcrDigest(mle_manifest.getValue());
+					pcr.setMle(mle);
+					pcrDao.addPcrEntry(pcr);
+				}			
+			}
+	        return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True").build();
+		}catch (Exception e){
+			status = Response.Status.INTERNAL_SERVER_ERROR;
+			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+					OpenAttestationResponseFault.FaultCode.FAULT_500);
+			fault.setError_message("Add MLE entry failed." + "Exception:" + e.getMessage());
+			return Response.status(status).header("Location", b.build()).entity(fault).build();
 		}
 
 	}
