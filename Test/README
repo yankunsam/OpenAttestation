@@ -1,0 +1,6 @@
+1. Run test.sh to test basic functions
+2. Enter "server name" and "port"
+3. See result at /tmp/Result
+4. Run pollhost.sh on appraiser to populate Host specific data and test pollhosts interface
+
+Notes: Regarding step 4, pllshost.sh must be run on appraiser for now. We will enhance in v1.6 RC2 release.
