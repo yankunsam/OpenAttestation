@@ -309,13 +309,8 @@ public class MLEResource {
 		
         try{	
 			HashMap parameters = new HashMap();
-			if (name != null){
+			if (name != null && version != null){
 				parameters.put(name, 50);
-			} else {
-				isValidKey = false;
-			}
-			
-			if (version != null){
 				parameters.put(version, 50);
 			} else {
 				isValidKey = false;
@@ -327,29 +322,25 @@ public class MLEResource {
 						OpenAttestationResponseFault.FaultCode.FAULT_500);
 				fault.setError_message("Delete MLE entry failed, please check the length for each parameters" +
 						" and remove all of the unwanted characters belonged to [# & + : \" \']");
-				return Response.status(status).header("Location", b.build()).entity(fault)
-						.build();
+				return Response.status(status).header("Location", b.build()).entity(fault).build();
 			}
 			
         	if (!mleDao.isMLEExisted(name,version,osName, osVersion,oemName)){
         		status = Response.Status.BAD_REQUEST;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(1007);
 				fault.setError_message("WLM Service Error - MLE not found in attestation data to delete");
-				return Response.status(status).header("Location", b.build()).entity(fault)
-							.build();
+				return Response.status(status).header("Location", b.build()).entity(fault).build();
         	}
+        	
         	MLE mle= mleDao.DeleteMLEEntry(name, version);
             System.out.println("##Check mle id:" + mle.getMLEID());
             pcrDao.deletePcrByMleID(mle.getMLEID());
-        	return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True")
-            		.build();
+        	return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True").build();
 		}catch (Exception e){
 			status = Response.Status.INTERNAL_SERVER_ERROR;
-			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
-					OpenAttestationResponseFault.FaultCode.FAULT_500);
-			fault.setError_message("Delete MLE entry failed." + "Exception:" + e.getMessage()); 
-			return Response.status(status).entity(fault)
-					.build();
+			OpenAttestationResponseFault fault = new OpenAttestationResponseFault(OpenAttestationResponseFault.FaultCode.FAULT_500);
+			fault.setError_message("Delete MLE entry failed." + "Exception:" + e.getMessage() + "    Possible solution: The specified MLE has a reference with HOST, solve this and try again."); 
+			return Response.status(status).entity(fault).build();
 
 		}
 	}

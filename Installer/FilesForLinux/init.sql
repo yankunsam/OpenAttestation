@@ -91,7 +91,9 @@ create table HOST_MLE
    ID int not null auto_increment,
    HOST_ID int ,
    MLE_ID int ,
-   primary key (ID)
+   primary key (ID) ,
+   FOREIGN KEY (HOST_ID) REFERENCES HOST(ID) ON DELETE CASCADE ,
+   CONSTRAINT mle_fk FOREIGN KEY (MLE_ID) REFERENCES MLE(ID)
 );
 
 
