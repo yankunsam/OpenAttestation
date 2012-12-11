@@ -437,7 +437,8 @@ fi
 sed -i "/<\/Service>/d" $TOMCAT_INSTALL_DIR2/$TOMCAT_NAME2/conf/server.xml
 sed -i "/<\/Server>/i\\  <\/Service>"  $TOMCAT_INSTALL_DIR2/$TOMCAT_NAME2/conf/server.xml
 rm -rf /OAT-Appraiser-Configure/
-#remove apache-tomcat
+#stop tomcat service and remove apache-tomcat
+kill -9 `ps -ef | grep tomcat | grep -v grep | awk '{print $2}'`
 if [ -d $TOMCAT_INSTALL_DIR2/apache-tomcat-6.0.29 ];then
 rm -f -r $TOMCAT_INSTALL_DIR2/apache-tomcat-6.0.29.tar.gz
 rm -rf $TOMCAT_INSTALL_DIR2/apache-tomcat-6.0.29
