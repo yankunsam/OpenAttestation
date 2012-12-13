@@ -1,6 +1,7 @@
-1. Run test.sh to test basic functions
+1. Run curl.sh to test basic functions
 2. Enter "server name" and "port"
 3. See result at /tmp/Result
-4. Run pollhost.sh on appraiser to populate Host specific data and test pollhosts interface
+4. Add data into file 'forpoll.data'
+5. Run pollhost.sh to populate Host specific data and test pollhosts interface
+6. Enter "server name" and make sure 'certfile.cer' in the same folder 
 
-Notes: Regarding step 4, pllshost.sh must be run on appraiser for now. We will enhance in v1.6 RC2 release.
