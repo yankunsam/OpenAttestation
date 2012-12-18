@@ -104,8 +104,18 @@ public class MLEResource {
 			if (mleBean.getMLE_Manifests() != null){
 				List<MLE_Manifest> pcrList = mleBean.getMLE_Manifests();
 				for (MLE_Manifest list : pcrList){
+					if(list.getValue() == null  || list.getValue().length() == 0 || list.getName() == null 
+					   ||  list.getName().length() == 0)
+					{
+						status = Response.Status.INTERNAL_SERVER_ERROR;
+						OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
+								OpenAttestationResponseFault.FaultCode.FAULT_500);
+						fault.setError_message("Invalid put for PCR value");
+						return Response.status(status).header("Location", b.build()).entity(fault).build();		
+					}
 					parameters.put(list.getValue(), 100);
 				}
+				
 			}
 			
 			parameters.put(mleBean.getDescription(), 100);
