@@ -522,7 +522,7 @@ public class HOSTResource {
     	    					} 
     	    				}
     	    			}
-    	    			Thread.sleep(10000/reqs.size()); //@TO DO: better calculation?
+    	    			Thread.sleep(1000); 
     	    		}while(!AttestService.isAllAttested(requestId));
     	    		logger.info("requestId:" +requestId +" has attested");
         		}
