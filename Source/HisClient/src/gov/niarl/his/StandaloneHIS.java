@@ -53,6 +53,9 @@ import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -536,7 +539,8 @@ public class StandaloneHIS
         //Obtain the computer name
         try
         {
-            computerName = InetAddress.getLocalHost().getCanonicalHostName();
+            //computerName = InetAddress.getLocalHost().getCanonicalHostName();
+        	computerName =  InetAddress.getLocalHost().getHostName();
             s_logger.debug("Computer name found as: "+computerName);
         }
 
@@ -1740,7 +1744,8 @@ public class StandaloneHIS
             byte[] name;
             try
             {
-                name = InetAddress.getLocalHost().getCanonicalHostName().getBytes();
+                //name = InetAddress.getLocalHost().getCanonicalHostName().getBytes();
+            	name = InetAddress.getLocalHost().getHostName().getBytes();
             }
             catch(Exception e)
             {

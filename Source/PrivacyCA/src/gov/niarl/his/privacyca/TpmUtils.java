@@ -1095,8 +1095,7 @@ public class TpmUtils {
 	public static String getHostname(){
 		String hostname = "";
 		try{
-			//hostname = InetAddress.getLocalHost().getHostName();
-			hostname = InetAddress.getLocalHost().getCanonicalHostName();
+			hostname = InetAddress.getLocalHost().getHostName();
 		}
 		catch (UnknownHostException u){
 			StringTokenizer st = new StringTokenizer(u.getMessage());
