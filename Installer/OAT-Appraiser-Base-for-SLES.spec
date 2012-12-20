@@ -113,6 +113,10 @@ service tomcat6 stop
 sleep 10
 
 #Configuring mysql so we can set up database and hisAppraiser profile
+ISENGINE=`grep "default-storage-engine=INNODB" /etc/my.cnf`
+if [ ! "$ISENGINE" ]; then
+  sed -i 's/\[mysqld\]/\[mysqld\]\ndefault-storage-engine=INNODB/g' /etc/my.cnf
+fi
 
 #sed -i 's/--datadir="$datadir" --socket="$socketfile"/--datadir="$datadir" --skip-grant-tables --socket="$socketfile"/g' /etc/rc.d/init.d/mysql
 
@@ -121,7 +125,6 @@ service mysql start
 #Sets up database and user
 ISSKIPGRANTEXIT=`grep skip-grant-tables /etc/my.cnf`
 if [ ! "$ISSKIPGRANTEXIT" ]; then
-  echo "[mysqld]" >> /etc/my.cnf
   sed -i 's/\[mysqld\]/\[mysqld\]\nskip-grant-tables/g' /etc/my.cnf
 fi
 

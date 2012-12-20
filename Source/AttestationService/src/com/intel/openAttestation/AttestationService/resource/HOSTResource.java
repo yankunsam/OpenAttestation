@@ -136,7 +136,11 @@ public class HOSTResource {
 			if (hostFullObj.getAddOn_Connection_String() != null){
 				parameters.put(hostFullObj.getAddOn_Connection_String(), 100);
 			}
-			
+				
+			if (hostFullObj.getDescription() != null){
+                                parameters.put(hostFullObj.getDescription(), 100);
+                        }
+
 			if (!isValidKey || hostFullObj.getHostName().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
@@ -290,6 +294,10 @@ public class HOSTResource {
 				parameters.put(hostFullObj.getAddOn_Connection_String(), 100);
 			}
 			
+			if (hostFullObj.getDescription() != null){
+                                parameters.put(hostFullObj.getDescription(), 100);
+                        }
+
 			if (!isValidKey || hostFullObj.getHostName().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
@@ -522,7 +530,7 @@ public class HOSTResource {
     	    					} 
     	    				}
     	    			}
-    	    			Thread.sleep(1000); 
+    	    			Thread.sleep(10000/reqs.size()); //@TO DO: better calculation?
     	    		}while(!AttestService.isAllAttested(requestId));
     	    		logger.info("requestId:" +requestId +" has attested");
         		}

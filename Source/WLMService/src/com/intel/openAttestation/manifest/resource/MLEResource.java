@@ -223,7 +223,7 @@ public class MLEResource {
 			}
 			
 			if (mleBean.getVersion() != null){
-				parameters.put(mleBean.getVersion(), 50);
+				parameters.put(mleBean.getVersion(), 100);
 			} else {
 				isValidKey = false;
 			}
@@ -321,7 +321,7 @@ public class MLEResource {
 			HashMap parameters = new HashMap();
 			if (name != null && version != null){
 				parameters.put(name, 50);
-				parameters.put(version, 50);
+				parameters.put(version, 100);
 			} else {
 				isValidKey = false;
 			}
