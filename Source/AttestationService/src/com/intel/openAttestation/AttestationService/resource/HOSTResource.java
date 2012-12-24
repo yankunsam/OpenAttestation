@@ -73,7 +73,7 @@ public class HOSTResource {
 	private static Logger logger = Logger.getLogger("OpenAttestation");
 
 	@POST
-	@Path("/host")
+	@Path("/hosts")
 	@Consumes("application/json")
 	@Produces("application/json")
 	public Response addHOST(@Context UriInfo uriInfo, HostBean hostFullObj, @Context javax.servlet.http.HttpServletRequest request){
@@ -231,7 +231,7 @@ public class HOSTResource {
 	}
 	
 	@PUT
-	@Path("/host")
+	@Path("/hosts")
 	@Consumes("application/json")
 	@Produces("application/json")
 	public Response updatehostEntry(@Context UriInfo uriInfo, HostBean hostFullObj, @Context javax.servlet.http.HttpServletRequest request){
@@ -381,7 +381,7 @@ public class HOSTResource {
 	}	
 	
 	@DELETE
-	@Path("/host")
+	@Path("/hosts")
 	@Produces("application/json")
 	public Response delhostEntry(@QueryParam("hostName") String Name, @Context UriInfo uriInfo){
         UriBuilder b = uriInfo.getBaseUriBuilder();

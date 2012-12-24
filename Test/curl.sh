@@ -813,7 +813,7 @@ OEM_TMP=`awk -F ":" 'NR==2 {print $1;}' test.data`
 BIOS_TMP=`awk -F ":" 'NR==5 {print $2;}' test.data`
 BIOS_VER=`awk -F ":" 'NR==6 {print $2;}' test.data`
 INFO=`echo "{\"HostName\":\"histest\",\"IPAddress\":\"192.168.0.1\",\"Port\":\"8080\",\"BIOS_Name\":\"$BIOS_TMP\",\"BIOS_Version\":\"$BIOS_VER\",\"BIOS_Oem\":\"$OEM_TMP\",\"VMM_Name\":\"$VMM_TMP\",\"VMM_Version\":\"$VMM_VER\",\"VMM_OSName\":\"$OS_TMP\",\"VMM_OSVersion\":\"$OS_VER\",\"Email\":\"\",\"AddOn_Connection_String\":\"\",\"Description\":\"\"}"`
-curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /dev/null
+curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /dev/null
 curl --cacert certfile.cer -X DELETE  "https://$HOST_NAME:$PORT/WLMService/resources/mles?mleName=$BIOS_TMP&mleVersion=$BIOS_VER&oemName=$OEM_TMP" -3 > /tmp/res
 
 if [ "`awk '$1 ~/True/' /tmp/res`" != "True" ];then
@@ -1177,7 +1177,7 @@ OEM_TMP=`awk -F ":" 'NR==2 {print $1;}' test.data`
 BIOS_TMP=`awk -F ":" 'NR==5 {print $1;}' test.data`
 BIOS_VER=`awk -F ":" 'NR==6 {print $1;}' test.data`
 INFO=`echo "{\"HostName\":\"$HOST_TMP\",\"IPAddress\":\"192.168.0.1\",\"Port\":\"8080\",\"BIOS_Name\":\"$BIOS_TMP\",\"BIOS_Version\":\"$BIOS_VER\",\"BIOS_Oem\":\"$OEM_TMP\",\"VMM_Name\":\"$VMM_TMP\",\"VMM_Version\":\"$VMM_VER\",\"VMM_OSName\":\"$OS_TMP\",\"VMM_OSVersion\":\"$OS_VER\",\"Email\":\"\",\"AddOn_Connection_String\":\"\",\"Description\":\"\"}"`
-curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /tmp/res
+curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /tmp/res
 
 if [ "`awk '$1 ~/True/' /tmp/res`" = "True" ];then
         echo -e "Passed " >> /tmp/Result
@@ -1196,9 +1196,9 @@ OEM_TMP=`awk -F ":" 'NR==2 {print $1;}' test.data`
 BIOS_TMP=`awk -F ":" 'NR==5 {print $1;}' test.data`
 BIOS_VER=`awk -F ":" 'NR==6 {print $1;}' test.data`
 INFO=`echo "{\"HostName\":\"$HOST_TMP\",\"IPAddress\":\"192.168.0.1\",\"Port\":\"8080\",\"BIOS_Name\":\"$BIOS_TMP\",\"BIOS_Version\":\"$BIOS_VER\",\"BIOS_Oem\":\"$OEM_TMP\",\"VMM_Name\":\"$VMM_TMP\",\"VMM_Version\":\"$VMM_VER\",\"VMM_OSName\":\"$OS_TMP\",\"VMM_OSVersion\":\"$OS_VER\",\"Email\":\"\",\"AddOn_Connection_String\":\"\",\"Description\":\"\"}"`
-curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /tmp/res
+curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /tmp/res
 if [ "`awk '$1 ~/True/' /tmp/res`" = "True" ];then
-	curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /tmp/res
+	curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /tmp/res
 
 	if [ "`awk '$1 ~/True/' /tmp/res`" != "True" ];then
 	        echo -e "Passed " >> /tmp/Result
@@ -1216,7 +1216,7 @@ BIOS_VER=`awk -F ":" 'NR==6 {print $9;}' test.data`
 VMM_TMP=`awk -F ":" 'NR==7 {print $9;}' test.data`
 VMM_VER=`awk -F ":" 'NR==8 {print $9;}' test.data`
 INFO=`echo "{\"HostName\":\"$HOST_TMP\",\"IPAddress\":\"192.168.0.1\",\"Port\":\"8080\",\"BIOS_Name\":\"$BIOS_TMP\",\"BIOS_Version\":\"$BIOS_VER\",\"BIOS_Oem\":\"$OEM_TMP\",\"VMM_Name\":\"$VMM_TMP\",\"VMM_Version\":\"$VMM_VER\",\"VMM_OSName\":\"$OS_TMP\",\"VMM_OSVersion\":\"$OS_VER\",\"Email\":\"\",\"AddOn_Connection_String\":\"\",\"Description\":\"\"}"`
-curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /tmp/res
+curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /tmp/res
 
 if [ "`awk '$1 ~/True/' /tmp/res`" != "True" ];then
         echo -e "Passed " >> /tmp/Result
@@ -1229,7 +1229,7 @@ echo "*********************Add Host with checking boundary value****************
 # Add Host with null string
 echo -ne "Add Host with null string		:	" >> /tmp/Result
 INFO=`echo "{\"HostName\":\"\",\"IPAddress\":\"192.168.0.2\",\"Port\":\"8080\",\"BIOS_Name\":\"$BIOS_TMP\",\"BIOS_Version\":\"$BIOS_VER\",\"BIOS_Oem\":\"$OEM_TMP\",\"VMM_Name\":\"$VMM_TMP\",\"VMM_Version\":\"$VMM_VER\",\"VMM_OSName\":\"$OS_TMP\",\"VMM_OSVersion\":\"$OS_VER\",\"Email\":\"\",\"AddOn_Connection_String\":\"\",\"Description\":\"\"}"`
-curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /tmp/res
+curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /tmp/res
 
 if [ "`awk '$1 ~/True/' /tmp/res`" != "True" ];then
         echo -e "Passed " >> /tmp/Result
@@ -1248,7 +1248,7 @@ OEM_TMP=`awk -F ":" 'NR==2 {print $1;}' test.data`
 BIOS_TMP=`awk -F ":" 'NR==5 {print $1;}' test.data`
 BIOS_VER=`awk -F ":" 'NR==6 {print $1;}' test.data`
 INFO=`echo "{\"HostName\":\"$HOST_TMP\",\"IPAddress\":\"192.168.0.2\",\"Port\":\"8080\",\"BIOS_Name\":\"$BIOS_TMP\",\"BIOS_Version\":\"$BIOS_VER\",\"BIOS_Oem\":\"$OEM_TMP\",\"VMM_Name\":\"$VMM_TMP\",\"VMM_Version\":\"$VMM_VER\",\"VMM_OSName\":\"$OS_TMP\",\"VMM_OSVersion\":\"$OS_VER\",\"Email\":\"\",\"AddOn_Connection_String\":\"\",\"Description\":\"\"}"`
-curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /tmp/res
+curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /tmp/res
 
 if [ "`awk '$1 ~/True/' /tmp/res`" = "True" ];then
         echo -e "Passed " >> /tmp/Result
@@ -1267,7 +1267,7 @@ OEM_TMP=`awk -F ":" 'NR==2 {print $1;}' test.data`
 BIOS_TMP=`awk -F ":" 'NR==5 {print $1;}' test.data`
 BIOS_VER=`awk -F ":" 'NR==6 {print $1;}' test.data`
 INFO=`echo "{\"HostName\":\"$HOST_TMP\",\"IPAddress\":\"192.168.0.2\",\"Port\":\"8080\",\"BIOS_Name\":\"$BIOS_TMP\",\"BIOS_Version\":\"$BIOS_VER\",\"BIOS_Oem\":\"$OEM_TMP\",\"VMM_Name\":\"$VMM_TMP\",\"VMM_Version\":\"$VMM_VER\",\"VMM_OSName\":\"$OS_TMP\",\"VMM_OSVersion\":\"$OS_VER\",\"Email\":\"\",\"AddOn_Connection_String\":\"\",\"Description\":\"\"}"`
-curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /tmp/res
+curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /tmp/res
 
 if [ "`awk '$1 ~/True/' /tmp/res`" != "True" ];then
         echo -e "Passed " >> /tmp/Result
@@ -1289,10 +1289,10 @@ BIOS_TMP=`awk -F ":" 'NR==5 {print $1;}' test.data`
 BIOS_VER=`awk -F ":" 'NR==6 {print $1;}' test.data`
 HOST_DESC=`awk -F ":" 'NR==12 {print $1;}' test.data`
 INFO=`echo "{\"HostName\":\"$HOST_TMP\",\"IPAddress\":\"192.168.0.2\",\"Port\":\"8080\",\"BIOS_Name\":\"$BIOS_TMP\",\"BIOS_Version\":\"$BIOS_VER\",\"BIOS_Oem\":\"$OEM_TMP\",\"VMM_Name\":\"$VMM_TMP\",\"VMM_Version\":\"$VMM_VER\",\"VMM_OSName\":\"$OS_TMP\",\"VMM_OSVersion\":\"$OS_VER\",\"Email\":\"\",\"AddOn_Connection_String\":\"\",\"Description\":\"$HOST_DESC\"}"`
-curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /tmp/res
+curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /tmp/res
 HOST_DESC=`awk -F ":" 'NR==12 {print $5;}' test.data`
 INFO=`echo "{\"HostName\":\"$HOST_TMP\",\"IPAddress\":\"192.168.0.2\",\"Port\":\"8080\",\"BIOS_Name\":\"$BIOS_TMP\",\"BIOS_Version\":\"$BIOS_VER\",\"BIOS_Oem\":\"$OEM_TMP\",\"VMM_Name\":\"$VMM_TMP\",\"VMM_Version\":\"$VMM_VER\",\"VMM_OSName\":\"$OS_TMP\",\"VMM_OSVersion\":\"$OS_VER\",\"Email\":\"\",\"AddOn_Connection_String\":\"\",\"Description\":\"$HOST_DESC\"}"`
-curl --cacert certfile.cer -H "Content-Type: application/json" -X PUT -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /tmp/res
+curl --cacert certfile.cer -H "Content-Type: application/json" -X PUT -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /tmp/res
 
 if [ "`awk '$1 ~/True/' /tmp/res`" = "True" ];then
         echo -e "Passed " >> /tmp/Result
@@ -1312,7 +1312,7 @@ BIOS_TMP=`awk -F ":" 'NR==5 {print $1;}' test.data`
 BIOS_VER=`awk -F ":" 'NR==6 {print $1;}' test.data`
 HOST_DESC=`awk -F ":" 'NR==12 {print $1;}' test.data`
 INFO=`echo "{\"HostName\":\"$HOST_TMP\",\"IPAddress\":\"192.168.0.2\",\"Port\":\"8080\",\"BIOS_Name\":\"$BIOS_TMP\",\"BIOS_Version\":\"$BIOS_VER\",\"BIOS_Oem\":\"$OEM_TMP\",\"VMM_Name\":\"$VMM_TMP\",\"VMM_Version\":\"$VMM_VER\",\"VMM_OSName\":\"$OS_TMP\",\"VMM_OSVersion\":\"$OS_VER\",\"Email\":\"\",\"AddOn_Connection_String\":\"\",\"Description\":\"$HOST_DESC\"}"`
-curl --cacert certfile.cer -H "Content-Type: application/json" -X PUT -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /tmp/res
+curl --cacert certfile.cer -H "Content-Type: application/json" -X PUT -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /tmp/res
 
 if [ "`awk '$1 ~/True/' /tmp/res`" != "True" ];then
         echo -e "Passed " >> /tmp/Result
@@ -1333,7 +1333,7 @@ OEM_TMP=`awk -F ":" 'NR==2 {print $1;}' test.data`
 BIOS_TMP=`awk -F ":" 'NR==5 {print $1;}' test.data`
 BIOS_VER=`awk -F ":" 'NR==6 {print $1;}' test.data`
 INFO=`echo "{\"HostName\":\"$HOST_TMP\",\"IPAddress\":\"192.168.0.2\",\"Port\":\"8080\",\"BIOS_Name\":\"$BIOS_TMP\",\"BIOS_Version\":\"$BIOS_VER\",\"BIOS_Oem\":\"$OEM_TMP\",\"VMM_Name\":\"$VMM_TMP\",\"VMM_Version\":\"$VMM_VER\",\"VMM_OSName\":\"$OS_TMP\",\"VMM_OSVersion\":\"$OS_VER\",\"Email\":\"\",\"AddOn_Connection_String\":\"\",\"Description\":\"\"}"`
-curl --cacert certfile.cer -H "Content-type: application/json" -X PUT -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /tmp/res
+curl --cacert certfile.cer -H "Content-type: application/json" -X PUT -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /tmp/res
 
 if [ "`awk '$1 ~/True/' /tmp/res`" = "True" ];then
         echo -e "Passed " >> /tmp/Result
@@ -1353,7 +1353,7 @@ BIOS_TMP=`awk -F ":" 'NR==5 {print $1;}' test.data`
 BIOS_VER=`awk -F ":" 'NR==6 {print $1;}' test.data`
 HOST_DESC=`awk -F ":" 'NR==12 {print $7;}' test.data`
 INFO=`echo "{\"HostName\":\"$HOST_TMP\",\"IPAddress\":\"192.168.0.2\",\"Port\":\"8080\",\"BIOS_Name\":\"$BIOS_TMP\",\"BIOS_Version\":\"$BIOS_VER\",\"BIOS_Oem\":\"$OEM_TMP\",\"VMM_Name\":\"$VMM_TMP\",\"VMM_Version\":\"$VMM_VER\",\"VMM_OSName\":\"$OS_TMP\",\"VMM_OSVersion\":\"$OS_VER\",\"Email\":\"\",\"AddOn_Connection_String\":\"\",\"Description\":\"$HOST_DESC\"}"`
-curl --cacert certfile.cer -H "Content-Type: application/json" -X PUT -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /tmp/res
+curl --cacert certfile.cer -H "Content-Type: application/json" -X PUT -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /tmp/res
 
 if [ "`awk '$1 ~/True/' /tmp/res`" = "True" ];then
         echo -e "Passed " >> /tmp/Result
@@ -1373,7 +1373,7 @@ BIOS_TMP=`awk -F ":" 'NR==5 {print $1;}' test.data`
 BIOS_VER=`awk -F ":" 'NR==6 {print $1;}' test.data`
 HOST_DESC=`awk -F ":" 'NR==12 {print $8;}' test.data`
 INFO=`echo "{\"HostName\":\"$HOST_TMP\",\"IPAddress\":\"192.168.0.2\",\"Port\":\"8080\",\"BIOS_Name\":\"$BIOS_TMP\",\"BIOS_Version\":\"$BIOS_VER\",\"BIOS_Oem\":\"$OEM_TMP\",\"VMM_Name\":\"$VMM_TMP\",\"VMM_Version\":\"$VMM_VER\",\"VMM_OSName\":\"$OS_TMP\",\"VMM_OSVersion\":\"$OS_VER\",\"Email\":\"\",\"AddOn_Connection_String\":\"\",\"Description\":\"$HOST_DESC\"}"`
-curl --cacert certfile.cer -H "Content-Type: application/json" -X PUT -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /tmp/res
+curl --cacert certfile.cer -H "Content-Type: application/json" -X PUT -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /tmp/res
 
 if [ "`awk '$1 ~/True/' /tmp/res`" != "True" ];then
         echo -e "Passed " >> /tmp/Result
@@ -1395,8 +1395,8 @@ BIOS_TMP=`awk -F ":" 'NR==5 {print $1;}' test.data`
 BIOS_VER=`awk -F ":" 'NR==6 {print $1;}' test.data`
 HOST_DESC=`awk -F ":" 'NR==12 {print $7;}' test.data`
 INFO=`echo "{\"HostName\":\"$HOST_TMP\",\"IPAddress\":\"192.168.0.2\",\"Port\":\"8080\",\"BIOS_Name\":\"$BIOS_TMP\",\"BIOS_Version\":\"$BIOS_VER\",\"BIOS_Oem\":\"$OEM_TMP\",\"VMM_Name\":\"$VMM_TMP\",\"VMM_Version\":\"$VMM_VER\",\"VMM_OSName\":\"$OS_TMP\",\"VMM_OSVersion\":\"$OS_VER\",\"Email\":\"\",\"AddOn_Connection_String\":\"\",\"Description\":\"$HOST_DESC\"}"`
-curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /dev/null
-curl --cacert certfile.cer -X DELETE  "https://$HOST_NAME:$PORT/AttestationService/resources/host?hostName=$HOST_TMP" -3 > /tmp/res
+curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /dev/null
+curl --cacert certfile.cer -X DELETE  "https://$HOST_NAME:$PORT/AttestationService/resources/hosts?hostName=$HOST_TMP" -3 > /tmp/res
 
 if [ "`awk '$1 ~/True/' /tmp/res`" = "True" ];then
         echo -e "Passed " >> /tmp/Result
@@ -1407,7 +1407,7 @@ fi
 # Delete Host fail
 echo -ne "Delete Host fail 			:	" >> /tmp/Result
 HOST_TMP=`awk -F ":" 'NR==11 {print $10;}' test.data`
-curl --cacert certfile.cer -X DELETE  "https://$HOST_NAME:$PORT/AttestationService/resources/host?hostName=$HOST_TMP" -3 > /tmp/res
+curl --cacert certfile.cer -X DELETE  "https://$HOST_NAME:$PORT/AttestationService/resources/hosts?hostName=$HOST_TMP" -3 > /tmp/res
 
 if [ "`awk '$1 ~/True/' /tmp/res`" != "True" ];then
         echo -e "Passed " >> /tmp/Result
@@ -1419,7 +1419,7 @@ echo
 echo "********************Delete HOST with checking boundary value********************" >> /tmp/Result
 # Delete HOST with null string
 echo -ne "Delete HOST with null string		:	" >> /tmp/Result
-curl --cacert certfile.cer -X DELETE  "https://$HOST_NAME:$PORT/AttestationService/resources/host?hostName=" -3 > /tmp/res
+curl --cacert certfile.cer -X DELETE  "https://$HOST_NAME:$PORT/AttestationService/resources/hosts?hostName=" -3 > /tmp/res
 
 if [ "`awk '$1 ~/True/' /tmp/res`" != "True" ];then
         echo -e "Passed " >> /tmp/Result
@@ -1439,8 +1439,8 @@ BIOS_TMP=`awk -F ":" 'NR==5 {print $1;}' test.data`
 BIOS_VER=`awk -F ":" 'NR==6 {print $1;}' test.data`
 HOST_DESC=`awk -F ":" 'NR==12 {print $7;}' test.data`
 INFO=`echo "{\"HostName\":\"$HOST_TMP\",\"IPAddress\":\"192.168.0.2\",\"Port\":\"8080\",\"BIOS_Name\":\"$BIOS_TMP\",\"BIOS_Version\":\"$BIOS_VER\",\"BIOS_Oem\":\"$OEM_TMP\",\"VMM_Name\":\"$VMM_TMP\",\"VMM_Version\":\"$VMM_VER\",\"VMM_OSName\":\"$OS_TMP\",\"VMM_OSVersion\":\"$OS_VER\",\"Email\":\"\",\"AddOn_Connection_String\":\"\",\"Description\":\"$HOST_DESC\"}"`
-curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/host" -3 > /dev/null
-curl --cacert certfile.cer -X DELETE  "https://$HOST_NAME:$PORT/AttestationService/resources/host?hostName=$HOST_TMP" -3 > /tmp/res
+curl --cacert certfile.cer -H "Content-Type: application/json" -X POST -d $INFO "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -3 > /dev/null
+curl --cacert certfile.cer -X DELETE  "https://$HOST_NAME:$PORT/AttestationService/resources/hosts?hostName=$HOST_TMP" -3 > /tmp/res
 
 if [ "`awk '$1 ~/True/' /tmp/res`" = "True" ];then
         echo -e "Passed " >> /tmp/Result
