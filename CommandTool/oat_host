@@ -43,19 +43,19 @@ echo $INFO
 addHOST() 
 {
   curl --cacert certfile.cer -H "Content-Type: application/json" \
-       -X POST -d "$INFO" "https://$HOST_NAME:$PORT/AttestationService/resources/host" -ssl3
+       -X POST -d "$INFO" "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -ssl3
 }
 
 editHOST()
 {
   curl --cacert certfile.cer -H "Content-Type: application/json" \
-        -X PUT -d "$INFO" "https://$HOST_NAME:$PORT/AttestationService/resources/host" -ssl3
+        -X PUT -d "$INFO" "https://$HOST_NAME:$PORT/AttestationService/resources/hosts" -ssl3
 }
 
 delHOST()
 {
   curl --cacert certfile.cer \
-        -X DELETE  "https://$HOST_NAME:$PORT/AttestationService/resources/host?$INFO"  -ssl3
+        -X DELETE  "https://$HOST_NAME:$PORT/AttestationService/resources/hosts?$INFO"  -ssl3
 }
 
 case $1 in
