@@ -211,10 +211,9 @@ public class MLEResource {
 		try{
 			MLEDAO mleDao = new MLEDAO();
 			OSDAO osDao = new  OSDAO();
-			OEMDAO oemDao =new OEMDAO();
+			OEMDAO oemDao = new OEMDAO();
 			List<PcrWhiteList> pcrList = new ArrayList<PcrWhiteList>(); 
 			PcrWhiteListDAO pcrDao = new PcrWhiteListDAO();
-			
 			HashMap parameters = new HashMap();
 			if (mleBean.getName() != null){
 				parameters.put(mleBean.getName(), 50);
@@ -258,18 +257,21 @@ public class MLEResource {
 				if(mleBean.getDescription()!=null)    //update description
 					mleDao.editMLEDesc(mleBean.getName(),mleBean.getVersion(), mleBean.getDescription());
 				if (mleBean.getMLE_Manifests()!=null){  //update whitelist
-					pcrDao.deletePcrByMleID(mle.getMLEID());
 					for (MLE_Manifest mleManifest: mleBean.getMLE_Manifests()){					
 						parameters.clear();
-						if (mleManifest.getName() != null){
+						if (mleManifest.getName() != null && !mleManifest.getName().trim().equals("")){
 							parameters.put(mleManifest.getName(), 10);
+						} else {
+							isValidKey = false;
 						}
 						
-						if (mleManifest.getValue() != null){
+						if (mleManifest.getValue() != null && !mleManifest.getValue().trim().equals("")){
 							parameters.put(mleManifest.getValue(), 100);	
+						} else {
+							isValidKey = false;
 						}
 						
-						if (!HisUtil.validParas(parameters)){
+						if (!HisUtil.validParas(parameters) || !isValidKey){
 							status = Response.Status.INTERNAL_SERVER_ERROR;
 							OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 									OpenAttestationResponseFault.FaultCode.FAULT_500);
@@ -278,12 +280,12 @@ public class MLEResource {
 							return Response.status(status).header("Location", b.build()).entity(fault).build();
 						}
 						
+						pcrDao.deletePcrByMleID(mle.getMLEID());
 						PcrWhiteList pcr = new PcrWhiteList();
 						pcr.setMle(mle);
 						pcr.setPcrName(mleManifest.getName());
 						pcr.setPcrDigest(mleManifest.getValue());
 						pcrList.add(pcr);
-						
 					}
 					pcrDao.addPcrList(pcrList);
 				}

@@ -1224,7 +1224,7 @@ MLE_VER=`awk 'NR==6 {print $2;}' commandtool.data`
 OEM_TMP=`awk 'NR==2 {print $2;}' commandtool.data`
 PCR2_NUM=`awk 'NR==9 {print $4;}' commandtool.data`
 PCR2_VALUE=`awk 'NR==10 {print $4;}' commandtool.data`
-INFO=`echo "{\"Name\":\"$MLE_TMP\",\"Version\":\"$MLE_VER\",\"OemName\":\"$OEM_TMP\",\"Attestation_Type\":\"PCR\",\"MLE_Type\":\"BIOS\",\"Description\":\"Test\",\"MLE_Manifests\":[{\"Name\":\"$PCR_N1\",\"Value\":\"$PCR_D1\"},{\"Name\":\"$PCR_N2\",\"Value\":\"$PCR_D2\"}]}"`
+INFO=`echo "{\"Name\":\"$MLE_TMP\",\"Version\":\"$MLE_VER\",\"OemName\":\"$OEM_TMP\",\"Attestation_Type\":\"PCR\",\"MLE_Type\":\"BIOS\",\"Description\":\"Test\",\"MLE_Manifests\":[{\"Name\":\"$PCR_NUM\",\"Value\":\"$PCR_VALUE\"},{\"Name\":\"$PCR2_NUM\",\"Value\":\"$PCR2_VALUE\"}]}"`
 ./oat_mle -e -h $HOST_NAME $INFO > /tmp/res
 if [ "`awk '$1 ~/True/' /tmp/res`" = "True" ];then
 	echo "Passed" >> /tmp/Result
