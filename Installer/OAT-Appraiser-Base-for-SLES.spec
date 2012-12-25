@@ -458,7 +458,7 @@ sed -i "s/expose_php = On/expose_php = Off/" /etc/php5/cli/php.ini
 #echo "" >> /etc/apache2.d/welcome.conf
 
 #/sbin/restorecon -R '/srv/www/htdocs/OAT'
-
+service apache2 restart
 
 #######################################################################
 printf "done\n"

@@ -146,7 +146,7 @@ public class PcrWhiteListResource {
 				parameters.put(pcrbean.getPcrDigest(), 100);
 			}
 
-			if (!isValidKey || pcrbean.getPcrName().length() < 1 || !HisUtil.validParas(parameters)){
+			if (!isValidKey || pcrbean.getPcrName().length() < 1 || !HisUtil.validParas(parameters) || pcrbean.getPcrDigest() == null || pcrbean.getPcrDigest().length() < 1){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
 						OpenAttestationResponseFault.FaultCode.FAULT_500);

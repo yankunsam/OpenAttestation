@@ -20,6 +20,8 @@ if [ -f /tmp/Result ];then
         rm -f /tmp/Result
 fi
 
+echo "Auto test script is running, please waitting..."
+
 echo "#The result about OEM" >> /tmp/Result
 echo "******************Add OEM normal******************************************" >> /tmp/Result
 # Add OEM successful (normal)
@@ -518,10 +520,8 @@ if [ "`awk '$1 ~/True/' /tmp/res`" = "True" ];then
         INFO=`echo "{\"Name\":\"$OS_TMP\",\"Version\":\"$OS_VER\"}"`
         ./oat_os -d -h $HOST_NAME $INFO > /tmp/res
         if [ "`awk '$1 ~/True/' /tmp/res`" = "True" ];then
-		echo "1"
                 echo "Passed" >> /tmp/Result
         else
-		echo "3"
                 echo "Failed" >> /tmp/Result
         fi
 else
@@ -1081,8 +1081,8 @@ fi
 echo -n "Add MLE with PCR			:	" >> /tmp/Result
 PCR_NUM=`awk 'NR==9 {print $2;}' commandtool.data`
 PCR_VALUE=`awk 'NR==10 {print $2;}' commandtool.data`
-MLE_TMP=`awk 'NR==5 {print $3;}' commandtool.data`
-MLE_VER=`awk 'NR==6 {print $3;}' commandtool.data`
+MLE_TMP=`awk 'NR==5 {print $4;}' commandtool.data`
+MLE_VER=`awk 'NR==6 {print $4;}' commandtool.data`
 OEM_TMP=`awk 'NR==2 {print $2;}' commandtool.data`
 INFO=`echo "{\"Name\":\"$MLE_TMP\",\"Version\":\"$MLE_VER\",\"OemName\":\"$OEM_TMP\",\"Attestation_Type\":\"PCR\",\"MLE_Type\":\"BIOS\",\"Description\":\"Test\",\"MLE_Manifests\":[{\"Name\":\"$PCR_NUM\",\"Value\":\"$PCR_VALUE\"}]}"`
 ./oat_mle -a -h $HOST_NAME $INFO > /tmp/res
@@ -1386,9 +1386,12 @@ fi
 # Delete existed PCR with edge length string
 echo -n "Delete PCR with edge length string	:	" >> /tmp/Result
 PCR_NUM=`awk 'NR==9 {print $5;}' commandtool.data`
+PCR_VALUE=`awk 'NR==10 {print $5;}' commandtool.data`
 MLE_TMP=`awk 'NR==5 {print $2;}' commandtool.data`
 MLE_VER=`awk 'NR==6 {print $2;}' commandtool.data`
 OEM_TMP=`awk 'NR==2 {print $2;}' commandtool.data`
+INFO=`echo "{\"pcrName\":\"$PCR_NUM\",\"pcrDigest\":\"$PCR_VALUE\",\"mleName\":\"$MLE_TMP\",\"mleVersion\":\"$MLE_VER\",\"oemName\":\"$OEM_TMP\"}"`
+./oat_pcrwhitelist -a -h $HOST_NAME $INFO
 INFO=`echo "{\"pcrName\":\"$PCR_NUM\",\"mleName\":\"$MLE_TMP\",\"mleVersion\":\"$MLE_VER\",\"oemName\":\"$OEM_TMP\"}"`
 ./oat_pcrwhitelist -d -h $HOST_NAME $INFO > /tmp/res
 if [ "`awk '$1 ~/True/' /tmp/res`" = "True" ];then
@@ -1401,9 +1404,12 @@ echo "**********************Delete PCR with checking special character**********
 # Delete PCR successful with special char
 echo -n "Delete PCR successful with special char:	" >> /tmp/Result
 PCR_NUM=`awk 'NR==9 {print $7;}' commandtool.data`
+PCR_VALUE=`awk 'NR==10 {print $7;}' commandtool.data`
 MLE_TMP=`awk 'NR==5 {print $2;}' commandtool.data`
 MLE_VER=`awk 'NR==6 {print $2;}' commandtool.data`
 OEM_TMP=`awk 'NR==2 {print $2;}' commandtool.data`
+INFO=`echo "{\"pcrName\":\"$PCR_NUM\",\"pcrDigest\":\"$PCR_VALUE\",\"mleName\":\"$MLE_TMP\",\"mleVersion\":\"$MLE_VER\",\"oemName\":\"$OEM_TMP\"}"`
+./oat_pcrwhitelist -a -h $HOST_NAME $INFO
 INFO=`echo "{\"pcrName\":\"$PCR_NUM\",\"mleName\":\"$MLE_TMP\",\"mleVersion\":\"$MLE_VER\",\"oemName\":\"$OEM_TMP\"}"`
 ./oat_pcrwhitelist -d -h $HOST_NAME $INFO > /tmp/res
 if [ "`awk '$1 ~/True/' /tmp/res`" = "True" ];then
@@ -1858,3 +1864,5 @@ else
         echo "Failed" >> /tmp/Result
 fi
 
+#run over
+echo "Run over, please check the result in file \"/tmp/Result\""
