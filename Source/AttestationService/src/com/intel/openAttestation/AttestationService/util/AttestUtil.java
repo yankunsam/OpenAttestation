@@ -34,12 +34,12 @@ public class AttestUtil {
 	public static void  loadProp(){
 		FileInputStream attestationPropertyFile = null;
 	       try {
-                   String configPath = "/etc/oat-appraiser/";
+	    	   String configPath = "/etc/oat-appraiser/";
 	    	   attestationPropertyFile = new FileInputStream(configPath + PROPERTIES_NAME);
 	    	   attestationProperties.load(attestationPropertyFile);
 	    	   timeout = Long.parseLong(attestationProperties.getProperty("default_attest_timeout"));
-	    	   checkAttestInterval = Long.parseLong(attestationProperties.getProperty("check_attest_interval"));
-	        	attestationPropertyFile.close();
+	    	   checkAttestInterval = Long.parseLong(attestationProperties.getProperty("check_attest_interval", "1000"));
+	    	   attestationPropertyFile.close();
 	       } 
 	        catch (IOException e) {
 				e.printStackTrace();
