@@ -502,7 +502,7 @@ public class HOSTResource {
     	    					} 
     	    				}
     	    			}
-    	    			Thread.sleep(1000); 
+    	    			Thread.sleep(AttestUtil.getCheckAttestInterval());
     	    		}while(!AttestService.isAllAttested(requestId));
     	    		logger.info("requestId:" +requestId +" has attested");
         		}
