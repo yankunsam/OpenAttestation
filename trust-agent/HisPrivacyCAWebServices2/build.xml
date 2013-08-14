@@ -1,5 +1,5 @@
 <project name="HisPrivacyCAWebServices2" basedir="./" default="server">
-       <setproxy proxyhost="proxy-us.intel.com" proxyport="911"/> 
+       <setproxy proxyhost="proxy-us.intel.com" proxyport="911"/>
 	<path id="compile.classpath">
 		<pathelement path="${classpath}" />
 		<pathelement path="${java.class.path}" />
@@ -21,10 +21,6 @@
 	<path id="client.compile.classpath">
 		<pathelement path="${classpath}" />
 		<pathelement path="${java.class.path}" />
-		<fileset dir="./clientlib">
-			<include name="**/*.jar" />
-			<include name="**/*.zip" />
-		</fileset>
 		<fileset dir="./WEB-INF/lib">
 			<include name="**/*.jar" />
 			<include name="**/*.zip" />
