@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>gov.niarl.his.webservices</groupId>
+  <artifactId>his-clients</artifactId>
+  <version>1.0</version>
+  <packaging>pom</packaging>
+  <name>NIARL HIS Web Service Clients</name>
+  
+  <distributionManagement>
+      <repository>
+	  <id>cloudsecurity-maven-repository</id>
+	  <url>dav:http://cloudsecurityportal.intel.com/maven</url>
+      </repository>
+  </distributionManagement>
+
+  <build>
+      <plugins>
+	  <plugin>
+	      <groupId>org.codehaus.mojo</groupId>
+	      <artifactId>build-helper-maven-plugin</artifactId>
+	      <version>1.7</version>
+	      <executions>
+		  <execution>
+		      <id>attach-artifact</id>
+		      <goals>
+			  <goal>attach-artifact</goal>
+		      </goals>
+		      <configuration>
+			  <artifacts>
+			      <artifact>
+				  <file>HisPrivacyCAWebServices2-client.jar</file>
+				  <type>jar</type>
+				  <classifier>HisPrivacyCAWebServices2-client</classifier>
+			      </artifact>
+			      <artifact>
+				  <file>HisWebServices-client.jar</file>
+				  <type>jar</type>
+				  <classifier>HisWebServices-client</classifier>
+			      </artifact>
+			  </artifacts>
+			  <basedir>${basedir}</basedir>
+		      </configuration>
+		  </execution>
+	      </executions>
+	  </plugin>
+      </plugins>
+    <extensions>
+	<extension>
+	    <groupId>org.apache.maven.wagon</groupId>
+	    <artifactId>wagon-webdav</artifactId>
+	    <version>1.0-beta-2</version>
+	</extension>
+    </extensions>
+  </build>
+</project>
