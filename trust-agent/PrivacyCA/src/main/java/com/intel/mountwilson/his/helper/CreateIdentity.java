@@ -254,10 +254,8 @@ public class CreateIdentity  {
 			System.arraycopy(encrypted1, 256, sym1, 0, sym1.length);
 			byte[] decrypted1;
 			if (os==1){//linux
-				//decrypted1 = TpmModule.activateIdentity(ownerAuthRaw, keyAuthRaw, asym1, sym1, HisIdentityIndex);
-				HashMap<String, byte[]> results = TpmModule.activateIdentity2(ownerAuthRaw, keyAuthRaw,asym1, sym1, HisIdentityIndex);
+				decrypted1 = TpmModule.activateIdentity(ownerAuthRaw, keyAuthRaw, asym1, sym1, HisIdentityIndex);
 
-				decrypted1 = results.get("aikcert");
 			}else
 				//decrypted1 = TpmModuleJava.ActivateIdentity(asym1, sym1, aik, keyAuthRaw, srkAuthRaw, ownerAuthRaw); //Comments  temporarily due to TSSCoreService.jar compiling issue 
 				decrypted1 = TpmModule.activateIdentity(ownerAuthRaw, keyAuthRaw, asym1, sym1, HisIdentityIndex);
@@ -275,11 +273,8 @@ public class CreateIdentity  {
 			byte[] decrypted2;
 			byte[] aikblob;
 			if (os==1){//linux
-				HashMap<String, byte[]> results = TpmModule.activateIdentity2(ownerAuthRaw, keyAuthRaw,asym2, sym2, HisIdentityIndex);
-				System.out.println(results);
-
-				decrypted2 = results.get("aikcert");
-				aikblob = results.get("aikblob");
+				decrypted2 = TpmModule.activateIdentity(ownerAuthRaw, keyAuthRaw, asym2, sym2, HisIdentityIndex);
+				aikblob = newId.getAikBlob();
 				
 				writecert(homeFolder + ClientPath, decrypted2,"/aikcert.cer");
 				writeFile(homeFolder + ClientPath, aikblob,"/aikblob.dat");
