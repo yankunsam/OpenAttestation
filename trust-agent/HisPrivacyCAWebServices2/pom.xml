@@ -27,7 +27,122 @@
 	<artifactId>slf4j-jdk14</artifactId>
 	<version>1.6.4</version>
     </dependency> -->
-    
+	<dependency>
+		<groupId>javax.servlet.jsp</groupId>
+		<artifactId>jsp-api</artifactId>
+		<version>2.0</version>
+	</dependency>
+         <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>1.0.4</version>
+        </dependency>
+        <dependency>
+                <groupId>org.apache.geronimo.bundles</groupId>
+                <artifactId>commons-discovery</artifactId>
+                <version>0.4_1</version>
+        </dependency>
+        <dependency>
+                <groupId>com.sun.xml.fastinfoset</groupId>
+                <artifactId>FastInfoset</artifactId>
+                <version>1.2.4</version>
+        </dependency>
+        <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>2.1</version>
+        </dependency>
+        <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-impl</artifactId>
+                <version>2.1.12</version>
+        </dependency>        
+        <dependency>
+                <groupId>com.sun.xml.bind</groupId>
+                <artifactId>jaxb-xjc</artifactId>
+                <version>2.1.11</version>
+        </dependency>       
+        <dependency>
+                <groupId>javax.xml</groupId>
+                <artifactId>jaxrpc</artifactId>
+                <version>1.1</version>
+        </dependency>
+        <dependency>
+                <groupId>javax.xml.ws</groupId>
+                <artifactId>jaxws-api</artifactId>
+                <version>2.1</version>
+        </dependency>
+        <dependency>
+                <groupId>com.sun.xml.ws</groupId>
+                <artifactId>jaxws-rt</artifactId>
+                <version>2.1.7</version>
+        </dependency>
+        <dependency>
+                <groupId>com.sun.xml.ws</groupId>
+                <artifactId>jaxws-tools</artifactId>
+                <version>2.1.7</version>
+        </dependency>
+        <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jsr173_api</artifactId>
+                <version>1.0</version>
+        </dependency>
+        <dependency>
+                <groupId>javax.jws</groupId>
+                <artifactId>jsr181-api</artifactId>
+                <version>1.0-MR1</version>
+        </dependency>        
+        <dependency>
+                <groupId>javax.annotation</groupId>
+                <artifactId>jsr250-api</artifactId>
+                <version>1.0</version>
+        </dependency>        
+        <dependency>
+		<groupId>javax.mail</groupId>
+		<artifactId>mail</artifactId>
+		<version>1.4</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.jvnet</groupId>
+		<artifactId>mimepull</artifactId>
+		<version>1.6</version>
+	</dependency>
+	<dependency>
+		<groupId>com.sun.org.apache.xml.internal</groupId>
+		<artifactId>resolver</artifactId>
+		<version>20050927</version>
+	</dependency>
+	<dependency>
+		<groupId>javax.xml.soap</groupId>
+		<artifactId>saaj-api</artifactId>
+		<version>1.3</version>
+	</dependency>
+	<dependency>
+		<groupId>com.sun.xml.messaging.saaj</groupId>
+		<artifactId>saaj-impl</artifactId>
+		<version>1.3.1</version>
+	</dependency>
+	<dependency>
+		<groupId>org.jvnet.staxex</groupId>
+		<artifactId>stax-ex</artifactId>
+		<version>1.0</version>
+	</dependency>
+	<dependency>
+		<groupId>com.sun.xml.stream.buffer</groupId>
+		<artifactId>streambuffer</artifactId>
+		<version>0.8</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.geronimo.bundles</groupId>
+		<artifactId>woodstox</artifactId>
+		<version>3.2.9_1</version>
+	</dependency>
+	<dependency>
+		<groupId>wsdl4j</groupId>
+		<artifactId>wsdl4j</artifactId>
+		<version>1.5.1</version>
+	</dependency>
 	<dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
@@ -39,7 +154,21 @@
                 <artifactId>logback-core</artifactId>
                 <version>1.0.9</version>
         </dependency>
-
+        <dependency>
+                <groupId>jaxb</groupId>
+                <artifactId>activation</artifactId>
+                <version>1.0.2</version>
+        </dependency>
+        <dependency>
+                <groupId>org.apache.axis</groupId>
+                <artifactId>axis</artifactId>
+                <version>1.4</version>
+        </dependency>
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>servlet-api</artifactId>
+		<version>2.4</version>
+	</dependency>
         <!-- XXX the following dependencies are declared so the java code will compile in the IDE - but they are included separately by the ant build for now; when we fully mavenize, we can use them directly -->
 		<dependency>
 			<groupId>org.glassfish</groupId>
@@ -100,7 +229,7 @@
             </goals>
             <configuration>
               <!-- exclude all the artifacts that are already in the WEB-INF/lib that is a "source" folder -->
-                <excludeArtifactIds>javax.servlet,javax.servlet.jsp,bcprov-jdk15</excludeArtifactIds>
+                <excludeArtifactIds>javax.servlet,javax.servlet.jsp</excludeArtifactIds>
                 <!--
                 <includeArtifactIds>api-client</includeArtifactIds>
                 <includeClassifiers>with-dependencies</includeClassifiers>

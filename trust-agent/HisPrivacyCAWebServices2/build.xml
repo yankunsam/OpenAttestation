@@ -7,10 +7,6 @@
 			<include name="**/*.jar" />
 			<include name="**/*.zip" />
 		</fileset>
-		<fileset dir="./WEB-INF/jars-compile-only">
-			<include name="**/*.jar" />
-			<include name="**/*.zip" />
-		</fileset>
                 <!-- contains dependencies downloaded by maven (see pom): -->
 		<fileset dir="./target/WEB-INF/lib">
 			<include name="**/*.jar" />
@@ -72,7 +68,6 @@
                                 <include name="properties/**"/>
                                 
                                 <include name="WEB-INF/**"/>
-				<exclude name="WEB-INF/jars-compile-only/**" />
                                 <include name="wsdl/**"/>
                                 <include name="privacyca-client.properties"/>
 			</fileset>
