@@ -1,32 +1,37 @@
 <project name="HisPrivacyCAWebServices2" basedir="./" default="server">
        <setproxy proxyhost="proxy-us.intel.com" proxyport="911"/>
 	<path id="compile.classpath">
-		<pathelement path="${classpath}" />
-		<pathelement path="${java.class.path}" />
-		<fileset dir="./WEB-INF/lib">
-			<include name="**/*.jar" />
-			<include name="**/*.zip" />
-		</fileset>
-                <!-- contains dependencies downloaded by maven (see pom): -->
-		<fileset dir="./target/WEB-INF/lib">
-			<include name="**/*.jar" />
-			<include name="**/*.zip" />
-		</fileset>
-	</path>
+			<pathelement path="${classpath}" />
+			<pathelement path="${java.class.path}" />
+			<fileset dir="./WEB-INF/lib">
+				<include name="**/*.jar" />
+				<include name="**/*.zip" />
+			</fileset>
+	                <!-- contains dependencies downloaded by maven (see pom): -->
+			<fileset dir="./target/WEB-INF/lib">
+				<include name="**/*.jar" />
+				<include name="**/*.zip" />
+			</fileset>
+		</path>
 
-	<path id="client.compile.classpath">
-		<pathelement path="${classpath}" />
-		<pathelement path="${java.class.path}" />
-		<fileset dir="./WEB-INF/lib">
-			<include name="**/*.jar" />
-			<include name="**/*.zip" />
-		</fileset>
-	</path>
+		<path id="client.compile.classpath">
+			<pathelement path="${classpath}" />
+			<pathelement path="${java.class.path}" />
+			<fileset dir="./WEB-INF/lib">
+				<include name="**/*.jar" />
+				<include name="**/*.zip" />
+	                </fileset>
+	                <fileset dir="./target/WEB-INF/lib">
+	                        <include name="**/*.jar" />
+	                        <include name="**/*.zip" />
+			</fileset>
+	    
+		</path>
 
 	<taskdef name="apt" classname="com.sun.tools.ws.ant.Apt">
-		<classpath>
-			<path refid="client.compile.classpath" />
-		</classpath>
+	    <classpath>
+	         <path refid="client.compile.classpath" />
+	    </classpath>
 	</taskdef>
 	<taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport">
 		<classpath>
@@ -39,9 +44,9 @@
 		<!-- Timestamp for potential use in filenames below-->
 		<tstamp />
 
-		<!-- Clean and copy non java files
+		<!-- Clean and copy non java files-->
 		<delete dir="./WEB-INF/classes" />
-		<mkdir dir="./WEB-INF/classes" />-->
+		<mkdir dir="./WEB-INF/classes" />
 		<copy todir="./WEB-INF/classes">
 			<fileset dir="./src/main/java">
 				<patternset>
@@ -50,30 +55,26 @@
 			</fileset>
 		</copy>
 		<!-- Compile-->
-		<apt debug="true" verbose="true" destdir="./WEB-INF/classes" sourcedestdir="./WEB-INF/classes" sourcepath="./src/main/java">
+		<javac debug="true" destdir="./WEB-INF/classes" srcdir="./src/main/java"
+               source="1.5" target="1.5"
+               includes="**/*.java" excludes="**/hisPrivacyCAWebService2/client*/,Main.java">
 			<classpath>
 				<path refid="compile.classpath" />
 			</classpath>
-			<source dir="./src/main/java" includes="**/*.java" excludes="**/hisPrivacyCAWebService2/client/,Main.java" />
-		</apt>
+		</javac>
 
 		<!-- Build-->
-                <mkdir dir="./target"/>
 		<delete file="./target/HisPrivacyCAWebServices2.war" />
 		<jar jarfile="./target/HisPrivacyCAWebServices2.war">
 			<fileset dir="./">
-                            <!--  removed from build on 2013-02-17 , jar files from ClientFiles/lib/* and properties/clientfiles/lib/* moved to 
-				<include name="ClientFiles/**"/>
-                                -->
-                                <include name="properties/**"/>
-                                
-                                <include name="WEB-INF/**"/>
-                                <include name="wsdl/**"/>
-                                <include name="privacyca-client.properties"/>
+				<include name="properties/**"/>
+				<include name="WEB-INF/**"/>
+                		<include name="wsdl/**"/>
+		                <include name="privacyca-client.properties"/>
 			</fileset>
-                        <fileset dir="./target/">
-                            <include name="WEB-INF/**"/>
-                        </fileset>
+			<fileset dir="./target/">
+			    <include name="WEB-INF/**"/>
+			</fileset>
 		</jar>
 	</target>
 
@@ -81,32 +82,50 @@
 	<target name="client">
 		<delete dir="client" />
 		<mkdir dir="client" />
+		<delete dir="clientsrc" />
+		<mkdir dir="clientsrc" />
+		<delete dir="src/main/java/gov/niarl/his/webservices/hisPrivacyCAWebService2/clientWsImport" />
 		<delete dir="./target/HisPrivacyCAWebServices2-client.jar" />
 		<wsimport 
 			debug="true" 
 			verbose="true" 
 			keep="true" 
-			destdir="client" 
+			sourcedestdir="clientsrc" 
 			package="gov.niarl.his.webservices.hisPrivacyCAWebServices2.clientWsImport"
-			wsdl="src/main/resources/hisPrivacyCAWebService2.wsdl" /> <!-- http://localhost:8080/HisPrivacyCAWebServices2/hisPrivacyCAWebService2?wsdl -->
-                        <!--
+			wsdl="${basedir}/src/main/resources/hisPrivacyCAWebService2.wsdl"
+			xnocompile="true" />
 		<wsimport 
 			debug="true" 
 			verbose="true" 
 			keep="true" 
-			destdir="client" 
+			sourcedestdir="clientsrc" 
 			package="gov.niarl.his.webservices.hisPrivacyCAWebServices2.clientWsImport"
-			wsdl="http://localhost:8080/HisPrivacyCAWebServices2/hisPrivacyCAWebService2FactoryService?wsdl" />
-                        -->
-		<apt debug="true" verbose="true" destdir="client" sourcedestdir="client" sourcepath="./src/main/java">
+			wsdl="${basedir}/src/main/resources/hisPrivacyCAWebService2FactoryService.wsdl"
+			xnocompile="true" />
+		<javac debug="true" destdir="client"
+			source="1.5" target="1.5">
+			<src path="./src/main/java"/>
+			<src path="./clientsrc"/>
+			<include name="**/clientWsImport/*"/>
+			<include name ="**/privacyca/*.java"/>
+			<include name="**/hisPrivacyCAWebService2/client/**/*.java"/>
+			<include name="**/hisPrivacyCAWebService2/*,Main.java"/>
 			<classpath>
 				<path refid="client.compile.classpath" />
 				<pathelement path="client"/>
 			</classpath>
-			<source dir="./src/main/java" includes="**/hisPrivacyCAWebService2/client/**/*.java,**/hisPrivacyCAWebService2/*,Main.java" />
-		</apt>
+		</javac>
 		<jar jarfile="./target/HisPrivacyCAWebServices2-client.jar" basedir="client" />
+		<copy todir ="../his-clients/" >
+			<fileset dir="./target/">
+				<include name="HisPrivacyCAWebServices2-client.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="src/main/java/gov/niarl/his/webservices/hisPrivacyCAWebService2/clientWsImport">
+			<fileset dir="./clientsrc/gov/niarl/his/webservices/hisPrivacyCAWebServices2/clientWsImport"/>
+		</copy>
 		<delete dir="client" />
+		<delete dir ="clientsrc" />
 	</target>
 
 	<target name="clientInvoker">

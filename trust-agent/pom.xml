@@ -15,8 +15,8 @@
   
 
   <modules>
-    <module>his-clients</module>
     <module>HisPrivacyCAWebServices2</module>
+    <module>his-clients</module>
     <module>PrivacyCA</module>
     <module>TrustAgent</module>
     <module>TrustAgentLinuxInstaller</module>
