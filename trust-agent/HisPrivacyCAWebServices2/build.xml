@@ -3,10 +3,6 @@
 	<path id="compile.classpath">
 			<pathelement path="${classpath}" />
 			<pathelement path="${java.class.path}" />
-			<fileset dir="./WEB-INF/lib">
-				<include name="**/*.jar" />
-				<include name="**/*.zip" />
-			</fileset>
 	                <!-- contains dependencies downloaded by maven (see pom): -->
 			<fileset dir="./target/WEB-INF/lib">
 				<include name="**/*.jar" />
@@ -17,10 +13,6 @@
 		<path id="client.compile.classpath">
 			<pathelement path="${classpath}" />
 			<pathelement path="${java.class.path}" />
-			<fileset dir="./WEB-INF/lib">
-				<include name="**/*.jar" />
-				<include name="**/*.zip" />
-	                </fileset>
 	                <fileset dir="./target/WEB-INF/lib">
 	                        <include name="**/*.jar" />
 	                        <include name="**/*.zip" />
