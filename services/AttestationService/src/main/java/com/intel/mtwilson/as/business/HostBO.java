@@ -305,13 +305,13 @@ public class HostBO extends BaseBO {
 		this.biosMleId = mleController.findBiosMle(host.getBios().getName(),
 				host.getBios().getVersion(), host.getBios().getOem());
 		if (biosMleId == null) {
-			throw new ASException(ErrorCode.AS_BIOS_INCORRECT, host.getBios().getName(),host.getBios().getVersion());
+			throw new ASException(ErrorCode.AS_BIOS_INCORRECT, host.getBios().getName(),host.getBios().getVersion(),host.getBios().getOem());
 		}
 		this.vmmMleId = mleController.findVmmMle(host.getVmm().getName(), host
 				.getVmm().getVersion(), host.getVmm().getOsName(), host
 				.getVmm().getOsVersion());
 		if (vmmMleId == null) {
-			throw new ASException(ErrorCode.AS_VMM_INCORRECT, host.getVmm().getName(),host.getVmm().getVersion());
+			throw new ASException(ErrorCode.AS_VMM_INCORRECT, host.getVmm().getName(),host.getVmm().getVersion(),host.getVmm().getOsName(),host.getVmm().getOsVersion());
 		}
 	}
 

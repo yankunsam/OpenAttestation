@@ -53,8 +53,8 @@ public enum ErrorCode {
 
     AS_ASYNC_TIMEOUT(1002,"Asynchronous operation timed out.Time out set to %d seconds"),
     AS_HOST_NOT_FOUND(1003,"Host '%s' not found."),
-    AS_BIOS_INCORRECT(1004,"Bios '%s' or version '%s' is incorrect."),
-    AS_VMM_INCORRECT(1004,"VMM '%s' or version '%s' is incorrect."),
+    AS_BIOS_INCORRECT(1004,"Bios '%s', version '%s' or oem '%s' is incorrect."),
+    AS_VMM_INCORRECT(1004,"VMM '%s' or version '%s', os '%s' or os version '%s' is incorrect."),
     AS_HOST_EXISTS(1005,"Host '%s' already exists."),
     AS_IPADDRESS_EXISTS(1006,"IPAddress '%s' already used."),
     AS_MISSING_MANIFEST(1007,"MLE '%s' Version '%s' Manifest data is missing."),
@@ -98,7 +98,9 @@ public enum ErrorCode {
     WS_MODULE_WHITELIST_DOES_NOT_EXIST(2017, "White list for the module '%s' is not configured in the system"),
     WS_NAME_SPACE_DOES_NOT_EXIST(2018, "Name space table is not configured in the system. Please contact administrator."),
     WS_MLE_SOURCE_MAPPING_ALREADY_EXISTS(2019, "White list host mapping already exists for the MLE '%s'."),
-    WS_MLE_SOURCE_MAPPING_DOES_NOT_EXIST(2019, "White list host mapping does not exist for the MLE '%s'."),
+    WS_MLE_SOURCE_MAPPING_DOES_NOT_EXIST(2020, "White list host mapping does not exist for the MLE '%s'."),
+    WS_MLE_OEM_DOES_NOT_EXIST(2021, "MLE name '%s' version '%s' oem '%s' is not configured in the system."),
+    WS_MLE_OS_DOES_NOT_EXIST(2022, "MLE name '%s' version '%s' os '%s' os version '%s' is not configured in the system."),
     
     
     // Below are error codes for the Management service

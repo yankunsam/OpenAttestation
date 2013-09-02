@@ -34,6 +34,7 @@ import com.intel.mountwilson.as.common.ASException;
 import com.intel.mtwilson.as.controller.MwMleSourceJpaController;
 import com.intel.mtwilson.wlm.helper.BaseBO;
 import com.intel.mtwilson.as.controller.exceptions.ASDataException;
+import com.intel.mtwilson.as.controller.exceptions.IllegalOrphanException;
 import com.intel.mtwilson.as.controller.exceptions.NonexistentEntityException;
 import com.intel.mtwilson.as.data.MwMleSource;
 import com.intel.mtwilson.datatypes.ErrorCode;
@@ -125,8 +126,11 @@ public class MleBO extends BaseBO {
                                                         mleData.getVersion(), mleData.getOsName(),
                                                         mleData.getOsVersion(), mleData.getOemName());
 
-                                        if (tblMle == null) {
-                                                throw new ASException(ErrorCode.WS_MLE_DOES_NOT_EXIST, mleData.getName(), mleData.getVersion());
+                                        if (tblMle == null && mleData.getOemName() != null) {
+                                                throw new ASException(ErrorCode.WS_MLE_OEM_DOES_NOT_EXIST, mleData.getName(), mleData.getVersion(), mleData.getOemName());
+                                        }
+                                        if (tblMle == null && mleData.getOsName() != null) {
+                                            throw new ASException(ErrorCode.WS_MLE_OS_DOES_NOT_EXIST, mleData.getName(), mleData.getVersion(), mleData.getOsName(), mleData.getOsVersion());
                                         }
 
                                         setTblMle(tblMle, mleData);
@@ -371,9 +375,6 @@ public class MleBO extends BaseBO {
 		return input;
 	}
 
-        /**
-         * 
-         */
 	private void addPcrManifest(TblMle tblMle, List<ManifestData> mleManifests) {
 		
 		tblMle.setTblPcrManifestCollection(new ArrayList<TblPcrManifest>());
