@@ -74,72 +74,72 @@ public class PCRWhiteList {
         this.oemName = oemName;
     }
     
-    @JsonProperty("MLEName")
+    @JsonProperty("mleName")
     public String getMleName() {
         return mleName;
     }
 
-    @JsonProperty("MLEName")
+    @JsonProperty("mleName")
     public void setMleName(String mleName) {
         this.mleName = mleName;
     }
 
-    @JsonProperty("MLEVersion")
+    @JsonProperty("mleVersion")
     public String getMleVersion() {
         return mleVersion;
     }
 
-    @JsonProperty("MLEVersion")
+    @JsonProperty("mleVersion")
     public void setMleVersion(String mleVersion) {
         this.mleVersion = mleVersion;
     }
 
-    @JsonProperty("OEMName")
+    @JsonProperty("oemName")
     public String getOemName() {
         return oemName;
     }
 
-    @JsonProperty("OEMName")
+    @JsonProperty("oemName")
     public void setOemName(String oemName) {
         this.oemName = oemName;
     }
 
-    @JsonProperty("OSName")
+    @JsonProperty("osName")
     public String getOsName() {
         return osName;
     }
 
-    @JsonProperty("OSName")
+    @JsonProperty("osName")
     public void setOsName(String osName) {
         this.osName = osName;
     }
 
-    @JsonProperty("OSVersion")
+    @JsonProperty("osVersion")
     public String getOsVersion() {
         return osVersion;
     }
 
-    @JsonProperty("OSVersion")
+    @JsonProperty("osVersion")
     public void setOsVersion(String osVersion) {
         this.osVersion = osVersion;
     }
 
-    @JsonProperty("PCRDigest")
+    @JsonProperty("pcrDigest")
     public String getPcrDigest() {
         return pcrDigest;
     }
 
-    @JsonProperty("PCRDigest")
+    @JsonProperty("pcrDigest")
     public void setPcrDigest(String pcrDigest) {
         this.pcrDigest = pcrDigest;
     }
 
-    @JsonProperty("PCRName")
+    @JsonProperty("pcrName")
     public String getPcrName() {
         return pcrName;
     }
 
-    @JsonProperty("PCRName")
+    @JsonProperty("pcrName")
     public void setPcrName(String pcrName) {
         this.pcrName = pcrName;
     }
