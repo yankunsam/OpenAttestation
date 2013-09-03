@@ -375,9 +375,9 @@ public class MleBO extends BaseBO {
 		return input;
 	}
 
-	private void addPcrManifest(TblMle tblMle, List<ManifestData> mleManifests) {
+	private void addPcrManifest(TblMle tblMle, List<ManifestData> mleManifests) throws IllegalOrphanException, NonexistentEntityException, ASDataException {
 		
-		tblMle.setTblPcrManifestCollection(new ArrayList<TblPcrManifest>());
+		Collection<TblPcrManifest> tblPcrManifests = new ArrayList<TblPcrManifest>();
 
 		if (mleManifests != null) {
 
@@ -387,8 +387,15 @@ public class MleBO extends BaseBO {
 				pcrManifest.setValue(manifestData.getValue());
 				pcrManifest.setMleId(tblMle);
 				pcrManifestJpaController.create(pcrManifest);
+				tblPcrManifests.add(pcrManifest);
 			}
 		}
+		
+		tblPcrManifests.addAll(tblMle.getTblPcrManifestCollection());
+		tblMle.setTblPcrManifestCollection(tblPcrManifests);
+		String oldRequiredManifestList = tblMle.getRequiredManifestList() ==null || tblMle.getRequiredManifestList().equals("") ? "":tblMle.getRequiredManifestList()+",";
+		tblMle.setRequiredManifestList(oldRequiredManifestList +getRequiredManifestList(mleManifests));
+		mleJpaController.edit(tblMle);
 
 	}
 
@@ -549,6 +556,7 @@ public class MleBO extends BaseBO {
 
                                     // Now add the pcr to the database.
                                     addPcrManifest(tblMle, pcrWhiteList);
+                                    
 
                                 } catch (ASException ase) {
                                     throw ase;
