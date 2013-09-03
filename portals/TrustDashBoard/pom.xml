@@ -91,7 +91,16 @@
                 <artifactId>api-client</artifactId>
                 <version>${project.version}</version>
         </dependency>
-        
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp.jstl</groupId>
+            <artifactId>javax.servlet.jsp.jstl-api</artifactId>
+            <version>1.2.1</version>
+        </dependency>
     </dependencies>
 
     <properties />
