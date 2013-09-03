@@ -111,7 +111,16 @@ cp trustagent.jks "${package_dir}"/cert
 # 5. run ldconfig -p to ensure it is found
 # XXX TODO for now we are not doing the general steps, just solving for a specific system.
 fix_redhat_libcrypto() {
-  local has_libcrypto=`find / -name libcrypto.so.1.0.0`
+  if [ -e /etc/fedora-release ]; then
+    version_id=`awk -F " "  '{print $3;}' /etc/fedora-release`
+  else
+    version_id=0
+  fi
+  if [ $version_id -ge 19 ]; then
+    local has_libcrypto=`find / -name libcrypto.so.1.0.1e`
+  else
+    local has_libcrypto=`find / -name libcrypto.so.1.0.0`
+  fi
   local has_symlink=`find / -name libcrypto.so`
   if [[ -n "$has_libcrypto" && -z "$has_symlink" ]]; then
     echo "Creating missing symlink for $has_libcrypto"
