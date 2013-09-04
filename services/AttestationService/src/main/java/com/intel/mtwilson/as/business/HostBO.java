@@ -107,7 +107,6 @@ public class HostBO extends BaseBO {
                                                     throw new ASException(e);
                                             }
                                     return "true";
-                                    //return new HostResponse(ErrorCode.OK);
 	}
 
 

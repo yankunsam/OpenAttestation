@@ -450,7 +450,7 @@ public class ApiClient implements AttestationService, WhitelistService {
     @Override
     public boolean addHostLocation(HostLocation hostLocObj) throws IOException, ApiException, SignatureException {
         String result = text(httpPost(asurl("/hosts/location"), toJSON(hostLocObj)));
-        return "true".equals(result);          
+        return "true".equals(result);
     }
 
     /**
@@ -505,10 +505,8 @@ public class ApiClient implements AttestationService, WhitelistService {
 
     @Override
     public boolean addHost(TxtHost host) throws IOException, ApiException, SignatureException {
-        //HostResponse added = fromJSON(httpPost(asurl("/hosts"), toJSON(new TxtHostRecord(host))), HostResponse.class);
         String result = text(httpPost(asurl("/hosts"), toJSON(new TxtHostRecord(host))));
-        return "true".equals(result);  
-        //return added;
+        return "true".equals(result);
     }
 
     @Override
