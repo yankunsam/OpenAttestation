@@ -57,20 +57,15 @@ public class HostBO extends BaseBO {
 	private TblMle biosMleId = null;
 	private TblMle vmmMleId = null;
         
-	public HostResponse addHost(TxtHost host) {
+	public String addHost(TxtHost host) {
                                 String certificate = null;
                                 String location = null;
                                 HashMap<String, ? extends IManifest> pcrMap = null;
-
                                 log.debug("About the add the host to the DB");
-
                                     try {
                                         checkForDuplicate(host);
-
                                         getBiosAndVMM(host);
-
                                         log.info("Getting Server Identity.");
-
                                                     TblHosts tblHosts = new TblHosts();
                                                     tblHosts.setTlsPolicyName("TRUST_FIRST_CERTIFICATE");
                                                     tblHosts.setTlsKeystore(null);
@@ -78,7 +73,6 @@ public class HostBO extends BaseBO {
                                                     if( host.getHostName() != null ) { tblHosts.setName(host.getHostName().toString()); }
                                                     if( host.getIPAddress() != null ) { tblHosts.setIPAddress(host.getIPAddress().toString()); }
                                                     if( host.getPort() != null ) { tblHosts.setPort(host.getPort()); }
-
 
                                                     if (canFetchAIKCertificateForHost(host.getVmm().getName())) { // datatype.Vmm
                                                             certificate = getAIKCertificateForHost(tblHosts, host);
@@ -95,15 +89,11 @@ public class HostBO extends BaseBO {
                                                    }
                                                     else { // ESX host so get the location for the host and store in the
                                                                     // table
-
                                                         pcrMap = getHostPcrManifest(tblHosts, host); // BUG #497 sending both the new TblHosts record and the TxtHost object just to get the TlsPolicy into the initial call so that with the trust_first_certificate policy we will obtain the host certificate now while adding it
-
                                                         log.info("Getting location for host from VCenter");
                                                         location = getLocation(pcrMap);
                                                     }
-
                                                     log.info("Saving Host in database with TlsPolicyName {} and TlsKeystoreLength {}", tblHosts.getTlsPolicyName(), tblHosts.getTlsKeystore() == null ? "null" : tblHosts.getTlsKeystore().length);
-
                                                     log.debug("Saving the host details in the DB");
                                                     saveHostInDatabase(tblHosts, host, certificate, location, pcrMap);
 
@@ -116,7 +106,8 @@ public class HostBO extends BaseBO {
                                             catch (Exception e) {
                                                     throw new ASException(e);
                                             }
-                                    return new HostResponse(ErrorCode.OK);
+                                    return "true";
+                                    //return new HostResponse(ErrorCode.OK);
 	}
 
 
@@ -305,13 +296,13 @@ public class HostBO extends BaseBO {
 		this.biosMleId = mleController.findBiosMle(host.getBios().getName(),
 				host.getBios().getVersion(), host.getBios().getOem());
 		if (biosMleId == null) {
-			throw new ASException(ErrorCode.AS_BIOS_INCORRECT, host.getBios().getName(),host.getBios().getVersion(),host.getBios().getOem());
+                       throw new ASException(ErrorCode.AS_BIOS_INCORRECT, host.getBios().getName(),host.getBios().getVersion(),host.getBios().getOem());
 		}
 		this.vmmMleId = mleController.findVmmMle(host.getVmm().getName(), host
 				.getVmm().getVersion(), host.getVmm().getOsName(), host
 				.getVmm().getOsVersion());
 		if (vmmMleId == null) {
-			throw new ASException(ErrorCode.AS_VMM_INCORRECT, host.getVmm().getName(),host.getVmm().getVersion(),host.getVmm().getOsName(),host.getVmm().getOsVersion());
+                       throw new ASException(ErrorCode.AS_VMM_INCORRECT, host.getVmm().getName(),host.getVmm().getVersion(),host.getVmm().getOsName(),host.getVmm().getOsVersion());
 		}
 	}
 

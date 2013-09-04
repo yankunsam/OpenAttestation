@@ -504,9 +504,11 @@ public class ApiClient implements AttestationService, WhitelistService {
     }
 
     @Override
-    public HostResponse addHost(TxtHost host) throws IOException, ApiException, SignatureException {
-        HostResponse added = fromJSON(httpPost(asurl("/hosts"), toJSON(new TxtHostRecord(host))), HostResponse.class);
-        return added;
+    public boolean addHost(TxtHost host) throws IOException, ApiException, SignatureException {
+        //HostResponse added = fromJSON(httpPost(asurl("/hosts"), toJSON(new TxtHostRecord(host))), HostResponse.class);
+        String result = text(httpPost(asurl("/hosts"), toJSON(new TxtHostRecord(host))));
+        return "true".equals(result);  
+        //return added;
     }
 
     @Override

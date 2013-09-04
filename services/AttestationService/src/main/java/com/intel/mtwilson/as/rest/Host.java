@@ -143,7 +143,7 @@ public class Host {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public HostResponse post(TxtHostRecord hostRecord) { 
+    public String post(TxtHostRecord hostRecord) { 
          return hostBO.addHost(new TxtHost(hostRecord)); 
     }
     

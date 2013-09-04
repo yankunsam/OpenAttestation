@@ -38,7 +38,7 @@ public interface AttestationService {
 
     HostTrustResponse getHostTrust(Hostname hostname) throws IOException, ApiException, SignatureException;
 
-    HostResponse addHost(TxtHost host) throws IOException, ApiException, SignatureException;
+    boolean addHost(TxtHost host) throws IOException, ApiException, SignatureException;
 
     HostResponse updateHost(TxtHost host) throws IOException, ApiException, SignatureException;
 
