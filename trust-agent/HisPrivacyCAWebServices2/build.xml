@@ -1,5 +1,4 @@
 <project name="HisPrivacyCAWebServices2" basedir="./" default="server">
-       <setproxy proxyhost="proxy-us.intel.com" proxyport="911"/>
 	<path id="compile.classpath">
 			<pathelement path="${classpath}" />
 			<pathelement path="${java.class.path}" />
