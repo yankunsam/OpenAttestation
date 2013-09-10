@@ -157,6 +157,15 @@ fix_redhat_libcrypto
     else
       echo_failure "FAILED"
     fi
+    #compile and install NIARL_TPM_Module
+    echo "Compiling NIARL_TPM_Module... "
+    make -C ./TPMModule/plain/linux/ 2>&1 > /dev/null
+    if [ -e ./TPMModule/plain/linux/NIARL_TPM_Module ]; then
+      cp ./TPMModule/plain/linux/NIARL_TPM_Module .
+      echo_success "OK"
+    else
+      echo_failure "FAILED"
+    fi
     chmod +x aikquote NIARL_TPM_Module openssl.sh
     cp aikquote NIARL_TPM_Module openssl.sh ${package_dir}/bin
     cd ..
