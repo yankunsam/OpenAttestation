@@ -37,8 +37,8 @@
     </organization>
 
   <scm>
-    <connection>scm:svn:svn://10.1.71.117/mountwilson-0.5.4/trunk</connection>
-    <developerConnection>scm:svn:svn://10.1.71.117/mountwilson-0.5.4/trunk</developerConnection>
+    <connection>scm:git:https://github.com/OATFork/OpenAttestation.git</connection>
+    <developerConnection>scm:git:https://github.com/OATFork/OpenAttestation.git</developerConnection>
   </scm>
   
 <licenses>
