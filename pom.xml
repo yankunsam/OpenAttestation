@@ -29,17 +29,16 @@
     <module>portals</module>
   </modules>
 
-  <url>http://cloudsecurityportal.intel.com/mtwilson</url>
+  <url>https://github.com/OpenAttestation/OpenAttestation</url>
   
     <organization>
         <name>Intel Corporation</name>
-        <url>http://cscenter.intel.com/portal/</url>
+        <url>https://github.com/OpenAttestation/OpenAttestation</url>
     </organization>
 
   <scm>
     <connection>scm:svn:svn://10.1.71.117/mountwilson-0.5.4/trunk</connection>
     <developerConnection>scm:svn:svn://10.1.71.117/mountwilson-0.5.4/trunk</developerConnection>
-    <url>http://cloudsecurityportal.intel.com/redmine/projects/mtw/repository</url>
   </scm>
   
 <licenses>
@@ -61,20 +60,18 @@
 
   <distributionManagement>
       <repository>
-	  <id>cloudsecurity-maven-repository</id>
-	  <url>dav:http://cloudsecurityportal.intel.com/maven</url>
-          <name>Maven Repository in Cloud Security Portal at Intel</name>
+	  <id>local</id>
+	  <url>file://${maven.repository.root}</url>
       </repository>
       <site>
-          <id>cloudsecurity-website</id>
-          <url>dav:http://cloudsecurityportal.intel.com/mtwilson/0.5.4</url>
-          <name>Documentation Site in Cloud Security Portal at Intel</name>
+          <id>local</id>
+	  <url>file://${maven.repository.root}</url>
       </site>
   </distributionManagement>
 
     <issueManagement>
         <system>Redmine</system>
-        <url>http://cloudsecurityportal.intel.com/redmine/projects/mtw/issues</url>
+        <url>http://otc-cloud.sh.intel.com/bugzilla/</url>
     </issueManagement>
 
     <repositories>

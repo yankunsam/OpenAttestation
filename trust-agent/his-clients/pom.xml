@@ -8,8 +8,8 @@
   
   <distributionManagement>
       <repository>
-	  <id>cloudsecurity-maven-repository</id>
-	  <url>dav:http://cloudsecurityportal.intel.com/maven</url>
+	  <id>local</id>
+	  <url>file://${maven.repository.root}</url>
       </repository>
   </distributionManagement>
 
