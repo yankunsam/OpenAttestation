@@ -71,7 +71,7 @@
 
     <issueManagement>
         <system>Redmine</system>
-        <url>http://otc-cloud.sh.intel.com/bugzilla/</url>
+        <url>https://github.com/OpenAttestation/OpenAttestation/wiki/OAT-Issues/</url>
     </issueManagement>
 
     <repositories>
