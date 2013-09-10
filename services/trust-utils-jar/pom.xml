@@ -9,13 +9,6 @@
         <artifactId>mtwilson-services</artifactId>
         <version>1.2-SNAPSHOT</version>
     </parent>
-  <!--
-  <url>http://maven.apache.org</url>
-    <issueManagement>
-        <system>Redmine</system>
-        <url>http://cloudsecurityportal.intel.com/redmine/projects/mtw/issues</url>
-    </issueManagement>
--->
     <build>
 		<plugins>
             <plugin>
