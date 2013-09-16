@@ -34,6 +34,14 @@
 #include <time.h>
 using namespace std;
 
+#undef NULL
+#if defined(__cplusplus)
+#define NULL 0
+#else
+#define NULL ((void *)0)
+#endif
+
+
 class NIARL_TPM_ModuleV2
 {
 public:
