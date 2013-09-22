@@ -2,17 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.intel.mtwilson.core.services</groupId>
-    <artifactId>mtwilson-services</artifactId>
-    <packaging>pom</packaging>
+  <groupId>com.intel.mtwilson.core.services</groupId>
+  <artifactId>mtwilson-services</artifactId>
+  <packaging>pom</packaging>
 
   <name>Mt Wilson Services</name>
-
-	<parent>
-		<groupId>com.intel.mtwilson.core</groupId>
-		<artifactId>mtwilson</artifactId>
-		<version>1.2-SNAPSHOT</version>
-	</parent>
+  <parent>
+    <groupId>com.intel.mtwilson.core</groupId>
+    <artifactId>mtwilson</artifactId>
+    <version>1.2-SNAPSHOT</version>
+  </parent>
   
   <modules>
     <module>aikqverify</module>

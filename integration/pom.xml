@@ -6,18 +6,16 @@
   <packaging>pom</packaging>
 
   <name>Mt Wilson Integration Projects</name>
-
-	<parent>
-		<groupId>com.intel.mtwilson.core</groupId>
-		<artifactId>mtwilson</artifactId>
-		<version>1.2-SNAPSHOT</version>
-	</parent>
+  <parent>
+    <groupId>com.intel.mtwilson.core</groupId>
+    <artifactId>mtwilson</artifactId>
+    <version>1.2-SNAPSHOT</version>
+  </parent>
   
   <modules>
     <module>http-authorization</module>
     <module>api-datatypes-jar</module>
     <module>api-client-jar</module>
   </modules>
-
 
 </project>

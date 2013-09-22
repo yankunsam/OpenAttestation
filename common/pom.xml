@@ -7,12 +7,11 @@
   <packaging>pom</packaging>
 
   <name>Mt Wilson Common Projects</name>
-
-	<parent>
-		<groupId>com.intel.mtwilson.core</groupId>
-		<artifactId>mtwilson</artifactId>
-		<version>1.2-SNAPSHOT</version>
-	</parent>
+  <parent>
+    <groupId>com.intel.mtwilson.core</groupId>
+    <artifactId>mtwilson</artifactId>
+    <version>1.2-SNAPSHOT</version>
+  </parent>
   
   <modules>
     <module>crypto</module>
@@ -20,6 +19,5 @@
     <module>jpa</module>
     <module>validation</module>
   </modules>
-
 
 </project>

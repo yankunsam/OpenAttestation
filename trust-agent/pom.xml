@@ -7,12 +7,11 @@
 
   <name>Mount Wilson Trust Agent</name>
 
-    <parent>
-	<groupId>com.intel.mtwilson.core</groupId>
-	<artifactId>mtwilson</artifactId>
-	<version>1.2-SNAPSHOT</version>
-    </parent>
-  
+  <parent>
+    <groupId>com.intel.mtwilson.core</groupId>
+    <artifactId>mtwilson</artifactId>
+    <version>1.2-SNAPSHOT</version>
+  </parent>
 
   <modules>
     <module>HisPrivacyCAWebServices2</module>
@@ -21,7 +20,6 @@
     <module>TrustAgent</module>
     <module>TrustAgentLinuxInstaller</module>
   </modules>
-
 
 </project>
 
