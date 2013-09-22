@@ -532,32 +532,29 @@ public class MleBO extends BaseBO {
                                 TblMle tblMle;
                                 TblPcrManifest tblPcr;
                                 try {
-
-                                    try {
-                                        // First check if the entry exists in the MLE table.
-                                        tblMle = getMleDetails(pcrData.getMleName(),
-                                                        pcrData.getMleVersion(), pcrData.getOsName(),
-                                                        pcrData.getOsVersion(), pcrData.getOemName());
-                                    } catch (NoResultException nre){
-                                        throw new ASException(ErrorCode.WS_MLE_DOES_NOT_EXIST, pcrData.getMleName(), pcrData.getMleVersion());
+                                	tblMle = getMleDetails(pcrData.getMleName(),
+                                            pcrData.getMleVersion(), pcrData.getOsName(),
+                                            pcrData.getOsVersion(), pcrData.getOemName());
+                                	if (tblMle == null && pcrData.getOemName() != null) {
+                                        throw new ASException(ErrorCode.WS_MLE_OEM_DOES_NOT_EXIST, pcrData.getMleName(), pcrData.getMleVersion(), pcrData.getOemName());
                                     }
+                                    if (tblMle == null && pcrData.getOsName() != null) {
+                                        throw new ASException(ErrorCode.WS_MLE_OS_DOES_NOT_EXIST, pcrData.getMleName(), pcrData.getMleVersion(), pcrData.getOsName(),pcrData.getOsVersion());
+                                    }
+                                   // Now we need to check if PCR is already configured. If yes, then
+                                   // we ned to ask the user to use the Update option instead of create
+                                   tblPcr = getPCRWhiteListDetails(tblMle.getId(), pcrData.getPcrName());
+                                   if (tblPcr != null) {
+                                        throw new ASException(ErrorCode.WS_PCR_WHITELIST_ALREADY_EXISTS, pcrData.getPcrName());
+                                   }
 
-                                        // Now we need to check if PCR is already configured. If yes, then
-                                        // we ned to ask the user to use the Update option instead of create
-                                        tblPcr = getPCRWhiteListDetails(tblMle.getId(), pcrData.getPcrName());
-                                        if (tblPcr != null) {
-                                            throw new ASException(ErrorCode.WS_PCR_WHITELIST_ALREADY_EXISTS, pcrData.getPcrName());
-                                        }
+                                   // In order to reuse the addPCRManifest function, we need to create a list and
+                                   // add a single entry into it using the manifest data that we got.
+                                   List<ManifestData> pcrWhiteList = new ArrayList<ManifestData>();
+                                   pcrWhiteList.add(new ManifestData(pcrData.getPcrName(), pcrData.getPcrDigest()));
 
-                                    // In order to reuse the addPCRManifest function, we need to create a list and
-                                    // add a single entry into it using the manifest data that we got.
-                                    List<ManifestData> pcrWhiteList = new ArrayList<ManifestData>();
-                                    pcrWhiteList.add(new ManifestData(pcrData.getPcrName(), pcrData.getPcrDigest()));
-
-                                    // Now add the pcr to the database.
-                                    addPcrManifest(tblMle, pcrWhiteList);
-                                    
-
+                                   // Now add the pcr to the database.
+                                   addPcrManifest(tblMle, pcrWhiteList);
                                 } catch (ASException ase) {
                                     throw ase;
                                 } catch (Exception e) {
@@ -597,24 +594,22 @@ public class MleBO extends BaseBO {
                                 TblPcrManifest tblPcr; 
 
                                 try {
-
-                                    try {
-                                        // First check if the entry exists in the MLE table.
-                                        tblMle = getMleDetails(pcrData.getMleName(),
-                                                        pcrData.getMleVersion(), pcrData.getOsName(),
-                                                        pcrData.getOsVersion(), pcrData.getOemName());
-                                    } catch (NoResultException nre){
-                                        throw new ASException(nre,ErrorCode.WS_MLE_DOES_NOT_EXIST, pcrData.getMleName(), pcrData.getMleVersion());
+                                	tblMle = getMleDetails(pcrData.getMleName(),
+                                            pcrData.getMleVersion(), pcrData.getOsName(),
+                                            pcrData.getOsVersion(), pcrData.getOemName());
+                                	if (tblMle == null && pcrData.getOemName() != null) {
+                                        throw new ASException(ErrorCode.WS_MLE_OEM_DOES_NOT_EXIST, pcrData.getMleName(), pcrData.getMleVersion(), pcrData.getOemName());
+                                    }
+                                    if (tblMle == null && pcrData.getOsName() != null) {
+                                        throw new ASException(ErrorCode.WS_MLE_OS_DOES_NOT_EXIST, pcrData.getMleName(), pcrData.getMleVersion(), pcrData.getOsName(),pcrData.getOsVersion());
                                     }
 
-                                    try {
-                                        // Now we need to check if PCR is already configured. If yes, then
-                                        // we ned to ask the user to use the Update option instead of create
-                                        tblPcr = getPCRWhiteListDetails(tblMle.getId(), pcrData.getPcrName());
-                                    } catch (NoResultException nre) {
-                                        throw new ASException(nre, ErrorCode.WS_PCR_WHITELIST_DOES_NOT_EXIST, pcrData.getPcrName());
+                                    // Now we need to check if PCR is already configured. If yes, then
+                                    // we ned to ask the user to use the Update option instead of create
+                                    tblPcr = getPCRWhiteListDetails(tblMle.getId(), pcrData.getPcrName());
+                                    if (tblPcr == null) {
+                                         throw new ASException(ErrorCode.WS_PCR_WHITELIST_DOES_NOT_EXIST, pcrData.getPcrName());
                                     }
-
                                     // Now update the pcr in the database.
                                     tblPcr.setValue(pcrData.getPcrDigest());
                                     pcrManifestJpaController.edit(tblPcr);
@@ -647,21 +642,19 @@ public class MleBO extends BaseBO {
                                 TblPcrManifest tblPcr;
                                 TblMle tblMle;
                                 try {
-                                    try {
-
-                                        tblMle = getMleDetails(mleName, mleVersion, osName, osVersion, oemName);
-
-                                    } catch (NoResultException nre){
-                                        // If the MLE is not configured, then return back a proper error
-                                        throw new ASException(nre,ErrorCode.WS_MLE_DOES_NOT_EXIST,mleName, mleVersion);
+                                	tblMle = getMleDetails(mleName, mleVersion, osName, osVersion,oemName);
+                                	if (tblMle == null && oemName != null) {
+                                        throw new ASException(ErrorCode.WS_MLE_OEM_DOES_NOT_EXIST, mleName, mleVersion, oemName);
                                     }
-
-                                    try {
-                                        // Now we need to check if PCR value exists. If it does, then we do delete or else
-                                        // we still return true since the data does not exist.
-                                            tblPcr = getPCRWhiteListDetails(tblMle.getId(), pcrName);
-                                    } catch (NoResultException nre) {
-                                        return "true";
+                                    if (tblMle == null && osName != null) {
+                                        throw new ASException(ErrorCode.WS_MLE_OS_DOES_NOT_EXIST, mleName, mleVersion, osName, osVersion);
+                                    }
+                                    
+                                    // Now we need to check if PCR value exists. If it does, then we do delete or else
+                                    // we still return true since the data does not exist.
+                                    tblPcr = getPCRWhiteListDetails(tblMle.getId(), pcrName);
+                                    if (tblPcr == null) {
+                                    	return "true";
                                     }
 
                                     // Delete the PCR white list entry.
