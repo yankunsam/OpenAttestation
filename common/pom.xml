@@ -2,15 +2,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.intel.mtwilson.core.common</groupId>
-  <artifactId>mtwilson-common</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <artifactId>oat-common</artifactId>
+  <version>2.0</version>
   <packaging>pom</packaging>
 
-  <name>Mt Wilson Common Projects</name>
+  <name>Open Attestation Common Projects</name>
   <parent>
     <groupId>com.intel.mtwilson.core</groupId>
-    <artifactId>mtwilson</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <artifactId>oat</artifactId>
+    <version>2.0</version>
   </parent>
   
   <modules>

@@ -6,7 +6,7 @@
   <name>API Client for Java 6</name>
   <description>
       The API Client provides an easy-to-use programming interface to access 
-      Mt Wilson services. Using the API Client, you can manage the Whitelist,
+      attestation services. Using the API Client, you can manage the Whitelist,
       manage the list of hosts being monitored, obtain attestation on the
       status of those hosts, and more. Please see the documentation
       for complete details.
@@ -14,8 +14,8 @@
   
     <parent>
 		<groupId>com.intel.mtwilson.core.integration</groupId>
-		<artifactId>mtwilson-integration</artifactId>
-		<version>1.2-SNAPSHOT</version>
+		<artifactId>oat-integration</artifactId>
+		<version>2.0</version>
     </parent>
 
     <build>
@@ -225,7 +225,7 @@
   <dependencies>
         <dependency>
             <groupId>com.intel.mtwilson.core.common</groupId>
-            <artifactId>mtwilson-crypto</artifactId>
+            <artifactId>oat-crypto</artifactId>
             <version>${project.version}</version>
         </dependency>
 		<!-- stdalex 1/15 jks2db!disk -->
@@ -236,7 +236,7 @@
         </dependency>
         <dependency>
             <groupId>com.intel.mtwilson.core.common</groupId>
-            <artifactId>mtwilson-io</artifactId>
+            <artifactId>oat-io</artifactId>
             <version>${project.version}</version>
         </dependency>
 <dependency>

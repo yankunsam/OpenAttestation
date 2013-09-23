@@ -2,14 +2,14 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.intel.mtwilson.core.integration</groupId>
-  <artifactId>mtwilson-integration</artifactId>
+  <artifactId>oat-integration</artifactId>
   <packaging>pom</packaging>
 
-  <name>Mt Wilson Integration Projects</name>
+  <name>Open Attestation Integration Projects</name>
   <parent>
     <groupId>com.intel.mtwilson.core</groupId>
-    <artifactId>mtwilson</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <artifactId>oat</artifactId>
+    <version>2.0</version>
   </parent>
   
   <modules>

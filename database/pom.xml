@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.intel.mtwilson.core.database</groupId>
-  <artifactId>mtwilson-database</artifactId>
+  <artifactId>oat-database</artifactId>
   <packaging>pom</packaging>
-  <name>Mt Wilson Database Support</name>
+  <name>Open Attestation Database Support</name>
   <parent>
     <groupId>com.intel.mtwilson.core</groupId>
-    <artifactId>mtwilson</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <artifactId>oat</artifactId>
+    <version>2.0</version>
   </parent>
   
   <modules>

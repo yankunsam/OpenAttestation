@@ -6,8 +6,8 @@
 	<name>Attestation Service War</name>
 	<parent>
 		<groupId>com.intel.mtwilson.core.services</groupId>
-		<artifactId>mtwilson-services</artifactId>
-		<version>1.2-SNAPSHOT</version>
+		<artifactId>oat-services</artifactId>
+		<version>2.0</version>
 	</parent>
 	<build>
 		<plugins>
@@ -131,22 +131,22 @@
 		</dependency>
 		<dependency>
 			<groupId>com.intel.mtwilson.core.common</groupId>
-			<artifactId>mtwilson-crypto</artifactId>
+			<artifactId>oat-crypto</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.intel.mtwilson.core.common</groupId>
-			<artifactId>mtwilson-jpa</artifactId>
+			<artifactId>oat-jpa</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.intel.mtwilson.core.common</groupId>
-			<artifactId>mtwilson-io</artifactId>
+			<artifactId>oat-io</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.intel.mtwilson.core.common</groupId>
-			<artifactId>mtwilson-validation</artifactId>
+			<artifactId>oat-validation</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -308,7 +308,7 @@
 
 		<dependency>
 			<groupId>com.intel.mtwilson.core.database</groupId>
-			<artifactId>mtwilson-mysql</artifactId>
+			<artifactId>oat-mysql</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

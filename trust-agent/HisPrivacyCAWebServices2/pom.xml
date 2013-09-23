@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>com.intel.mtwilson.core.trustagent</groupId>
 		<artifactId>trust-agent-parent</artifactId>
-		<version>1.2-SNAPSHOT</version>
+		<version>2.0</version>
 	</parent>
 
 	<!-- these dependencies are only for including the api client, they are 
@@ -238,7 +238,7 @@
 					<dependency>
 						<groupId>com.sun</groupId>
 						<artifactId>tools</artifactId>
-						<version>1.6</version> <!-- Mt Wilson builds target Java 1.6, therefore you must use JDK 1.6 to 
+						<version>1.6</version> <!-- Open Attestation builds target Java 1.6, therefore you must use JDK 1.6 to 
 							compile this. Make sure you set JDK 1.6 as the specific JDK for this maven 
 							project in your IDE in order for this to work. -->
 						<scope>system</scope>

@@ -1,18 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>mtwilson-io</artifactId>
+  <artifactId>oat-io</artifactId>
   <packaging>jar</packaging>
   <name>Common IO</name>
   <description>File and network related objects</description>
-    <parent>
-        <groupId>com.intel.mtwilson.core.common</groupId>
-        <artifactId>mtwilson-common</artifactId>
-        <version>1.2-SNAPSHOT</version>
-    </parent>
+  <parent>
+      <groupId>com.intel.mtwilson.core.common</groupId>
+      <artifactId>oat-common</artifactId>
+      <version>2.0</version>
+  </parent>
 
     <build>
-		<plugins>
+        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -25,7 +25,6 @@
                 </configuration>
             </plugin>
         </plugins>
-
     </build>
 
 

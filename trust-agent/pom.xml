@@ -5,12 +5,12 @@
   <artifactId>trust-agent-parent</artifactId>
   <packaging>pom</packaging>
 
-  <name>Mount Wilson Trust Agent</name>
+  <name>Open Attestation Trust Agent</name>
 
   <parent>
     <groupId>com.intel.mtwilson.core</groupId>
-    <artifactId>mtwilson</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <artifactId>oat</artifactId>
+    <version>2.0</version>
   </parent>
 
   <modules>
