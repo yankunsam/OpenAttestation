@@ -259,6 +259,7 @@ function clearAllFiled(divID) {
 	$('#'+divID).find('input:text').each(function() {
 		if ($(this).attr('disabled') != 'disabled') {
 			$(this).val('');
+			$('#'+divID).parent().find('.errorMessage').remove();
 		}
 	});
 }

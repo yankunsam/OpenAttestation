@@ -217,6 +217,7 @@ function resetDataTable(elementID) {
 	$('#'+elementID).find('tr:not(:last-child)').each(function() {
 		if ($(this).find(':input(:text)').html() != null) {
 			$(this).find(':input(:text)').val('');
+			$(this).find('td:last-child').html('<span class="requiredField">*</span>');
 		}
 	});
 }

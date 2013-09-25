@@ -155,6 +155,7 @@ function clearAllFiled(divID) {
 	$('#'+divID).find('input:text').each(function() {
 		if ($(this).attr('disabled') != 'disabled') {
 			$(this).val('');
+			$('#'+divID).parent().find('.errorMessage').remove();
 		}
 	});
 	$('#'+divID).find('textarea').each(function() {
@@ -165,6 +166,7 @@ function clearAllFiled(divID) {
 	$('#'+divID).find('input:password').each(function() {
 		if ($(this).attr('disabled') != 'disabled') {
 			$(this).val('');
+			$('#'+divID).parent().find('.errorMessage').remove();
 		}
 	});
 }
