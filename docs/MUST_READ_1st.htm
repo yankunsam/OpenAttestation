@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.0.4 (Linux)">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGED" CONTENT="20130930;124829755470057">
+	<STYLE TYPE="text/css">
+	<!--
+		H1 { margin-top: 0.33in; margin-bottom: 0.04in; border: none; padding: 0in; color: #0860a8; line-height: 0.4in; page-break-before: always }
+		H1.western { font-family: "Verdana", sans-serif; font-size: 22pt; font-style: italic }
+		H1.cjk { font-family: "Verdana", sans-serif; font-style: italic }
+		H1.ctl { font-family: "Verdana", sans-serif; font-style: italic }
+		P.msonormal { margin-top: 0.14in; margin-bottom: 0in }
+		H2 { margin-top: 0.28in; margin-bottom: 0.04in; color: #0860a8; font-family: "Verdana", sans-serif; font-size: 14pt; line-height: 0.24in }
+		H5 { margin-top: 0.21in; margin-bottom: 0.07in; color: #0860a8; font-family: "Verdana", sans-serif; line-height: 0.17in }
+		P.msotoc1 { margin-top: 0.1in; margin-bottom: 0.04in; color: #000000; font-family: "Verdana", sans-serif; font-size: 9pt }
+		P.msotoc2 { margin-left: 0.49in; margin-top: 0.01in; margin-bottom: 0.01in; color: #000000; font-family: "Verdana", sans-serif; font-size: 9pt }
+		P.msolistparagraphcxspfirst { margin-left: 0.5in; margin-top: 0.14in; margin-bottom: 0in }
+		P.msolistparagraphcxspmiddle { margin-left: 0.5in; margin-bottom: 0in }
+		P.msolistparagraphcxsplast { margin-left: 0.5in; margin-bottom: 0in }
+		P.headingtoc { margin-top: 0.33in; margin-bottom: 0.04in; border: none; padding: 0in; color: #0860a8; font-family: "Verdana", sans-serif; font-size: 22pt; font-style: italic; font-weight: bold; line-height: 0.4in; page-break-before: always }
+		A:link { color: #0860a8; font-family: "Verdana", sans-serif }
+		A:visited { color: #800080 }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="en-US" LINK="#0860a8" VLINK="#800080" DIR="LTR">
+<H1 CLASS="western" ALIGN=LEFT>OpenAttestation SDK ReadMe</H1>
+<H5 ALIGN=LEFT><FONT SIZE=2 STYLE="font-size: 11pt">Version: 2.0</FONT></H5>
+<H5 ALIGN=LEFT>September 2013</H5>
+<P CLASS="headingtoc" STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.08in; padding-left: 0in; padding-right: 0in">
+Contents</P>
+<P CLASS="msotoc1"><A HREF="#_Toc320543097"><SPAN LANG="en-US">1</SPAN><SPAN STYLE="text-decoration: none">
+</SPAN><SPAN LANG="en-US">Acknowledgements</SPAN></A></P>
+<P CLASS="msotoc1"><A HREF="#_Toc320543098"><SPAN LANG="en-US">2
+Intended Audients</SPAN></A></P>
+<P CLASS="msotoc1"><A HREF="#_Toc320543099"><SPAN LANG="en-US">3
+OpenAttestation SDK</SPAN></A></P>
+<P CLASS="msotoc2" STYLE="margin-left: 0.98in"><A HREF="#_Toc320543100"><SPAN LANG="en-US">3.1
+Security Warning</SPAN></A></P>
+<P CLASS="msotoc2" STYLE="margin-left: 0.98in"><A HREF="#_Toc320543101"><SPAN LANG="en-US">3.2
+What is</SPAN></A></P>
+<P CLASS="msotoc2" STYLE="margin-left: 0.98in"><A HREF="#_Toc320543102"><SPAN LANG="en-US">3.3
+What is Not</SPAN></A></P>
+<P CLASS="msotoc2" STYLE="margin-left: 0.98in"><A HREF="#_Toc320543103"><SPAN LANG="en-US">3.4
+Must do</SPAN></A></P>
+<P CLASS="msotoc1"><A HREF="#_Toc320543104"><SPAN LANG="en-US">4
+Security Recommendation to Software Vendors</SPAN></A></P>
+<P CLASS="msotoc1"><A NAME="_Toc431308718"></A><A NAME="_Toc428761831"></A>
+<A HREF="#_Toc320543105"><SPAN LANG="en-US">5 Recommendation to Cloud
+providers</SPAN></A></P>
+<H1 CLASS="western" STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.08in; padding-left: 0in; padding-right: 0in"><A NAME="_Toc320543097"></A>
+1 Acknowledgements</H1>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">OpenAttestation
+SDK is built based on Host Integrity at Startup (HIS) project
+developed by National Information Assurance research laboratory
+(NIARL) and Mount Wilson project by Intel to measure and report
+status of remote host platforms which contain a Trusted Platform
+Module (TPM).</P>
+<H1 CLASS="western" STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.08in; padding-left: 0in; padding-right: 0in"><A NAME="_Toc320543098"></A>
+<SPAN LANG="en-US">2</SPAN><SPAN STYLE="font-variant: normal">
+</SPAN><SPAN LANG="en-US">Intended Audiences</SPAN></H1>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">The
+intended audiences of this document are Independent Software vendors
+(ISV), developers who are to integrate OpenAttestation SDK into ISV’s
+cloud management tools for product releases. Administrators who are
+to take advantage of remote host integrity checking capability for
+their cloud services by using ISV software packages which has
+OpenAttestation SDK integrated. 
+</P>
+<H1 CLASS="western" STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.08in; padding-left: 0in; padding-right: 0in"><A NAME="_Toc320543099"></A>
+<SPAN LANG="en-US">3</SPAN><SPAN STYLE="font-variant: normal">
+</SPAN><SPAN LANG="en-US">OpenAttestation SDK</SPAN></H1>
+<H2><A NAME="_Toc320543100"></A><SPAN LANG="en-US">3.1</SPAN><SPAN STYLE="font-variant: normal">
+</SPAN><SPAN LANG="en-US">Security Warning</SPAN></H2>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">OpenAttestation
+SDK, by itself, is not a secured software or commercial ready
+product. It is expected that ISVs must enhance and integrate the SDK
+with their software stacks for security evaluation/validation cycles
+before production/distribution.</P>
+<H2><A NAME="_Toc320543101"></A><SPAN LANG="en-US">3.2</SPAN><SPAN STYLE="font-variant: normal">
+</SPAN><SPAN LANG="en-US">What is</SPAN></H2>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">OpenAttestation
+SDK is software components to add cloud providers with capability of
+establishing hosts/clients integrity by remotely retrieve integrity
+reports saved in Hosts/Clients TPM.</P>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">The
+SDK is expected to be security enhanced, integrated with ISV’s
+cloud management software, and distributed/supported by ISV to cloud
+providers.</P>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">The
+integrated ISV software to be hosted and operated by cloud providers.</P>
+<H2><A NAME="_Toc320543102"></A><SPAN LANG="en-US">3.3</SPAN><SPAN STYLE="font-variant: normal">
+</SPAN><SPAN LANG="en-US">What is Not</SPAN></H2>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">SDK
+does not add security enhancement to existing database or network
+infrastructure, rather it uses underlying infrastructure supported by
+ISVs and operated by cloud providers.</P>
+<H2><A NAME="_Toc320543103"></A><SPAN LANG="en-US">3.4</SPAN><SPAN STYLE="font-variant: normal">
+</SPAN><SPAN LANG="en-US">Must do</SPAN></H2>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">Attestation
+service is hosted by cloud providers, Hosts/Clients privacy is cloud
+providers or ISVs responsibility.</P>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">ISVs
+must follow industry security standards and recommendation to
+integrate OpenAttestation SDK with their software stack.</P>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">Cloud
+providers should follow industry security standards and
+recommendation to operate and maintain secured infrastructure. 
+</P>
+<H1 CLASS="western" STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.08in; padding-left: 0in; padding-right: 0in"><A NAME="_Toc320543104"></A>
+<SPAN LANG="en-US">4</SPAN><SPAN STYLE="font-variant: normal">
+</SPAN><SPAN LANG="en-US">Security Recommendation to Software Vendors</SPAN></H1>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">Besides
+recommendation bellow, ISVs should follow industry security standards
+in integrating OpenAttestation into their software stacks.</P>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">OpenAttestation
+SDK exposing APIs, Integrity query API for management software to
+remotely query host(s) integrity and Whitelist API for administers to
+remotely setup/update good, know measurement data. Where these APIs
+should be access controlled from general users due to privacy and
+security purpose. To ensure access controls to APIs, ISV should
+perform following designs: 
+</P>
+<OL>
+	<LI><P CLASS="msolistparagraphcxspfirst" STYLE="margin-top: 0in; margin-bottom: 0.2in">
+	ISV should clearly document than a deployment should always setup
+	web container’s 2-way SSL/TLS authentication between Access
+	platforms and Attestation service in order to ensure controlled
+	platforms can access to APIs. Fail to setup authentication, a cloud
+	infrastructure’s privacy and security can be compromised.</P>
+	<LI><P CLASS="msolistparagraphcxspmiddle" STYLE="margin-bottom: 0.2in">
+	ISV should work with Cloud provider to establish their credential
+	control in accessing APIs. Note all the APIs requests to Attestation
+	server has an authentication blob which enables ISV software to pass
+	access credential to attestation service, which attestation service
+	is only to pass to an ISV authentication specific validation service
+	in SDK. It is ISV’s responsibility who integrates SDK should fully
+	implement the validation service.</P>
+	<LI><P CLASS="msolistparagraphcxsplast" STYLE="margin-bottom: 0.2in">
+	ISV should enhance HostAgent/TrustAgent installation package to be
+	created into a secured smart media to keep attestation service keys
+	within controlled, secured access environment.</P>
+</OL>
+<H1 CLASS="western" STYLE="border-top: none; border-bottom: 1.00pt solid #000000; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.08in; padding-left: 0in; padding-right: 0in"><A NAME="_Toc320543105"></A>
+5<SPAN STYLE="font-variant: normal"> </SPAN>Recommendation to Cloud
+providers</H1>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">Cloud
+providers should follow industry security standards in operates and
+maintain infrastructure.</P>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">Attestation
+infrastructure takes PrivacyCA approach to certificate Hosts TPM
+keys. Cloud providers should securely safe-keeping PrivacyCA and
+EKsigning Key pairs.</P>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">Attestation
+service installation: 
+</P>
+<OL>
+	<LI><P CLASS="msolistparagraphcxspfirst" STYLE="margin-top: 0in; margin-bottom: 0.2in">
+	Attestation service and management tools accessing API services are
+	Root of Trust of overall cloud infrastructure -- Cloud provider must
+	ensure these components are installed with underlying systems are in
+	a trusted state.</P>
+	<LI><P CLASS="msolistparagraphcxspmiddle" STYLE="margin-bottom: 0.2in">
+	Cloud provider must ensure the correct PrivacyCA certificate is
+	installed into Appraiser.</P>
+	<LI><P CLASS="msolistparagraphcxsplast" STYLE="margin-bottom: 0.2in">
+	Whitelist database must be kept in a secured, controlled
+	environment.</P>
+</OL>
+<P CLASS="msonormal" STYLE="margin-top: 0in; margin-bottom: 0.2in">HostAgent/TrustAgent,
+agent code to be installed into Hosts, installation must ensure:</P>
+<OL>
+	<LI><P CLASS="msolistparagraphcxspfirst" STYLE="margin-top: 0in; margin-bottom: 0.2in">
+	Host is in a trusted state for Agent installation.</P>
+	<LI><P CLASS="msolistparagraphcxspmiddle" STYLE="margin-bottom: 0.2in">
+	Agent must be installed by a trusted entity with auditable process.</P>
+	<LI><P CLASS="msolistparagraphcxsplast" STYLE="margin-bottom: 0.2in">
+	EKsigningKey must not be installed into Host. 
+	</P>
+</OL>
+</BODY>
+</HTML>
