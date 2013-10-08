@@ -258,15 +258,11 @@ public class HisReportUtil {
 		HisAuditDao auditLogDao = new HisAuditDao();
 		AuditLog newAuditLog = auditLogDao.getLastAuditLog(machineNameInput);
 		AttestRequest latestPolledRequest = attestDao.getLatestPolledRequest(machineNameInput);
-		if (latestPolledRequest != null && newAuditLog != null)
-		{
+		if (latestPolledRequest.getId() != null && newAuditLog != null) {
 			System.out.println("latestPolledRequest" +latestPolledRequest.getId());
-	     	if (latestPolledRequest.getId()!=null && latestPolledRequest.getResult()==null)
-	     	{
-				 latestPolledRequest.setAuditLog(newAuditLog);
-				 latestPolledRequest = AttestService.validatePCRReport(latestPolledRequest, machineNameInput);
-				 attestDao.updateRequest(latestPolledRequest);
-			 }
+			latestPolledRequest.setAuditLog(newAuditLog);
+			latestPolledRequest = AttestService.validatePCRReport(latestPolledRequest, machineNameInput);
+			attestDao.updateRequest(latestPolledRequest);
 	     	System.out.println("------------------------OpenAttestation complete!------------------------------------------");
 		 /****************************************************************************************************/
 		}
