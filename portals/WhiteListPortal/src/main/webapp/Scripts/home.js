@@ -214,10 +214,13 @@ function fnAddNewOSSuccess(response) {
 }
 
 function resetDataTable(elementID) {
+	$('#'+elementID).parent().find('.errorMessage').remove();
 	$('#'+elementID).find('tr:not(:last-child)').each(function() {
 		if ($(this).find(':input(:text)').html() != null) {
 			$(this).find(':input(:text)').val('');
-			$(this).find('td:last-child').html('<span class="requiredField">*</span>');
+			if (!$(this).find("td:eq(1)").html().contains('osDescription')){
+				$(this).find('td:last-child').html('<span class="requiredField">*</span>');
+			}
 		}
 	});
 }
