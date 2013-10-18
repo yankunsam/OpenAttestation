@@ -17,6 +17,7 @@ package com.intel.mtwilson.agent;
 
 import com.intel.mountwilson.manifest.data.IManifest;
 import com.intel.mountwilson.manifest.strategy.TrustAgentStrategy;
+import com.intel.mtwilson.agent.citrix.CitrixHostAgentFactory;
 import com.intel.mtwilson.agent.intel.IntelHostAgentFactory;
 import com.intel.mtwilson.as.data.TblHosts;
 import com.intel.mtwilson.crypto.SimpleKeystore;
@@ -54,6 +55,7 @@ public class HostAgentFactory {
     public HostAgentFactory() {
         // we initialize the map with the known vendors; but this could also be done through IoC
         vendorFactoryMap.put(Vendor.INTEL, new IntelHostAgentFactory());
+        vendorFactoryMap.put(Vendor.CITRIX, new CitrixHostAgentFactory());
     }
     
     /**

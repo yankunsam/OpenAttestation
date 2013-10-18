@@ -23,5 +23,4 @@ public enum Vendor {
     INTEL,
     CITRIX,
     VMWARE;
-    
 }

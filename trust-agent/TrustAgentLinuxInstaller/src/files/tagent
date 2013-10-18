@@ -244,8 +244,7 @@ function main {
    case "$1" in
       version)
         echo "${package_name}"
-	echo "Version ${VERSION:-Unknown}"
-	echo "Build ${BUILD:-Unknown}"
+		echo "Version ${VERSION:-Unknown}"
         ;;
       start)
          startService

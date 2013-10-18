@@ -30,6 +30,27 @@
 					<input type="text" class="textBoxClass" id="MainContent_tbHostPort" value="9999" >
 				</div>
 			</div>
+
+			<div id="citrixStringElement">
+                                <div class="singleDiv">
+                                        <div class="labelDiv">XenServer Details :</div>
+                                        <div class="valueDiv">&nbsp;
+                                                <!-- <textarea class="textAreaBoxClass" id="MainContent_tbVCenterDetails" cols="20" rows="2"></textarea> -->
+                                        </div>
+                                </div>
+                                <div class="subSingleDiv">
+                                                <div class="subLabelDivgkv labelDiv">Login ID :</div>
+                                                <div class="valueDiv">
+                                                        <input type="text" maxlength="200" id="MainContent_tbVcitrixLoginId" class="textBoxClass">
+                                                </div>
+                                </div>
+                                <div class="subSingleDiv">
+                                                <div class="subLabelDivgkv labelDiv">Password :</div>
+                                                <div class="valueDiv">
+                                                        <input type="password" maxlength="200" id="MainContent_tbVcitrixPass" class="textBoxClass">
+                                                </div>
+                                </div>
+                        </div>
 			
 			<div class="singleDiv">
 				<div class="labelDiv">Description :</div>

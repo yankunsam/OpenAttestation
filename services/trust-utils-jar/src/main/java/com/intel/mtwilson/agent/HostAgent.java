@@ -17,6 +17,7 @@ package com.intel.mtwilson.agent;
 
 import com.intel.mountwilson.manifest.data.IManifest;
 import java.io.IOException;
+import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 
@@ -77,6 +78,14 @@ public interface HostAgent {
      * Vmware agent should return false.
      * @return 
      */
+    
+    /**
+     * AIK's are RSA public keys.  The certificates only exist when a Privacy CA or
+     * a Mt Wilson CA signs the public key to create a certificate.
+     * @return 
+     */
+    PublicKey getAik();
+    
     boolean isAikCaAvailable();
     
     /**

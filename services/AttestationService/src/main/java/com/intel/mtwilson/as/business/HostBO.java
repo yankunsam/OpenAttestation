@@ -36,6 +36,7 @@ import com.intel.mtwilson.datatypes.*;
 import com.intel.mtwilson.util.ResourceFinder;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,12 +70,14 @@ public class HostBO extends BaseBO {
                                                     TblHosts tblHosts = new TblHosts();
                                                     tblHosts.setTlsPolicyName("TRUST_FIRST_CERTIFICATE");
                                                     tblHosts.setTlsKeystore(null);
+                                                    log.debug("stdalex addHost cs == " + host.getAddOn_Connection_String());
                                                     tblHosts.setAddOnConnectionInfo(host.getAddOn_Connection_String());
                                                     if( host.getHostName() != null ) { tblHosts.setName(host.getHostName().toString()); }
                                                     if( host.getIPAddress() != null ) { tblHosts.setIPAddress(host.getIPAddress().toString()); }
                                                     if( host.getPort() != null ) { tblHosts.setPort(host.getPort()); }
 
                                                     if (canFetchAIKCertificateForHost(host.getVmm().getName())) { // datatype.Vmm
+                                                        if(!host.getAddOn_Connection_String().toLowerCase().contains("citrix")){
                                                             certificate = getAIKCertificateForHost(tblHosts, host);
 															 // we have to check that the aik certificate was signed by a trusted privacy ca
 															X509Certificate hostAikCert = X509Util.decodePemCertificate(certificate);
@@ -86,6 +89,7 @@ public class HostBO extends BaseBO {
 															privacyCaCert.checkValidity();
 															// verify the trusted privacy ca signed this aik cert
 															hostAikCert.verify(privacyCaCert.getPublicKey()); // NoSuchAlgorithmException, InvalidKeyException, NoSuchProviderException, SignatureException
+                                                        }
                                                    }
                                                     else { // ESX host so get the location for the host and store in the
                                                                     // table
@@ -104,6 +108,9 @@ public class HostBO extends BaseBO {
                                                 throw new ASException(e,ErrorCode.AS_ENCRYPTION_ERROR, e.getCause() == null ? e.getMessage() : e.getCause().getMessage());
                                             } 
                                             catch (Exception e) {
+                                                    log.debug("beggining stack trace --------------");
+                                                    e.printStackTrace();
+                                                    log.debug("end stack trace --------------");
                                                     throw new ASException(e);
                                             }
                                     return "true";
@@ -278,14 +285,14 @@ public class HostBO extends BaseBO {
 		if( agent.isAikAvailable() ) {
 		    X509Certificate cert = agent.getAikCertificate();
 		    try {
-			return X509Util.encodePemCertificate(cert);
+                return X509Util.encodePemCertificate(cert);
 		    }
 		    catch(Exception e) {
-			log.error("Cannot encode AIK certificate: "+e.toString(), e);
-			return null;
+                log.error("Cannot encode AIK certificate: "+e.toString(), e);
+                return null;
 		    }
-		}
-		return null;
+        }
+        return null;
 	}
 
 
