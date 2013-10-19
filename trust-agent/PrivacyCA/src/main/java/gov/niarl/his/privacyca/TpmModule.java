@@ -144,6 +144,7 @@ public class TpmModule {
 			newExeName = TpmModuleProperties.getProperty(new_EXE_NAME, "NIARL_TPM_Module");
 			newTrousersMode = TpmModuleProperties.getProperty(new_TROUSERS_MODE, "False");
 			debugMode = TpmModuleProperties.getProperty(DEBUG_MODE, "False");
+			//System.out.println("debug mode: " + debugMode);
 		} catch (FileNotFoundException e) {
 			System.out.println("Error finding TPM Module properties file; using defaults.");
 		} catch (IOException e) {
@@ -167,7 +168,11 @@ public class TpmModule {
 		String commandLine = newTpmModuleExePath + newExeName + " -mode " + mode + " " + args;
 		if (TrousersMode && useTrousersMode)
 			commandLine += " -trousers";
-		if (DebugMode) System.out.println("\"" + commandLine + "\"");
+		//System.out.println("\"" + commandLine + "\"");
+		if (DebugMode){ 
+                	System.out.println("\"" + commandLine + "\"");
+			Logger.getAnonymousLogger().info("Command: " + commandLine);
+		}
 		Process p = Runtime.getRuntime().exec(commandLine);
 		String line = "";
 		if (returnCount != 0){
@@ -187,8 +192,10 @@ public class TpmModule {
 			}
 			
 		}
-		if (DebugMode) System.out.println("\"" + line + "\"");
-		
+		if (DebugMode){
+			System.out.println("\"" + line + "\"");
+			Logger.getAnonymousLogger().info("Output: " + line);
+		}
 		//do a loop to wait for an exit value
 		
 		boolean isRunning;
