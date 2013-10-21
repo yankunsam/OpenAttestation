@@ -57,7 +57,7 @@ public class GenerateQuoteCmd implements ICommand {
     
     @Override
     public void execute() throws TAException {
-        String commandLine = String.format("aikquote -p %s -c %s %s %s %s",
+        String commandLine = String.format("NIARL_TPM_Module -p %s -c %s %s %s %s -mode 25",
         		context.getIdentityAuthKey(),
                 context.getNonceFileName(),
                 context.getAikBlobFileName(),

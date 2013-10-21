@@ -56,7 +56,7 @@ public class CommandUtil {
         
 
         if (Config.isDebug()) {
-            log.info( "\"{0}\"", commandLine);
+            log.info( "commandLine: " + commandLine);
         }
 
         Process p = Runtime.getRuntime().exec(commandLine);
@@ -104,9 +104,9 @@ public class CommandUtil {
     }
 
     private static void checkError(int exitValue, String commandLine) throws TAException {
-        log.info( "Return code {0}", exitValue);
+        log.info( "Return code: " + exitValue);
 
-        if (exitValue != 0) {
+        if (exitValue == 1) {
             throw new TAException(ErrorCode.FATAL_ERROR, "Error while running command" + commandLine);
         }
 

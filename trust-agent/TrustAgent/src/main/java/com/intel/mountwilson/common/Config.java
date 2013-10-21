@@ -57,7 +57,7 @@ public class Config {
 		try {
 			propFile = TAConfig.getFile("trustagent.properties");
 			homeFolder = propFile.getAbsolutePath();
-			homeFolder = homeFolder.substring(0,homeFolder.indexOf("trustagent.properties"));
+			homeFolder = homeFolder.substring(0,homeFolder.indexOf("trustagent.properties") -1);
 			LoggerFactory.getLogger(Config.class.getName()).warn("Home folder. Using " + homeFolder);
 		} catch (FileNotFoundException e) {
 			LoggerFactory.getLogger(Config.class.getName()).warn("Could Not find the home folder. Using " + homeFolder);

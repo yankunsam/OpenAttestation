@@ -21,6 +21,7 @@
 #include <tss/tspi.h>
 #include <tss/tss_error.h>
 #include <tss/tss_defines.h>
+#include <trousers/tss.h>
 //#include "tspi.h"
 //#include "tss_error.h"
 //#include "tss_defines.h"
@@ -32,6 +33,8 @@
 #include <fstream>
 #include <string>
 #include <time.h>
+#include <arpa/inet.h>
+
 using namespace std;
 
 #undef NULL
@@ -81,7 +84,8 @@ public:
 				MODE_GET_RAND,
 				MODE_SIGN,
 				MODE_CREATE_EK,
-				MODE_QUOTE2};
+				MODE_QUOTE2,
+				MODE_QUOTE3};
 
 	bool		b_debug,
 				b_log,
@@ -133,6 +137,7 @@ public:
 	void		decrypt();
 	void		create_ek();
 	void		quote2();
+	int		quote3();
 };
 
 #endif

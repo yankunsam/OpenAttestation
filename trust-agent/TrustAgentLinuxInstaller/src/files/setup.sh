@@ -148,15 +148,6 @@ fix_redhat_libcrypto
     echo "Compiling TPM commands... "
     cd commands
     COMPILE_OK=''
-    make 2>&1 > /dev/null
-    # identity and takeownership commands not needed with NIARL PRIVACY CA
-    if [ -e aikquote ]; then
-      cp aikquote ${package_dir}/bin
-      COMPILE_OK=yes
-      echo_success "OK"
-    else
-      echo_failure "FAILED"
-    fi
     #compile and install NIARL_TPM_Module
     echo "Compiling NIARL_TPM_Module... "
     make -C ./TPMModule/plain/linux/ 2>&1 > /dev/null
