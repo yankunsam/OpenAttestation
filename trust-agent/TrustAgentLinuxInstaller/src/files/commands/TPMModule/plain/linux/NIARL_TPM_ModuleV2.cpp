@@ -5648,7 +5648,7 @@ int NIARL_TPM_ModuleV2::quote3(){
 	result = Tspi_Context_LoadKeyByUUID(hContext,
 			TSS_PS_TYPE_SYSTEM, SRK_UUID, &hSRK); CKERR;
 	result = Tspi_GetPolicyObject (hSRK, TSS_POLICY_USAGE, &hSrkPolicy); CKERR;
-	result = Tspi_Policy_SetSecret(hSrkPolicy, TSS_SECRET_MODE_PLAIN,
+	result = Tspi_Policy_SetSecret(hSrkPolicy, TSS_SECRET_MODE_SHA1,
 			sizeof(srkSecret), srkSecret); CKERR;
 	result = Tspi_Context_GetTpmObject (hContext, &hTPM); CKERR;
 
