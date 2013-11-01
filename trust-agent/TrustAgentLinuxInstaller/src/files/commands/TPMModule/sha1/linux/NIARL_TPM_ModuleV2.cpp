@@ -367,7 +367,7 @@ void NIARL_TPM_ModuleV2::take_ownership()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_PLAIN, ownerauth.size, ownerauth.blob);
+	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_SHA1, ownerauth.size, ownerauth.blob);
 		if(b_debug)	cerr << ' ' << result << " owner auth" << endl;
 		if(b_log)	cerr << ' ' << result << " owner auth" << endl;
 
@@ -392,7 +392,7 @@ void NIARL_TPM_ModuleV2::take_ownership()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -424,7 +424,7 @@ void NIARL_TPM_ModuleV2::take_ownership()
 		if(b_debug)	cerr << ' ' << result << " create ek policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create ek policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_ek, TSS_SECRET_MODE_PLAIN, ownerauth.size, ownerauth.blob);
+	result = Tspi_Policy_SetSecret(policy_ek, TSS_SECRET_MODE_SHA1, ownerauth.size, ownerauth.blob);
 		if(b_debug)	cerr << ' ' << result << " set auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set auth" << endl;
 
@@ -548,7 +548,7 @@ void NIARL_TPM_ModuleV2::clear_ownership()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_PLAIN, ownerauth.size, ownerauth.blob);
+	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_SHA1, ownerauth.size, ownerauth.blob);
 		if(b_debug)	cerr << ' ' << result << " owner auth" << endl;
 		if(b_log)	cerr << ' ' << result << " owner auth" << endl;
 
@@ -727,7 +727,7 @@ void NIARL_TPM_ModuleV2::collate_identity()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_PLAIN, ownerauth.size, ownerauth.blob);
+	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_SHA1, ownerauth.size, ownerauth.blob);
 		if(b_debug)	cerr << ' ' << result << " owner auth" << endl;
 		if(b_log)	cerr << ' ' << result << " owner auth" << endl;
 
@@ -756,7 +756,7 @@ void NIARL_TPM_ModuleV2::collate_identity()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -784,7 +784,7 @@ void NIARL_TPM_ModuleV2::collate_identity()
 		if(b_debug)	cerr << ' ' << result << " create pcak policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create pcak policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_pcak, TSS_SECRET_MODE_PLAIN, ownerauth.size, ownerauth.blob);
+	result = Tspi_Policy_SetSecret(policy_pcak, TSS_SECRET_MODE_SHA1, ownerauth.size, ownerauth.blob);
 		if(b_debug)	cerr << ' ' << result << " set auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set auth" << endl;
 
@@ -809,7 +809,7 @@ void NIARL_TPM_ModuleV2::collate_identity()
 		if(b_debug)	cerr << ' ' << result << " create aik policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create aik policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_aik, TSS_SECRET_MODE_PLAIN, aikauth.size, aikauth.blob);
+	result = Tspi_Policy_SetSecret(policy_aik, TSS_SECRET_MODE_SHA1, aikauth.size, aikauth.blob);
 		if(b_debug)	cerr << ' ' << result << " set aik auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set aik auth" << endl;
 
@@ -1128,7 +1128,7 @@ void NIARL_TPM_ModuleV2::activate_identity()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_PLAIN, ownerauth.size, ownerauth.blob);
+	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_SHA1, ownerauth.size, ownerauth.blob);
 		if(b_debug)	cerr << ' ' << result << " owner auth" << endl;
 		if(b_log)	cerr << ' ' << result << " owner auth" << endl;
 
@@ -1157,7 +1157,7 @@ void NIARL_TPM_ModuleV2::activate_identity()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -1186,7 +1186,7 @@ void NIARL_TPM_ModuleV2::activate_identity()
 		if(b_debug)	cerr << ' ' << result << " create aik policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create aik policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_aik, TSS_SECRET_MODE_PLAIN, aikauth.size, aikauth.blob);
+	result = Tspi_Policy_SetSecret(policy_aik, TSS_SECRET_MODE_SHA1, aikauth.size, aikauth.blob);
 		if(b_debug)	cerr << ' ' << result << " set aik auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set aik auth" << endl;
 
@@ -1362,7 +1362,7 @@ void NIARL_TPM_ModuleV2::quote()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -1391,7 +1391,7 @@ void NIARL_TPM_ModuleV2::quote()
 		if(b_debug)	cerr << ' ' << result << " create aik policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create aik policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_aik, TSS_SECRET_MODE_PLAIN, aikauth.size, aikauth.blob);
+	result = Tspi_Policy_SetSecret(policy_aik, TSS_SECRET_MODE_SHA1, aikauth.size, aikauth.blob);
 		if(b_debug)	cerr << ' ' << result << " set aik auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set aik auth" << endl;
 
@@ -1605,7 +1605,7 @@ throw ERROR_MODE_DISABLED;
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_PLAIN, ownerauth.size, ownerauth.blob);
+	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_SHA1, ownerauth.size, ownerauth.blob);
 		if(b_debug)	cerr << ' ' << result << " owner auth" << endl;
 		if(b_log)	cerr << ' ' << result << " owner auth" << endl;
 
@@ -1629,7 +1629,7 @@ throw ERROR_MODE_DISABLED;
 		if(b_debug)	cerr << ' ' << result << " create rek policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create rek policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_rek, TSS_SECRET_MODE_PLAIN, ownerauth.size, ownerauth.blob);
+	result = Tspi_Policy_SetSecret(policy_rek, TSS_SECRET_MODE_SHA1, ownerauth.size, ownerauth.blob);
 		if(b_debug)	cerr << ' ' << result << " set rek auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set rek auth" << endl;
 
@@ -1788,7 +1788,7 @@ throw ERROR_MODE_DISABLED;
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_PLAIN, ownerauth.size, ownerauth.blob);
+	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_SHA1, ownerauth.size, ownerauth.blob);
 		if(b_debug)	cerr << ' ' << result << " owner auth" << endl;
 		if(b_log)	cerr << ' ' << result << " owner auth" << endl;
 
@@ -1948,7 +1948,7 @@ void NIARL_TPM_ModuleV2::create_key()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -2000,7 +2000,7 @@ void NIARL_TPM_ModuleV2::create_key()
 		if(b_debug)	cerr << ' ' << result << " create key policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create key policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_key, TSS_SECRET_MODE_PLAIN, keyauth.size, keyauth.blob);
+	result = Tspi_Policy_SetSecret(policy_key, TSS_SECRET_MODE_SHA1, keyauth.size, keyauth.blob);
 		if(b_debug)	cerr << ' ' << result << " set key auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set key auth" << endl;
 
@@ -2219,7 +2219,7 @@ void NIARL_TPM_ModuleV2::set_key()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -2283,7 +2283,7 @@ void NIARL_TPM_ModuleV2::set_key()
 		if(b_debug)	cerr << ' ' << result << " create key policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create key policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_key, TSS_SECRET_MODE_PLAIN, keyauth.size, keyauth.blob);
+	result = Tspi_Policy_SetSecret(policy_key, TSS_SECRET_MODE_SHA1, keyauth.size, keyauth.blob);
 		if(b_debug)	cerr << ' ' << result << " set key auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set key auth" << endl;
 
@@ -2453,7 +2453,7 @@ void NIARL_TPM_ModuleV2::get_key()
 			if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 			if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-		result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_PLAIN, ownerauth.size, ownerauth.blob);
+		result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_SHA1, ownerauth.size, ownerauth.blob);
 			if(b_debug)	cerr << ' ' << result << " owner auth" << endl;
 			if(b_log)	cerr << ' ' << result << " owner auth" << endl;
 
@@ -2483,7 +2483,7 @@ void NIARL_TPM_ModuleV2::get_key()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -2571,7 +2571,7 @@ void NIARL_TPM_ModuleV2::get_key()
 			if(b_debug)	cerr << ' ' << result << " create key policy" << endl;
 			if(b_log)	cerr << ' ' << result << " create key policy" << endl;
 
-		result = Tspi_Policy_SetSecret(policy_key, TSS_SECRET_MODE_PLAIN, keyauth.size, keyauth.blob);
+		result = Tspi_Policy_SetSecret(policy_key, TSS_SECRET_MODE_SHA1, keyauth.size, keyauth.blob);
 			if(b_debug)	cerr << ' ' << result << " set key auth" << endl;
 			if(b_log)	cerr << ' ' << result << " set key auth" << endl;
 
@@ -2764,7 +2764,7 @@ void NIARL_TPM_ModuleV2::clear_key()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -2828,7 +2828,7 @@ void NIARL_TPM_ModuleV2::clear_key()
 		if(b_debug)	cerr << ' ' << result << " create key policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create key policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_key, TSS_SECRET_MODE_PLAIN, keyauth.size, keyauth.blob);
+	result = Tspi_Policy_SetSecret(policy_key, TSS_SECRET_MODE_SHA1, keyauth.size, keyauth.blob);
 		if(b_debug)	cerr << ' ' << result << " set key auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set key auth" << endl;
 
@@ -2964,7 +2964,7 @@ void NIARL_TPM_ModuleV2::set_credential()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_PLAIN, ownerauth.size, ownerauth.blob);
+	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_SHA1, ownerauth.size, ownerauth.blob);
 		if(b_debug)	cerr << ' ' << result << " owner auth" << endl;
 		if(b_log)	cerr << ' ' << result << " owner auth" << endl;
 
@@ -3136,7 +3136,7 @@ void NIARL_TPM_ModuleV2::get_credential()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_PLAIN, ownerauth.size, ownerauth.blob);
+	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_SHA1, ownerauth.size, ownerauth.blob);
 		if(b_debug)	cerr << ' ' << result << " owner auth" << endl;
 		if(b_log)	cerr << ' ' << result << " owner auth" << endl;
 
@@ -3338,7 +3338,7 @@ void NIARL_TPM_ModuleV2::clear_credential()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_PLAIN, ownerauth.size, ownerauth.blob);
+	result = Tspi_Policy_SetSecret(policy_tpm, TSS_SECRET_MODE_SHA1, ownerauth.size, ownerauth.blob);
 		if(b_debug)	cerr << ' ' << result << " owner auth" << endl;
 		if(b_log)	cerr << ' ' << result << " owner auth" << endl;
 
@@ -3519,7 +3519,7 @@ void NIARL_TPM_ModuleV2::seal()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -3543,7 +3543,7 @@ void NIARL_TPM_ModuleV2::seal()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_encdata, TSS_SECRET_MODE_PLAIN, encauth.size, encauth.blob);
+	result = Tspi_Policy_SetSecret(policy_encdata, TSS_SECRET_MODE_SHA1, encauth.size, encauth.blob);
 		if(b_debug)	cerr << ' ' << result << " encdata auth" << endl;
 		if(b_log)	cerr << ' ' << result << " encdata auth" << endl;
 
@@ -3736,7 +3736,7 @@ void NIARL_TPM_ModuleV2::unseal()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -3764,7 +3764,7 @@ void NIARL_TPM_ModuleV2::unseal()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_encdata, TSS_SECRET_MODE_PLAIN, encauth.size, encauth.blob);
+	result = Tspi_Policy_SetSecret(policy_encdata, TSS_SECRET_MODE_SHA1, encauth.size, encauth.blob);
 		if(b_debug)	cerr << ' ' << result << " encdata auth" << endl;
 		if(b_log)	cerr << ' ' << result << " encdata auth" << endl;
 
@@ -3942,7 +3942,7 @@ void NIARL_TPM_ModuleV2::bind()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -3976,7 +3976,7 @@ void NIARL_TPM_ModuleV2::bind()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_bind, TSS_SECRET_MODE_PLAIN, bindauth.size, bindauth.blob);
+	result = Tspi_Policy_SetSecret(policy_bind, TSS_SECRET_MODE_SHA1, bindauth.size, bindauth.blob);
 		if(b_debug)	cerr << ' ' << result << " key auth" << endl;
 		if(b_log)	cerr << ' ' << result << " key auth" << endl;
 
@@ -4004,7 +4004,7 @@ void NIARL_TPM_ModuleV2::bind()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_encdata, TSS_SECRET_MODE_PLAIN, encauth.size, encauth.blob);
+	result = Tspi_Policy_SetSecret(policy_encdata, TSS_SECRET_MODE_SHA1, encauth.size, encauth.blob);
 		if(b_debug)	cerr << ' ' << result << " encdata auth" << endl;
 		if(b_log)	cerr << ' ' << result << " encdata auth" << endl;
 
@@ -4192,7 +4192,7 @@ void NIARL_TPM_ModuleV2::unbind()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -4226,7 +4226,7 @@ void NIARL_TPM_ModuleV2::unbind()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_bind, TSS_SECRET_MODE_PLAIN, bindauth.size, bindauth.blob);
+	result = Tspi_Policy_SetSecret(policy_bind, TSS_SECRET_MODE_SHA1, bindauth.size, bindauth.blob);
 		if(b_debug)	cerr << ' ' << result << " key auth" << endl;
 		if(b_log)	cerr << ' ' << result << " key auth" << endl;
 
@@ -4258,7 +4258,7 @@ void NIARL_TPM_ModuleV2::unbind()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_encdata, TSS_SECRET_MODE_PLAIN, encauth.size, encauth.blob);
+	result = Tspi_Policy_SetSecret(policy_encdata, TSS_SECRET_MODE_SHA1, encauth.size, encauth.blob);
 		if(b_debug)	cerr << ' ' << result << " encdata auth" << endl;
 		if(b_log)	cerr << ' ' << result << " encdata auth" << endl;
 
@@ -4456,7 +4456,7 @@ void NIARL_TPM_ModuleV2::seal_bind()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -4490,7 +4490,7 @@ void NIARL_TPM_ModuleV2::seal_bind()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_bind, TSS_SECRET_MODE_PLAIN, bindauth.size, bindauth.blob);
+	result = Tspi_Policy_SetSecret(policy_bind, TSS_SECRET_MODE_SHA1, bindauth.size, bindauth.blob);
 		if(b_debug)	cerr << ' ' << result << " key auth" << endl;
 		if(b_log)	cerr << ' ' << result << " key auth" << endl;
 
@@ -4518,7 +4518,7 @@ void NIARL_TPM_ModuleV2::seal_bind()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_encdata, TSS_SECRET_MODE_PLAIN, encauth.size, encauth.blob);
+	result = Tspi_Policy_SetSecret(policy_encdata, TSS_SECRET_MODE_SHA1, encauth.size, encauth.blob);
 		if(b_debug)	cerr << ' ' << result << " encdata auth" << endl;
 		if(b_log)	cerr << ' ' << result << " encdata auth" << endl;
 
@@ -4745,7 +4745,7 @@ void NIARL_TPM_ModuleV2::unseal_unbind()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -4779,7 +4779,7 @@ void NIARL_TPM_ModuleV2::unseal_unbind()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_bind, TSS_SECRET_MODE_PLAIN, bindauth.size, bindauth.blob);
+	result = Tspi_Policy_SetSecret(policy_bind, TSS_SECRET_MODE_SHA1, bindauth.size, bindauth.blob);
 		if(b_debug)	cerr << ' ' << result << " key auth" << endl;
 		if(b_log)	cerr << ' ' << result << " key auth" << endl;
 
@@ -4811,7 +4811,7 @@ void NIARL_TPM_ModuleV2::unseal_unbind()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_encdata, TSS_SECRET_MODE_PLAIN, encauth.size, encauth.blob);
+	result = Tspi_Policy_SetSecret(policy_encdata, TSS_SECRET_MODE_SHA1, encauth.size, encauth.blob);
 		if(b_debug)	cerr << ' ' << result << " encdata auth" << endl;
 		if(b_log)	cerr << ' ' << result << " encdata auth" << endl;
 
@@ -5078,7 +5078,7 @@ void NIARL_TPM_ModuleV2::sign()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -5113,7 +5113,7 @@ void NIARL_TPM_ModuleV2::sign()
 		if(b_debug)	cerr << ' ' << result << " create policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_sign, TSS_SECRET_MODE_PLAIN, signauth.size, signauth.blob);
+	result = Tspi_Policy_SetSecret(policy_sign, TSS_SECRET_MODE_SHA1, signauth.size, signauth.blob);
 		if(b_debug)	cerr << ' ' << result << " key auth" << endl;
 		if(b_log)	cerr << ' ' << result << " key auth" << endl;
 
@@ -5437,7 +5437,7 @@ void NIARL_TPM_ModuleV2::quote2()
 		if(b_debug)	cerr << ' ' << result << " create srk policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create srk policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_PLAIN, wks_size, wks_blob);
+	result = Tspi_Policy_SetSecret(policy_srk, TSS_SECRET_MODE_SHA1, wks_size, wks_blob);
 		if(b_debug)	cerr << ' ' << result << " set srk auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set srk auth" << endl;
 
@@ -5466,7 +5466,7 @@ void NIARL_TPM_ModuleV2::quote2()
 		if(b_debug)	cerr << ' ' << result << " create aik policy" << endl;
 		if(b_log)	cerr << ' ' << result << " create aik policy" << endl;
 
-	result = Tspi_Policy_SetSecret(policy_aik, TSS_SECRET_MODE_PLAIN, aikauth.size, aikauth.blob);
+	result = Tspi_Policy_SetSecret(policy_aik, TSS_SECRET_MODE_SHA1, aikauth.size, aikauth.blob);
 		if(b_debug)	cerr << ' ' << result << " set aik auth" << endl;
 		if(b_log)	cerr << ' ' << result << " set aik auth" << endl;
 
@@ -5648,7 +5648,7 @@ int NIARL_TPM_ModuleV2::quote3(){
 	result = Tspi_Context_LoadKeyByUUID(hContext,
 			TSS_PS_TYPE_SYSTEM, SRK_UUID, &hSRK); CKERR;
 	result = Tspi_GetPolicyObject (hSRK, TSS_POLICY_USAGE, &hSrkPolicy); CKERR;
-	result = Tspi_Policy_SetSecret(hSrkPolicy, TSS_SECRET_MODE_PLAIN,
+	result = Tspi_Policy_SetSecret(hSrkPolicy, TSS_SECRET_MODE_SHA1,
 			sizeof(srkSecret), srkSecret); CKERR;
 	result = Tspi_Context_GetTpmObject (hContext, &hTPM); CKERR;
 
@@ -5697,7 +5697,7 @@ int NIARL_TPM_ModuleV2::quote3(){
 		result = Tspi_Context_CreateObject(hContext, TSS_OBJECT_TYPE_POLICY,
 				TSS_POLICY_USAGE, &hAIKPolicy); CKERR;
 		result = Tspi_Policy_AssignToObject(hAIKPolicy, hAIK);
-		result = Tspi_Policy_SetSecret (hAIKPolicy, TSS_SECRET_MODE_PLAIN,
+		result = Tspi_Policy_SetSecret (hAIKPolicy, TSS_SECRET_MODE_SHA1,
 				strlen(pass)/2, binary_password); CKERR;
 	}
 
