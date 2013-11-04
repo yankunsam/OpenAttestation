@@ -30,6 +30,8 @@ package gov.niarl.his.privacyca;
 
 import gov.niarl.his.privacyca.TpmModule.TpmModuleException;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -66,7 +68,7 @@ public class TpmClient {
 	 * @throws SignatureException Error when creating the EC.
 	 * @throws NoSuchProviderException Error using the BouncyCastle provider, needed for creation of the certificate.
 	 */
-	public static void provisionTpm(byte [] ownerAuth, RSAPrivateKey caPrivKey, X509Certificate caCert, int ecValidDays)
+	public static void provisionTpm(byte [] ownerAuth, RSAPrivateKey caPrivKey, X509Certificate caCert, int ecValidDays, String ecStorage, String ecStorageFileName)
 			throws IOException,
 			TpmModuleException,
 			InvalidKeyException,
@@ -105,7 +107,15 @@ public class TpmClient {
 		try {
 			byte [] pubEkMod = TpmModule.getEndorsementKeyModulus(ownerAuth, nonce);
 			X509Certificate ekCert = TpmUtils.makeEkCert(pubEkMod, caPrivKey, caCert, ecValidDays);
-			TpmModule.setCredential(ownerAuth, "EC", ekCert.getEncoded());
+			if (ecStorage.equalsIgnoreCase("file")){
+			    File ecFile = new File(ecStorageFileName);
+			    FileOutputStream ecFileOut = new FileOutputStream(ecFile);
+			    ecFileOut.write(ekCert.getEncoded());
+			    ecFileOut.flush();
+			    ecFileOut.close();
+			} else {
+			    TpmModule.setCredential(ownerAuth, "EC", ekCert.getEncoded());
+			}
 		} catch (TpmModuleException e){
 			Logger.getLogger(TpmClient.class.getName()).info("Error getting PubEK: " + e.toString());
 			throw e;

@@ -16,6 +16,9 @@
 package gov.niarl.his.privacyca;
 
 import com.intel.mtwilson.util.ResourceFinder;
+
+import gov.niarl.his.webservices.hisPrivacyCAWebService2.server.HisPrivacyCAWebServices2LoadOnStartup;
+
 import java.io.*;
 import java.security.cert.X509Certificate;
 import java.util.Properties;
@@ -68,9 +71,10 @@ public class HisSetup {
          * PrivacyCaCertFileName = PricCa.cer
          * FileLocation = ./HIS_Setup
          */
+        final Logger logger = Logger.getLogger(HisSetup.class.getName());
         FileOutputStream fos = null;
         try {
-            System.out.println("Reading properties file...");
+            logger.info("Reading properties file...");
             final String PRIVACY_CA_SUBJECT_NAME = "PrivacyCaSubjectName";
             //final String PRIVACY_CA_FILE_NAME = "PrivacyCaFileName";
             final String PRIVACY_CA_PASSWORD = "PrivacyCaPassword";
@@ -84,6 +88,8 @@ public class HisSetup {
             final String FILE_LOCATION = "FileLocation";
             final String CLIENT_PATH = "ClientPath";
             final String AIK_AUTH = "AikAuth";
+            final String EC_SIGNING_KEY_SIZE = "ecSigningKeySize";
+            final String EC_STORAGE = "ecStorage";
 
             FileInputStream PropertyFile = null;
             String PrivacyCaSubjectName = "null";
@@ -101,7 +107,9 @@ public class HisSetup {
             int ValidityDays;
             String clientPath = "";
             String AikAuth = "";
-
+            String ecSigningKeySize = "";
+            String ecStorage = "";
+            
 //			String tomcatPath = System.getProperty("catalina.base");
 //			String tempPath = "";
 //			if (tomcatPath != null){
@@ -129,8 +137,11 @@ public class HisSetup {
                 //FileLocation = SetupProperties.getProperty(FILE_LOCATION, "null");
                 clientPath = SetupProperties.getProperty(CLIENT_PATH, "clientfiles");
                 checkAndCreateDirectory(fileLocation, clientPath);
-
                 AikAuth = SetupProperties.getProperty(AIK_AUTH, "1111111111111111111111111111111111111111");
+                ecSigningKeySize =  SetupProperties.getProperty(EC_SIGNING_KEY_SIZE,"2048");
+                ecStorage =  SetupProperties.getProperty(EC_STORAGE, "NVRAM");
+                System.out.println("ecSigningKeySize = " + ecSigningKeySize + "\n");
+                System.out.println("ecStorage = " + ecStorage + "\n");
             } catch (FileNotFoundException e) {
                 System.out.println("Error finding setup.properties file. Setup cannot continue without the information in this file.");
                 return;
@@ -244,6 +255,7 @@ public class HisSetup {
                 EndorsementCaPassword = TpmUtils.byteArrayToHexString(TpmUtils.createRandomBytes(16));
             }
             String ecCaPath = "";
+            int KeySize = 2048;
 //			if (tomcatPath != null){
 //				InputStream in = null;
 //				OutputStream out = null;
@@ -302,8 +314,12 @@ public class HisSetup {
              * FileLocation = ./HIS_Setup
              */
             System.out.print("Creating p12 files...");
+            if(ecSigningKeySize.equals("1024") || ecSigningKeySize.equals("2048") ||  ecSigningKeySize.equals("3072"))
+            {
+              KeySize = Integer.parseInt(ecSigningKeySize);  
+            }
             TpmUtils.createCaP12(2048, PrivacyCaSubjectName, PrivacyCaPassword, fileLocation + "/" + PrivacyCaFileName, ValidityDays);
-            TpmUtils.createCaP12(2048, EndorsementCaSubjectName, EndorsementCaPassword, fileLocation + clientPath + "/" + EndorsementCaFileName, ValidityDays);
+            TpmUtils.createCaP12(KeySize, EndorsementCaSubjectName, EndorsementCaPassword, fileLocation + clientPath + "/" + EndorsementCaFileName, ValidityDays);
             System.out.println("DONE");
             // Create the Privacy CA certificate file
             System.out.print("Creating Privacy CA certificate...");
@@ -424,7 +440,9 @@ public class HisSetup {
                     + //				"#HisRegistrationUrl = " + HisRegistrationUrl + "\r\n" +
                     //				"TrustStore = TrustStore.jks\r\n" +
                     "NtruBypass = true\r\n"
-                    + "ClientPath = " + "cert" + "\r\n";
+                    + "ClientPath = " + "cert" + "\r\n"
+                    + "ecStorage = " + ecStorage + "\r\n"
+                    + "ecSigningKeySize = " + ecSigningKeySize + "\r\n";
             try {
                 fos.write(toWrite.getBytes("US-ASCII"));
                 fos.flush();

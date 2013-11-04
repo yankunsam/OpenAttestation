@@ -66,9 +66,12 @@ public class ProvisionTPM {
 		final String EC_P12_PASSWORD = "EndorsementP12Pass";
 		final String EC_VALIDITY = "EcValidityDays";
 		final String OWNER_AUTH = "TpmOwnerAuth";
-		
+		final String EC_STORAGE = "ecStorage";
+        
 		String TpmEndorsmentP12 = "";
 		String EndorsementP12Pass = "";
+		String ecStorage = "";
+		String ecStorageFileName = "./EC.cer";
 		int EcValidityDays = 0;
 		
 		byte [] TpmOwnerAuth = null;
@@ -97,6 +100,7 @@ public class ProvisionTPM {
 			EndorsementP12Pass = HisProvisionerProperties.getProperty(EC_P12_PASSWORD, "");
 			EcValidityDays = Integer.parseInt(HisProvisionerProperties.getProperty(EC_VALIDITY, ""));
 			TpmOwnerAuth = TpmUtils.hexStringToByteArray(HisProvisionerProperties.getProperty(OWNER_AUTH, ""));
+			ecStorage = HisProvisionerProperties.getProperty(EC_STORAGE, "NVRAM");
 		} catch (FileNotFoundException e) {
 			throw new PrivacyCAException("Error finding HIS Provisioner properties file (HISprovisionier.properties)",e);
 		} catch (IOException e) {
@@ -141,7 +145,7 @@ public class ProvisionTPM {
 		try {
 			X509Certificate cert = TpmUtils.certFromP12(homeFolder + TpmEndorsmentP12, EndorsementP12Pass); //opening the keystore and getting cert
 			if (cert != null)
-				TpmClient.provisionTpm(TpmOwnerAuth, TpmUtils.privKeyFromP12(homeFolder + TpmEndorsmentP12, EndorsementP12Pass), cert, EcValidityDays);
+				TpmClient.provisionTpm(TpmOwnerAuth, TpmUtils.privKeyFromP12(homeFolder + TpmEndorsmentP12, EndorsementP12Pass), cert, EcValidityDays, ecStorage, ecStorageFileName);
 			else
 				log.warning("Certificate was null. Skipping provisioning of TPM. ");
 			
