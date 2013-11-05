@@ -54,7 +54,7 @@ import com.intel.mtwilson.util.ResourceFinder;
  */
 public class ProvisionTPM {
 
-	private static Logger log = Logger.getLogger(CreateIdentity.class.getName());
+	private static Logger log = Logger.getLogger(ProvisionTPM.class.getName());
 
 	/**
 	 * Entry point into the program

@@ -13,14 +13,23 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package gov.niarl.his.privacyca;
+package com.intel.mountwilson.his.helper;
 
+import gov.niarl.his.privacyca.TpmClient;
+import gov.niarl.his.privacyca.TpmModule;
+import gov.niarl.his.privacyca.TpmUtils;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import java.security.cert.X509Certificate;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+//import com.intel.mountwilson.as.common.ResourceFinder;
+import com.intel.mtwilson.util.ResourceFinder;
 
 /**
  * <p>This is part 1 of 3 for fully provisioning HIS on a Windows client. This class does the initial provisioning of the TPM.</p>
@@ -45,51 +54,70 @@ import java.util.Properties;
  */
 public class HisTpmProvisioner {
 
+	private static Logger log = Logger.getLogger(HisTpmProvisioner.class.getName());
+
 	/**
 	 * Entry point into the program
+	 * @throws Exception 
 	 */
-	public static void main(String[] args){// throws InvalidKeyException, CertificateEncodingException, UnrecoverableKeyException, NoSuchAlgorithmException, InvalidKeySpecException, SignatureException, NoSuchProviderException, KeyStoreException, CertificateException, IOException, javax.security.cert.CertificateException {
+	public static void takeOwnership() throws Exception{// throws InvalidKeyException, CertificateEncodingException, UnrecoverableKeyException, NoSuchAlgorithmException, InvalidKeySpecException, SignatureException, NoSuchProviderException, KeyStoreException, CertificateException, IOException, javax.security.cert.CertificateException {
 		//get properties file info
 		final String EC_P12_FILE = "TpmEndorsmentP12";
 		final String EC_P12_PASSWORD = "EndorsementP12Pass";
 		final String EC_VALIDITY = "EcValidityDays";
 		final String OWNER_AUTH = "TpmOwnerAuth";
-		
+		final String EC_STORAGE = "ecStorage";
+        
 		String TpmEndorsmentP12 = "";
 		String EndorsementP12Pass = "";
+		String ecStorage = "";
+		String ecStorageFileName = "./EC.cer";
 		int EcValidityDays = 0;
 		
 		byte [] TpmOwnerAuth = null;
-
-		String propertiesFileName = "./OATprovisioner.properties";
+		//This is for logging purpose
+		String propertiesFileName = ResourceFinder.getLocation("hisprovisioner.properties");
 
 		FileInputStream PropertyFile = null;
+		
+		String homeFolder = "";
+		
 		try {
-			PropertyFile = new FileInputStream(propertiesFileName);
+			File propFile = ResourceFinder.getFile("hisprovisioner.properties");
+			PropertyFile = new FileInputStream(propFile);
 			Properties HisProvisionerProperties = new Properties();
 			HisProvisionerProperties.load(PropertyFile);
 			
+			
+			homeFolder = propFile.getAbsolutePath();
+			homeFolder = homeFolder.substring(0,homeFolder.indexOf("hisprovisioner.properties"));
+			
+			log.info("Home folder : " + homeFolder);
+			
+			
 			TpmEndorsmentP12 = HisProvisionerProperties.getProperty(EC_P12_FILE, "");
+			
 			EndorsementP12Pass = HisProvisionerProperties.getProperty(EC_P12_PASSWORD, "");
 			EcValidityDays = Integer.parseInt(HisProvisionerProperties.getProperty(EC_VALIDITY, ""));
 			TpmOwnerAuth = TpmUtils.hexStringToByteArray(HisProvisionerProperties.getProperty(OWNER_AUTH, ""));
+			ecStorage = HisProvisionerProperties.getProperty(EC_STORAGE, "NVRAM");
 		} catch (FileNotFoundException e) {
-			System.out.println("Error finding HIS Provisioner properties file (HISprovisionier.properties)");
+			throw new PrivacyCAException("Error finding HIS Provisioner properties file (HISprovisionier.properties)",e);
 		} catch (IOException e) {
-			System.out.println("Error loading HIS Provisioner properties file (HISprovisionier.properties)");
-		}
-		catch (NumberFormatException e) {
-			e.printStackTrace();
+			throw new PrivacyCAException("Error loading HIS Provisioner properties file (HISprovisionier.properties)",e);
+		} catch (NumberFormatException e) {
+			throw new PrivacyCAException("Error while reading EcValidityDays",e);
 		}
 		finally{
 			if (PropertyFile != null){
 				try {
 					PropertyFile.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					log.log(Level.SEVERE,"Error while closing the property file ", e);
 				}
 			}
 		}
+		
 		String errorString = "Properties file \"" + propertiesFileName + "\" contains errors:\n";
 		boolean hasErrors = false;
 		if(TpmEndorsmentP12.length() == 0){
@@ -109,26 +137,24 @@ public class HisTpmProvisioner {
 			hasErrors = true;
 		}
 		if(hasErrors){
-			System.out.println(errorString);
-			System.exit(99);
-			return;
+			throw new PrivacyCAException(errorString);
 		}
 		//Provision the TPM
-		System.out.print("Performing TPM provisioning...");
+		log.info("Performing TPM provisioning...");
+		
 		try {
-			X509Certificate cert = TpmUtils.certFromP12(TpmEndorsmentP12, EndorsementP12Pass);
+			X509Certificate cert = TpmUtils.certFromP12(homeFolder + TpmEndorsmentP12, EndorsementP12Pass); //opening the keystore and getting cert
 			if (cert != null)
-				TpmClient.provisionTpm(TpmOwnerAuth, TpmUtils.privKeyFromP12(TpmEndorsmentP12, EndorsementP12Pass), cert, EcValidityDays);
+				TpmClient.provisionTpm(TpmOwnerAuth, TpmUtils.privKeyFromP12(homeFolder + TpmEndorsmentP12, EndorsementP12Pass), cert, EcValidityDays, ecStorage, ecStorageFileName);
+			else
+				log.warning("Certificate was null. Skipping provisioning of TPM. ");
+			
 		}catch (TpmModule.TpmModuleException e){
-			System.out.println("Caught a TPM Module exception: " + e.toString());
+			throw new PrivacyCAException("Caught a TPM Module exception: " + e.toString());
 		}catch (Exception e){
-			System.out.println("FAILED");
-			e.printStackTrace();
-			System.exit(1);
+			throw new PrivacyCAException("FAILED",e);
 		}
-		System.out.println("DONE");
-		System.exit(0);
-		return;
+		log.info("DONE");
 	}
 
 }

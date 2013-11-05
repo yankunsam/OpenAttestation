@@ -231,6 +231,7 @@ public class CreateIdentity  {
 			
 			
 			X509Certificate pcaCert = TpmUtils.certFromFile(homeFolder + PrivacyCaCertFile);
+			boolean shortcut = true;
 			byte[] ekCert = null;
 			if (ecStorage.equalsIgnoreCase("file"))
 			{
