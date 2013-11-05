@@ -374,12 +374,10 @@ public class HisReportValidator {
 		StringBuffer sb = new StringBuffer();
 		for (Iterator<String> iterator = errors.iterator(); iterator.hasNext();) {
 			String string = (String) iterator.next();
-			if (errorsString == null) {
-				errorsString = string;
-			} else {
+			if (errorsString != null) {
 				errorsString = sb.append("\n").append(ERROR_SEPARATOR).append("\n").toString();
-				errorsString = sb.append(string).toString() ;
 			}
+			errorsString = sb.append(string).toString();
 		}
 		return errorsString;
 	}
