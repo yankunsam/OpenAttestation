@@ -319,7 +319,7 @@ public class HisSetup {
               KeySize = Integer.parseInt(ecSigningKeySize);  
             }
             TpmUtils.createCaP12(2048, PrivacyCaSubjectName, PrivacyCaPassword, fileLocation + "/" + PrivacyCaFileName, ValidityDays);
-            TpmUtils.createCaP12(KeySize, EndorsementCaSubjectName, EndorsementCaPassword, fileLocation + clientPath + "/" + EndorsementCaFileName, ValidityDays);
+            TpmUtils.createCaP12(KeySize, EndorsementCaSubjectName, EndorsementCaPassword, fileLocation + "/" + EndorsementCaFileName, ValidityDays);
             System.out.println("DONE");
             // Create the Privacy CA certificate file
             System.out.print("Creating Privacy CA certificate...");
@@ -343,7 +343,7 @@ public class HisSetup {
 
             // Create the Endorsement CA certificate file
             System.out.print("Creating Endorsement CA certificate...");
-            X509Certificate ecCert = TpmUtils.certFromP12(fileLocation + clientPath + "/" + EndorsementCaFileName, EndorsementCaPassword);
+            X509Certificate ecCert = TpmUtils.certFromP12(fileLocation + "/" + EndorsementCaFileName, EndorsementCaPassword);
             FileOutputStream ecFileOut = new FileOutputStream(new File(fileLocation + ecCaPath + "/" + EndorsementCaCertFileName));
             try {
                 if (ecCert != null) {
@@ -365,6 +365,7 @@ public class HisSetup {
             // Create the other properties files (HISprovisioner and PrivacyCA)
             System.out.print("Creating properties files...");
             String PrivacyCaPropertiesFile = "PrivacyCA.properties";
+            String EndorsementPropertiesFile = "EndorsementCA.properties";
             String HisProvisionerPropertiesFile = "hisprovisioner.properties";
             //String HisStandalonePropertiesFile = "OAT.properties";
 
@@ -421,14 +422,33 @@ public class HisSetup {
 
 
             /*
+             * File: EndorsementCA.properties
+             */
+            fos = new FileOutputStream(fileLocation + "/" + EndorsementPropertiesFile);
+            toWrite =
+                    "#Endorsement CA Data\r\n"
+                    + "TpmEndorsmentP12 = " + EndorsementCaFileName + "\r\n"
+                    + "EndorsementP12Pass = " + EndorsementCaPassword + "\r\n";
+            try {
+                fos.write(toWrite.getBytes("US-ASCII"));
+                fos.flush();
+                fos.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (fos != null) {
+                    fos.close();
+                }
+            }
+
+            /*
              * File: HISprovisioner.properties
              * Used by: HisTpmProvisioner, HisIdentityProvisioner, HisRegisterIdentity
              */
             fos = new FileOutputStream(fileLocation + clientPath + "/" + HisProvisionerPropertiesFile);
             toWrite =
                     "#TPM Provisioning Data\r\n"
-                    + "TpmEndorsmentP12 = " + EndorsementCaFileName + "\r\n"
-                    + "EndorsementP12Pass = " + EndorsementCaPassword + "\r\n"
                     + "EcValidityDays = " + CertValidityDays + "\r\n"
                     + "TpmOwnerAuth = 1111111111111111111111111111111111111111\r\n"
                     + "#HIS Identity Provisioning Data\r\n"

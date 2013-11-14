@@ -64,5 +64,13 @@ class HisPrivacyCAWebServices2ClientImpl implements IHisPrivacyCAWebService2 {
 		identityRequestResponseToChallengeByteArray.setBytes(identityRequestResponseToChallenge);
 		return hisPrivacyCAWebService2.identityRequestSubmitResponse(identityRequestResponseToChallengeByteArray).getBytes();
 	}
+	
+	public byte [] requestGetEC(byte [] encryptedEkMod, byte [] encryptedSessionKey, int ecValidDays){
+        ByteArray eKModulusByteArray = new ByteArray();
+		eKModulusByteArray.setBytes(encryptedEkMod);
+		ByteArray sessionKeyArray = new ByteArray();
+		sessionKeyArray.setBytes(encryptedSessionKey);
+		return hisPrivacyCAWebService2.requestGetEC(eKModulusByteArray, sessionKeyArray, ecValidDays).getBytes();
+	}
 
 }

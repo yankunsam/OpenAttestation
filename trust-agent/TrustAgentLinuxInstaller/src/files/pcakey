@@ -101,11 +101,11 @@ get_privacyca_ssl() {
 }
 
 import_privacyca_files() {
-  if [[ -f /etc/intel/cloudsecurity/PrivacyCA.cer && -f /etc/intel/cloudsecurity/endorsement.p12 && -f /etc/intel/cloudsecurity/hisprovisioner.properties ]]; then
+  if [[ -f /etc/intel/cloudsecurity/PrivacyCA.cer && -f /etc/intel/cloudsecurity/hisprovisioner.properties ]]; then
     echo_success "Installed Privacy CA client files"
   else
     echo_failure "Privacy CA setup is not complete"
-    report_files_exist /etc/intel/cloudsecurity/PrivacyCA.cer /etc/intel/cloudsecurity/endorsement.p12 /etc/intel/cloudsecurity/hisprovisioner.properties
+    report_files_exist /etc/intel/cloudsecurity/PrivacyCA.cer /etc/intel/cloudsecurity/hisprovisioner.properties
   fi
 }
 
