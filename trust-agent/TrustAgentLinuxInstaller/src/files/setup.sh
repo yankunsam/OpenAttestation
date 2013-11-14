@@ -140,8 +140,8 @@ fix_redhat_libcrypto
     # we have precompiled binaries for citrix-xen
     echo "Installing TPM commands... "
     cd commands-citrix-xen
-    chmod +x aikquote NIARL_TPM_Module openssl.sh
-    cp aikquote NIARL_TPM_Module openssl.sh ${package_dir}/bin
+    chmod +x NIARL_TPM_Module openssl.sh
+    cp NIARL_TPM_Module openssl.sh ${package_dir}/bin
     cd ..
   else
     # compile and install tpm commands
@@ -157,8 +157,8 @@ fix_redhat_libcrypto
     else
       echo_failure "FAILED"
     fi
-    chmod +x aikquote NIARL_TPM_Module openssl.sh
-    cp aikquote NIARL_TPM_Module openssl.sh ${package_dir}/bin
+    chmod +x NIARL_TPM_Module openssl.sh
+    cp NIARL_TPM_Module openssl.sh ${package_dir}/bin
     cd ..
   fi
   cd ..
