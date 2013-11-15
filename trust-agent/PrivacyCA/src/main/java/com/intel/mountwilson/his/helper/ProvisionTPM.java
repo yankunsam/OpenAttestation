@@ -25,6 +25,7 @@ import gov.niarl.his.webservices.hisPrivacyCAWebService2.client.HisPrivacyCAWebS
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.security.NoSuchAlgorithmException;
@@ -153,17 +154,24 @@ public class ProvisionTPM {
 		//Provision the TPM
 		log.info("Performing TPM provisioning...");
 
-                SecretKey deskey = null;
+		SecretKey deskey = null;
 		KeyGenerator keygen;
 		Cipher c;
 		Security.addProvider(new BouncyCastleProvider());
 		// Take Ownership
 		byte [] nonce = null;		
 		try {
-                    nonce = TpmUtils.createRandomBytes(20);
-			TpmModule.takeOwnership(TpmOwnerAuth, nonce);
+		    nonce = TpmUtils.createRandomBytes(20);
+		    TpmModule.takeOwnership(TpmOwnerAuth, nonce);
 		} catch (TpmModuleException e){
-			System.out.println("Error taking ownership: " + e.toString());
+            if(e.toString().contains(".takeOwnership returned nonzero error: 4")){
+                Logger.getLogger(ProvisionTPM.class.getName()).info("Ownership is already taken : " );
+                                //if( !System.getProperty("forceCreateEk", "false").equals("true") ) { // feature to help with bug #554 and allow admin to force creating an ek (in case it failed the first time due to a non-tpm error such as java missing classes exception
+                                //    return;
+                                //}
+            }
+            else
+                throw e;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -172,7 +180,7 @@ public class ProvisionTPM {
 		try {
 			keygen = KeyGenerator.getInstance("DESede"); 
 			deskey = keygen.generateKey();  
-		        c = Cipher.getInstance("DESede");
+			c = Cipher.getInstance("DESede");
 		} catch (NoSuchPaddingException e) {
 			System.out.println("Exception message is found, detail info is: " + e.getMessage());
 		} catch (NoSuchAlgorithmException e) {
@@ -198,7 +206,7 @@ public class ProvisionTPM {
 			System.out.println("print out error message: " + e.toString());
 			e.printStackTrace();
  		}
-                try {					
+		try {					
 			IHisPrivacyCAWebService2 hisPrivacyCAWebService2 = HisPrivacyCAWebServices2ClientInvoker.getHisPrivacyCAWebService2(PrivacyCaUrl);	
 			encryptCert = hisPrivacyCAWebService2.requestGetEC(encryptDES(pubEkMod, deskey), encryptRSA(deskey.getEncoded(), publicKey), EcValidityDays);	
 		} catch (Exception e){
@@ -221,10 +229,18 @@ public class ProvisionTPM {
 			e.printStackTrace();
 		}
 			
-		// Store the new EC in NV-RAM
+		// Store the new EC in NV-RAM or in the file
  		try{
- 			TpmModule.setCredential(TpmOwnerAuth, "EC", ekCert.getEncoded());
-                        System.out.println( ekCert.getEncoded().length);
+ 	         if (ecStorage.equalsIgnoreCase("file")){
+                 File ecFile = new File(ecStorageFileName);
+                 FileOutputStream ecFileOut = new FileOutputStream(ecFile);
+                 ecFileOut.write(ekCert.getEncoded());
+                 ecFileOut.flush();
+                 ecFileOut.close();
+             } else {
+                 TpmModule.setCredential(TpmOwnerAuth, "EC", ekCert.getEncoded());
+             }
+ 			System.out.println( ekCert.getEncoded().length);
  		} catch (TpmModuleException e){
  			System.out.println("Error getting PubEK: " + e.toString());
  		} catch (CertificateEncodingException e) {
@@ -237,21 +253,21 @@ public class ProvisionTPM {
 		return;
  	}
  
-        private static byte[] encryptDES(byte[] text, SecretKey key) throws Exception {
-        	Cipher c = Cipher.getInstance("DESede");  
-		c.init(Cipher.ENCRYPT_MODE, key);  
+	private static byte[] encryptDES(byte[] text, SecretKey key) throws Exception {
+	    Cipher c = Cipher.getInstance("DESede");  
+	    c.init(Cipher.ENCRYPT_MODE, key);  
 		return c.doFinal(text);
-        }
+	}
     
-        private static byte[] encryptRSA(byte[] text, PublicKey pubRSA) throws Exception {
-         	Cipher cipher = Cipher.getInstance("RSA", new BouncyCastleProvider());
-                cipher.init(Cipher.ENCRYPT_MODE, pubRSA);
-                return cipher.doFinal(text);
-        }
+    private static byte[] encryptRSA(byte[] text, PublicKey pubRSA) throws Exception {
+     	Cipher cipher = Cipher.getInstance("RSA", new BouncyCastleProvider());
+     	cipher.init(Cipher.ENCRYPT_MODE, pubRSA);
+     	return cipher.doFinal(text);
+    }
     
-        private static byte[] decryptDES(byte[] text, SecretKey key) throws Exception {
-    	       Cipher cipher = Cipher.getInstance("DESede");
-               cipher.init(Cipher.DECRYPT_MODE, key);
-               return cipher.doFinal(text);
-        }                    
+    private static byte[] decryptDES(byte[] text, SecretKey key) throws Exception {
+        Cipher cipher = Cipher.getInstance("DESede");
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        return cipher.doFinal(text);
+    }                    
 }
