@@ -15,28 +15,36 @@
 
 package com.intel.mountwilson.manifest.helper;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.UnknownHostException;
-import java.security.KeyManagementException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.Security;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.cert.X509Certificate;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.persistence.EntityManagerFactory;
-import javax.xml.bind.JAXBException;
-import com.intel.mtwilson.agent.intel.*;
 import com.intel.mtwilson.agent.*;
 import com.intel.mtwilson.tls.*;
-import com.intel.mtwilson.datatypes.InternetAddress;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
 import com.intel.mountwilson.as.common.ASConfig;
 import com.intel.mountwilson.as.common.ASException;
@@ -47,19 +55,21 @@ import com.intel.mountwilson.manifest.data.PcrManifest;
 import com.intel.mountwilson.ta.data.ClientRequestType;
 import com.intel.mtwilson.as.data.TblHosts;
 import com.intel.mtwilson.datatypes.ErrorCode;
-import com.intel.mtwilson.io.ByteArrayResource;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.bouncycastle.openssl.PEMReader;
+
 
 /**
  * @author dsmagadx
+ * @author dave chen
  */
 public class TAHelper {
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private static final Logger log = LoggerFactory.getLogger(TAHelper.class);
 
     private String aikverifyhome;
     private String aikverifyhomeData;
@@ -74,7 +84,11 @@ public class TAHelper {
 //	private EntityManagerFactory entityManagerFactory;
 
    private String trustedAik = null; // host's AIK in PEM format, for use in verifying quotes (caller retrieves it from database and provides it to us)
-     
+   
+   public static final String BEGIN_PUBLIC_KEY = "-----BEGIN PUBLIC KEY-----";
+   public static final String END_PUBLIC_KEY = "-----END PUBLIC KEY-----";
+
+   
     public TAHelper(/*EntityManagerFactory entityManagerFactory*/) {
         Configuration config = ASConfig.getConfiguration();
         aikverifyhome = config.getString("com.intel.mountwilson.as.home", "C:/work/aikverifyhome");
@@ -377,12 +391,15 @@ public class TAHelper {
     private HashMap<String,PcrManifest> verifyQuoteAndGetPcr(String sessionId) {
         HashMap<String,PcrManifest> pcrMp = new HashMap<String,PcrManifest>();
         log.info( "verifyQuoteAndGetPcr for session {}",sessionId);
-        String command = String.format("%s -c %s %s %s",aikverifyCmd, aikverifyhomeData + File.separator+getNonceFileName( sessionId),
-                aikverifyhomeData + File.separator+getRSAPubkeyFileName(sessionId),aikverifyhomeData + File.separator+getQuoteFileName(sessionId)); 
+        //String command = String.format("%s -c %s %s %s",aikverifyCmd, aikverifyhomeData + File.separator+getNonceFileName( sessionId),
+        //      aikverifyhomeData + File.separator+getRSAPubkeyFileName(sessionId),aikverifyhomeData + File.separator+getQuoteFileName(sessionId)); 
         
-        log.info( "Command: {}",command);
-        List<String> result = CommandUtil.runCommand(command,true,"VerifyQuote");
-        
+        //log.info( "Command: {}",command);
+        //List<String> result = CommandUtil.runCommand(command,true,"VerifyQuote");
+        String certFileName = aikverifyhomeData + File.separator + getCertFileName(sessionId);
+        String nonceFileName = aikverifyhomeData + File.separator+getNonceFileName(sessionId);
+        String quoteFileName = aikverifyhomeData + File.separator+getQuoteFileName(sessionId);
+        List<String> result = aikqverify(nonceFileName, certFileName, quoteFileName);
         // Sample output from command:
         //  1 3a3f780f11a4b49969fcaa80cd6e3957c33b2275
         //  17 bfc3ffd7940e9281a3ebfdfa4e0412869a3f55d8
@@ -405,40 +422,214 @@ public class TAHelper {
             else {
             	log.warn( "Result PCR invalid");
             }
-            /*
-            if(pcrs.contains(parts[0].trim()))
-            	pcrMp.put(parts[0].trim(), new PcrManifest(Integer.parseInt(parts[0]),parts[1]));
-            */
         }
         
         return pcrMp;
         
     }
-    
-    /*
-	public EntityManagerFactory getEntityManagerFactory() {
-		return entityManagerFactory;
-	}
-	
-	public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
-		this.entityManagerFactory = entityManagerFactory;
-	}*/
 
-    /*
-	private List<String> getPcrsList() {
-		List<String> pcrs = new ArrayList<String>() ;
-		
-		for(int i = 0 ; i< 24 ; i++)
-			pcrs.add(String.valueOf(i));
-		
-		return pcrs;
-	}
-	*/
+    private List<String> aikqverify(String nonceFileName, String certFileName, String quoteFileName){
+        List<String> pcrList = new ArrayList<String>();
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        X509Certificate machineCertificate = pemToX509Certificate(certFileName);
+        StringBuffer pcrBuffer;
+        try {
+            /* Read challenge file */
+            byte[] nonce = readFromFile(nonceFileName);
+            byte[] chalmd = sha1hash1(nonce);
+            /* Read quote file */
+            byte[] quote =  readFromFile(quoteFileName);
+            /* Parse quote file */
+            if (quote.length <2){
+                log.error("Input AIK quote file incorrect format\n");
+            }
+            //concat two bytes to get the select length, x86 use little endian, "0x0003" is stored as "0x0300" in memory
+            int selectLen = ntohs(quote, 0);
+            int length = quote.length;
+            int pcrLen = ntohl(quote, 2 + selectLen);
+            int sigPostition = 2 + selectLen + 4 + pcrLen;
+            int pcri = 0;
+            int sigLen = length - sigPostition;
+            byte [] select = new byte[quote.length -2];
+            byte[] qinfo = new byte[8+20+20];
+            byte[] sig = new byte[sigLen];
+            byte[] pcrs;
+            qinfo[0] = 1; 
+            qinfo[1] = 1; 
+            qinfo[2] = 0; 
+            qinfo[3] = 0;
+            qinfo[4] = 'Q'; 
+            qinfo[5] = 'U'; 
+            qinfo[6] = 'O'; 
+            qinfo[7] = 'T';
+            //sha1
+            sha1hash2(quote, 2+selectLen+4+pcrLen, qinfo);
+            //memcpy
+            System.arraycopy(chalmd, 0, qinfo, 8+20, 20);
+            /* Verify RSA signature */
+            //this step is needn't, the SHA-1 is suspect performed by the java API itself which is different with API from openssl
+            // byte[] md = sha1hash1(qinfo);    
+            //verify 
+            System.arraycopy(quote, sigPostition, sig, 0 , sigLen);
+            System.arraycopy(quote, 2, select, 0, select.length);
+            pcrs = new byte[quote.length - (2 + selectLen + 4)];
+            System.arraycopy(quote, 2 + selectLen + 4, pcrs, 0, pcrs.length);
+            Signature signature;
+            signature = Signature.getInstance("SHA1withRSA");
+            signature.initVerify(machineCertificate);
+            signature.update(qinfo);
+            if (!signature.verify(sig)) {
+                log.error("signature is not correct\n");
+            } else {
+                log.info("signature is correct\n");
+            }
+            for (int pcr=0; pcr < 8*selectLen; pcr++) {
+                if ((select[pcr/8] & (1 << (pcr%8))) != 0) {
+                    log.info("pcr number is: " + pcr);
+                    pcrBuffer = new StringBuffer();
+                    pcrBuffer.append(pcr).append(" ");
+                    for (int i=0; i<20; i++) {
+                        pcrBuffer.append(hexString(pcrs[20*pcri+i]));
+                    }
+                    pcrList.add(pcrBuffer.toString());
+                    pcri++;
+                }
+            }
+        } catch(IOException e){
+            log.error("Unable to read nonce file");
+        } catch (NoSuchAlgorithmException e) {
+            log.error("no such algorithm " + e.toString());
+        } catch (InvalidKeyException e) {
+            log.error("invalid key is found " + e.toString());
+        } catch (SignatureException e) {
+            log.error("signature exception " + e.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String resultForLog = pcrList.size()+" items:\n"+StringUtils.join(pcrList, "\n");
+        log.info("Result Output \n{}", resultForLog);
+        return pcrList;
+    }
 
+    public static byte[] readFromFile(String filename)throws IOException{  
+        File f = new File(filename);
+        if(!f.exists()){  
+            throw new FileNotFoundException(filename);  
+        }  
+          
+        FileChannel channel = null;  
+        FileInputStream fis = null;  
+        try{  
+            fis = new FileInputStream(f);  
+            channel = fis.getChannel();  
+            ByteBuffer byteBuffer = ByteBuffer.allocate((int)channel.size());  //may needn't convert from NBO to HBO as we use ByteBuffer here.
+            channel.read(byteBuffer); 
+            return byteBuffer.array();  
+        }catch (IOException e) {  
+            e.printStackTrace();  
+            throw e;  
+        }finally{  
+            try{  
+                channel.close();  
+            }catch (IOException e) {  
+                e.printStackTrace();  
+            }  
+            try{  
+                fis.close();  
+            }catch (IOException e) {  
+                e.printStackTrace();  
+            }  
+        }  
+    } 
     
+    public static byte[] sha1hash1(byte[] blob) throws NoSuchAlgorithmException{
+        byte[] toReturn = null;
+        MessageDigest md = MessageDigest.getInstance("SHA-1");
+        //md.update(blob);
+        toReturn = md.digest(blob);
+        return toReturn;
+    }
     
+    public static void sha1hash2(byte[] blob, int length, byte[] qinfo) throws NoSuchAlgorithmException{
+        byte[] tempArray = null;
+        MessageDigest md = MessageDigest.getInstance("SHA-1");
+        md.update(blob, 0, length);
+        tempArray = md.digest();
+        System.arraycopy(tempArray, 0, qinfo, 8, tempArray.length);
+    }
+   
+    public static String hexString(byte byteVaue) {
+        Integer integer = byteVaue < 0 ? byteVaue + 256 : byteVaue;
+        String integerString = Integer.toString(integer, 16);
+        String hexValue = (integerString.length() == 1 ? "0" + integerString : integerString);
+        return hexValue.toUpperCase();  
+    }
     
+    public static int ntohs(byte[] x, int pos)
+    {
+        int res = 0;
+        int size = pos + 2;
+        while (pos < size) {
+            res <<= 8;
+            res |= (int) x[pos];
+            pos ++;
+        }
+        return res;
+    }
     
+    public static int ntohl(byte[] x, int pos)
+    {
+        int res = 0;
+        int size = pos + 4;
+        while (pos < size){
+            res <<= 8;
+            res |= (int) x[pos];
+            pos ++;
+        }
+        return res;
+    }
     
+    //this method is not used in current stage, but maybe helpful in the future
+    public  PublicKey getPemPublicKey(String filename) throws Exception {
+        File f = new File(filename);
+        FileInputStream filestr = new FileInputStream(f);
+        DataInputStream datastr = new DataInputStream(filestr);
+        byte[] keyBytes = new byte[(int) f.length()];
+        datastr.readFully(keyBytes);
+        datastr.close();
+
+        String temp = new String(keyBytes);
+        String publicKeyPEM = temp.replace("-----BEGIN PUBLIC KEY-----\n", "");
+        publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "");
+
+        Base64 b64 = new Base64();
+        byte [] decoded = b64.decode(publicKeyPEM);
+
+        X509EncodedKeySpec spec =
+              new X509EncodedKeySpec(decoded);
+        KeyFactory kf =  KeyFactory.getInstance("RSA");
+        return kf.generatePublic(spec);
+        }
     
+    /**
+     * Convert a PEM formatted certificate in X509 format.
+     * @param machineCertPEM Machine certificate in PEM/text format. 
+     * @return An X509 certificate object.
+     */
+    public static X509Certificate pemToX509Certificate(String machineCertPEM) {
+        try {
+            File f = new File(machineCertPEM);
+            FileInputStream filestr = new FileInputStream(f);
+            DataInputStream datastr = new DataInputStream(filestr);
+            byte[] keyBytes = new byte[(int) f.length()];
+            datastr.readFully(keyBytes);
+            String temp = new String(keyBytes);
+            PEMReader reader = new PEMReader(new StringReader(temp.replace("-----BEGIN CERTIFICATE-----", "-----BEGIN CERTIFICATE-----\n").replace("-----END CERTIFICATE-----", "\n-----END CERTIFICATE-----")));
+            datastr.close();
+            return (X509Certificate) reader.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 }
