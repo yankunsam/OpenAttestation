@@ -15,18 +15,21 @@
 
 package com.intel.mountwilson.manifest.helper;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
+import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
@@ -38,10 +41,13 @@ import java.security.cert.X509Certificate;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 import com.intel.mtwilson.agent.*;
 import com.intel.mtwilson.tls.*;
+import com.intel.mtwilson.util.ResourceFinder;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
@@ -62,7 +68,7 @@ import javax.xml.stream.XMLStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bouncycastle.openssl.PEMReader;
-
+//import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  * @author dsmagadx
@@ -389,14 +395,36 @@ public class TAHelper {
 
     // BUG #497 need to rewrite this to return List<Pcr> ... the Pcr.equals()  does same as (actually more than) IManifest.verify() because Pcr ensures the index is the same and IManifest does not!  and also it is less redundant, because this method returns Map< pcr index as string, manifest object containing pcr index and value >  
     private HashMap<String,PcrManifest> verifyQuoteAndGetPcr(String sessionId) {
+        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         HashMap<String,PcrManifest> pcrMp = new HashMap<String,PcrManifest>();
+        String setUpFile;
+
         log.info( "verifyQuoteAndGetPcr for session {}",sessionId);
-        //String command = String.format("%s -c %s %s %s",aikverifyCmd, aikverifyhomeData + File.separator+getNonceFileName( sessionId),
-        //      aikverifyhomeData + File.separator+getRSAPubkeyFileName(sessionId),aikverifyhomeData + File.separator+getQuoteFileName(sessionId)); 
-        
         //log.info( "Command: {}",command);
         //List<String> result = CommandUtil.runCommand(command,true,"VerifyQuote");
         String certFileName = aikverifyhomeData + File.separator + getCertFileName(sessionId);
+        //need verify AIC here by the privacyCA's public key
+        //1. get privacy CA's public key
+        //2. verification
+        try {
+                setUpFile = ResourceFinder.getFile("privacyca-client.properties").getAbsolutePath();
+                String fileLocation = setUpFile.substring(0, setUpFile.indexOf("privacyca-client.properties"));
+                String CLIENT_PATH = "ClientPath";
+                String PrivacyCaCertFileName = "PrivacyCA.cer";
+                FileInputStream PropertyFile = null;
+                PropertyFile = new FileInputStream(ResourceFinder.getFile("privacyca-client.properties"));
+                Properties SetupProperties = new Properties();
+                SetupProperties.load(PropertyFile);
+                X509Certificate machineCertificate = pemToX509Certificate(certFileName);
+                String clientPath = SetupProperties.getProperty(CLIENT_PATH, "clientfiles");
+                X509Certificate pcaCert = certFromFile(fileLocation + clientPath + "/" + PrivacyCaCertFileName);
+                if (pcaCert !=null)
+                    machineCertificate.verify(pcaCert.getPublicKey());
+                log.info("passed the verification");
+        } catch (Exception e){
+            log.error("Machine certificate was not signed by the privacy CA." + e.toString());
+            throw new RuntimeException(e);
+        }
         String nonceFileName = aikverifyhomeData + File.separator+getNonceFileName(sessionId);
         String quoteFileName = aikverifyhomeData + File.separator+getQuoteFileName(sessionId);
         List<String> result = aikqverify(nonceFileName, certFileName, quoteFileName);
@@ -430,7 +458,7 @@ public class TAHelper {
 
     private List<String> aikqverify(String nonceFileName, String certFileName, String quoteFileName){
         List<String> pcrList = new ArrayList<String>();
-        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        //Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         X509Certificate machineCertificate = pemToX509Certificate(certFileName);
         StringBuffer pcrBuffer;
         try {
@@ -631,5 +659,52 @@ public class TAHelper {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+    
+    /**
+     * Retrieve a certificate as an X509Certificate object from a file (generally .cer or .crt using DER or PEM encoding)
+     * @param filename
+     * @return
+     * @throws KeyStoreException
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     * @throws javax.security.cert.CertificateException
+     * @throws java.security.cert.CertificateException
+     */
+    public static X509Certificate certFromFile(String filename)
+            throws KeyStoreException,
+            IOException,
+            NoSuchAlgorithmException,
+            javax.security.cert.CertificateException,
+            java.security.cert.CertificateException {
+        InputStream certStream = new FileInputStream(filename);
+//      byte [] certBytes = new byte[certStream.available()];
+        byte[] certBytes = new byte[2048];
+        try {
+            int k = certStream.read(certBytes);
+
+//      } catch (Exception e) {
+//          e.printStackTrace();
+        }
+        finally{
+                 certStream.close();
+        }
+        javax.security.cert.X509Certificate cert = javax.security.cert.X509Certificate.getInstance(certBytes);
+        return convertX509Cert(cert);
+    }
+    
+    /**
+     * Convert a <b>javax</b> X509Certificate to a <b>java</b> X509Certificate.
+     *
+     * @param cert A certificate in <b>javax.security.cert.X509Certificate</b> format
+     * @return A certificate in <b>java.security.cert.X509Certificate</b> format
+     */
+    public static java.security.cert.X509Certificate convertX509Cert(javax.security.cert.X509Certificate cert)
+            throws java.security.cert.CertificateEncodingException,
+            javax.security.cert.CertificateEncodingException,
+            java.security.cert.CertificateException,
+            javax.security.cert.CertificateException {
+        java.security.cert.CertificateFactory cf = java.security.cert.CertificateFactory.getInstance("X.509");
+        return (java.security.cert.X509Certificate)cf.generateCertificate(new ByteArrayInputStream(cert.getEncoded()));
     }
 }
