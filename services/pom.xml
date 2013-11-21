@@ -18,6 +18,7 @@
     <module>webservice-util</module>
     <module>ASData</module>
     <module>ASCommon</module>
+    <module>citrix-sdk</module>
     <module>trust-utils-jar</module>
     <module>AttestationService</module>
     <module>WLMService</module>

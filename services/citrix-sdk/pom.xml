@@ -1,0 +1,70 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.xensource</groupId>
+  <artifactId>citrix-sdk</artifactId>
+  <version>6.2</version>
+  <packaging>pom</packaging>
+  <name>Citrix-SDK-6.2</name>
+  <url>citrix.com</url>
+
+  <distributionManagement>
+      <repository>
+	  <id>local</id>
+	  <url>file://${maven.repository.root}</url>
+      </repository>
+  </distributionManagement>
+  
+  <build>
+      <plugins>
+	  <plugin>
+	      <groupId>org.codehaus.mojo</groupId>
+	      <artifactId>build-helper-maven-plugin</artifactId>
+	      <version>1.7</version>
+	      <executions>
+		  <execution>
+		      <id>attach-artifact</id>
+		      <goals>
+			  <goal>attach-artifact</goal>
+		      </goals>
+		      <configuration>
+			  <artifacts>
+                            
+                            <artifact>
+                                <file>xenserver-6.2.0-1.jar</file>
+                                <type>jar</type>		
+                            </artifact>
+							
+			  </artifacts>
+			  <basedir>${basedir}</basedir>
+		      </configuration>
+		  </execution>
+	      </executions>
+	  </plugin>
+      </plugins>
+    <extensions>
+	<extension>
+	    <groupId>org.apache.maven.wagon</groupId>
+	    <artifactId>wagon-webdav</artifactId>
+	    <version>1.0-beta-2</version>
+	</extension>
+    </extensions>
+  </build>
+  <dependencies>
+    <dependency>
+	    <groupId>org.apache.ws.commons.util</groupId>
+		<artifactId>ws-commons-util</artifactId>
+		<version>1.0.2</version>
+  	</dependency>
+	<dependency>
+	    <groupId>org.apache.xmlrpc</groupId>
+		<artifactId>xmlrpc-client</artifactId>
+		<version>3.1</version>
+  	</dependency>
+	<dependency>
+	    <groupId>org.apache.xmlrpc</groupId>
+		<artifactId>xmlrpc-common</artifactId>
+		<version>3.1</version>
+  	</dependency>
+   </dependencies>
+</project>
