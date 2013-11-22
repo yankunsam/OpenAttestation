@@ -38,19 +38,19 @@ fi
 addOEM() 
 {
   curl --cacert certfile.cer -H "Content-Type: application/json" \
-       -X POST -d "$INFO" "https://$HOST_NAME:$PORT/WLMService/resources/oem" -ssl3
+       -X POST -d "$INFO" "https://$HOST_NAME:$PORT/WLMService/resources/oem"
 }
 
 editOEM()
 {
   curl --cacert certfile.cer -H "Content-Type: application/json" \
-        -X PUT -d "$INFO" "https://$HOST_NAME:$PORT/WLMService/resources/oem" -ssl3
+        -X PUT -d "$INFO" "https://$HOST_NAME:$PORT/WLMService/resources/oem"
 }
 
 delOEM()
 {
   curl --cacert certfile.cer \
-        -X DELETE  "https://$HOST_NAME:$PORT/WLMService/resources/oem?$INFO"  -ssl3
+        -X DELETE  "https://$HOST_NAME:$PORT/WLMService/resources/oem?$INFO"
 }
 
 case $1 in

@@ -28,7 +28,7 @@ INFO="$3"
 pollHosts()
 {
   curl --cacert certfile.cer -H "Content-Type: application/json" \
-        -X POST -d "$INFO" "https://$HOST_NAME:$PORT/AttestationService/resources/PollHosts" -ssl3
+        -X POST -d "$INFO" "https://$HOST_NAME:$PORT/AttestationService/resources/PollHosts"
 }
 pollHosts
 echo -e "\n"
