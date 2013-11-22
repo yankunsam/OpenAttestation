@@ -43,19 +43,19 @@ fi
 addOS() 
 {
   curl --cacert certfile.cer -H "Content-Type: application/json" \
-       -X POST -d "$INFO" "https://$HOST_NAME:$PORT/WLMService/resources/mles/whitelist/pcr" -ssl3
+       -X POST -d "$INFO" "https://$HOST_NAME:$PORT/WLMService/resources/mles/whitelist/pcr" 
 }
 
 editOS()
 {
   curl --cacert certfile.cer -H "Content-Type: application/json" \
-        -X PUT -d "$INFO" "https://$HOST_NAME:$PORT/WLMService/resources/mles/whitelist/pcr" -ssl3
+        -X PUT -d "$INFO" "https://$HOST_NAME:$PORT/WLMService/resources/mles/whitelist/pcr" 
 }
 
 delOS()
 {
   curl --cacert certfile.cer \
-        -X DELETE  "https://$HOST_NAME:$PORT/WLMService/resources/mles/whitelist/pcr?$INFO"  -ssl3
+        -X DELETE  "https://$HOST_NAME:$PORT/WLMService/resources/mles/whitelist/pcr?$INFO"  
 }
 
 case $1 in

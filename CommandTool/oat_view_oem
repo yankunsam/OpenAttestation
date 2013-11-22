@@ -36,7 +36,7 @@ view_oem()
        exit 0
      fi
      curl --cacert ./certfile.cer -H "Content-Type: application/json" \
-     -X GET https://$HOST_NAME:$PORT/WLMService/resources/oem -ssl3
+     -X GET https://$HOST_NAME:$PORT/WLMService/resources/oem 
 }
 
 view_oem

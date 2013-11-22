@@ -30,7 +30,7 @@ INFO="`echo "$3" | awk -F{ '{print $2}'| awk -F} '{print $1}'\
 view_mle()
 {
      curl --cacert ./certfile.cer -H "Content-Type: application/json" \
-     -X GET "https://$HOST_NAME:$PORT/WLMService/resources/mles/manifest?$INFO" -ssl3
+     -X GET "https://$HOST_NAME:$PORT/WLMService/resources/mles/manifest?$INFO" 
 }
 
 view_mle

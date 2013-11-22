@@ -36,7 +36,7 @@ view_os()
        exit 0
      fi
      curl --cacert ./certfile.cer -H "Content-Type: application/json" \
-     -X GET https://$HOST_NAME:$PORT/WLMService/resources/os -ssl3
+     -X GET https://$HOST_NAME:$PORT/WLMService/resources/os 
 }
 
 view_os
