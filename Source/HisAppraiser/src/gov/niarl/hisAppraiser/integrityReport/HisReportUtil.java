@@ -49,6 +49,7 @@ import gov.niarl.hisAppraiser.hibernate.domain.AuditLog;
 import gov.niarl.hisAppraiser.hibernate.domain.MachineCert;
 import gov.niarl.hisAppraiser.hibernate.util.AttestService;
 import gov.niarl.hisAppraiser.hibernate.util.HibernateUtilHis;
+import gov.niarl.hisAppraiser.hibernate.util.ResultConverter;
 import gov.niarl.hisAppraiser.util.AlertConfiguration;
 import gov.niarl.hisAppraiser.util.Emailer;
 import gov.niarl.hisAppraiser.util.HisUtil;
@@ -58,6 +59,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.security.cert.X509Certificate;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.xml.bind.JAXBContext;
@@ -258,15 +260,18 @@ public class HisReportUtil {
 		HisAuditDao auditLogDao = new HisAuditDao();
 		AuditLog newAuditLog = auditLogDao.getLastAuditLog(machineNameInput);
 		AttestRequest latestPolledRequest = attestDao.getLatestPolledRequest(machineNameInput);
-		if (latestPolledRequest != null && newAuditLog != null)
-		{
+		if (latestPolledRequest.getId() != null && newAuditLog != null) {
 			System.out.println("latestPolledRequest" +latestPolledRequest.getId());
-	     	if (latestPolledRequest.getId()!=null && latestPolledRequest.getResult()==null)
-	     	{
-				 latestPolledRequest.setAuditLog(newAuditLog);
-				 latestPolledRequest = AttestService.validatePCRReport(latestPolledRequest, machineNameInput);
-				 attestDao.updateRequest(latestPolledRequest);
-			 }
+			latestPolledRequest.setAuditLog(newAuditLog);
+
+			if (newAuditLog.getReportErrors() != null) {
+				latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.UN_TRUSTED));
+				latestPolledRequest.setValidateTime(new Date());
+			} else {
+				latestPolledRequest = AttestService.validatePCRReport(latestPolledRequest, machineNameInput);
+			}
+
+			attestDao.updateRequest(latestPolledRequest);
 	     	System.out.println("------------------------OpenAttestation complete!------------------------------------------");
 		 /****************************************************************************************************/
 		}

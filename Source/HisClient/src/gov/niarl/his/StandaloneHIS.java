@@ -594,6 +594,9 @@ public class StandaloneHIS
         //load the default polling interval value in whole seconds
         defaultPollInterval = new Integer(hisProperties.getProperty(POLLING_PERIOD_LABEL, DEFAULT_POLLING_VALUE)).intValue();
 
+        //make a call to the web service to get the type of action and action delay
+        hisPollingWebService = HisWebServicesClientInvoker.getHisPollingWebService(webServiceUrl);//"http://toc.dod.mil:8080/HisWebServices");
+
         //enter a polling loop
         while(true)
         {
@@ -603,21 +606,18 @@ public class StandaloneHIS
 
             try 
             {
-                //make a call to the web service to get the type of action and action delay
-                hisPollingWebService = HisWebServicesClientInvoker.getHisPollingWebService(webServiceUrl);//"http://toc.dod.mil:8080/HisWebServices");
-				if(hisPollingWebService==null)
+		if(hisPollingWebService==null)
                 {
                     System.out.println("Web service object null");
                 }
 				
-				else{
-					actionDelay = hisPollingWebService.getNextAction(computerName);
+		else{
+   		    actionDelay = hisPollingWebService.getNextAction(computerName);
+    		    action = actionDelay.getAction();
 
-					action = actionDelay.getAction();
-
-	                //save the delay until the next poll
-	                pollInterval = actionDelay.getDelayMilliseconds();
-				}
+	            //save the delay until the next poll
+	            pollInterval = actionDelay.getDelayMilliseconds();
+		}
 
             } 
             catch (Exception e) 
@@ -631,14 +631,14 @@ public class StandaloneHIS
                 //e.printStackTrace();
             }
             
-			switch (action) 
+	    switch (action) 
             {
-				case DO_NOTHING:
-					System.out.println("Action:DO_NOTHING");
-					 s_logger.debug("Action:DO_NOTHING");
-					break;
-				case SEND_REPORT:
-					System.out.println("Action:SEND_REPORT");
+		case DO_NOTHING:
+	            System.out.println("Action:DO_NOTHING");
+		    s_logger.debug("Action:DO_NOTHING");
+		    break;
+		case SEND_REPORT:
+		    System.out.println("Action:SEND_REPORT");
                     s_logger.debug("Action:SEND_REPORT");
                     try
                     {
@@ -649,13 +649,13 @@ public class StandaloneHIS
                         e.printStackTrace();
                         s_logger.error( "Error checking integrity on demand: "+e.getMessage() );
                     }
-					break;
-				case REBOOT:
-					System.out.println("Action:REBOOT");
+		    break;
+		case REBOOT:
+		    System.out.println("Action:REBOOT");
                     s_logger.debug("Action:REBOOT");
                     //TODO ENABLE THIS WHEN SAFE
                     restartComputer(hostOS);
-					break;
+		    break;
                 case VERIFY_CLIENT:
                     System.out.println("Action: VERIFY CLIENT");
                     s_logger.debug("Action: VERIFY CLIENT");
@@ -670,8 +670,9 @@ public class StandaloneHIS
                     if (actionDelay != null)
                     	commandProcessor(CLEAN_COMMAND_LABEL, actionDelay.getArgs() == null? "":actionDelay.getArgs());
                     break;
-			}
-
+	    }
+            actionDelay = null;
+            action = null;
             //delay for the poll interval
             try
             {
@@ -681,8 +682,8 @@ public class StandaloneHIS
                 }
                 else
                 {
-                	if (actionDelay != null)
-                		Thread.sleep(actionDelay.getDelayMilliseconds());
+                    if (actionDelay != null)
+                	Thread.sleep(pollInterval);
                 }
                 
             }

@@ -43,7 +43,9 @@ import java.security.Signature;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.SortedSet;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
@@ -321,10 +323,17 @@ public class HisReportValidator {
 		if (getPcrValueCount() != hisReportValidator.getPcrValueCount()) {
 			errors.add("There are a different number of PCR values for this report as compared to the previous report.");
 		}
-		for (Integer i : hisReportData.getPossiblePcrs()) {
+
+		SortedSet<Integer> possiblePcrs = new TreeSet<Integer>();
+		possiblePcrs.addAll(hisReportValidator.getHisReportData().getPossiblePcrs());
+		possiblePcrs.addAll(hisReportData.getPossiblePcrs());
+		for (Integer i : possiblePcrs) {
 			if (hisReportValidator.getPcrValue(i).length() == 0) {
 				previousReportDifferences = sb.append(DIFFERENCE_SEPARATOR).append(Integer.toString(i)).append(DIFFERENCE_SEPARATOR).toString();
 				errors.add("PCR value " + Integer.toString(i) + " is not in the previous report.");
+			} else if (getPcrValue(i).length() == 0) {
+				previousReportDifferences = sb.append(DIFFERENCE_SEPARATOR).append(Integer.toString(i)).append(DIFFERENCE_SEPARATOR).toString();
+				errors.add("PCR value " + Integer.toString(i) + " is not in the current report.");
 			} else if (!getPcrValue(i).equalsIgnoreCase(hisReportValidator.getPcrValue(i))) {
 				previousReportDifferences = sb.append(DIFFERENCE_SEPARATOR).append(Integer.toString(i)).append(DIFFERENCE_SEPARATOR).toString();
 				errors.add("PCR value " + Integer.toString(i) + " is different than the value in the previous report.");
@@ -365,12 +374,10 @@ public class HisReportValidator {
 		StringBuffer sb = new StringBuffer();
 		for (Iterator<String> iterator = errors.iterator(); iterator.hasNext();) {
 			String string = (String) iterator.next();
-			if (errorsString == null) {
-				errorsString = string;
-			} else {
+			if (errorsString != null) {
 				errorsString = sb.append("\n").append(ERROR_SEPARATOR).append("\n").toString();
-				errorsString = sb.append(string).toString() ;
 			}
+			errorsString = sb.append(string).toString();
 		}
 		return errorsString;
 	}
