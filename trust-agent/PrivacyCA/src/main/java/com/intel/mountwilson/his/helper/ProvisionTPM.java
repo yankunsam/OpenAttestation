@@ -77,22 +77,21 @@ public class ProvisionTPM {
 	 */
 	public static void takeOwnership() throws Exception{// throws InvalidKeyException, CertificateEncodingException, UnrecoverableKeyException, NoSuchAlgorithmException, InvalidKeySpecException, SignatureException, NoSuchProviderException, KeyStoreException, CertificateException, IOException, javax.security.cert.CertificateException {
 		//get properties file info
-                final String EC_VALIDITY = "EcValidityDays";
 		final String OWNER_AUTH = "TpmOwnerAuth";
+		final String EC_VALIDITY = "EcValidityDays";
 		final String EC_STORAGE = "ecStorage";
-        
-		String ecStorage = "";
-		String ecStorageFileName = "./EC.cer";
-                final String PRIVACY_CA_URL = "PrivacyCaUrl";
+		final String PRIVACY_CA_URL = "PrivacyCaUrl";
 		final String TRUST_STORE = "TrustStore";
-                final String PRIVACY_CA_CERT = "PrivacyCaCertFile";
-        
-                String PrivacyCaUrl = "";
+		final String PRIVACY_CA_CERT = "PrivacyCaCertFile";
+		final String EC_LOCATION = "ecLocation";
+		String ecStorage = "";
+		String ecStorageFileName = "";
+		String PrivacyCaUrl = "";
  		int EcValidityDays = 0;
-                String PrivacyCaCertFile = "";
+ 		String PrivacyCaCertFile = "";
 		
 		byte [] TpmOwnerAuth = null;
-                byte[] encryptCert = null;
+		byte[] encryptCert = null;
 		byte [] pubEkMod = null;
 		X509Certificate pcaCert = null;
 		PublicKey publicKey = null;
@@ -121,6 +120,8 @@ public class ProvisionTPM {
                         PrivacyCaUrl = HisProvisionerProperties.getProperty(PRIVACY_CA_URL, "");
 			PrivacyCaCertFile = HisProvisionerProperties.getProperty(PRIVACY_CA_CERT, "");
 			ecStorage = HisProvisionerProperties.getProperty(EC_STORAGE, "NVRAM");
+			ecStorageFileName = HisProvisionerProperties.getProperty(EC_LOCATION, ".") + System.getProperty("file.separator") + "EC.cer";
+			log.info("ecStorageFileName:" + ecStorageFileName);
 		} catch (FileNotFoundException e) {
 			throw new PrivacyCAException("Error finding HIS Provisioner properties file (HISprovisionier.properties)",e);
 		} catch (IOException e) {
@@ -166,15 +167,16 @@ public class ProvisionTPM {
 		} catch (TpmModuleException e){
             if(e.toString().contains(".takeOwnership returned nonzero error: 4")){
                 Logger.getLogger(ProvisionTPM.class.getName()).info("Ownership is already taken : " );
-                                //if( !System.getProperty("forceCreateEk", "false").equals("true") ) { // feature to help with bug #554 and allow admin to force creating an ek (in case it failed the first time due to a non-tpm error such as java missing classes exception
-                                //    return;
-                                //}
+                                if( !System.getProperty("forceCreateEk", "false").equals("true") ) { // feature to help with bug #554 and allow admin to force creating an ek (in case it failed the first time due to a non-tpm error such as java missing classes exception
+                                    return;
+                                }
             }
             else
                 throw e;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		
 		// Generate security key via 3DES algorithm
 		try {

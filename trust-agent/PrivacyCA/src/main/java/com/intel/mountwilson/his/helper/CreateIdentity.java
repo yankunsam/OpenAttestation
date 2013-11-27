@@ -100,6 +100,7 @@ public class CreateIdentity  {
 		final String TRUST_STORE = "TrustStore";
 		final String CLIENT_PATH = "ClientPath";
 		final String EC_STORAGE = "ecStorage";
+		final String EC_LOCATION = "ecLocation";
 		// Instantiate variables to be set by properties file
 		byte [] TpmOwnerAuth = null;
 		String HisIdentityLabel = "";
@@ -109,7 +110,7 @@ public class CreateIdentity  {
 		String PrivacyCaUrl = "";
 		String TrustStore = "";
 		String ClientPath = "";
-		String ecStorageFileName = "./EC.cer";
+		String ecStorageFileName = "";
 		String ecStorage = "";
         
 		// Set properties file name
@@ -141,6 +142,7 @@ public class CreateIdentity  {
 //			TrustStore = HisProvisionerProperties.getProperty(TRUST_STORE, "TrustStore.jks");
 			ClientPath = HisProvisionerProperties.getProperty(CLIENT_PATH, "");
 			ecStorage =  HisProvisionerProperties.getProperty(EC_STORAGE, "NVRAM");
+			ecStorageFileName = HisProvisionerProperties.getProperty(EC_LOCATION, ".") + System.getProperty("file.separator") + "EC.cer";
 		} catch (FileNotFoundException e) { // If the properties file is not found, display error
 			throw new PrivacyCAException("Error finding HIS Provisioner properties file (HISprovisionier.properties); using defaults.",e);
 		} catch (IOException e) { // If propertied file cannot be read, display error

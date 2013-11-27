@@ -272,8 +272,9 @@ function main {
         java_detect > /dev/null
         if no_java $java_required_version; then echo "Cannot find Java $java_required_version or later"; exit 1; fi
         stopService
-        pcakey
-        $java -cp $CLASSPATH -DforceCreateEk=true com.intel.mountwilson.trustagent.commands.TakeOwnershipCmd
+        /usr/local/bin/pcakey
+        javaVMArgs="$javaVMArgs -DforceCreateEk=true"
+        $java -cp $CLASSPATH $javaVMArgs com.intel.mountwilson.trustagent.commands.TakeOwnershipCmd
         startService
         ;;
   tpmstatus)

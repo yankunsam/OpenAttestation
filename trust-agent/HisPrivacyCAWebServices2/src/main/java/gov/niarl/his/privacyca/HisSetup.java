@@ -17,8 +17,6 @@ package gov.niarl.his.privacyca;
 
 import com.intel.mtwilson.util.ResourceFinder;
 
-import gov.niarl.his.webservices.hisPrivacyCAWebService2.server.HisPrivacyCAWebServices2LoadOnStartup;
-
 import java.io.*;
 import java.security.cert.X509Certificate;
 import java.util.Properties;
@@ -81,15 +79,14 @@ public class HisSetup {
             final String ENDORSEMENT_CA_SUBJECT_NAME = "EndorsementCaSubjectName";
             //final String ENDORSEMENT_CA_FILE_NAME = "EndorsementCaFileName";
             final String ENDORSEMENT_CA_PASSWORD = "EndorsementCaPassword";
-            final String HIS_REGISTRATION_URL = "HisRegistrationUrl";
             final String PRIVACY_CA_URL = "PrivacyCaUrl";
             final String CERT_VALIDITY_DAYS = "CertValidityDays";
             //final String PRIVACY_CA_CERTIFICATE_FILE_NAME = "PrivacyCaCertFileName";
-            final String FILE_LOCATION = "FileLocation";
             final String CLIENT_PATH = "ClientPath";
             final String AIK_AUTH = "AikAuth";
             final String EC_SIGNING_KEY_SIZE = "ecSigningKeySize";
             final String EC_STORAGE = "ecStorage";
+            final String EC_LOCATION = "ecLocation";
 
             FileInputStream PropertyFile = null;
             String PrivacyCaSubjectName = "null";
@@ -98,7 +95,6 @@ public class HisSetup {
             String EndorsementCaSubjectName = "null";
             String EndorsementCaFileName = "endorsement.p12";
             String EndorsementCaPassword = "null";
-            String HisRegistrationUrl = "null";
             String PrivacyCaUrl = "null";
             String CertValidityDays = "null";
             String PrivacyCaCertFileName = "PrivacyCA.cer";
@@ -109,12 +105,7 @@ public class HisSetup {
             String AikAuth = "";
             String ecSigningKeySize = "";
             String ecStorage = "";
-            
-//			String tomcatPath = System.getProperty("catalina.base");
-//			String tempPath = "";
-//			if (tomcatPath != null){
-//				tempPath = tomcatPath + "/webapps/HisPrivacyCAWebServices2/";
-//			}
+            String ecLocation = "";
 
             try {
                 PropertyFile = new FileInputStream(ResourceFinder.getFile("privacyca-client.properties"));
@@ -140,8 +131,10 @@ public class HisSetup {
                 AikAuth = SetupProperties.getProperty(AIK_AUTH, "1111111111111111111111111111111111111111");
                 ecSigningKeySize =  SetupProperties.getProperty(EC_SIGNING_KEY_SIZE,"2048");
                 ecStorage =  SetupProperties.getProperty(EC_STORAGE, "NVRAM");
-                System.out.println("ecSigningKeySize = " + ecSigningKeySize + "\n");
-                System.out.println("ecStorage = " + ecStorage + "\n");
+                ecLocation =  SetupProperties.getProperty(EC_LOCATION, ".");
+                logger.info("ecSigningKeySize = " + ecSigningKeySize + "\n");
+                logger.info("ecStorage = " + ecStorage + "\n");
+                logger.info("ecLocation = " + ecLocation + "\n");
             } catch (FileNotFoundException e) {
                 System.out.println("Error finding setup.properties file. Setup cannot continue without the information in this file.");
                 return;
@@ -462,7 +455,8 @@ public class HisSetup {
                     "NtruBypass = true\r\n"
                     + "ClientPath = " + "cert" + "\r\n"
                     + "ecStorage = " + ecStorage + "\r\n"
-                    + "ecSigningKeySize = " + ecSigningKeySize + "\r\n";
+                    + "ecSigningKeySize = " + ecSigningKeySize + "\r\n"
+                    + "ecLocation = " + ecLocation + "\r\n";
             try {
                 fos.write(toWrite.getBytes("US-ASCII"));
                 fos.flush();
