@@ -3,6 +3,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+/* //[enddef]
 package com.intel.mtwilson.agent.citrix;
 
 
@@ -37,12 +38,13 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.xmlrpc.XmlRpcException;
-
+//[ifdef] */
 
 /**
  *
  * @author stdalex
  */
+/* //[enddef]
 public class CitrixHostAgent implements HostAgent{
     private CitrixClient client;
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -152,3 +154,4 @@ public class CitrixHostAgent implements HostAgent{
   
        
 }
+//[ifdef] */

@@ -2,6 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+/* //[enddef]
 package com.intel.mtwilson.agent.citrix;
 
 import com.intel.mountwilson.as.common.ASConfig;
@@ -42,12 +43,13 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.xmlrpc.XmlRpcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+//[ifdef] */
 
 /**
  *
  * @author stdalex
  */
+/*  //[enddef]
 public class CitrixClient {
     private transient Logger log = LoggerFactory.getLogger(getClass());
     
@@ -129,25 +131,6 @@ public class CitrixClient {
     }
 	
 	
-    // Commenting the below function since it is not being used and klocwork is throwing a warning    
-    /*private String removeTags(String xml) {
-	
-      String resp = "";  
-      int i = 0;
-      for(; i < xml.length(); i++) {
-       if(xml.charAt(i) == '>') {
-        i++;
-        break;
-       }
-      }
-      for(;i < xml.length(); i++) {
-       if(xml.charAt(i) == '<'){
-        break;
-       }
-       resp += xml.charAt(i);
-      }
-      return resp;
-    }*/
     
     public class keys {
      public String tpmEndCert;
@@ -303,10 +286,6 @@ public class CitrixClient {
             else {
             	log.warn( "Result PCR invalid");
             }
-            /*
-            if(pcrs.contains(parts[0].trim()))
-            	pcrMp.put(parts[0].trim(), new PcrManifest(Integer.parseInt(parts[0]),parts[1]));
-            */
         }
         
         return pcrMp;
@@ -364,19 +343,6 @@ public class CitrixClient {
         return "quote_" + sessionId +".data";
     }
 
-    // Commenting the below function since it is not being used and klocwork is throwing a warning
-    /*private void saveCertificate(String aikCertificate, String sessionId) throws IOException  {
-        if( aikCertificate.indexOf("-----BEGIN CERTIFICATE-----\n") < 0 && aikCertificate.indexOf("-----BEGIN CERTIFICATE-----") >= 0 ) {
-            log.debug( "adding newlines to certificate BEGIN tag");            
-            aikCertificate = aikCertificate.replace("-----BEGIN CERTIFICATE-----", "-----BEGIN CERTIFICATE-----\n");
-        }
-        if( aikCertificate.indexOf("\n-----END CERTIFICATE-----") < 0 && aikCertificate.indexOf("-----END CERTIFICATE-----") >= 0 ) {
-            log.debug( "adding newlines to certificate END tag");            
-            aikCertificate = aikCertificate.replace("-----END CERTIFICATE-----", "\n-----END CERTIFICATE-----");
-        }
-
-        saveFile(getCertFileName(sessionId), aikCertificate.getBytes());
-    }*/
 
     private String getCertFileName(String sessionId) {
         return "aikcert_" + sessionId + ".cer";
@@ -421,7 +387,7 @@ public class CitrixClient {
         byte[] nonceBytes = Base64.decodeBase64(nonce);
           saveFile(getNonceFileName(sessionId), nonceBytes);
     }
-
+//[ifdef] */
     // Commenting the below function since it is not being used and klocwork is throwing a warning
     /*private void createRSAKeyFile(String sessionId)  {
         
@@ -499,7 +465,7 @@ public class CitrixClient {
        return response;
     }
     */
-    
+/* //[enddef] 
     public String getAIKCertificate() throws NoSuchAlgorithmException, KeyManagementException, BadServerResponse, XenAPIException,  XmlRpcException {
         String resp = "";
         log.info("stdalex-error getAIKCert IP:" + hostIpAddress + " port:" + port + " user: " + userName + " pw:" + password); // removed to prevent leaking secrets
@@ -540,3 +506,4 @@ public class CitrixClient {
        return resp;
     }
 }
+//[ifdef] */

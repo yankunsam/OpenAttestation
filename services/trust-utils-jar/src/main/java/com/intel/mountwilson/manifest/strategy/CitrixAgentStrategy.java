@@ -1,3 +1,4 @@
+/* //[enddef]
 package com.intel.mountwilson.manifest.strategy;
 
 import java.util.HashMap;
@@ -16,18 +17,20 @@ import com.intel.mtwilson.agent.citrix.CitrixClient;
 import com.intel.mtwilson.datatypes.ErrorCode;
 import com.intel.mtwilson.tls.TlsConnection;
 import com.intel.mtwilson.tls.TlsPolicy;
-
+//[ifdef] */
 /**
  * XXX needs to move to a trust-agent specific package
  */
+/* //[enddef]
 public class CitrixAgentStrategy implements IManifestStrategy  {
 
     EntityManagerFactory entityManagerFactory;
-    
+ //[ifdef] */ 
 	/**
      *
      * @param entityManagerFactory
      */
+/* //[enddef]
     public CitrixAgentStrategy(EntityManagerFactory entityManagerFactory) {
 		this.entityManagerFactory = entityManagerFactory;
 	}
@@ -72,3 +75,4 @@ public class CitrixAgentStrategy implements IManifestStrategy  {
     }
      
 }
+//[ifdef] */
