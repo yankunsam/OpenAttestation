@@ -87,6 +87,7 @@ public class HisSetup {
             final String EC_SIGNING_KEY_SIZE = "ecSigningKeySize";
             final String EC_STORAGE = "ecStorage";
             final String EC_LOCATION = "ecLocation";
+            final String OWNER_AUTH = "TpmOwnerAuth";
 
             FileInputStream PropertyFile = null;
             String PrivacyCaSubjectName = "null";
@@ -106,7 +107,7 @@ public class HisSetup {
             String ecSigningKeySize = "";
             String ecStorage = "";
             String ecLocation = "";
-
+            String tpmOwnerAuth = "";
             try {
                 PropertyFile = new FileInputStream(ResourceFinder.getFile("privacyca-client.properties"));
                 Properties SetupProperties = new Properties();
@@ -132,9 +133,11 @@ public class HisSetup {
                 ecSigningKeySize =  SetupProperties.getProperty(EC_SIGNING_KEY_SIZE,"2048");
                 ecStorage =  SetupProperties.getProperty(EC_STORAGE, "NVRAM");
                 ecLocation =  SetupProperties.getProperty(EC_LOCATION, ".");
+                tpmOwnerAuth = SetupProperties.getProperty(OWNER_AUTH, ".");
                 logger.info("ecSigningKeySize = " + ecSigningKeySize + "\n");
                 logger.info("ecStorage = " + ecStorage + "\n");
                 logger.info("ecLocation = " + ecLocation + "\n");
+                logger.info("tpmOwnerAuth = " + tpmOwnerAuth + "\n");
             } catch (FileNotFoundException e) {
                 System.out.println("Error finding setup.properties file. Setup cannot continue without the information in this file.");
                 return;
@@ -443,7 +446,7 @@ public class HisSetup {
             toWrite =
                     "#TPM Provisioning Data\r\n"
                     + "EcValidityDays = " + CertValidityDays + "\r\n"
-                    + "TpmOwnerAuth = 1111111111111111111111111111111111111111\r\n"
+                    + "TpmOwnerAuth = " + tpmOwnerAuth + "\r\n"
                     + "#HIS Identity Provisioning Data\r\n"
                     + "HisIdentityLabel = HIS Identity Key\r\n"
                     + "HisIdentityIndex = 1\r\n"

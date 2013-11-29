@@ -115,7 +115,7 @@ public class CreateIdentity  {
         
 		// Set properties file name
 		String homeFolder = ""; 
-		
+		String tpmOwnerAuth = "";
 
 		// Read the properties file, setting any defaults where it makes sense
 		FileInputStream PropertyFile = null;
@@ -130,8 +130,17 @@ public class CreateIdentity  {
 			homeFolder = homeFolder.substring(0,homeFolder.indexOf("hisprovisioner.properties"));
 			
 			log.info("Home folder : " + homeFolder);
-
-			TpmOwnerAuth = TpmUtils.hexStringToByteArray(HisProvisionerProperties.getProperty(OWNER_AUTH));
+			tpmOwnerAuth = HisProvisionerProperties.getProperty(OWNER_AUTH, "");
+			if (tpmOwnerAuth.length() == 20) {
+			    log.info("owner authentication is char formatted");
+			    TpmOwnerAuth = tpmOwnerAuth.getBytes();
+			} else if (tpmOwnerAuth.length() == 40) {
+			    log.info("owner authentication is hex code formatted");
+			    TpmOwnerAuth = TpmUtils.hexStringToByteArray(tpmOwnerAuth);
+			} else {
+			    log.info("illegal owner authentication detected! accepted owner authentication is 20 or 40 long characters");
+			}
+			//TpmOwnerAuth = TpmUtils.hexStringToByteArray(HisProvisionerProperties.getProperty(OWNER_AUTH));
 			HisIdentityLabel = HisProvisionerProperties.getProperty(HIS_IDENTITY_LABEL, "");
 			HisIdentityIndex = Integer.parseInt(HisProvisionerProperties.getProperty(HIS_IDENTITY_INDEX, "0"));
 			HisIdentityAuth = TpmUtils.hexStringToByteArray(HisProvisionerProperties.getProperty(HIS_IDENTITY_AUTH, ""));
