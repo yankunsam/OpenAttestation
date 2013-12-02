@@ -9,8 +9,63 @@
         <artifactId>oat-services</artifactId>
         <version>2.1</version>
     </parent>
+   <properties>
+        <src.dir>${basedir}/src/main/java</src.dir>
+        <sourcePath>${src.dir}</sourcePath>
+        <xenserver.dir>${basedir}/xenserver</xenserver.dir>
+    </properties>
+    
+    <profiles>
+        <profile>
+            <id>xenserver</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>compile.xenserver</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <properties>
+                <sourcePath>${xenserver.dir}</sourcePath>
+            </properties>
+            <dependencies>
+                <dependency>
+                   <groupId>com.xensource</groupId>
+	               <artifactId>citrix-sdk</artifactId>
+	               <version>6.2</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
     <build>
-		<plugins>
+        <sourceDirectory>${sourcePath}</sourceDirectory>
+	<plugins>
+            <plugin>
+	      <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-antrun-plugin</artifactId>
+	          <executions>
+	            <execution>
+ 	                <goals><goal>run</goal></goals>
+	                <phase>generate-resources</phase>
+	                <configuration>
+	                    <tasks>
+	                        <delete dir = "${xenserver.dir}" />
+	                        <mkdir dir = "${xenserver.dir}" />
+	                        <copy toDir = "${xenserver.dir}" filtering = "true">
+	                           <fileset dir = "${src.dir}">
+	                              <include name = "**/*.java"/>
+	                           </fileset>
+	                           <filterset begintoken = "//[" endtoken = "]">
+                                      <filter token = "ifdef" value = "/*"/>
+                                      <filter token = "enddef" value = "*/"/>		                               
+	                           </filterset>
+	                        </copy>
+	                    </tasks>
+	                </configuration>
+	            </execution>
+	        </executions>
+	    </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -43,11 +98,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.0.9</version>
-    </dependency>
-    <dependency>
-            <groupId>com.xensource</groupId>
-            <artifactId>citrix-sdk</artifactId>
-	    <version>6.2</version>
     </dependency>
     <dependency>
             <groupId>ch.qos.logback</groupId>
