@@ -1,5 +1,5 @@
 var oemInfo = [];
-var isVmware = false;
+var isVmware = 0;  // 0 == TA, 1 == Citrix
 
 $(function() {
 	$('#mainAddHostContainer').prepend(disabledDiv);
@@ -94,6 +94,22 @@ function fnChangeOEMVender() {
 }
 
 function SetRequired(element) {
+    var selected = $(element).val();
+    
+	$(element).find('option').each(function() {
+		if ($(this).text() == selected) {
+			type = $(this).attr('value');  // 'isvmware'
+		}
+	});
+    
+    if (type.toString().toLowerCase().indexOf("vmware") != -1) {  
+		isVmware = 1;
+	}else if(type.toString().toLowerCase().indexOf("xenserver") != -1) {
+       isVmware = 2;
+	}else{
+        isVmware= 0;
+    }
+    
 	$('.requiredOne').each(function() {
 		$(this).remove();
 	});
@@ -101,6 +117,32 @@ function SetRequired(element) {
                         $('#hostPortDisplayDiv').show();
                         $('#MainContent_tbHostIP').parent().append(reqStr);
                         $('#MainContent_tbHostPort').parent().append(reqStr);
+    if(isVmware == 2) {  // Citrix
+        $('#hostPortDisplayDiv').show();
+                //$('#MainContent_tbHostIP').parent().append(reqStr);
+				$('#MainContent_tbHostPort').parent().append(reqStr);
+                $('#vcenterStringElement').find('input').each(function() {
+                    $(this).parent().find('.validationErrorDiv').remove();
+                });
+                $('#vcenterStringElement').hide(); 
+                
+                $('#citrixStringElement').find('input').each(function() {
+                    $(this).parent().append(reqStr);
+                });
+                $('#citrixStringElement').show();
+                $('#MainContent_tbHostPort').val("443");
+    }else { // TA
+        $('#hostPortDisplayDiv').show();
+		//$('#MainContent_tbHostIP').parent().append(reqStr);
+		$('#MainContent_tbHostPort').parent().append(reqStr);
+		$('#vcenterStringElement').find('input').each(function() {
+			$(this).parent().find('.validationErrorDiv').remove();
+		});
+		$('#vcenterStringElement').hide();
+		$('#citrixStringElement').hide();
+                $('#MainContent_tbHostPort').val("9999");
+    }
+  
 }
 
 function hostDataVoObbject(hostId,hostName,hostIPAddress,hostPort,hostDescription,biosName,biosBuildNo,vmmName,vmmBuildNo,updatedOn,emailAddress,location,oemName) {
@@ -180,8 +222,13 @@ function fnGetNewHostData() {
 	hostVo.oemName = $('#MainContent_ddlOEM').val();
 		
 	hostVo.hostIPAddress = $.trim($('#MainContent_tbHostIP').val());
-                        hostVo.hostPort =$.trim($('#MainContent_tbHostPort').val());
-	
+    hostVo.hostPort =$.trim($('#MainContent_tbHostPort').val());
+	if(isVmware == 2) {
+        // itrix:https://xenserver:port;username;password
+        hostVo.vCenterDetails = "citrix:https://"+$('#MainContent_tbHostName').val()+":"+$('#MainContent_tbHostPort').val()+
+                                             "/;"+$('#MainContent_tbVcitrixLoginId').val()+";"+$('#MainContent_tbVcitrixPass').val();
+        
+    }
 	//setting unwanted values to null or default
 	hostVo.location = null;
 	hostVo.updatedOn = null;

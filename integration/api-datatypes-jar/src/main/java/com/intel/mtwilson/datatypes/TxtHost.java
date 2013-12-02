@@ -18,12 +18,15 @@ package com.intel.mtwilson.datatypes;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author dsmagadx
  */
 public class TxtHost {
+    private final Logger log = LoggerFactory.getLogger(getClass());
     private Hostname hostname;
 //    private ServicePort servicePort;
     private IPAddress ipAddress;
@@ -98,7 +101,8 @@ public class TxtHost {
     public String getAddOn_Connection_String() {
         if( connectionString == null && ipAddress != null && port != null ) {
             // for backwards compatibility with cilents that don't submit a connection string for intel hosts
-            return "intel:https://"+ipAddress.toString()+":"+port.toString(); // XXX or mabye just throw an IllegalArgumentException , this may not be the right place to kludge this.
+              log.debug("stdalex connection string was null");
+              return "intel:https://"+ipAddress.toString()+":"+port.toString(); // XXX or mabye just throw an IllegalArgumentException , this may not be the right place to kludge this.
         }
         return connectionString;
     }

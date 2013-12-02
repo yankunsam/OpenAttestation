@@ -13,6 +13,20 @@
     <version>2.0</version>
   </parent>
   
+ <profiles>
+        <profile>
+            <id>xenserver</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>compile.xenserver</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <modules><module>citrix-sdk</module></modules>
+        </profile>
+    </profiles>
+ 
   <modules>
     <module>aikqverify</module>
     <module>webservice-util</module>

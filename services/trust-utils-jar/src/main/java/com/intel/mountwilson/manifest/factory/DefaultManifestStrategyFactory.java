@@ -20,6 +20,10 @@ import javax.persistence.EntityManagerFactory;
 import com.intel.mtwilson.as.data.TblHosts;
 import com.intel.mountwilson.manifest.IManifestStrategy;
 import com.intel.mountwilson.manifest.IManifestStrategyFactory;
+/* //[enddef] 
+import com.intel.mountwilson.manifest.strategy.CitrixAgentStrategy;
+//[ifdef] */
+
 import com.intel.mountwilson.manifest.strategy.TrustAgentStrategy;
 
 /**
@@ -30,7 +34,14 @@ public class DefaultManifestStrategyFactory implements IManifestStrategyFactory 
 
 	@Override
 	public IManifestStrategy getManifestStategy(TblHosts tblHosts, EntityManagerFactory entityManagerFactory) {
-               return new TrustAgentStrategy(entityManagerFactory);
+          /* //[enddef]
+          if(tblHosts.getAddOnConnectionInfo().toLowerCase().contains("citrix")){
+             return new CitrixAgentStrategy(entityManagerFactory);
+          }else{ //[ifdef] */
+              return new TrustAgentStrategy(entityManagerFactory);
+          /* //[enddef]
+          }
+          //[ifdef] */
 	}
 
 }

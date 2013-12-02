@@ -23,6 +23,7 @@ import com.intel.mtwilson.agent.HostAgent;
 import com.intel.mtwilson.crypto.X509Util;
 import com.intel.mtwilson.datatypes.InternetAddress;
 import java.io.IOException;
+import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import org.slf4j.Logger;
@@ -117,6 +118,11 @@ public class IntelHostAgent implements HostAgent {
         catch(Exception e) {
             throw new IOException(e);
         }
+    }
+
+    @Override
+    public PublicKey getAik() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }

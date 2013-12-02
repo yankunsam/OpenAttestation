@@ -29,33 +29,31 @@
 
   <dependencies>
     <dependency>
-		<groupId>junit</groupId>
-		<artifactId>junit</artifactId>
-		<scope>test</scope>
+	<groupId>junit</groupId>
+	<artifactId>junit</artifactId>
+  	<scope>test</scope>
         <type>jar</type>
     </dependency>
-
     <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.6.4</version>
     </dependency>
-    <!-- <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
-            <version>1.6.4</version>
-    </dependency> -->
-        <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>1.0.9</version>
-        </dependency>
-
-        <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>1.0.9</version>
-        </dependency>
+    <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.9</version>
+    </dependency>
+    <dependency>
+            <groupId>com.xensource</groupId>
+            <artifactId>citrix-sdk</artifactId>
+	    <version>6.2</version>
+    </dependency>
+    <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.0.9</version>
+    </dependency>
 	
     <dependency>
             <groupId>${project.groupId}</groupId>
