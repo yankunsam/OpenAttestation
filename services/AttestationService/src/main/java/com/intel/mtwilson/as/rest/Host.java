@@ -176,7 +176,7 @@ public class Host {
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public HostResponse put(TxtHostRecord hostRecord) {
+    public String put(TxtHostRecord hostRecord) {
             return hostBO.updateHost(new TxtHost(hostRecord));
     }
     
@@ -192,7 +192,7 @@ public class Host {
     @DELETE
 //    @Consumes({"text/html"})
     @Produces({MediaType.APPLICATION_JSON})
-    public HostResponse delete(@QueryParam("hostName")String hostName){
+    public String delete(@QueryParam("hostName")String hostName){
            return hostBO.deleteHost(new Hostname(hostName));
      }
     

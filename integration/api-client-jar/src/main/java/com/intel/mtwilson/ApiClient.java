@@ -510,17 +510,21 @@ public class ApiClient implements AttestationService, WhitelistService {
     }
 
     @Override
-    public HostResponse updateHost(TxtHost host) throws IOException, ApiException, SignatureException {
-        HostResponse added = fromJSON(httpPut(asurl("/hosts"), toJSON(new TxtHostRecord(host))), HostResponse.class);
-        return added;        
+    public boolean updateHost(TxtHost host) throws IOException, ApiException, SignatureException {
+        //HostResponse added = fromJSON(httpPut(asurl("/hosts"), toJSON(new TxtHostRecord(host))), HostResponse.class);
+        String added = text(httpPut(asurl("/hosts"), toJSON(new TxtHostRecord(host))));
+        //return added;
+        return "true".equals(added);
     }
 
     @Override
-    public HostResponse deleteHost(Hostname hostname) throws IOException, ApiException, SignatureException {
+    public boolean deleteHost(Hostname hostname) throws IOException, ApiException, SignatureException {
         MultivaluedMap<String,String> query = new MultivaluedMapImpl();
         query.add("hostName", hostname.toString());
-        HostResponse deleted = fromJSON(httpDelete(asurl("/hosts", query)), HostResponse.class);
-        return deleted;        
+        //HostResponse deleted = fromJSON(httpDelete(asurl("/hosts", query)), HostResponse.class);
+        String deleted = text(httpDelete(asurl("/hosts", query)));
+        return "true".equals(deleted);
+        //return deleted;        
     }
 
     @Override

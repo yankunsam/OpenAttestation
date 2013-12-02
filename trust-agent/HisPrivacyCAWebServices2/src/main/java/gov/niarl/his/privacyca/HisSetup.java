@@ -16,6 +16,7 @@
 package gov.niarl.his.privacyca;
 
 import com.intel.mtwilson.util.ResourceFinder;
+
 import java.io.*;
 import java.security.cert.X509Certificate;
 import java.util.Properties;
@@ -68,22 +69,25 @@ public class HisSetup {
          * PrivacyCaCertFileName = PricCa.cer
          * FileLocation = ./HIS_Setup
          */
+        final Logger logger = Logger.getLogger(HisSetup.class.getName());
         FileOutputStream fos = null;
         try {
-            System.out.println("Reading properties file...");
+            logger.info("Reading properties file...");
             final String PRIVACY_CA_SUBJECT_NAME = "PrivacyCaSubjectName";
             //final String PRIVACY_CA_FILE_NAME = "PrivacyCaFileName";
             final String PRIVACY_CA_PASSWORD = "PrivacyCaPassword";
             final String ENDORSEMENT_CA_SUBJECT_NAME = "EndorsementCaSubjectName";
             //final String ENDORSEMENT_CA_FILE_NAME = "EndorsementCaFileName";
             final String ENDORSEMENT_CA_PASSWORD = "EndorsementCaPassword";
-            final String HIS_REGISTRATION_URL = "HisRegistrationUrl";
             final String PRIVACY_CA_URL = "PrivacyCaUrl";
             final String CERT_VALIDITY_DAYS = "CertValidityDays";
             //final String PRIVACY_CA_CERTIFICATE_FILE_NAME = "PrivacyCaCertFileName";
-            final String FILE_LOCATION = "FileLocation";
             final String CLIENT_PATH = "ClientPath";
             final String AIK_AUTH = "AikAuth";
+            final String EC_SIGNING_KEY_SIZE = "ecSigningKeySize";
+            final String EC_STORAGE = "ecStorage";
+            final String EC_LOCATION = "ecLocation";
+            final String OWNER_AUTH = "TpmOwnerAuth";
 
             FileInputStream PropertyFile = null;
             String PrivacyCaSubjectName = "null";
@@ -92,7 +96,6 @@ public class HisSetup {
             String EndorsementCaSubjectName = "null";
             String EndorsementCaFileName = "endorsement.p12";
             String EndorsementCaPassword = "null";
-            String HisRegistrationUrl = "null";
             String PrivacyCaUrl = "null";
             String CertValidityDays = "null";
             String PrivacyCaCertFileName = "PrivacyCA.cer";
@@ -101,13 +104,10 @@ public class HisSetup {
             int ValidityDays;
             String clientPath = "";
             String AikAuth = "";
-
-//			String tomcatPath = System.getProperty("catalina.base");
-//			String tempPath = "";
-//			if (tomcatPath != null){
-//				tempPath = tomcatPath + "/webapps/HisPrivacyCAWebServices2/";
-//			}
-
+            String ecSigningKeySize = "";
+            String ecStorage = "";
+            String ecLocation = "";
+            String tpmOwnerAuth = "";
             try {
                 PropertyFile = new FileInputStream(ResourceFinder.getFile("privacyca-client.properties"));
                 Properties SetupProperties = new Properties();
@@ -129,8 +129,15 @@ public class HisSetup {
                 //FileLocation = SetupProperties.getProperty(FILE_LOCATION, "null");
                 clientPath = SetupProperties.getProperty(CLIENT_PATH, "clientfiles");
                 checkAndCreateDirectory(fileLocation, clientPath);
-
                 AikAuth = SetupProperties.getProperty(AIK_AUTH, "1111111111111111111111111111111111111111");
+                ecSigningKeySize =  SetupProperties.getProperty(EC_SIGNING_KEY_SIZE,"2048");
+                ecStorage =  SetupProperties.getProperty(EC_STORAGE, "NVRAM");
+                ecLocation =  SetupProperties.getProperty(EC_LOCATION, ".");
+                tpmOwnerAuth = SetupProperties.getProperty(OWNER_AUTH, ".");
+                logger.info("ecSigningKeySize = " + ecSigningKeySize + "\n");
+                logger.info("ecStorage = " + ecStorage + "\n");
+                logger.info("ecLocation = " + ecLocation + "\n");
+                logger.info("tpmOwnerAuth = " + tpmOwnerAuth + "\n");
             } catch (FileNotFoundException e) {
                 System.out.println("Error finding setup.properties file. Setup cannot continue without the information in this file.");
                 return;
@@ -244,6 +251,7 @@ public class HisSetup {
                 EndorsementCaPassword = TpmUtils.byteArrayToHexString(TpmUtils.createRandomBytes(16));
             }
             String ecCaPath = "";
+            int KeySize = 2048;
 //			if (tomcatPath != null){
 //				InputStream in = null;
 //				OutputStream out = null;
@@ -302,8 +310,12 @@ public class HisSetup {
              * FileLocation = ./HIS_Setup
              */
             System.out.print("Creating p12 files...");
+            if(ecSigningKeySize.equals("1024") || ecSigningKeySize.equals("2048") ||  ecSigningKeySize.equals("3072"))
+            {
+              KeySize = Integer.parseInt(ecSigningKeySize);  
+            }
             TpmUtils.createCaP12(2048, PrivacyCaSubjectName, PrivacyCaPassword, fileLocation + "/" + PrivacyCaFileName, ValidityDays);
-            TpmUtils.createCaP12(2048, EndorsementCaSubjectName, EndorsementCaPassword, fileLocation + clientPath + "/" + EndorsementCaFileName, ValidityDays);
+            TpmUtils.createCaP12(KeySize, EndorsementCaSubjectName, EndorsementCaPassword, fileLocation + "/" + EndorsementCaFileName, ValidityDays);
             System.out.println("DONE");
             // Create the Privacy CA certificate file
             System.out.print("Creating Privacy CA certificate...");
@@ -327,7 +339,7 @@ public class HisSetup {
 
             // Create the Endorsement CA certificate file
             System.out.print("Creating Endorsement CA certificate...");
-            X509Certificate ecCert = TpmUtils.certFromP12(fileLocation + clientPath + "/" + EndorsementCaFileName, EndorsementCaPassword);
+            X509Certificate ecCert = TpmUtils.certFromP12(fileLocation + "/" + EndorsementCaFileName, EndorsementCaPassword);
             FileOutputStream ecFileOut = new FileOutputStream(new File(fileLocation + ecCaPath + "/" + EndorsementCaCertFileName));
             try {
                 if (ecCert != null) {
@@ -349,6 +361,7 @@ public class HisSetup {
             // Create the other properties files (HISprovisioner and PrivacyCA)
             System.out.print("Creating properties files...");
             String PrivacyCaPropertiesFile = "PrivacyCA.properties";
+            String EndorsementPropertiesFile = "EndorsementCA.properties";
             String HisProvisionerPropertiesFile = "hisprovisioner.properties";
             //String HisStandalonePropertiesFile = "OAT.properties";
 
@@ -405,16 +418,35 @@ public class HisSetup {
 
 
             /*
+             * File: EndorsementCA.properties
+             */
+            fos = new FileOutputStream(fileLocation + "/" + EndorsementPropertiesFile);
+            toWrite =
+                    "#Endorsement CA Data\r\n"
+                    + "TpmEndorsmentP12 = " + EndorsementCaFileName + "\r\n"
+                    + "EndorsementP12Pass = " + EndorsementCaPassword + "\r\n";
+            try {
+                fos.write(toWrite.getBytes("US-ASCII"));
+                fos.flush();
+                fos.close();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (fos != null) {
+                    fos.close();
+                }
+            }
+
+            /*
              * File: HISprovisioner.properties
              * Used by: HisTpmProvisioner, HisIdentityProvisioner, HisRegisterIdentity
              */
             fos = new FileOutputStream(fileLocation + clientPath + "/" + HisProvisionerPropertiesFile);
             toWrite =
                     "#TPM Provisioning Data\r\n"
-                    + "TpmEndorsmentP12 = " + EndorsementCaFileName + "\r\n"
-                    + "EndorsementP12Pass = " + EndorsementCaPassword + "\r\n"
                     + "EcValidityDays = " + CertValidityDays + "\r\n"
-                    + "TpmOwnerAuth = 1111111111111111111111111111111111111111\r\n"
+                    + "TpmOwnerAuth = " + tpmOwnerAuth + "\r\n"
                     + "#HIS Identity Provisioning Data\r\n"
                     + "HisIdentityLabel = HIS Identity Key\r\n"
                     + "HisIdentityIndex = 1\r\n"
@@ -424,7 +456,10 @@ public class HisSetup {
                     + //				"#HisRegistrationUrl = " + HisRegistrationUrl + "\r\n" +
                     //				"TrustStore = TrustStore.jks\r\n" +
                     "NtruBypass = true\r\n"
-                    + "ClientPath = " + "cert" + "\r\n";
+                    + "ClientPath = " + "cert" + "\r\n"
+                    + "ecStorage = " + ecStorage + "\r\n"
+                    + "ecSigningKeySize = " + ecSigningKeySize + "\r\n"
+                    + "ecLocation = " + ecLocation + "\r\n";
             try {
                 fos.write(toWrite.getBytes("US-ASCII"));
                 fos.flush();

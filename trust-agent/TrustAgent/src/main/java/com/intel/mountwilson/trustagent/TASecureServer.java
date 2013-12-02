@@ -60,7 +60,6 @@ public class TASecureServer extends BaseServer {
          Take ownership of the TPM
          */
         takeOwnerShip();
-        
         while (true) {
             try {
 
@@ -74,8 +73,6 @@ public class TASecureServer extends BaseServer {
                  * tcsd is not up. 
                  */
                 takeOwnerShip();
-
-                
                 handleConnection(sock.getInputStream(), sock.getOutputStream());
 
             } catch (Exception e) {

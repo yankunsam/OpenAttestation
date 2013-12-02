@@ -52,53 +52,13 @@ public class TakeOwnershipCmd implements ICommand {
     
     @Override
     public void execute() throws TAException{
-
         try {
-        	
-//			String commandLine = String.format("takeownership");
-//			CommandUtil.runCommand(commandLine); // safe; no arguments involved in this command line
-//			log.log(Level.INFO, " Take ownership command executed successfully");
-        	
-			if(endorsementKeyExists()){	
-				ProvisionTPM.takeOwnership();
-				deleteEndorsmentKey();
-			}else
-				log.info("No Endorsement key. Assuming ownership is already taken.");
-			
-		} catch (Exception e) {
-			throw new TAException(ErrorCode.ERROR, "Error while taking ownership",e);
-		}
+	    ProvisionTPM.takeOwnership();
+            log.info("Take ownership command executed successfully");
+	}catch (Exception e) {
+	   throw new TAException(ErrorCode.ERROR, "Error while taking ownership",e);
+	}
 
     }
-
-	private void deleteEndorsmentKey() {
-		
-		String endorsementKey = (String) HisConfig.getConfiguration().getString("TpmEndorsmentP12");
-		
-		File file = new File(Config.getHomeFolder() + endorsementKey);
-		
-		if(file.isFile()){
-			file.delete();
-			log.info("Deleted endoresment key after taking ownership.");
-		}
-		
-	}
-
-	private boolean endorsementKeyExists() {
-		
-		String endorsementKey = (String) HisConfig.getConfiguration().getString("TpmEndorsmentP12");
-		
-		log.info(" File to check " + Config.getHomeFolder() + endorsementKey);
-		
-		File file = new File(Config.getHomeFolder() + endorsementKey);
-		
-		if(file.isFile()){
-			log.info("Endorsement key Found.");
-			return true;
-		}
-		
-		return false;
-	}
-
 
 }

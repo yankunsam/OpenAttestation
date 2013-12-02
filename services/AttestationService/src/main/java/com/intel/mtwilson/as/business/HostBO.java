@@ -168,7 +168,7 @@ public class HostBO extends BaseBO {
 		return (!vmmName.contains("ESX"));
 	}
 
-	public HostResponse updateHost(TxtHost host) {
+	public String updateHost(TxtHost host) {
                 
                                 try {
 
@@ -226,10 +226,11 @@ public class HostBO extends BaseBO {
                                         throw new ASException(e);
                                 }
 
-                                return new HostResponse(ErrorCode.OK);
+                                //return new HostResponse(ErrorCode.OK);
+                                return "true";
 	}
 
-	public HostResponse deleteHost(Hostname hostName) { // datatype.Hostname
+	public String deleteHost(Hostname hostName) { // datatype.Hostname
 				
                                 try {
                                         TblHosts tblHosts = getHostByName(hostName);
@@ -254,7 +255,8 @@ public class HostBO extends BaseBO {
                                 catch (Exception e) {
                                         throw new ASException(e);
                                 }
-                                return new HostResponse(ErrorCode.OK);
+                                //return new HostResponse(ErrorCode.OK);
+                                return "true";
 	}
 
        

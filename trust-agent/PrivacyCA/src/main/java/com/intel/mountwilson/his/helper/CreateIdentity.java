@@ -99,7 +99,8 @@ public class CreateIdentity  {
 		final String PRIVACY_CA_URL = "PrivacyCaUrl";
 		final String TRUST_STORE = "TrustStore";
 		final String CLIENT_PATH = "ClientPath";
-		
+		final String EC_STORAGE = "ecStorage";
+		final String EC_LOCATION = "ecLocation";
 		// Instantiate variables to be set by properties file
 		byte [] TpmOwnerAuth = null;
 		String HisIdentityLabel = "";
@@ -109,10 +110,12 @@ public class CreateIdentity  {
 		String PrivacyCaUrl = "";
 		String TrustStore = "";
 		String ClientPath = "";
-
+		String ecStorageFileName = "";
+		String ecStorage = "";
+        
 		// Set properties file name
 		String homeFolder = ""; 
-		
+		String tpmOwnerAuth = "";
 
 		// Read the properties file, setting any defaults where it makes sense
 		FileInputStream PropertyFile = null;
@@ -127,8 +130,17 @@ public class CreateIdentity  {
 			homeFolder = homeFolder.substring(0,homeFolder.indexOf("hisprovisioner.properties"));
 			
 			log.info("Home folder : " + homeFolder);
-
-			TpmOwnerAuth = TpmUtils.hexStringToByteArray(HisProvisionerProperties.getProperty(OWNER_AUTH));
+			tpmOwnerAuth = HisProvisionerProperties.getProperty(OWNER_AUTH, "");
+			if (tpmOwnerAuth.length() == 20) {
+			    log.info("owner authentication is char formatted");
+			    TpmOwnerAuth = tpmOwnerAuth.getBytes();
+			} else if (tpmOwnerAuth.length() == 40) {
+			    log.info("owner authentication is hex code formatted");
+			    TpmOwnerAuth = TpmUtils.hexStringToByteArray(tpmOwnerAuth);
+			} else {
+			    log.info("illegal owner authentication detected! accepted owner authentication is 20 or 40 long characters");
+			}
+			//TpmOwnerAuth = TpmUtils.hexStringToByteArray(HisProvisionerProperties.getProperty(OWNER_AUTH));
 			HisIdentityLabel = HisProvisionerProperties.getProperty(HIS_IDENTITY_LABEL, "");
 			HisIdentityIndex = Integer.parseInt(HisProvisionerProperties.getProperty(HIS_IDENTITY_INDEX, "0"));
 			HisIdentityAuth = TpmUtils.hexStringToByteArray(HisProvisionerProperties.getProperty(HIS_IDENTITY_AUTH, ""));
@@ -138,6 +150,8 @@ public class CreateIdentity  {
 			PrivacyCaUrl = HisProvisionerProperties.getProperty(PRIVACY_CA_URL, "");
 //			TrustStore = HisProvisionerProperties.getProperty(TRUST_STORE, "TrustStore.jks");
 			ClientPath = HisProvisionerProperties.getProperty(CLIENT_PATH, "");
+			ecStorage =  HisProvisionerProperties.getProperty(EC_STORAGE, "NVRAM");
+			ecStorageFileName = HisProvisionerProperties.getProperty(EC_LOCATION, ".") + System.getProperty("file.separator") + "EC.cer";
 		} catch (FileNotFoundException e) { // If the properties file is not found, display error
 			throw new PrivacyCAException("Error finding HIS Provisioner properties file (HISprovisionier.properties); using defaults.",e);
 		} catch (IOException e) { // If propertied file cannot be read, display error
@@ -229,8 +243,18 @@ public class CreateIdentity  {
 			
 			X509Certificate pcaCert = TpmUtils.certFromFile(homeFolder + PrivacyCaCertFile);
 			boolean shortcut = true;
-			
-			byte[] ekCert = TpmModule.getCredential(TpmOwnerAuth, "EC");
+			byte[] ekCert = null;
+			if (ecStorage.equalsIgnoreCase("file"))
+			{
+			    File ecFile = new File(ecStorageFileName);
+			    FileInputStream ecFileIn = new FileInputStream(ecFile);
+			    ekCert = new byte[ecFileIn.available()];
+			    ecFileIn.read(ekCert);
+			    log.info("--read EC from file--");
+			    ecFileIn.close();
+			    } else {
+			        ekCert = TpmModule.getCredential(TpmOwnerAuth, "EC");
+			    }
 			TpmIdentityRequest encryptedEkCert = new TpmIdentityRequest(ekCert, (RSAPublicKey)pcaCert.getPublicKey(), false); 
 			
 	
