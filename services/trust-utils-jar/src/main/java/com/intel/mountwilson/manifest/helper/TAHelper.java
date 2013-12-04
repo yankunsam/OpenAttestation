@@ -101,10 +101,10 @@ public class TAHelper {
         aikverifyhomeData = aikverifyhome+File.separator+"data";
         aikverifyhomeBin = aikverifyhome+File.separator+"bin";
         opensslCmd = aikverifyhomeBin + File.separator + config.getString("com.intel.mountwilson.as.openssl.cmd", "openssl.bat");
-        aikverifyCmd = aikverifyhomeBin + File.separator + config.getString("com.intel.mountwilson.as.aikqverify.cmd", "aikqverify.exe");
+        //aikverifyCmd = aikverifyhomeBin + File.separator + config.getString("com.intel.mountwilson.as.aikqverify.cmd", "aikqverify.exe");
         
         boolean foundAllRequiredFiles = true;
-        String required[] = new String[] { aikverifyhome, opensslCmd, aikverifyCmd, aikverifyhomeData };
+        String required[] = new String[] { aikverifyhome, opensslCmd, aikverifyhomeData };
         for(String filename : required) {
             File file = new File(filename);
             if( !file.exists() ) {
@@ -496,7 +496,7 @@ public class TAHelper {
             System.arraycopy(chalmd, 0, qinfo, 8+20, 20);
             /* Verify RSA signature */
             //this step is needn't, the SHA-1 is suspect performed by the java API itself which is different with API from openssl
-            // byte[] md = sha1hash1(qinfo);    
+            //byte[] md = sha1hash1(qinfo);    
             //verify 
             System.arraycopy(quote, sigPostition, sig, 0 , sigLen);
             System.arraycopy(quote, 2, select, 0, select.length);

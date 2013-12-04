@@ -49,7 +49,7 @@ public class ASConfig extends ConfigBase{
         Properties defaults = new Properties();
         defaults.setProperty("com.intel.mountwilson.as.home", "C:/work/aikverifyhome"); // used by TAHelper
         defaults.setProperty("com.intel.mountwilson.as.openssl.cmd", "openssl.bat"); // used by TAHelper
-        defaults.setProperty("com.intel.mountwilson.as.aikqverify.cmd", "aikqverify.exe"); // used by TAHelper
+        //defaults.setProperty("com.intel.mountwilson.as.aikqverify.cmd", "aikqverify.exe"); // used by TAHelper
         defaults.setProperty("com.intel.mountwilson.as.trustagent.timeout", "3"); // seconds
         defaults.setProperty("com.intel.mountwilson.as.attestation.hostTimeout","30");  // seconds
         // mtwilson.as.dek = base64-encoded AES key used by HostBO
