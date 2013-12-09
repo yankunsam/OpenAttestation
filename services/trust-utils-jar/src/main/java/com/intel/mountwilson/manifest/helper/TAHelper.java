@@ -15,14 +15,18 @@
 
 package com.intel.mountwilson.manifest.helper;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
@@ -37,7 +41,10 @@ import java.security.SecureRandom;
 import java.security.Security;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.HashMap;
 import java.util.List;
@@ -427,7 +434,8 @@ public class TAHelper {
         }
         String nonceFileName = aikverifyhomeData + File.separator+getNonceFileName(sessionId);
         String quoteFileName = aikverifyhomeData + File.separator+getQuoteFileName(sessionId);
-        List<String> result = aikqverify(nonceFileName, certFileName, quoteFileName);
+        String rsaPubkeyFileName = aikverifyhomeData + File.separator+getRSAPubkeyFileName(sessionId);
+        List<String> result = aikqverify(nonceFileName, rsaPubkeyFileName, quoteFileName);
         // Sample output from command:
         //  1 3a3f780f11a4b49969fcaa80cd6e3957c33b2275
         //  17 bfc3ffd7940e9281a3ebfdfa4e0412869a3f55d8
@@ -456,10 +464,9 @@ public class TAHelper {
         
     }
 
-    private List<String> aikqverify(String nonceFileName, String certFileName, String quoteFileName){
+    public static List<String> aikqverify(String nonceFileName, String rsaPubkeyFileName, String quoteFileName){
+        PublicKey publicKey = getPemPublicKey(rsaPubkeyFileName);
         List<String> pcrList = new ArrayList<String>();
-        //Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-        X509Certificate machineCertificate = pemToX509Certificate(certFileName);
         StringBuffer pcrBuffer;
         try {
             /* Read challenge file */
@@ -504,7 +511,7 @@ public class TAHelper {
             System.arraycopy(quote, 2 + selectLen + 4, pcrs, 0, pcrs.length);
             Signature signature;
             signature = Signature.getInstance("SHA1withRSA");
-            signature.initVerify(machineCertificate);
+            signature.initVerify(publicKey);
             signature.update(qinfo);
             if (!signature.verify(sig)) {
                 log.error("signature is not correct\n");
@@ -599,7 +606,7 @@ public class TAHelper {
         int size = pos + 2;
         while (pos < size) {
             res <<= 8;
-            res |= (int) x[pos];
+            res |= (int) x[pos] & 0xFF;
             pos ++;
         }
         return res;
@@ -611,33 +618,42 @@ public class TAHelper {
         int size = pos + 4;
         while (pos < size){
             res <<= 8;
-            res |= (int) x[pos];
+            res |= (int) x[pos] & 0xFF;
             pos ++;
         }
         return res;
     }
     
-    //this method is not used in current stage, but maybe helpful in the future
-    public  PublicKey getPemPublicKey(String filename) throws Exception {
+    public  static PublicKey getPemPublicKey(String filename){
         File f = new File(filename);
-        FileInputStream filestr = new FileInputStream(f);
-        DataInputStream datastr = new DataInputStream(filestr);
-        byte[] keyBytes = new byte[(int) f.length()];
-        datastr.readFully(keyBytes);
-        datastr.close();
-
-        String temp = new String(keyBytes);
-        String publicKeyPEM = temp.replace("-----BEGIN PUBLIC KEY-----\n", "");
-        publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "");
-
-        Base64 b64 = new Base64();
-        byte [] decoded = b64.decode(publicKeyPEM);
-
-        X509EncodedKeySpec spec =
-              new X509EncodedKeySpec(decoded);
-        KeyFactory kf =  KeyFactory.getInstance("RSA");
-        return kf.generatePublic(spec);
-        }
+        FileInputStream filestr = null;
+        PublicKey pubkey = null;  
+        try {
+            filestr = new FileInputStream(f);
+            DataInputStream datastr = new DataInputStream(filestr);
+            byte[] keyBytes = new byte[(int) f.length()];
+            datastr.readFully(keyBytes);
+            datastr.close();
+            String temp = new String(keyBytes);
+            String publicKeyPEM = temp.replace("-----BEGIN PUBLIC KEY-----\n", "");
+            publicKeyPEM = publicKeyPEM.replace("-----END PUBLIC KEY-----", "");
+            Base64 b64 = new Base64();
+            byte [] decoded = b64.decode(publicKeyPEM);
+            X509EncodedKeySpec spec = new X509EncodedKeySpec(decoded);
+            KeyFactory kf = KeyFactory.getInstance("RSA");
+            kf.generatePublic(spec);
+            pubkey = kf.generatePublic(spec);
+       }catch (FileNotFoundException e) {
+           log.error("Unable to find rsapubkey file, "+e.toString());
+       }catch (IOException e) {
+           log.error("Unable to read nonce file");
+       }catch (NoSuchAlgorithmException e) {
+           log.error("no such algorithm " + e.toString());
+       }catch (InvalidKeySpecException e) {
+           log.error("invalid key is found " + e.toString());
+       }
+       return pubkey;
+    }
     
     /**
      * Convert a PEM formatted certificate in X509 format.

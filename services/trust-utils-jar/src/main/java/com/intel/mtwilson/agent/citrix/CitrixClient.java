@@ -9,6 +9,7 @@ import com.intel.mountwilson.as.common.ASConfig;
 import com.intel.mountwilson.as.common.ASException;
 import com.intel.mountwilson.as.helper.CommandUtil;
 import com.intel.mountwilson.manifest.data.PcrManifest;
+import com.intel.mountwilson.manifest.helper.TAHelper;
 import com.intel.mtwilson.datatypes.ErrorCode;
 import com.intel.mtwilson.tls.TlsConnection;
 import com.xensource.xenapi.APIVersion;
@@ -103,13 +104,12 @@ public class CitrixClient {
         aikverifyhomeData = aikverifyhome+File.separator+"data";
         aikverifyhomeBin = aikverifyhome+File.separator+"bin";
         opensslCmd = aikverifyhomeBin + File.separator + config.getString("com.intel.mountwilson.as.openssl.cmd", "openssl.bat");
-        aikverifyCmd = aikverifyhomeBin + File.separator + config.getString("com.intel.mountwilson.as.aikqverify.cmd", "aikqverify.exe");
         
     }
     
     public void init() {
         boolean foundAllRequiredFiles = true;
-        String required[] = new String[] { aikverifyhome, opensslCmd, aikverifyCmd, aikverifyhomeData };
+        String required[] = new String[] { aikverifyhome, opensslCmd, aikverifyhomeData };
         for(String filename : required) {
             File file = new File(filename);
             if( !file.exists() ) {
@@ -256,12 +256,10 @@ public class CitrixClient {
     private HashMap<String,PcrManifest> verifyQuoteAndGetPcr(String sessionId, String pcrList) {
         HashMap<String,PcrManifest> pcrMp = new HashMap<String,PcrManifest>();
         log.info( "verifyQuoteAndGetPcr for session {}",sessionId);
-        String command = String.format("%s -c %s %s %s",aikverifyCmd, aikverifyhomeData + File.separator+getNonceFileName( sessionId),
-                aikverifyhomeData + File.separator+getCertFileName(sessionId), aikverifyhomeData + File.separator+getQuoteFileName(sessionId)); 
-        
-        log.info( "Command: {}",command);
-        List<String> result = CommandUtil.runCommand(command,true,"VerifyQuote");
-        
+        String certFileName = aikverifyhomeData + File.separator + getCertFileName(sessionId);
+        String nonceFileName = aikverifyhomeData + File.separator+getNonceFileName(sessionId);
+        String quoteFileName = aikverifyhomeData + File.separator+getQuoteFileName(sessionId);
+        List<String> result = TAHelper.aikqverify(nonceFileName, certFileName, quoteFileName); 
         // Sample output from command:
         //  1 3a3f780f11a4b49969fcaa80cd6e3957c33b2275
         //  17 bfc3ffd7940e9281a3ebfdfa4e0412869a3f55d8
