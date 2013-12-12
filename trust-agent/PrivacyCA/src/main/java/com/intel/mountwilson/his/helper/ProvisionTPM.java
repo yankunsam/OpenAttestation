@@ -34,6 +34,7 @@ import java.security.Security;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
+import java.security.SecureRandom;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
@@ -190,11 +191,9 @@ public class ProvisionTPM {
 		
 		// Generate security key via 3DES algorithm
 		try {
-			keygen = KeyGenerator.getInstance("DESede"); 
+			keygen = KeyGenerator.getInstance("DESede", "BC"); 
+			keygen.init(new SecureRandom()); 
 			deskey = keygen.generateKey();  
-			c = Cipher.getInstance("DESede");
-		} catch (NoSuchPaddingException e) {
-			System.out.println("Exception message is found, detail info is: " + e.getMessage());
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} 
@@ -266,20 +265,20 @@ public class ProvisionTPM {
  	}
  
 	private static byte[] encryptDES(byte[] text, SecretKey key) throws Exception {
-	    Cipher c = Cipher.getInstance("DESede");  
+	    Cipher c = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");  
 	    c.init(Cipher.ENCRYPT_MODE, key);  
 		return c.doFinal(text);
 	}
     
-    private static byte[] encryptRSA(byte[] text, PublicKey pubRSA) throws Exception {
-     	Cipher cipher = Cipher.getInstance("RSA", new BouncyCastleProvider());
-     	cipher.init(Cipher.ENCRYPT_MODE, pubRSA);
-     	return cipher.doFinal(text);
-    }
-    
-    private static byte[] decryptDES(byte[] text, SecretKey key) throws Exception {
-        Cipher cipher = Cipher.getInstance("DESede");
-        cipher.init(Cipher.DECRYPT_MODE, key);
-        return cipher.doFinal(text);
-    }                    
+        private static byte[] encryptRSA(byte[] text, PublicKey pubRSA) throws Exception {
+         	Cipher cipher = Cipher.getInstance("RSA", "BC");
+         	cipher.init(Cipher.ENCRYPT_MODE, pubRSA);
+         	return cipher.doFinal(text);
+        }
+        
+        private static byte[] decryptDES(byte[] text, SecretKey key) throws Exception {
+            Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            return cipher.doFinal(text);
+        }                    
 }

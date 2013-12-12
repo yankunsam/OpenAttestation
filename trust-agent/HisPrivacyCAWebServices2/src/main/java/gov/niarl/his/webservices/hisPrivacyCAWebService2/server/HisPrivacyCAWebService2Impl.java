@@ -183,7 +183,7 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 			
 			//phase 1: construct sessionKey
 			byte[] deskey = decryptRSA(encryptedSessionKey, privacyKey);
-			SecretKey sessionKey = new SecretKeySpec(deskey, 0, deskey.length, "DES");
+			SecretKey sessionKey = new SecretKeySpec(deskey, "DESede");
 			
 			//phase2: recover EK modular
 			ekMod = decryptDES(encryptedEkMod, sessionKey);		
@@ -326,14 +326,14 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
     }
     
     private static byte[] decryptDES(byte[] text, SecretKey key) throws Exception {
-    	Cipher cipher = Cipher.getInstance("DESede");
+        Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");
     	cipher.init(Cipher.DECRYPT_MODE, key);
         return cipher.doFinal(text);
     }
     
     private static byte[] encryptDES(byte[] text, SecretKey key) throws Exception {
-    	Cipher c = Cipher.getInstance("DESede");  
-		c.init(Cipher.ENCRYPT_MODE, key);  
-		return c.doFinal(text);
+    	Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");  
+	cipher.init(Cipher.ENCRYPT_MODE, key);  
+	return cipher.doFinal(text);
     }
 }
