@@ -35,6 +35,8 @@ import com.intel.mtwilson.crypto.X509Util;
 import com.intel.mtwilson.datatypes.*;
 import com.intel.mtwilson.util.ResourceFinder;
 import java.io.FileInputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.security.PublicKey;
@@ -381,13 +383,12 @@ public class HostBO extends BaseBO {
 	}
 
 	private void checkForDuplicate(TxtHost host) throws CryptographyException {
-		TblHostsJpaController tblHostsJpaController = new TblHostsJpaController(
+		/*TblHostsJpaController tblHostsJpaController = new TblHostsJpaController(
 				getEntityManagerFactory());
-		TblHosts tblHosts1 = tblHostsJpaController.findByName(host.getHostName()
-				.toString()); // datatype.Hostname
-		TblHosts tblHosts2 = tblHostsJpaController.findByIPAddress(host.getIPAddress()
-				.toString());
-		if (tblHosts1 != null) {
+		TblHosts tblHosts = tblHostsJpaController.findByName(host.getHostName()
+				.toString()); // datatype.Hostname*/
+                TblHosts tblHosts = getHostByName(host.getHostName());
+		if (tblHosts != null) {
 			throw new ASException(
 					ErrorCode.AS_HOST_EXISTS,
 					host.getHostName());
@@ -406,9 +407,19 @@ public class HostBO extends BaseBO {
          * @throws CryptographyException 
          */
 	public TblHosts getHostByName(Hostname hostName) throws CryptographyException { // datatype.Hostname
-		TblHosts tblHosts = new TblHostsJpaController(getEntityManagerFactory())
-				.findByName(hostName.toString());
-		return tblHosts;
+           TblHosts tblHosts = null;
+           try {
+              InetAddress addr = InetAddress.getByName(hostName.toString());
+              String hostname = addr.getHostName();
+              log.debug("hostname:" +hostname);
+              String ip =  addr.getHostAddress();
+              log.debug("ip:" +ip);
+              tblHosts = new TblHostsJpaController(getEntityManagerFactory()).findByName(hostname);
+              tblHosts = tblHosts!=null? tblHosts :new TblHostsJpaController(getEntityManagerFactory()).findByName(ip);
+           } catch (UnknownHostException e) {
+              log.error("Unknown host", e);
+           }
+           return tblHosts;
 	}
 
  	public TblHosts getHostByIpAddress(String ipAddress) throws CryptographyException {
