@@ -25,6 +25,10 @@ PrivacyCaPassword=***replace***
 EndorsementCaSubjectName=Endorsement_CA_Rev_1
 EndorsementCaPassword=***replace***
 CertValidityDays=3652
+ecStorage=NVRAM
+ecSigningKeySize=2048
+ecLocation=/opt/intel/cloudsecurity/trustagent
+TpmOwnerAuth=1111111111111111111111111111111111111111
 AikAuth=1111111111111111111111111111111111111111" > /etc/intel/cloudsecurity/privacyca-client.properties
 
 echo "ClientFilesDownloadUsername=admin
