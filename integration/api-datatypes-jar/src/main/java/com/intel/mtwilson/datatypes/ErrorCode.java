@@ -77,7 +77,7 @@ public enum ErrorCode {
     AS_TRUST_AGENT_CONNNECT_TIMED_OUT(1024,"Unable to connect to Trust Agent on '%s:%d'. Timed out after %d seconds"),
     AS_TRUST_AGENT_INVALID_RESPONSE(1025, "Invalid response from host: %s"),
     AS_INTEL_TXT_NOT_ENABLED(1026, "Host does not have Intel TXT enabled: %s"),
-    AS_CITRIX_ERROR(1027, "Citrix error"),
+
     // Error codes for White List Service
     WS_OEM_DOES_NOT_EXIST(2001, "OEM '%s' is not configured in the system."),
     WS_OEM_ALREADY_EXISTS(2002, "OEM '%s' is already configured in the system."),
@@ -101,7 +101,7 @@ public enum ErrorCode {
     WS_MLE_SOURCE_MAPPING_DOES_NOT_EXIST(2020, "White list host mapping does not exist for the MLE '%s'."),
     WS_MLE_OEM_DOES_NOT_EXIST(2021, "MLE name '%s' version '%s' oem '%s' is not configured in the system."),
     WS_MLE_OS_DOES_NOT_EXIST(2022, "MLE name '%s' version '%s' os '%s' os version '%s' is not configured in the system."),
-    
+    WS_MLE_PCR_NOT_VALID(2023, "White list for the PCR '%s' is not a valid value"),
     
     // Below are error codes for the Management service
     // 3000 to 3100 General Management Service errors
