@@ -36,6 +36,9 @@ import com.intel.mtwilson.as.data.TblTaLog;
 import com.intel.mtwilson.as.helper.BaseBO;
 import com.intel.mtwilson.crypto.CryptographyException;
 import com.intel.mtwilson.datatypes.*;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -72,8 +75,12 @@ public class HostTrustBO extends BaseBO {
         HashMap<String, ? extends IManifest> pcrManifestMap;
         HashMap<String, ? extends IManifest> gkvBiosPcrManifestMap, gkvVmmPcrManifestMap;
         if( hostName == null ) { throw new IllegalArgumentException("missing hostname"); }
-        TblHosts tblHosts = getHostByName(hostName);
-
+        TblHosts tblHosts = null;
+        try {
+            tblHosts = getHostByIpAddress(InetAddress.getByName(hostName.toString()).getHostAddress());
+        } catch (UnknownHostException e) {
+            throw new ASException(e);
+        }
         if (tblHosts == null) {
             throw new ASException(
                     ErrorCode.AS_HOST_NOT_FOUND,
@@ -299,6 +306,15 @@ public class HostTrustBO extends BaseBO {
     private TblHosts getHostByName(Hostname hostName) { // datatype.Hostname
         try {
             return hostBO.getHostByName(hostName);
+        }
+        catch(CryptographyException e) {
+            throw new ASException(e,ErrorCode.AS_ENCRYPTION_ERROR, e.getCause() == null ? e.getMessage() : e.getCause().getMessage());
+        }
+    }
+  
+    private TblHosts getHostByIpAddress(String ipAddress) {
+        try {
+            return hostBO.getHostByIpAddress(ipAddress);
         }
         catch(CryptographyException e) {
             throw new ASException(e,ErrorCode.AS_ENCRYPTION_ERROR, e.getCause() == null ? e.getMessage() : e.getCause().getMessage());

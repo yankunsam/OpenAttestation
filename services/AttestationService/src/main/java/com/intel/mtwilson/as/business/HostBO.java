@@ -36,6 +36,7 @@ import com.intel.mtwilson.datatypes.*;
 import com.intel.mtwilson.util.ResourceFinder;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -61,9 +62,14 @@ public class HostBO extends BaseBO {
 	public String addHost(TxtHost host) {
                                 String certificate = null;
                                 String location = null;
+                                String ipAddress = null;
                                 HashMap<String, ? extends IManifest> pcrMap = null;
                                 log.debug("About the add the host to the DB");
                                     try {
+                                        ipAddress = InetAddress.getByName(host.getHostName().toString()).getHostAddress();
+                                        if (!ipAddress.equalsIgnoreCase(host.getIPAddress().toString())) {
+                                            throw new ASException(ErrorCode.AS_HOST_IPADDRESS_NOT_MATCHED, host.getHostName().toString(),host.getIPAddress().toString());
+                                        }
                                         checkForDuplicate(host);
                                         getBiosAndVMM(host);
                                         log.info("Getting Server Identity.");
@@ -377,14 +383,20 @@ public class HostBO extends BaseBO {
 	private void checkForDuplicate(TxtHost host) throws CryptographyException {
 		TblHostsJpaController tblHostsJpaController = new TblHostsJpaController(
 				getEntityManagerFactory());
-		TblHosts tblHosts = tblHostsJpaController.findByName(host.getHostName()
+		TblHosts tblHosts1 = tblHostsJpaController.findByName(host.getHostName()
 				.toString()); // datatype.Hostname
-		if (tblHosts != null) {
+		TblHosts tblHosts2 = tblHostsJpaController.findByIPAddress(host.getIPAddress()
+				.toString());
+		if (tblHosts1 != null) {
 			throw new ASException(
 					ErrorCode.AS_HOST_EXISTS,
 					host.getHostName());
 		}
-
+		if (tblHosts2 != null) {
+			throw new ASException(
+				ErrorCode.AS_IPADDRESS_EXISTS,
+				host.getIPAddress().toString());
+		}
 	}
 
         /**
@@ -396,6 +408,12 @@ public class HostBO extends BaseBO {
 	public TblHosts getHostByName(Hostname hostName) throws CryptographyException { // datatype.Hostname
 		TblHosts tblHosts = new TblHostsJpaController(getEntityManagerFactory())
 				.findByName(hostName.toString());
+		return tblHosts;
+	}
+
+ 	public TblHosts getHostByIpAddress(String ipAddress) throws CryptographyException {
+		TblHosts tblHosts = new TblHostsJpaController(getEntityManagerFactory())
+				.findByIPAddress(ipAddress);
 		return tblHosts;
 	}
 
