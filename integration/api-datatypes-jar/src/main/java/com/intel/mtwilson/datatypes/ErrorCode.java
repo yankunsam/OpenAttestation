@@ -77,6 +77,7 @@ public enum ErrorCode {
     AS_TRUST_AGENT_CONNNECT_TIMED_OUT(1024,"Unable to connect to Trust Agent on '%s:%d'. Timed out after %d seconds"),
     AS_TRUST_AGENT_INVALID_RESPONSE(1025, "Invalid response from host: %s"),
     AS_INTEL_TXT_NOT_ENABLED(1026, "Host does not have Intel TXT enabled: %s"),
+    AS_CITRIX_ERROR(1027, "Citrix error"),
 
     // Error codes for White List Service
     WS_OEM_DOES_NOT_EXIST(2001, "OEM '%s' is not configured in the system."),
