@@ -90,25 +90,27 @@ public class MleBO extends BaseBO {
                                         }
                                        
                                         if (mleData.getMleType().equalsIgnoreCase("BIOS")){
-                                            for (ManifestData manifestData : mleData.getManifestList()) {
-                                                if (Integer.valueOf(manifestData.getName()).intValue() > 5 || Integer.valueOf(manifestData.getName()).intValue() < 0) {
-                                                    throw new ASException(ErrorCode.WS_MLE_PCR_NOT_VALID, manifestData.getName());
+                                            if (mleData.getManifestList() != null){
+                                                for (ManifestData manifestData : mleData.getManifestList()) {
+                                                    if (Integer.valueOf(manifestData.getName()).intValue() > 5 || Integer.valueOf(manifestData.getName()).intValue() < 0) {
+                                                        throw new ASException(ErrorCode.WS_MLE_PCR_NOT_VALID, manifestData.getName());
+                                                    }
                                                 }
                                             }
                                         }
                                         
                                         if (mleData.getMleType().equalsIgnoreCase("VMM")){
-                                            for (ManifestData manifestData : mleData.getManifestList()) {
-                                                if (Integer.valueOf(manifestData.getName()).intValue() > 20 || Integer.valueOf(manifestData.getName()).intValue() < 17) {
-                                                    throw new ASException(ErrorCode.WS_MLE_PCR_NOT_VALID, manifestData.getName());
+                                            if (mleData.getManifestList() != null){
+                                                for (ManifestData manifestData : mleData.getManifestList()) {
+                                                    if (Integer.valueOf(manifestData.getName()).intValue() > 20 || Integer.valueOf(manifestData.getName()).intValue() < 17) {
+                                                        throw new ASException(ErrorCode.WS_MLE_PCR_NOT_VALID, manifestData.getName());
+                                                    }
                                                 }
                                             }
                                         }
                                         tblMle = getTblMle(mleData);
                                         mleJpaController.create(tblMle);
-
                                         addPcrManifest(tblMle, mleData.getManifestList());
-
                                 } catch (ASException ase) {
                                     throw ase;
                                 } catch (Exception e) {
@@ -340,10 +342,8 @@ public class MleBO extends BaseBO {
 		tblMle.setVersion(mleData.getVersion());
 		tblMle.setAttestationType(mleData.getAttestationType());
 		tblMle.setDescription(mleData.getDescription());
-
 		tblMle.setRequiredManifestList(getRequiredManifestList(mleData
-				.getManifestList()));
-
+                .getManifestList()));
 		if (mleData.getMleType().equals("VMM")) {
 			tblMle.setOsId(getTblOs(mleData.getOsName(), mleData.getOsVersion()));
 		} else if (mleData.getMleType().equals("BIOS")) {
