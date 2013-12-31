@@ -88,7 +88,7 @@ public class MleBO extends BaseBO {
                                                         throw new ASException(ErrorCode.WS_ESX_MLE_NOT_SUPPORTED);
                                                 }
                                         }
-                                       
+                                        /*
                                         if (mleData.getMleType().equalsIgnoreCase("BIOS")){
                                             if (mleData.getManifestList() != null){
                                                 for (ManifestData manifestData : mleData.getManifestList()) {
@@ -107,7 +107,7 @@ public class MleBO extends BaseBO {
                                                     }
                                                 }
                                             }
-                                        }
+                                        }*/
                                         tblMle = getTblMle(mleData);
                                         mleJpaController.create(tblMle);
                                         addPcrManifest(tblMle, mleData.getManifestList());
@@ -564,6 +564,7 @@ public class MleBO extends BaseBO {
                                         throw new ASException(ErrorCode.WS_PCR_WHITELIST_ALREADY_EXISTS, pcrData.getPcrName());
                                    }
 
+				   /*
                                    if (StringUtils.isNotBlank(pcrData.getOemName())) {
                                        log.info("BIOS MLE, check the range of PCR value " + pcrData.getPcrName());
                                        if (Integer.valueOf(pcrData.getPcrName()).intValue() > 5 || Integer.valueOf(pcrData.getPcrName()).intValue() < 0)
@@ -572,7 +573,7 @@ public class MleBO extends BaseBO {
                                        log.info("VMM MLE, check the range of PCR value " + pcrData.getPcrName());
                                        if (Integer.valueOf(pcrData.getPcrName()).intValue() > 20 || Integer.valueOf(pcrData.getPcrName()).intValue() < 17)
                                            throw new ASException(ErrorCode.WS_MLE_PCR_NOT_VALID, pcrData.getPcrName());
-                                   }
+                                   } */
                                    
                                    // In order to reuse the addPCRManifest function, we need to create a list and
                                    // add a single entry into it using the manifest data that we got.
