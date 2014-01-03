@@ -32,7 +32,6 @@ import java.util.Properties;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.security.cert.CertificateException;
 import java.security.interfaces.RSAPublicKey;  
@@ -71,46 +70,43 @@ public class HisTpmProvisioner {
 		final String OWNER_AUTH = "TpmOwnerAuth";
 		final String PRIVACY_CA_URL = "PrivacyCaUrl";
 		final String TRUST_STORE = "TrustStore";
-        final String EC_STORAGE = "ecStorage";
-        final String PRIVACY_CA_CERT = "PrivacyCaCertFile";
- 
-		String PrivacyCaUrl = "";
+		final String EC_STORAGE = "ecStorage";
+		final String PRIVACY_CA_CERT = "PrivacyCaCertFile";
+		final String propertiesFileName = "OATprovisioner.properties";
+		final String ecStorageFileName = "EC.cer";
 		int EcValidityDays = 0;
-		String TrustStore = "";
-        String ecStorage = "";
-        String PrivacyCaCertFile = "";
-		
 		byte [] TpmOwnerAuth = null;
-		byte[] encryptCert = null;
+		byte [] encryptCert = null;
 		byte [] pubEkMod = null;
+		String TrustStore = "";
+		String ecStorage = "";
+		String PrivacyCaCertFile = "";
+		String PrivacyCaUrl = "";
 		X509Certificate pcaCert = null;
 		PublicKey publicKey = null;
-
-		String propertiesFileName = "./OATprovisioner.properties";
-                 String ecStorageFileName = "./EC.cer";
-
 		FileInputStream PropertyFile = null;
+		
 		try {
-			PropertyFile = new FileInputStream(propertiesFileName);
+			PropertyFile = new FileInputStream(System.getProperty("user.dir") + System.getProperty("file.separator") + propertiesFileName);
 			Properties HisProvisionerProperties = new Properties();
-			HisProvisionerProperties.load(PropertyFile);
-			
+			HisProvisionerProperties.load(PropertyFile);		
 			EcValidityDays = Integer.parseInt(HisProvisionerProperties.getProperty(EC_VALIDITY, ""));
 			TpmOwnerAuth = TpmUtils.hexStringToByteArray(HisProvisionerProperties.getProperty(OWNER_AUTH, ""));
 			PrivacyCaUrl = HisProvisionerProperties.getProperty(PRIVACY_CA_URL, "");
 			PrivacyCaCertFile = HisProvisionerProperties.getProperty(PRIVACY_CA_CERT, "");
 			TrustStore = HisProvisionerProperties.getProperty(TRUST_STORE, "TrustStore.jks");
-            ecStorage = HisProvisionerProperties.getProperty(EC_STORAGE, "NVRAM");
+			ecStorage = HisProvisionerProperties.getProperty(EC_STORAGE, "NVRAM");
+			//TODO, it not a good manner to always print out the message into console
+			//keep here as it will help user get some direct message
             System.out.println("### ecStorage = "  + ecStorage + "###");
 		} catch (FileNotFoundException e) {
-			System.out.println("Error finding HIS Provisioner properties file (HISprovisionier.properties)");
+			System.out.println("Error finding HIS Provisioner properties file (OATprovisioner.properties)");
 		} catch (IOException e) {
-			System.out.println("Error loading HIS Provisioner properties file (HISprovisionier.properties)");
+			System.out.println("Error loading HIS Provisioner properties file (OATprovisioner.properties)");
 		}
 		catch (NumberFormatException e) {
 			e.printStackTrace();
-		}
-		finally{
+		} finally{
 			if (PropertyFile != null){
 				try {
 					PropertyFile.close();
@@ -138,9 +134,9 @@ public class HisTpmProvisioner {
 			System.exit(99);
 			return;
 		}
+		
 		//Provision the TPM
 		System.out.print("Performing TPM provisioning...");
-		
 		
 		/*
 		 * The following actions must be performed during the TPM Provisioning process:
@@ -155,7 +151,6 @@ public class HisTpmProvisioner {
 		 */
 		SecretKey deskey = null;
 		KeyGenerator keygen;
-		Cipher c;
 		Security.addProvider(new BouncyCastleProvider());
 		// Take Ownership
 		byte [] nonce = null;
@@ -163,20 +158,25 @@ public class HisTpmProvisioner {
 			nonce = TpmUtils.createRandomBytes(20);
 			TpmModule.takeOwnership(TpmOwnerAuth, nonce);
 		} catch (TpmModuleException e){
-			//System.out.println("Error taking ownership: " + e.toString());
+		    if(e.toString().contains(".takeOwnership returned nonzero error: 4")){
+		        System.out.println("Ownership is already taken");
+		        } else {
+		            System.out.println("Error while taking ownership: " + e.toString());
+		            System.exit(1);
+		            }
 		} catch (IOException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
+			System.exit(1);
 		}
 		
 		// Generate security key via 3DES algorithm
 		try {
 			keygen = KeyGenerator.getInstance("DESede"); 
-			deskey = keygen.generateKey();  
-		    c = Cipher.getInstance("DESede");
-		} catch (NoSuchPaddingException e) {
-			System.out.println("Exception message is found, detail info is: " + e.getMessage());
+			deskey = keygen.generateKey();
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+		    System.out.println("Error while generating 3DES key" + e.toString());
+		    e.printStackTrace();
+		    System.exit(1);
 		} 
 		
 		// Create Endorsement Certificate
@@ -184,9 +184,11 @@ public class HisTpmProvisioner {
 			nonce = TpmUtils.createRandomBytes(20);
 			pubEkMod = TpmModule.getEndorsementKeyModulus(TpmOwnerAuth, nonce);
 		} catch (TpmModuleException e){
-			System.out.println("Error getting PubEK: " + e.toString());
+			System.out.println("Error while getting PubEK: " + e.toString());
+			System.exit(1);
 		} catch (Exception e){
-			System.out.println("Error getting PubEK: " + e.toString());
+			System.out.println("Error while getting PubEK: " + e.toString());
+			System.exit(1);
 		}
 		
 		try {
@@ -195,8 +197,8 @@ public class HisTpmProvisioner {
 			publicKey = (RSAPublicKey)pcaCert.getPublicKey();
 			}
 		} catch (Exception e){
-			System.out.println("print out error message: " + e.toString());
-			e.printStackTrace();
+			System.out.println("Error while getting PCA public key: " + e.toString());
+			System.exit(1);
 		}
 	
 		
@@ -205,8 +207,7 @@ public class HisTpmProvisioner {
 			IHisPrivacyCAWebService2 hisPrivacyCAWebService2 = HisPrivacyCAWebServices2ClientInvoker.getHisPrivacyCAWebService2(PrivacyCaUrl);
 			encryptCert = hisPrivacyCAWebService2.requestGetEC(encryptDES(pubEkMod, deskey), encryptRSA(deskey.getEncoded(), publicKey), EcValidityDays);	
 		} catch (Exception e){
-			System.out.println("FAILED");
-			e.printStackTrace();
+			System.out.println("Failed to sign EC on PCA, error message is: " + e.getMessage());
 			System.exit(1);
 		}
 		
@@ -217,58 +218,65 @@ public class HisTpmProvisioner {
 				ekCert = TpmUtils.certFromBytes(decryptDES(encryptCert, deskey));
 			}
 		} catch (java.security.cert.CertificateException e) {
-			e.printStackTrace();
+		    System.out.println("Error while decrypting endorsement certificate, error message is: " + e.getMessage());
+			System.exit(1);
 		} catch (CertificateException e) {
 			e.printStackTrace();
+			System.exit(1);
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.exit(1);
 		}
 			
 		// Store the new EC in NV-RAM
        if (ecStorage.equalsIgnoreCase("file")) {
-    	   System.out.println("--store EC in file--");
+    	   System.out.println("\n--store EC in file--");
     	   try{
-                File ecFile = new File(ecStorageFileName);
+                File ecFile = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + ecStorageFileName);
                 FileOutputStream ecFileOut = new FileOutputStream(ecFile);
                 ecFileOut.write(ekCert.getEncoded());
                 ecFileOut.flush();
                 ecFileOut.close();
-                }catch(Exception e){
-                   System.out.println("FAILED");
+                } catch(Exception e) {
+                   System.out.println("Failed to write EC into file, error message is: " + e.getMessage());
                    e.printStackTrace();
                    System.exit(1);
-               }
+                }
        } else {
- 		try{
- 			TpmModule.setCredential(TpmOwnerAuth, "EC", ekCert.getEncoded());
-                          System.out.println( ekCert.getEncoded().length);
- 		} catch (TpmModuleException e){
- 			System.out.println("Error getting PubEK: " + e.toString());
- 		} catch (CertificateEncodingException e) {
- 			e.printStackTrace();
- 		} catch (IOException e) {
- 			e.printStackTrace();
- 		}
+     		try{
+     			TpmModule.setCredential(TpmOwnerAuth, "EC", ekCert.getEncoded());
+     			System.out.println("The size of endorsement certificate: " + ekCert.getEncoded().length);
+     		} catch (TpmModuleException e){
+     			System.out.println("Error while seting credential: " + e.toString());
+     			System.exit(1);
+     		} catch (CertificateEncodingException e) {
+                //TODO we'd better reduce the frequency of printing stack trace;
+     		    e.printStackTrace();
+     		    System.exit(1);
+     		} catch (IOException e) {
+     			e.printStackTrace();
+     			System.exit(1);
+     		}
         }
 		System.out.println("DONE");
 		System.exit(0);
-		return;
 	}
-
+	
+	//we cannot always rely on JDK itself, specify the provide as "BC" to compatible with server side;
     private static byte[] encryptDES(byte[] text, SecretKey key) throws Exception {
-    	Cipher c = Cipher.getInstance("DESede");  
+    	Cipher c = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");  
 		c.init(Cipher.ENCRYPT_MODE, key);  
 		return c.doFinal(text);
     }
     
     private static byte[] encryptRSA(byte[] text, PublicKey pubRSA) throws Exception {
-    	Cipher cipher = Cipher.getInstance("RSA", new BouncyCastleProvider());
+    	Cipher cipher = Cipher.getInstance("RSA", "BC");
         cipher.init(Cipher.ENCRYPT_MODE, pubRSA);
         return cipher.doFinal(text);
     }
     
     private static byte[] decryptDES(byte[] text, SecretKey key) throws Exception {
-    	Cipher cipher = Cipher.getInstance("DESede");
+    	Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");
         cipher.init(Cipher.DECRYPT_MODE, key);
         return cipher.doFinal(text);
     }
