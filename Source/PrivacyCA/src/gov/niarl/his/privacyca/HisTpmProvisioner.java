@@ -259,7 +259,7 @@ public class HisTpmProvisioner {
      		}
         }
 		System.out.println("DONE");
-		System.exit(0);
+		return;
 	}
 	
 	//we cannot always rely on JDK itself, specify the provide as "BC" to compatible with server side;

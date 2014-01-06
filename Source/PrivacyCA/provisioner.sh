@@ -22,6 +22,7 @@ if [ $ret == 0 ] ; then
   echo "Successfully initialized TPM" >> provisioning.log
 else 
  echo "Failed to initialize the TPM, error $ret" >> provisioning.log
+ exit
 fi
 
 java -cp $provclasspath gov.niarl.his.privacyca.HisIdentityProvisioner
@@ -30,6 +31,7 @@ if [ $ret == 0 ]; then
   echo "Successfully received AIC from Privacy CA" >> provisioning.log
 else
  echo "Failed to receive AIC from Privacy CA, error $ret" >> provisioning.log
+ exit
 fi
 
 java -cp $provclasspath gov.niarl.his.privacyca.HisRegisterIdentity
