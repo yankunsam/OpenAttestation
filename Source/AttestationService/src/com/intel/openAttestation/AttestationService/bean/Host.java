@@ -18,6 +18,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.intel.openAttestation.AttestationService.bean.PCRValue;
+import com.intel.openAttestation.AttestationService.bean.AnalysisDetails;
 
 @XmlRootElement
 public class Host {
@@ -33,6 +34,8 @@ public class Host {
 	private boolean report_is_valid;
 
 	private String url;
+
+	private List<AnalysisDetails> analysis_details = new ArrayList<AnalysisDetails>();
 
 	public String getTrust_lvl() {
 		return trust_lvl;
@@ -80,5 +83,13 @@ public class Host {
 
 	public void setReport_is_valid(boolean report_is_valid) {
 		this.report_is_valid = report_is_valid;
+	}
+
+	public List<AnalysisDetails> getAnalysis_details() {
+		return analysis_details;
+	}
+
+	public void setAnalysis_details(List<AnalysisDetails> analysis_details) {
+		this.analysis_details = analysis_details;
 	}
 }

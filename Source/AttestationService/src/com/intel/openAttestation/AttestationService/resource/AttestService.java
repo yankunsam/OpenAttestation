@@ -25,6 +25,7 @@ import com.intel.openAttestation.AttestationService.util.AttestUtil;
 import com.intel.openAttestation.AttestationService.bean.Host;
 import com.intel.openAttestation.AttestationService.bean.PCRValue;
 import com.intel.openAttestation.AttestationService.bean.RespSyncBean;
+import com.intel.openAttestation.AttestationService.bean.AnalysisDetails;
 import com.intel.openAttestation.AttestationService.util.ResultConverter;
 import com.intel.openAttestation.AttestationService.util.ResultConverter.AttestResult;
 import com.intel.openAttestation.AttestationService.hibernate.dao.AttestDao;
@@ -126,6 +127,38 @@ public class AttestService {
 					host.setReport_is_valid(true);
 				}
 			}
+
+			String[] analysisList = {"VALIDATE_PCR", "COMPARE_REPORT"};
+			if (attest.getAnalysisRequest() != null)
+				analysisList = attest.getAnalysisRequest().split(";");
+
+			String analysisResults = attest.getAnalysisResults();
+			List<AnalysisDetails> detailsList = null;
+
+			if (analysisResults != null && !analysisResults.equals("")) {
+				detailsList = new ArrayList<AnalysisDetails>();
+				int analysisCounter = 0;
+				while (analysisResults.length() > 0) {
+					String[] analysisElements = analysisResults.split("\\|", 5);
+					AnalysisDetails detail = new AnalysisDetails();
+
+					int outputLength = Integer.parseInt(analysisElements[3]);
+					int tmpLength = 0;
+					for (int i = 0; i < 4; i++)
+						tmpLength += analysisElements[i].length() + 1;
+
+					detail.setName(analysisList[analysisCounter].split(",")[0]);
+					detail.setResult(analysisElements[1]);
+					detail.setStatus(analysisElements[2]);
+					detail.setOutput(analysisResults.substring(tmpLength, tmpLength + outputLength));
+					detailsList.add(detail);
+
+					analysisResults = analysisResults.substring(tmpLength + outputLength + 1);
+					analysisCounter++;
+				}
+			}
+
+			host.setAnalysis_details(detailsList);
 			hosts.add(host);
 		}
 		resp.setHosts(hosts);
