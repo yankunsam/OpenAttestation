@@ -30,6 +30,8 @@ public class Host {
 	
 	private Date vtime;
 
+	private boolean report_is_valid;
+
 	private String url;
 
 	public String getTrust_lvl() {
@@ -70,5 +72,13 @@ public class Host {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public boolean getReport_is_valid() {
+		return report_is_valid;
+	}
+
+	public void setReport_is_valid(boolean report_is_valid) {
+		this.report_is_valid = report_is_valid;
 	}
 }

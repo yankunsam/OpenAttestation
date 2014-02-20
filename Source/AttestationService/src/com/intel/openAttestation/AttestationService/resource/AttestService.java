@@ -118,6 +118,14 @@ public class AttestService {
 				AttestUtil.loadProp();
 				host.setUrl("http://" + AttestUtil.getPortalAddress() + "/OAT/report.php?id=" + attest.getAuditLog().getId());
 			}
+			host.setReport_is_valid(false);
+
+			if (attest.getAuditLog() != null) {
+				AuditLog auditlog = dao.getAuditLogById(attest.getAuditLog().getId());
+				if (auditlog.getValidationErrors() == null) {
+					host.setReport_is_valid(true);
+				}
+			}
 			hosts.add(host);
 		}
 		resp.setHosts(hosts);
