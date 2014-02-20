@@ -35,6 +35,8 @@ package gov.niarl.hisAppraiser.integrityReport;
 import gov.niarl.his.xsd.JAXBContextIntegrity_Report_Manifest_v1_0String;
 import gov.niarl.his.xsd.JAXBContextPCR_DifferenceString;
 import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.integrity_Report_v1_0.ReportType;
+import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.integrity_Report_v1_0.SnapshotType;
+import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.core_Integrity_v1_0_1.ValueType;
 import gov.niarl.his.xsd.pcr_difference.ObjectFactory;
 import gov.niarl.his.xsd.pcr_difference.PCRDifferenceReport;
 import gov.niarl.his.xsd.pcr_difference.PCRDifferenceReport.CurrentValue;
@@ -56,11 +58,13 @@ import gov.niarl.hisAppraiser.util.Emailer;
 import gov.niarl.hisAppraiser.util.HisUtil;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 import java.security.MessageDigest;
@@ -68,6 +72,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.InputMismatchException;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -355,7 +360,7 @@ public class HisReportUtil {
 		}
 	}
 
-	public static String fetchReport(Long reportId) {
+	public static String fetchReport(Long reportId, boolean partial) throws IllegalStateException {
 		String reportXML = "";
 		try {
 			if (reportId == null) {
@@ -368,6 +373,61 @@ public class HisReportUtil {
 				throw new Exception("fetchReport(): no report with id '" + reportId + "'");
 			}
 			reportXML = HisReportIO.readIR(reportId, auditLog.getReport());
+
+			List<AuditLog> relatedAuditLogs = auditDao.getRelatedAuditLogs(auditLog);
+
+			boolean reportValid = reportXML != null && !reportXML.equals("");
+			if (!partial && relatedAuditLogs.size() > 0 && reportValid) {
+				InputStream stream = new ByteArrayInputStream(reportXML.getBytes());
+
+				JAXBContext context = JAXBContext.newInstance(JAXBContextIntegrity_Report_Manifest_v1_0String.contextString
+				                      + ":gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.simple_object_v1_0_");
+				Unmarshaller unmarshaller = context.createUnmarshaller();
+				ReportType lastReport = ((JAXBElement<ReportType>) unmarshaller.unmarshal(stream)).getValue();
+
+				ReportType tmpReport = null;
+				String tmpReportString = null;
+
+				/*
+				 * relatedAuditLogs order is inverted because
+				 * measurements can be attached always on top
+				 * of the other
+				 */ 
+				for (AuditLog tmpAuditLog : relatedAuditLogs) {
+					tmpReportString = HisReportIO.readIR(tmpAuditLog.getId(), tmpAuditLog.getReport());
+					if (tmpReportString == null || tmpReportString.equals("")) {
+						throw new IllegalStateException("A problem occurred reading integrity report");
+					}
+					stream = new ByteArrayInputStream(tmpReportString.getBytes());
+					tmpReport = ((JAXBElement<ReportType>) unmarshaller.unmarshal(stream)).getValue();
+
+					for (SnapshotType snap : tmpReport.getSnapshotCollection()) {
+						boolean snapshotFound = false;
+						for (SnapshotType lastReportSnap : lastReport.getSnapshotCollection()) {
+							if (!snap.getPcrHash().get(0).getNumber().equals(lastReportSnap.getPcrHash().get(0).getNumber()))
+								continue;
+
+							lastReportSnap.getValues().addAll(0, snap.getValues());
+							lastReportSnap.getPcrHash().get(0).setStartHash(HisUtil.unHexString("0000000000000000000000000000000000000000"));
+							snapshotFound = true;
+							break;
+						}
+						if (!snapshotFound) {
+							lastReport.getSnapshotCollection().add(snap);
+						}
+					}
+				}
+
+				Marshaller m = context.createMarshaller();
+				ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+				JAXBElement<ReportType> report = new gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.integrity_Report_v1_0.ObjectFactory().createReport(lastReport);
+				m.marshal(report, bOut);
+
+				reportXML = new String(bOut.toByteArray());
+			}
+		} catch (IllegalStateException exception) {
+			logger.error(exception.getMessage());
+			throw exception;
 		} catch (Exception exception) {
 			logger.error(exception.getMessage());
 		}

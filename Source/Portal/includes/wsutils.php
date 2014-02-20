@@ -38,8 +38,9 @@
 function getReport($id) {
 	$server = 'localhost';
 
-	$client = new SoapClient("https://$server:8443/HisWebServices/hisDownloadReportService?wsdl");
-	return $client->fetchReport(array('reportId' => $id));
+	$client = new SoapClient("https://$server:8443/HisWebServices/hisDownloadReportService?wsdl",
+	                         array('cache_wsdl' => WSDL_CACHE_NONE));
+	return $client->fetchReport(array('reportId' => $id, 'partial' => true));
 }
 
 ?>
