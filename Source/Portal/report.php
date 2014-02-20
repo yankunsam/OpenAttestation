@@ -31,7 +31,26 @@ header ("Content-Type:text/xml");
 include("includes/wsutils.php"); 
 
 //GET THE REPORT FROM THE WEB SERVICE
-$result = getReport($id);
+try {
+	$result = getReport($id);
+} catch(SoapFault $fault) {
+	header("Content-Type:text");
+
+	if ($fault->faultstring == "Not Found") {
+		echo "<h1>" . $fault->faultstring . "</h1>";
+		header('HTTP/1.0 404 Not Found');
+		echo "<p>The requested report (" . $id . ") does not exist.</p>";
+	} else if ($fault->faultstring == "Internal Server Error") {
+		echo "<h1>" . $fault->faultstring . "</h1>";
+		header('HTTP/1.0 500 Internal Server Error');
+		echo "<p>An error occurred while retrieving requested report (" . $id . ").</p>";
+	} else {
+		echo "<h1>SOAP Exception</h1>";
+		echo "<p>" . $fault->faultstring . "</p>";
+	}
+	echo "<hr><address>Apache Server at " . $_SERVER['HTTP_HOST'] . " Port " . $_SERVER['SERVER_PORT'] . "</address>";
+	exit();
+}
 
 //PRINT OUT ALL THE XML
 foreach ($result as $key=>$value) {
