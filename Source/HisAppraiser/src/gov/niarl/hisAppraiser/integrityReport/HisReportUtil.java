@@ -304,8 +304,7 @@ public class HisReportUtil {
 				latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.UN_TRUSTED));
 			} else {
 				latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.TRUSTED));
-				latestPolledRequest = AttestService.validatePCRReport(latestPolledRequest, machineNameInput);
-				latestPolledRequest = AttestService.evaluateCompareReport(latestPolledRequest);
+				latestPolledRequest = AttestService.doAnalyses(latestPolledRequest, machineNameInput);
 			}
 
 			latestPolledRequest.setValidateTime(new Date());

@@ -31,6 +31,35 @@ import com.sun.jersey.api.client.WebResource;
 
 public class AttestService {
 	
+	/**
+	 * Reads the list of analyses requested within the attestation
+	 * request received and executes them.
+	 * @param attestRequest The attestation request to be fulfilled
+	 * @return The attestation request received, updated with analyses
+	 * result.
+	 */
+	public static AttestRequest doAnalyses(AttestRequest attestRequest, String machineName) {
+		String analysisReqString = "VALIDATE_PCR;COMPARE_REPORT";
+		if (attestRequest.getAnalysisRequest() != null) {
+			analysisReqString = attestRequest.getAnalysisRequest();
+		}
+
+		String[] analysisReqList = analysisReqString.split(";");
+		for (String analysis : analysisReqList) {
+			if (analysis.length() == 0 && analysisReqList.length == 1) {
+				break;
+			} else if (analysis.equals("VALIDATE_PCR")) {
+				attestRequest = validatePCRReport(attestRequest, machineName);
+			} else if (analysis.equals("COMPARE_REPORT")) {
+				attestRequest = evaluateCompareReport(attestRequest);
+			} else {
+				attestRequest = updateAnalysisResult(attestRequest, "NULL", false, "ANALYSIS_NOT_FOUND", "");
+				attestRequest.setResult(ResultConverter.getIntFromResult(AttestResult.UN_TRUSTED));
+			}
+		}
+		return attestRequest;
+	}
+
 	
 	/** 
 	 * Verifies if any errors occurred during the report comparison.
