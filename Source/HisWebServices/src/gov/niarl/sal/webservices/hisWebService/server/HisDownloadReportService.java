@@ -46,9 +46,13 @@ import java.io.FileNotFoundException;
 import java.security.NoSuchAlgorithmException;
 import java.util.InputMismatchException;
 
+import javax.annotation.Resource;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.WebServiceContext;
 
 import org.apache.log4j.Logger;
 
@@ -61,6 +65,9 @@ import org.apache.log4j.Logger;
 public class HisDownloadReportService {
 	private static Logger logger = Logger.getLogger(HisDownloadReportService.class);
 
+	@Resource
+    private WebServiceContext ctx;
+
 	/**
 	 * This function returns the integrity report having the given ID.
 	 * @param reportId ID of the report in DB
@@ -72,13 +79,25 @@ public class HisDownloadReportService {
 		String reportXML = "";
 		HibernateUtilHis.beginTransaction();
 
+		MessageContext msgCtx = ctx.getMessageContext();
+		HttpServletResponse response =  (HttpServletResponse) msgCtx.get(MessageContext.SERVLET_RESPONSE);
+
 		try {
 			reportXML = HisReportUtil.fetchReport(reportId);
+			if (reportXML.equals("")) {
+				response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			}
+
 			HibernateUtilHis.commitTransaction();
 			return reportXML;
 		} catch (Exception exception) {
 			HibernateUtilHis.rollbackTransaction();
 			exception.printStackTrace();
+			try {
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
 			throw new RuntimeException(exception);
 		} finally {
 			HibernateUtilHis.closeSession();
