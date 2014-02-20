@@ -63,6 +63,12 @@ public class Constants {
 	 */
 	public static final String IR_DIGEST_METHOD = (getProperty("IR_DIGEST_METHOD") == null) ? "SHA-256" : getProperty("IR_DIGEST_METHOD");
 
+	/** 
+	 * Returns true if the SCALABILITY property is set to "on";
+	 * returns false otherwise.
+	 */
+	public static final boolean SCALABILITY = (getProperty("SCALABILITY") != null && getProperty("SCALABILITY").equals("on")) ? true : false;
+
 	/**
 	 * Determines which alerts to generate. 
 	 */
