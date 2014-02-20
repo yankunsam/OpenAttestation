@@ -55,6 +55,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder; 
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException; 
@@ -241,6 +243,7 @@ public class StandaloneHIS
     public static final String EXPECTED_QUOTE_VERSION_TAG = "01010000";
     public static final String QUOTE_FIXED = "QUOT";//TCG Defined Quote Info Fxied Value
     //public static final int SEGMENT_LENGH_FIELD_SIZE = 4;
+    public static final int PCR_MAX_NUM = 24;
     public static final int PCR_FIELD_SIZE = 2;
     public static final int PCR_LENGTH_SIZE = 2;
     public static final int PCR_SIZE = 20;
@@ -828,9 +831,7 @@ public class StandaloneHIS
         //create the base integrity report
         report = createIntegrityReport(computerName);
 
-        //Set up the system snapshot object and add it to the integrity report
-        snap = createSnapshot(report.getID(), "");
-        report.getSnapshotCollection().add(snap);
+        createMeasureSnapshot(report, "bios");
         
         //parse the Quote and add it to the integrity report
         try
@@ -1136,6 +1137,115 @@ public class StandaloneHIS
         
         return snap;
     }
+
+	/**
+	 * Calls the right function depending on the received IML type
+	 * and returns the final report.
+	 *
+	 * @param report The report that will contain the SnapshotCollection
+	 *        elements
+	 * @param imlType The type of integrity measurements to be parsed
+	 */
+	private void createMeasureSnapshot(ReportType report, String imlType) {
+		try {
+			if (imlType.equals("bios"))
+				createBIOSSnapshot(report);
+		} catch (Exception e) {
+			if (e instanceof NoSuchAlgorithmException)
+				s_logger.error("SHA-1 is required to create a valid snapshot");
+			else
+				s_logger.error(e.getMessage());
+
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Creates an element SnapshotCollection for each PCR entry
+	 * read from the BIOS measurements file and adds it to the
+	 * given ReportType element.
+	 * 
+	 * @param report The report that will contain the SnapshotCollection
+	 *        elements
+	 */
+	private void createBIOSSnapshot(ReportType report) throws NoSuchAlgorithmException, Exception {
+		int intBitmask = (pcrBitmask[2] & 0xFF) | ((pcrBitmask[1] & 0xFF) << 8) | ((pcrBitmask[0] & 0xFF) << 16);
+		byte[] tmpBytes = new byte[4];
+		String UUID = generateUUID("4");
+		SnapshotType snap = null;
+		int pcrNumber;
+
+		byte[] hashValue = null;
+		String eventType;
+		byte[] readImageSize = null;
+		int imageSize;
+		byte[] digestValue = null;
+		int imageBufferSize;
+
+		int[] eventCount = new int[PCR_MAX_NUM];
+		for (int i=0; i<PCR_MAX_NUM; i++)
+			eventCount[i] = 0;
+
+		boolean[] pcrValueReached = new boolean[PCR_MAX_NUM];
+		for (int i=0; i<PCR_MAX_NUM; i++)
+			pcrValueReached[i] = false;
+
+		FileInputStream tpmFileStream = new FileInputStream("/sys/kernel/security/tpm0/binary_bios_measurements");
+
+		if (tpmFileStream == null)
+			throw new Exception("Can't read file \"/sys/kernel/security/tpm0/binary_bios_measurements\"");
+
+		while (tpmFileStream.read(tmpBytes, 0, 4) == 4) {
+			pcrNumber = ByteBuffer.wrap(tmpBytes).order(ByteOrder.nativeOrder()).getInt();
+
+			tpmFileStream.read(tmpBytes, 0, 4);
+			StringBuilder sb = new StringBuilder();
+			for(int i = 3; i >= 0; i--)
+				sb.append(String.format("%02x", tmpBytes[i]&0xff));
+			eventType = sb.toString().replaceFirst("^(00)+(?!$)", "");
+
+			hashValue = new byte[PCR_SIZE];
+			tpmFileStream.read(hashValue, 0, PCR_SIZE);
+
+			readImageSize = new byte[4];
+			tpmFileStream.read(readImageSize, 0, 4);
+			imageSize = ByteBuffer.wrap(readImageSize).order(ByteOrder.nativeOrder()).getInt();
+
+			digestValue = new byte[imageSize];
+			tpmFileStream.read(digestValue, 0, imageSize);
+
+			imageBufferSize = readImageSize.length + digestValue.length;
+			ByteBuffer imageBuffer = ByteBuffer.allocate(imageBufferSize);
+			imageBuffer.put(readImageSize);
+			imageBuffer.put(digestValue);
+
+			if (pcrValueReached[pcrNumber] || (intBitmask & (0x00800000 >> pcrNumber)) == 0)
+				continue;
+
+			snap = null;
+			for (SnapshotType tmpSnap : report.getSnapshotCollection()) {
+				if (tmpSnap.getComponentID().getId().equals("CID_" + pcrNumber)) {
+					snap = tmpSnap;
+					break;
+				}
+			}
+
+			if (snap == null) {
+				snap = initializeSnapshot(UUID, pcrNumber);
+				snap = createValuesType(snap, UUID, pcrNumber, eventType, eventCount[pcrNumber], hashValue, imageBuffer.array());
+				report.getSnapshotCollection().add(snap);
+			} else {
+				createValuesType(snap, UUID, pcrNumber, eventType, eventCount[pcrNumber], hashValue, imageBuffer.array());
+			}
+
+			eventCount[pcrNumber]++;
+
+			if (hexString(hashValue).equals(tpmOutput.split(" ")[pcrNumber]))
+				pcrValueReached[pcrNumber] = true;
+		}
+
+		tpmFileStream.close();
+	}
 
 	/** 
 	 * Creates an element SnapshotCollection for the given PCR number.
@@ -1643,7 +1753,7 @@ public class StandaloneHIS
         System.out.println("Sending integrity report");
         try
         {
-            jc = JAXBContext.newInstance( "org.trustedcomputinggroup.xml.schema.integrity_report_v1_0_" );
+            jc = JAXBContext.newInstance("org.trustedcomputinggroup.xml.schema.integrity_report_v1_0_:org.trustedcomputinggroup.xml.schema.simple_object_v1_0_");
             m = jc.createMarshaller();
         }
         catch(Exception e)
