@@ -33,5 +33,6 @@
 		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/OS.hbm.xml"/>
 		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/PcrWhiteList.hbm.xml"/>
 		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/HOST_MLE.hbm.xml"/>
+		<mapping resource="gov/niarl/hisAppraiser/hibernate/mapping/analysisTypes.hbm.xml"/>
 	</session-factory>
 </hibernate-configuration>
