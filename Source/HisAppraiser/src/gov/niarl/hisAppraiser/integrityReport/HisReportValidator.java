@@ -256,7 +256,11 @@ public class HisReportValidator {
 		try {
 			int sizeOfSelect = hisReportData.getPcrSizeOfSelect();
 			byte[] select = hisReportData.generatePcrSelect();
-			int dataLength = hisReportData.generatePcrSelectedCount() * hisReportData.getPcrValueSize();
+			/*
+			 * WRONG!! According to TCG specs, ValueSize is the total size of the array of PcrValue structures
+			 *   int dataLength = hisReportData.generatePcrSelectedCount() * hisReportData.getPcrValueSize();
+			 */
+			int dataLength = hisReportData.getPcrValueSize();
 
 			//concatenate the values 
 			String stringDigest = HisUtil.hexString(HisUtil.intToByteArray(sizeOfSelect, 2));
