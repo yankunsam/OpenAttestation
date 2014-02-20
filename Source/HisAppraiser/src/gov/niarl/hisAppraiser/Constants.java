@@ -69,6 +69,12 @@ public class Constants {
 	 */
 	public static final boolean SCALABILITY = (getProperty("SCALABILITY") != null && getProperty("SCALABILITY").equals("on")) ? true : false;
 
+	/** 
+	 * Returns true if the DISCARD_IDENTICAL_IR property is set to "on";
+	 * returns false otherwise.
+	 */
+	public static final boolean DISCARD_IDENTICAL_IR = (getProperty("DISCARD_IDENTICAL_IR") != null && getProperty("DISCARD_IDENTICAL_IR").equals("on")) ? true : false;
+
 	/**
 	 * Determines which alerts to generate. 
 	 */
