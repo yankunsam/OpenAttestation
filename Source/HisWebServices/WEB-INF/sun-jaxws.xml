@@ -15,4 +15,8 @@
         name='hisPollingWebService'
         implementation='gov.niarl.sal.webservices.hisWebService.server.HisPollingWebService'
         url-pattern='/hisPollingWebService'/>
+    <endpoint
+        name='hisDownloadReportService'
+        implementation='gov.niarl.sal.webservices.hisWebService.server.HisDownloadReportService'
+        url-pattern='/hisDownloadReportService'/>
 </endpoints>
