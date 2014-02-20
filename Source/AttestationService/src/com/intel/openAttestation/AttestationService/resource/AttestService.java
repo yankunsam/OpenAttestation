@@ -30,6 +30,7 @@ import com.intel.openAttestation.AttestationService.util.ResultConverter;
 import com.intel.openAttestation.AttestationService.util.ResultConverter.AttestResult;
 import com.intel.openAttestation.AttestationService.hibernate.dao.AttestDao;
 
+import gov.niarl.hisAppraiser.Constants;
 import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
 
 public class AttestService {
@@ -84,6 +85,40 @@ public class AttestService {
 		return true;
 	}
 
+	/** 
+	 * Compares the requested threshold and the time since the last
+	 * attestation was executed in order to determine if the result
+	 * is usable.
+	 * @param request The AttestRequest entry to be tested
+	 * @return True if the result of the AttestRequest respects
+	 * time interval constraints; false otherwise.
+	 */
+	public static boolean isPeriodicResultValid(AttestRequest request) {
+		boolean returnValue = false;
+
+		if (request.getThreshold() == null || request.getValidateTime() == null ||
+		    request.getThreshold() == Constants.PERIODIC_HOST_UNREACHABLE)
+			return returnValue;
+
+		Long currentTime = new Date().getTime();
+		Long lastAttestationTime = request.getValidateTime().getTime();
+
+		/*
+		 * The periodic attestation result is valid if:
+		 *  - the result is UN_KNOWN, because in this case no
+		 *    attestation is done and the result must be returned
+		 *    to the user;
+		 *  - the interval between the last attestation request time
+		 *    and the last validation time is lesser than the provided
+		 *    threshold. 
+		 */
+		if (ResultConverter.getResultFromInt(request.getResult()) == AttestResult.UN_KNOWN ||
+		    currentTime - lastAttestationTime < request.getThreshold())
+			returnValue = true;
+		
+		return returnValue;
+	}
+
 	/**
 	 * get synchronous result for a given requestId. Just get value from DB.
 	 * @param requestId
@@ -113,6 +148,14 @@ public class AttestService {
 			}
 			host.setHost_name(attest.getHostName());
 			host.setTrust_lvl(ResultConverter.getStringFromInt(result));
+
+			if (attest.getThreshold() != null && attest.getThreshold() > 0 && attest.getResult() != null) {
+				if (!isPeriodicResultValid(attest)) {
+					host.setTrust_lvl(ResultConverter.getStringFromInt(ResultConverter.getIntFromResult(AttestResult.TIME_OUT)));
+					hosts.add(host);
+					continue;
+				}
+			}
 			host.setVtime(attest.getValidateTime());
 
 			if (attest.getAuditLog() != null) {
