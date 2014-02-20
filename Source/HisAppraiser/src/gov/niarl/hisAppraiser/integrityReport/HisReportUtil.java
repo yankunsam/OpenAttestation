@@ -274,7 +274,7 @@ public class HisReportUtil {
 		auditLog.setMachine(machineCert);
 		auditLog.setPreviousDifferences(hisReportValidator.getPreviousReportDifferences());
 		auditLog.setReportCompareErrors(hisReportValidator.getCompareErrors());
-		auditLog.setReportErrors(hisReportValidator.getErrors());
+		auditLog.setValidationErrors(hisReportValidator.getErrors());
 
 		hisAuditDao.saveAuditLog(auditLog);
 		
@@ -300,7 +300,7 @@ public class HisReportUtil {
 			System.out.println("latestPolledRequest" +latestPolledRequest.getId());
 			latestPolledRequest.setAuditLog(newAuditLog);
 
-			if (newAuditLog.getReportErrors() != null || newAuditLog.getReportCompareErrors() != null) {
+			if (newAuditLog.getValidationErrors() != null || newAuditLog.getReportCompareErrors() != null) {
 				latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.UN_TRUSTED));
 				latestPolledRequest.setValidateTime(new Date());
 			} else {
@@ -315,7 +315,7 @@ public class HisReportUtil {
 		AlertConfiguration alertConfiguration = Constants.ALERT_CONFIGURATION;
 		boolean createAlert = false;
 		if (alertConfiguration.getAllAlerts()) {
-			if ((auditLog.getReportErrors() != null && auditLog.getReportErrors().length() > 0) ||
+			if ((auditLog.getValidationErrors() != null && auditLog.getValidationErrors().length() > 0) ||
 				(auditLog.getReportCompareErrors() != null && auditLog.getReportCompareErrors().length() > 0)) {
 				createAlert = true;			
 			}

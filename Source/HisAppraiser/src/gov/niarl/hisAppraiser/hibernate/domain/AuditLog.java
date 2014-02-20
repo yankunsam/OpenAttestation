@@ -76,7 +76,7 @@ public class AuditLog {
 	String report;
 	String previousDifferences;
 	String reportCompareErrors;
-	String reportErrors;
+	String validationErrors;
 
 	/**
 	 * @return the id
@@ -569,16 +569,16 @@ public class AuditLog {
 	}
 
 	/**
-	 * @return the reportErrors
+	 * @return the validationErrors
 	 */
-	public String getReportErrors() {
-		return reportErrors;
+	public String getValidationErrors() {
+		return validationErrors;
 	}
 
 	/**
-	 * @param reportErrors the reportErrors to set
+	 * @param validationErrors the validationErrors to set
 	 */
-	public void setReportErrors(String reportErrors) {
-		this.reportErrors = reportErrors;
+	public void setValidationErrors(String validationErrors) {
+		this.validationErrors = validationErrors;
 	}
 }
