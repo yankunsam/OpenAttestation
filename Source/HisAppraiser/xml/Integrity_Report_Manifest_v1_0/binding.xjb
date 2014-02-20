@@ -29,5 +29,13 @@
     </jxb:schemaBindings>
     
   </jxb:bindings>
+  
+  <jxb:bindings schemaLocation="Simple_Object_v1_0.xsd" node="/xs:schema">
+
+    <jxb:schemaBindings>
+      <jxb:package name="gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.simple_object_v1_0_"/>
+    </jxb:schemaBindings>
+
+  </jxb:bindings>
 
 </jxb:bindings>
