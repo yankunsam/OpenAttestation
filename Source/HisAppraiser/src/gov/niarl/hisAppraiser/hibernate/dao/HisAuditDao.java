@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.hibernate.Session;
 
 /**
  * This class serves as a central location for updates and queries against 
@@ -68,6 +69,22 @@ public class HisAuditDao {
 			auditLog.setTimestamp(new Date());
 			auditLog.setMachineName(auditLog.getMachineName().toLowerCase());
 			HibernateUtilHis.getSession().save(auditLog);
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			throw new RuntimeException(e);
+		}
+	}
+
+	/** 
+	 * Update the given auditLog
+	 * @param auditLog AuditLog entry to update
+	 * 
+	 */
+	public AuditLog updateAuditLog(AuditLog auditLog) {
+		try {
+			Session session = HibernateUtilHis.getSession();
+			session.update(auditLog);
+			return (AuditLog)session.get(AuditLog.class, auditLog.getId());
 		} catch (Exception e) {
 			HibernateUtilHis.rollbackTransaction();
 			throw new RuntimeException(e);
