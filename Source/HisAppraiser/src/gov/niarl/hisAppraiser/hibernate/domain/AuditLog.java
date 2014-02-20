@@ -75,6 +75,7 @@ public class AuditLog {
 	Boolean signatureVerified;
 	String report;
 	String previousDifferences;
+	String reportCompareErrors;
 	String reportErrors;
 
 	/**
@@ -551,6 +552,20 @@ public class AuditLog {
 	 */
 	public void setPreviousDifferences(String previousDifferences) {
 		this.previousDifferences = previousDifferences;
+	}
+
+	/** 
+	 * @return the reportCompareErrors
+	 */
+	public String getReportCompareErrors() {
+		return reportCompareErrors;
+	}
+
+	/**
+	 * @param reportCompareErrors the reportCompareErrors to set
+	 */
+	public void setReportCompareErrors(String reportCompareErrors) {
+		this.reportCompareErrors = reportCompareErrors;
 	}
 
 	/**

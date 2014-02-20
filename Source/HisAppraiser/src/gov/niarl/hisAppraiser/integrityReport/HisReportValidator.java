@@ -87,6 +87,7 @@ public class HisReportValidator {
 	String previousReportDifferences = "";
 
 	ArrayList<String> errors = new ArrayList<String>();
+	ArrayList<String> compareErrors = new ArrayList<String>();
 
 	/**
 	 * The constructor does all the work for verifying the report and returning 
@@ -330,13 +331,13 @@ public class HisReportValidator {
 		for (Integer i : possiblePcrs) {
 			if (hisReportValidator.getPcrValue(i).length() == 0) {
 				previousReportDifferences = sb.append(DIFFERENCE_SEPARATOR).append(Integer.toString(i)).append(DIFFERENCE_SEPARATOR).toString();
-				errors.add("PCR value " + Integer.toString(i) + " is not in the previous report.");
+				compareErrors.add("PCR value " + Integer.toString(i) + " is not in the previous report.");
 			} else if (getPcrValue(i).length() == 0) {
 				previousReportDifferences = sb.append(DIFFERENCE_SEPARATOR).append(Integer.toString(i)).append(DIFFERENCE_SEPARATOR).toString();
-				errors.add("PCR value " + Integer.toString(i) + " is not in the current report.");
+				compareErrors.add("PCR value " + Integer.toString(i) + " is not in the current report.");
 			} else if (!getPcrValue(i).equalsIgnoreCase(hisReportValidator.getPcrValue(i))) {
 				previousReportDifferences = sb.append(DIFFERENCE_SEPARATOR).append(Integer.toString(i)).append(DIFFERENCE_SEPARATOR).toString();
-				errors.add("PCR value " + Integer.toString(i) + " is different than the value in the previous report.");
+				compareErrors.add("PCR value " + Integer.toString(i) + " is different than the value in the previous report.");
 			}
 		}
 		logger.info("----------end comparing to previous report----------");
@@ -362,6 +363,22 @@ public class HisReportValidator {
 	 */
 	public static boolean getPreviousReportDifference(String previousReportDifferences, int i) {
 		return !(previousReportDifferences.indexOf(DIFFERENCE_SEPARATOR + Integer.toString(i) + DIFFERENCE_SEPARATOR) < (1 - 1));
+	}
+
+	/** 
+	 * After the constructor generates and stores compararison errors
+	 * in a list this function concatenates and returns them.
+	 * @return The error string generated from compareErrors list.
+	 */
+	public String getCompareErrors() {
+		String errorsString = null;
+		StringBuffer sb = new StringBuffer();
+		Iterator<String> iterator = compareErrors.iterator();
+		
+		while (iterator.hasNext()) {
+			errorsString = sb.append(iterator.next()).toString();
+		}
+		return errorsString;
 	}
 
 	/**

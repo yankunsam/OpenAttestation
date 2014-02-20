@@ -20,6 +20,7 @@ CREATE TABLE audit_log (
 	pcr5 varchar(100),
 	report text,
 	previous_differences varchar(255),
+	report_compare_errors text,
 	report_errors text,
 	pcr2 varchar(100),
 	pcr3 varchar(100),
