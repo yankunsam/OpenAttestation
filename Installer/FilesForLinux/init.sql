@@ -29,6 +29,7 @@ CREATE TABLE `attest_request` (
   `is_sync` tinyint(1) DEFAULT NULL,
   `validate_time` datetime DEFAULT NULL,  
   `analysis_request` varchar(1320) DEFAULT NULL,
+  `analysis_results` varchar(1320) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_audit_log_id` (`audit_log_id`),
   KEY `UNIQUE` (`request_id`,`host_id`)

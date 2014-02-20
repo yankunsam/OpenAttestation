@@ -51,6 +51,8 @@ public class AttestRequest {
 	
 	private String analysisRequest;
 
+	private String analysisResults;
+
 	public Date getValidateTime() {
 		return validateTime;
 	}
@@ -179,5 +181,13 @@ public class AttestRequest {
 
 	public void setAnalysisRequest(String analysisRequest) {
 		this.analysisRequest = analysisRequest;
+	}
+
+	public String getAnalysisResults() {
+		return analysisResults;
+	}
+
+	public void setAnalysisResults(String analysisResults) {
+		this.analysisResults = analysisResults;
 	}
 }
