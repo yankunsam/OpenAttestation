@@ -1228,12 +1228,15 @@ public class StandaloneHIS
         List pcrs = pcrComposite.getPcrValue();
         
         //Loop through the PCR values adding them to the list
-        for(int i = 0; i<pcrNumber; i++)
+        for(int i = 0; i < 8 * bitmask.length; i++)
         {
             PcrValue pcrEntry = new org.trustedcomputinggroup.xml.schema.integrity_report_v1_0_.ObjectFactory().createPcrCompositeTypePcrValue();
             String pcrValue;
             byte[] pcrValueBytes;
             
+            if ((128 >> (i % 8) & bitmask[i/8]) == 0)
+                continue;
+
             //Set the index number of the first PCR value
             pcrEntry.setPcrNumber(new BigInteger(new Integer(i).toString()));
 
@@ -1436,7 +1439,7 @@ public class StandaloneHIS
         
 
         //here all of the info we just parsed from the quote is assembled into a Quote Data structure
-        pcrComposite.setValueSize(new BigInteger(new Integer(PCR_SIZE).toString()));
+        pcrComposite.setValueSize(new BigInteger(new Integer(PCR_SIZE * pcrNumber).toString()));
         
         pcrSelect.setPcrSelect(bitmask);
         pcrSelect.setSizeOfSelect(bitmaskLen);
