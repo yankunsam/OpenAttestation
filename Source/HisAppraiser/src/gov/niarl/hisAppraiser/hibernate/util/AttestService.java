@@ -32,6 +32,34 @@ import com.sun.jersey.api.client.WebResource;
 public class AttestService {
 	
 	
+	/** 
+	 * Verifies if any errors occurred during the report comparison.
+	 * It updates the fields Result and analysisResults of the recevied
+	 * attestRequest and returns the updated object.
+	 * @param attestRequest The attestation request to be analysed
+	 * @return The updated attestRequest
+	 */
+	public static AttestRequest evaluateCompareReport(AttestRequest attestRequest) {
+		boolean analysisResult = false;
+		String analysisOutput = "";
+		AuditLog auditLog = attestRequest.getAuditLog();
+		if (auditLog != null && attestRequest.getIsConsumedByPollingWS()) {
+			if (auditLog.getReportCompareErrors() != null) {
+				analysisOutput = auditLog.getReportCompareErrors().trim();
+			} else {
+				analysisResult = true;
+			}
+		} else {
+			analysisOutput = "Analysis requested for a not valid report";
+		}
+
+		if (!analysisResult) {
+			attestRequest.setResult(ResultConverter.getIntFromResult(AttestResult.UN_TRUSTED));
+		}
+		attestRequest = updateAnalysisResult(attestRequest, "COMPARE_REPORT", analysisResult, "ANALYSIS_COMPLETED", analysisOutput);
+		return attestRequest;
+	}
+
 	/**
 	 * validate PCR value of a request. Here is 4 cases, that is timeout, unknown, trusted and untrusted.
 	 * case1 (timeout): attest's time is greater than default timeout of attesting from OpenAttestation.properties. In generally, it is usually set as 60 seconds;

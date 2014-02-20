@@ -300,11 +300,12 @@ public class HisReportUtil {
 			System.out.println("latestPolledRequest" +latestPolledRequest.getId());
 			latestPolledRequest.setAuditLog(newAuditLog);
 
-			if (newAuditLog.getValidationErrors() != null || newAuditLog.getReportCompareErrors() != null) {
+			if (newAuditLog.getValidationErrors() != null) {
 				latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.UN_TRUSTED));
 			} else {
 				latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.TRUSTED));
 				latestPolledRequest = AttestService.validatePCRReport(latestPolledRequest, machineNameInput);
+				latestPolledRequest = AttestService.evaluateCompareReport(latestPolledRequest);
 			}
 
 			latestPolledRequest.setValidateTime(new Date());
