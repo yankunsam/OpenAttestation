@@ -74,6 +74,25 @@ public class AttestService {
 		}
 		 return attestRequest;
 	}
+
+	/**
+	 * Receives the current content of field analysisResult of table
+	 * AttestRequest and updates it with received information
+	 * about the analysis: name, result, status and output.
+	 * @param prevAnalysisResult Previous content of field analysisResult
+	 * @param analysis The analysis to be added to analysisResult
+	 * @param result Result of the analysis to be added to analysisResult
+	 * @param status Status of the analysis to be added to analysisResult
+	 * @param output Output of the analysis to be added to analysisResult
+	 * @return The updated content of field analysisResult
+	 */
+	public static AttestRequest updateAnalysisResult(AttestRequest attestRequest, String analysis, boolean result, String status, String output) {
+		String analysisResult = (attestRequest.getAnalysisResults() == null) ? "" : attestRequest.getAnalysisResults();
+		analysisResult += analysis + "|" + result + "|" + status + "|" + output.length() + "|" + output + ";";
+		attestRequest.setAnalysisResults(analysisResult);
+
+		return attestRequest;
+	}
 	
 	/*
 	 * compare request's PCR with PCRManifest in DB. 
