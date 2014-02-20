@@ -321,9 +321,6 @@ public class HisReportValidator {
 		logger.info("----------begin comparing to previous report----------");
 		HisReportValidator hisReportValidator = new HisReportValidator(previousReportString, null, null, null, null, null);
 		StringBuffer sb = new StringBuffer();
-		if (getPcrValueCount() != hisReportValidator.getPcrValueCount()) {
-			errors.add("There are a different number of PCR values for this report as compared to the previous report.");
-		}
 
 		SortedSet<Integer> possiblePcrs = new TreeSet<Integer>();
 		possiblePcrs.addAll(hisReportValidator.getHisReportData().getPossiblePcrs());
@@ -331,13 +328,13 @@ public class HisReportValidator {
 		for (Integer i : possiblePcrs) {
 			if (hisReportValidator.getPcrValue(i).length() == 0) {
 				previousReportDifferences = sb.append(DIFFERENCE_SEPARATOR).append(Integer.toString(i)).append(DIFFERENCE_SEPARATOR).toString();
-				compareErrors.add("PCR value " + Integer.toString(i) + " is not in the previous report.");
+				compareErrors.add("PCR #" + Integer.toString(i) + " new. ");
 			} else if (getPcrValue(i).length() == 0) {
 				previousReportDifferences = sb.append(DIFFERENCE_SEPARATOR).append(Integer.toString(i)).append(DIFFERENCE_SEPARATOR).toString();
-				compareErrors.add("PCR value " + Integer.toString(i) + " is not in the current report.");
+				compareErrors.add("PCR #" + Integer.toString(i) + " absent. ");
 			} else if (!getPcrValue(i).equalsIgnoreCase(hisReportValidator.getPcrValue(i))) {
 				previousReportDifferences = sb.append(DIFFERENCE_SEPARATOR).append(Integer.toString(i)).append(DIFFERENCE_SEPARATOR).toString();
-				compareErrors.add("PCR value " + Integer.toString(i) + " is different than the value in the previous report.");
+				compareErrors.add("PCR #" + Integer.toString(i) + " differs. ");
 			}
 		}
 		logger.info("----------end comparing to previous report----------");
