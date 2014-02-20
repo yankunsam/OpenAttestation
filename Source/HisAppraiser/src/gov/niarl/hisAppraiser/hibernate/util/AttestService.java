@@ -12,13 +12,18 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 package gov.niarl.hisAppraiser.hibernate.util;
+import gov.niarl.hisAppraiser.hibernate.dao.AnalysisTypesDao;
 import gov.niarl.hisAppraiser.hibernate.dao.AttestDao;
+import gov.niarl.hisAppraiser.hibernate.domain.AnalysisTypes;
 import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
 import gov.niarl.hisAppraiser.hibernate.domain.AuditLog;
+import gov.niarl.hisAppraiser.hibernate.domain.OS;
 import gov.niarl.hisAppraiser.hibernate.domain.PCRManifest;
 import gov.niarl.hisAppraiser.hibernate.domain.PcrWhiteList;
 import gov.niarl.hisAppraiser.hibernate.util.ResultConverter.AttestResult;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +33,8 @@ import javax.ws.rs.core.GenericEntity;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+
+import org.hibernate.Query;
 
 public class AttestService {
 	
@@ -53,13 +60,116 @@ public class AttestService {
 			} else if (analysis.equals("COMPARE_REPORT")) {
 				attestRequest = evaluateCompareReport(attestRequest);
 			} else {
-				attestRequest = updateAnalysisResult(attestRequest, "NULL", false, "ANALYSIS_NOT_FOUND", "");
-				attestRequest.setResult(ResultConverter.getIntFromResult(AttestResult.UN_TRUSTED));
+				attestRequest = analysisLauncher(attestRequest, analysis);
 			}
 		}
 		return attestRequest;
 	}
 
+	/**
+	 * Executes the received analysis, writing thier result in the
+	 * received AttestRequest
+	 * @param attestRequest The AttestRequest to be updated
+	 * @param analysis The analysis to be executed
+	 * @return The updated AttestRequest
+	 */
+	public static AttestRequest analysisLauncher(AttestRequest attestRequest, String analysis) {
+		boolean analysisResult = false;
+		String analysisStatus = "ANALYSIS_COMPLETED";
+		String analysisOutput = "";
+		String analysisName = analysis.split(",")[0].trim();
+		String analysisParameters = "";
+		String os_name = findHostOS(attestRequest.getHostName());
+		AnalysisTypesDao ATDao = new AnalysisTypesDao();
+		AnalysisTypes analysisType = ATDao.getAnalysisTypeByName(analysisName);
+
+		if (analysisType == null) {
+			attestRequest = updateAnalysisResult(attestRequest, "NULL", false, "ANALYSIS_NOT_FOUND", "");
+			attestRequest.setResult(ResultConverter.getIntFromResult(AttestResult.UN_TRUSTED));
+			return attestRequest;
+		}
+
+		try {
+			if (os_name == null)
+				throw new Exception ("Error occurred retrieving OS name");
+
+			if (analysis.indexOf(',') != -1) {
+				analysisParameters = analysis.substring(analysis.indexOf(',') + 1);
+			}
+			
+			String[] env_var = { "ANALYSIS=" + analysisType.getName() + "," + analysisParameters, "OS=" + os_name};
+			Runtime r = Runtime.getRuntime();
+			String script_string = analysisType.getURL();
+			Process p = r.exec(script_string, env_var);
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			BufferedReader brerr = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+
+			int exitCode = p.waitFor();
+
+			String line = "";
+			analysisOutput = "";
+
+			while ((line = br.readLine()) != null) {
+				analysisOutput += line + "\n";
+			}
+			analysisOutput = analysisOutput.substring(0, Math.min(analysisOutput.length(), 80));
+
+			analysisOutput = analysisOutput.trim();
+			if (exitCode == 0) {
+				analysisResult = true;
+			} else if (exitCode != 1) {
+				analysisStatus = "SCRIPT_ERROR";
+
+				System.out.println("error: External analysis tool returned error code " + exitCode);
+				System.out.println("\tAnalysis tool output: " + analysisOutput.replace("\n", " \\n "));
+			}
+		} catch (Exception e) {
+			if (e instanceof IOException)
+				System.out.println("IO error executing analysis: " + e.getMessage());
+			else
+				System.out.println("Error executing analysis: " + e.getMessage());
+
+			analysisResult = false;
+			analysisStatus = "OAT_ERROR";
+			analysisOutput = "";
+		}
+
+		if (!analysisResult)
+			attestRequest.setResult(ResultConverter.getIntFromResult(AttestResult.UN_TRUSTED));
+
+		attestRequest = updateAnalysisResult(attestRequest, "DB:" + analysisType.getId().toString(),
+		                                     analysisResult, analysisStatus, analysisOutput);
+		return attestRequest;
+	}
+
+	/**
+	 * Obtains the OS from the host name reading
+	 * information stored on DB.
+	 * @param hostName The host name to look for
+	 * @return The OS associated with the host name received
+	 */
+	private static String findHostOS(String hostName) {
+		String os_name = null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("select c from OS c where ID in " + 
+				"(select a.os from MLE a where ID in (select b.mle from HOST_MLE b where HOST_ID in " + 
+				"(select h.ID from HOST h where HOST_NAME = :host_name)))");
+			query.setString("host_name", hostName);
+
+			List list = query.list();
+
+			if (list.size() > 0) {
+				os_name = ((OS)list.get(0)).getName();
+			}
+			return os_name;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
 	
 	/** 
 	 * Verifies if any errors occurred during the report comparison.
