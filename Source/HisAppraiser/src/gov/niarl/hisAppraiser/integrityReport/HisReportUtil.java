@@ -275,8 +275,15 @@ public class HisReportUtil {
 		auditLog.setPreviousDifferences(hisReportValidator.getPreviousReportDifferences());
 		auditLog.setReportCompareErrors(hisReportValidator.getCompareErrors());
 		auditLog.setValidationErrors(hisReportValidator.getErrors());
+		auditLog.setFirstReport((long) -1);
 
 		hisAuditDao.saveAuditLog(auditLog);
+
+		if (auditLog.getValidationErrors() == null) {
+			auditLog.setFirstReport(auditLog.getId());
+			if (!hisReportValidator.isFirstIR())
+				auditLog.setFirstReport(lastAuditLog.getFirstReport());
+		}
 		
 		try {
 			String reportDBString = HisReportIO.writeIR(auditLog.getId(), reportString);
