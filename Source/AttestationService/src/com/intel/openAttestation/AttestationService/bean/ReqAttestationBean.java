@@ -27,6 +27,8 @@ public class ReqAttestationBean {
 
 	private String analysisType;
 	
+	private String expirationTime;
+
     public ReqAttestationBean(){
     	
     }
@@ -61,6 +63,14 @@ public class ReqAttestationBean {
 
 	public void setAnalysisType(String analysisType) {
 		this.analysisType = analysisType;
+	}
+
+	public String getExpirationTime() {
+		return expirationTime;
+	}
+
+	public void setExpirationTime(String expirationTime) {
+		this.expirationTime = expirationTime;
 	}
 	
 }
