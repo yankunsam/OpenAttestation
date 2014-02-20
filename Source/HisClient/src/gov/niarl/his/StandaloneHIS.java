@@ -236,6 +236,10 @@ public class StandaloneHIS
     public static final String WINDOWS_REBOOT_CMD = "shutdown -r";
     public static final String LINUX_REBOOT_CMD = "shutdown -r 15";
 
+    public static boolean clientStartUpDone = false;
+    public static boolean lastReportSendSuccess = true;
+
+    String reportType = "start";
     //global variable that indicates the quote type to be used
     int quoteType=2;
     
@@ -263,7 +267,10 @@ public class StandaloneHIS
 
 
     String tpmOutput = "";
-    
+    private static long lastByteBIOS;
+    private static long lastByteIMA;
+    private static byte[][] lastPcrHash = new byte[PCR_MAX_NUM][20];
+    private static int[] lastEventCount = new int[PCR_MAX_NUM];
 
             /**
              * Removes white space from a string.
@@ -415,6 +422,7 @@ public class StandaloneHIS
         try
         {
             his.checkIntegrity();
+            clientStartUpDone = true;
         }
         catch(Exception e)
         {
@@ -442,6 +450,7 @@ public class StandaloneHIS
     
     public StandaloneHIS(String path, boolean splash, boolean brand) throws Exception
     {
+        resetScalabilityCounters();
         
         if(path.length() == 0)
         {
@@ -653,9 +662,13 @@ public class StandaloneHIS
                     try
                     {
                         checkIntegrity();
+                        lastReportSendSuccess = true;
                     }
                     catch(Exception e)
                     {
+                        resetScalabilityCounters();
+                        lastReportSendSuccess = false;
+
                         e.printStackTrace();
                         s_logger.error( "Error checking integrity on demand: "+e.getMessage() );
                     }
@@ -1032,7 +1045,7 @@ public class StandaloneHIS
         String reportID;
         
         //Set the Report ID to the host name concatonated with the time ++
-        reportID=hostName+"-"+System.currentTimeMillis();       
+        reportID = hostName + "-" + reportType + "-" + System.currentTimeMillis();       
         report.setID(reportID);
         
         //Set the UUID to the UUID prefix concatonated with the reportID ++
@@ -1190,11 +1203,13 @@ public class StandaloneHIS
 
 		InputStream in = new FileInputStream("/sys/kernel/security/ima/binary_runtime_measurements");
 
+		in.skip(lastByteIMA);
 		while (in.read(tmpBytes, 0, 4) == 4) {
 			pcrNumber = ByteBuffer.wrap(tmpBytes).order(ByteOrder.nativeOrder()).getInt();
 			if ((intBitmask & (0x00800000 >> pcrNumber)) == 0)
 				return;
 
+			eventCount = lastEventCount[pcrNumber];
 			hashValue = new byte[PCR_SIZE];
 			in.read(hashValue, 0, PCR_SIZE);
 
@@ -1231,6 +1246,10 @@ public class StandaloneHIS
 
 			eventCount++;
 
+			/* 4 * 3 bytes are for PCR number, template name length and template data length */ 
+			lastByteIMA += 4 * 3 + templateNameSize + imageSize + PCR_SIZE + ((digestValue != null) ? PCR_SIZE : 0);
+			lastEventCount[pcrNumber] = eventCount;
+
 			if (hexString(hashValue).equals(tpmOutput.split(" ")[pcrNumber]))
 				break;
 		}
@@ -1263,7 +1282,7 @@ public class StandaloneHIS
 
 		int[] eventCount = new int[PCR_MAX_NUM];
 		for (int i=0; i<PCR_MAX_NUM; i++)
-			eventCount[i] = 0;
+			eventCount[i] = lastEventCount[i];
 
 		boolean[] pcrValueReached = new boolean[PCR_MAX_NUM];
 		for (int i=0; i<PCR_MAX_NUM; i++)
@@ -1274,6 +1293,7 @@ public class StandaloneHIS
 		if (tpmFileStream == null)
 			throw new Exception("Can't read file \"/sys/kernel/security/tpm0/binary_bios_measurements\"");
 
+		tpmFileStream.skip(lastByteBIOS);
 		while (tpmFileStream.read(tmpBytes, 0, 4) == 4) {
 			pcrNumber = ByteBuffer.wrap(tmpBytes).order(ByteOrder.nativeOrder()).getInt();
 
@@ -1318,6 +1338,10 @@ public class StandaloneHIS
 			}
 
 			eventCount[pcrNumber]++;
+
+			/* 4 * 3 bytes are for PCR number, template name length and template data length */ 
+			lastByteBIOS += 4 * 3 + PCR_SIZE + imageSize;
+			lastEventCount[pcrNumber] = eventCount[pcrNumber];
 
 			if (hexString(hashValue).equals(tpmOutput.split(" ")[pcrNumber]))
 				pcrValueReached[pcrNumber] = true;
@@ -1421,12 +1445,14 @@ public class StandaloneHIS
 			pcrHash.setId("PCR_" + pcrIndex + "_" + levelString + "_HASH");
 			pcrHash.setIsResetable(false);
 			pcrHash.setNumber(BigInteger.valueOf(pcrIndex));
+
+			startHash = lastPcrHash[pcrIndex];
 			pcrHash.setStartHash(startHash);
 
 			snap.getPcrHash().add(pcrHash);
 		} else {
 			pcrHash = snap.getPcrHash().get(0);
-			startHash = snap.getPcrHash().get(0).getValue();
+			startHash = lastPcrHash[pcrIndex];
 		}
 
 		md.reset();
@@ -1436,6 +1462,8 @@ public class StandaloneHIS
 		else
 			md.update(hashValue, 0, PCR_SIZE);
 		pcrHash.setValue(md.digest());
+
+		lastPcrHash[pcrIndex] = pcrHash.getValue();
 
 		return snap;
 	}
@@ -1783,8 +1811,19 @@ public class StandaloneHIS
         return quote;
     }
 
-
-
+	/**
+	 * Resets counters used by the client to
+	 * implement the scalability mechanism.
+	 */
+	private void resetScalabilityCounters() {
+		reportType = "start";
+		lastByteBIOS = 0;
+		lastByteIMA = 0;
+		for (int i = 0; i < PCR_MAX_NUM; i++) {
+			lastPcrHash[i] = unHexString("0000000000000000000000000000000000000000");
+			lastEventCount[i] = 0;
+		}
+	}
   
     /** Makes a web service call to get the parameters for the Integrity check.  
      * The parameters include a Quote type (1 or 2) nonce and PCR selection and are customized for the computer and user.
@@ -1797,6 +1836,18 @@ public class StandaloneHIS
     {
         //get the web service object with the correct computer name
         NonceSelect nonceSelect = hisAuthenticationWebService.getNonce(compName, userName);
+
+        /*
+         * Ignore the report type requested by the Appraiser,
+         * if the Client service restarted or last report was
+         * not successfully sent.
+         */ 
+        if (clientStartUpDone && lastReportSendSuccess) {
+            reportType = nonceSelect.getReportType();
+        }
+        if (reportType.equals("start")) {
+            resetScalabilityCounters();
+        }
 
         //NOTE: This can be considered input filtering for command line arguments as the Hex tool can only generate 0-9 A-F
         //This selection must account for null return from older versions of the web service
