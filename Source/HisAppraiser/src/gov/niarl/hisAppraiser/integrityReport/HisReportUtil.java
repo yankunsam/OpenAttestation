@@ -50,6 +50,7 @@ import gov.niarl.hisAppraiser.hibernate.domain.MachineCert;
 import gov.niarl.hisAppraiser.hibernate.util.AttestService;
 import gov.niarl.hisAppraiser.hibernate.util.HibernateUtilHis;
 import gov.niarl.hisAppraiser.hibernate.util.ResultConverter;
+import gov.niarl.hisAppraiser.integrityReport.HisReportIO;
 import gov.niarl.hisAppraiser.util.AlertConfiguration;
 import gov.niarl.hisAppraiser.util.Emailer;
 import gov.niarl.hisAppraiser.util.HisUtil;
@@ -302,5 +303,24 @@ public class HisReportUtil {
 			HibernateUtilHis.beginTransaction();
 			Emailer.sendDefaultAlertEmail();
 		}
+	}
+
+	public static String fetchReport(Long reportId) {
+		String reportXML = "";
+		try {
+			if (reportId == null) {
+				throw new Exception("fetchReport(): null reportId received");
+			}
+
+			HisAuditDao auditDao = new HisAuditDao();
+			AuditLog auditLog = auditDao.getAuditLog(reportId.intValue());
+			if (auditLog == null) {
+				throw new Exception("fetchReport(): no report with id '" + reportId + "'");
+			}
+			reportXML = HisReportIO.readIR(reportId, auditLog.getReport());
+		} catch (Exception exception) {
+			logger.error(exception.getMessage());
+		}
+		return reportXML;
 	}
 }
