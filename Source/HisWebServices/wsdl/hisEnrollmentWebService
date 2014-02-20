@@ -45,6 +45,14 @@ Information
 <table border="0"><tr><td>Address:</td><td>hisPollingWebService</td></tr><tr><td>WSDL:</td><td><a href="hisPollingWebService.wsdl">hisPollingWebService.wsdl</a></td></tr><tr><td>Implementation class:</td><td>gov.niarl.sal.webservices.hisWebService.server.HisPollingWebService</td></tr></table>
 </td>
 </tr>
+<tr>
+<td>
+<table border="0"><tr><td>Service Name:</td><td>{http://server.hisWebService.webservices.sal.niarl.gov/}HisDownloadReportService</td></tr><tr><td>Port Name:</td><td>{http://server.hisWebService.webservices.sal.niarl.gov/}HisDownloadReportService</td></tr></table>
+</td>
+<td>
+<table border="0"><tr><td>Address:</td><td>hisDownloadReportService</td></tr><tr><td>WSDL:</td><td><a href="hisDownloadReportService.wsdl">hisDownloadReportService.wsdl</a></td></tr><tr><td>Implementation class:</td><td>gov.niarl.sal.webservices.hisWebService.server.HisDownloadReportService</td></tr></table>
+</td>
+</tr>
 </table>
 </body>
 </html>
