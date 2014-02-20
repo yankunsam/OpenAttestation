@@ -50,6 +50,7 @@ public class NonceSelect {
 	Quote quote;
 	byte[] nonce;
 	byte[] select;
+	String reportType;
 
 	/**
 	 * @return the quote
@@ -91,5 +92,19 @@ public class NonceSelect {
 	 */
 	public void setSelect(byte[] select) {
 		this.select = select;
+	}
+
+	/**
+	 * @return the reportType flag
+	 */
+	public String getReportType() {
+		return reportType;
+	}
+
+	/**
+	 * @param reportType the reportType to set
+	 */
+	public void setReportType(String reportType) {
+		this.reportType = reportType;
 	}
 }
