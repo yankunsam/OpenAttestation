@@ -832,6 +832,7 @@ public class StandaloneHIS
         report = createIntegrityReport(computerName);
 
         createMeasureSnapshot(report, "bios");
+        createMeasureSnapshot(report, "ima");
         
         //parse the Quote and add it to the integrity report
         try
@@ -1150,6 +1151,8 @@ public class StandaloneHIS
 		try {
 			if (imlType.equals("bios"))
 				createBIOSSnapshot(report);
+			else if (imlType.equals("ima"))
+				createIMASnapshot(report);
 		} catch (Exception e) {
 			if (e instanceof NoSuchAlgorithmException)
 				s_logger.error("SHA-1 is required to create a valid snapshot");
@@ -1158,6 +1161,82 @@ public class StandaloneHIS
 
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Creates an element SnapshotCollection, writes IMA measurements
+	 * inside it and adds it to the given ReportType element.
+	 * 
+	 * @param report The report that will contain the SnapshotCollection
+	 *        elements
+	 */
+	private void createIMASnapshot(ReportType report) throws NoSuchAlgorithmException, Exception {
+		int intBitmask = (pcrBitmask[2] & 0xFF) | ((pcrBitmask[1] & 0xFF) << 8) | ((pcrBitmask[0] & 0xFF) << 16);
+
+		SnapshotType snap = null;
+		String UUID = generateUUID("4");
+		byte[] tmpBytes = new byte[4];
+		int eventCount = 0;
+
+		int pcrNumber;
+		byte[] hashValue = null;
+		byte[] digestValue = null;
+		byte[] readImageSize = null;
+		int imageSize;
+
+		File ima_file = new File("/sys/kernel/security/ima/binary_runtime_measurements");
+		if (!ima_file.exists())
+			return;
+
+		InputStream in = new FileInputStream("/sys/kernel/security/ima/binary_runtime_measurements");
+
+		while (in.read(tmpBytes, 0, 4) == 4) {
+			pcrNumber = ByteBuffer.wrap(tmpBytes).order(ByteOrder.nativeOrder()).getInt();
+			if ((intBitmask & (0x00800000 >> pcrNumber)) == 0)
+				return;
+
+			hashValue = new byte[PCR_SIZE];
+			in.read(hashValue, 0, PCR_SIZE);
+
+			in.read(tmpBytes, 0, 4);
+			int templateNameSize = ByteBuffer.wrap(tmpBytes).order(ByteOrder.nativeOrder()).getInt();
+
+			byte[] templateName = new byte[templateNameSize];
+			in.read(templateName, 0, templateNameSize);
+
+			imageSize = 0;
+			digestValue = null;
+			if (new String(templateName).equals("ima")) {
+				digestValue = new byte[PCR_SIZE];
+				in.read(digestValue, 0, PCR_SIZE);
+				imageSize += PCR_SIZE;
+			}
+
+			readImageSize = new byte[4];
+			in.read(readImageSize, 0, 4);
+			int templateDataSize = ByteBuffer.wrap(readImageSize).order(ByteOrder.nativeOrder()).getInt();
+			byte[] templateData = new byte[templateDataSize];
+			in.read(templateData, 0, templateDataSize);
+			imageSize += templateDataSize;
+
+			ByteBuffer imageBuffer = ByteBuffer.allocate(imageSize);
+			if (digestValue != null)
+				imageBuffer.put(digestValue);
+			imageBuffer.put(templateData); 
+
+			if (snap == null) {
+				snap = initializeSnapshot(UUID, 10);
+			}
+			snap = createValuesType(snap, UUID, 10, new String(templateName), eventCount, hashValue, imageBuffer.array());
+
+			eventCount++;
+
+			if (hexString(hashValue).equals(tpmOutput.split(" ")[pcrNumber]))
+				break;
+		}
+
+		report.getSnapshotCollection().add(snap);
+		in.close();
 	}
 
 	/**
