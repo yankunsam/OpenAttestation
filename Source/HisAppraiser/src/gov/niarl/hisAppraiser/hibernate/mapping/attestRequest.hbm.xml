@@ -22,6 +22,10 @@
 	    <property name="validateTime" column="validate_time"></property>
 	    <property name="analysisRequest" column="analysis_request"></property>
 	    <property name="analysisResults" column="analysis_results"></property>
+	    <property name="threshold" column="threshold"></property>
+	    <property name="expirationTime" column="expiration_time"></property>
+	    <property name="lastReadTime" column="last_read_time"></property>
+	    <property name="currentProcessingTime" column="current_processing_time"></property>
 	</class>
 </hibernate-mapping>
 

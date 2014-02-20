@@ -30,6 +30,10 @@ CREATE TABLE `attest_request` (
   `validate_time` datetime DEFAULT NULL,  
   `analysis_request` varchar(1320) DEFAULT NULL,
   `analysis_results` varchar(1320) DEFAULT NULL,
+  `threshold` bigint DEFAULT NULL,
+  `expiration_time` datetime DEFAULT NULL,
+  `last_read_time` datetime DEFAULT NULL,
+  `current_processing_time` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_audit_log_id` (`audit_log_id`),
   KEY `UNIQUE` (`request_id`,`host_id`)
