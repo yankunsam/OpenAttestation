@@ -638,6 +638,7 @@ public class HOSTResource {
 			attestRequests[i].setCount(new Long(hostNum));
 			attestRequests[i].setPCRMask(reqAttestation.getPCRmask());
 			attestRequests[i].setIsSync(isSync);
+			attestRequests[i].setAnalysisRequest(reqAttestation.getAnalysisType());
 		}
 		for(AttestRequest req: attestRequests)
 			dao.saveRequest(req);
