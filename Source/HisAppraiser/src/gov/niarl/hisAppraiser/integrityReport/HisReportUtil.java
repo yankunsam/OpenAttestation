@@ -302,11 +302,12 @@ public class HisReportUtil {
 
 			if (newAuditLog.getValidationErrors() != null || newAuditLog.getReportCompareErrors() != null) {
 				latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.UN_TRUSTED));
-				latestPolledRequest.setValidateTime(new Date());
 			} else {
+				latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.TRUSTED));
 				latestPolledRequest = AttestService.validatePCRReport(latestPolledRequest, machineNameInput);
 			}
 
+			latestPolledRequest.setValidateTime(new Date());
 			attestDao.updateRequest(latestPolledRequest);
 	     	System.out.println("------------------------OpenAttestation complete!------------------------------------------");
 		 /****************************************************************************************************/

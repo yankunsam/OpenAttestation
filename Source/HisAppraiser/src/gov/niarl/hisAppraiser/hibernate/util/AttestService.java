@@ -71,9 +71,6 @@ public class AttestService {
 			if (!flag){
 				attestRequest.setResult(ResultConverter.getIntFromResult(AttestResult.UN_TRUSTED));
 			}
-			else
-				attestRequest.setResult(ResultConverter.getIntFromResult(AttestResult.TRUSTED));
-			attestRequest.setValidateTime(new Date());
 		}
 		 return attestRequest;
 	}
