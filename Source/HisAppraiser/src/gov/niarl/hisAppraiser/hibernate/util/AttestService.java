@@ -42,6 +42,7 @@ public class AttestService {
 	 * @return 
 	 */
 	public static AttestRequest validatePCRReport(AttestRequest attestRequest,String machineNameInput){
+		String analysisOutput = "";
 		attestRequest.getAuditLog();
 		List<PcrWhiteList> whiteList = new ArrayList<PcrWhiteList>();
 		AttestDao dao = new AttestDao();
@@ -60,17 +61,19 @@ public class AttestService {
 				for(int i=0; i<whiteList.size(); i++){
 					int pcrNumber = Integer.valueOf(whiteList.get(i).getPcrName()).intValue();
 						if(!whiteList.get(i).getPcrDigest().equalsIgnoreCase(pcrs.get(pcrNumber))){
+							analysisOutput += "PCR #" + whiteList.get(i).getPcrName() + " mismatch. ";
 							flag = false;
-							break;
 						}
 				}
 			} else {
+				analysisOutput += "No PCR in white list.";
 				flag = false;
 			}
 			
 			if (!flag){
 				attestRequest.setResult(ResultConverter.getIntFromResult(AttestResult.UN_TRUSTED));
 			}
+			attestRequest = updateAnalysisResult(attestRequest, "VALIDATE_PCR", flag, "ANALYSIS_COMPLETED", analysisOutput.trim());
 		}
 		 return attestRequest;
 	}
