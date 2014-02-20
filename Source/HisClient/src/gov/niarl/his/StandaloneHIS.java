@@ -56,6 +56,8 @@ import java.net.UnknownHostException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException; 
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -66,6 +68,7 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.trustedcomputinggroup.xml.schema.core_integrity_v1_0_1_.ComponentIDType;
+import org.trustedcomputinggroup.xml.schema.core_integrity_v1_0_1_.DigestMethodType;
 import org.trustedcomputinggroup.xml.schema.core_integrity_v1_0_1_.ObjectFactory;
 import org.trustedcomputinggroup.xml.schema.core_integrity_v1_0_1_.ValueType;
 import org.trustedcomputinggroup.xml.schema.core_integrity_v1_0_1_.VendorIdType;
@@ -78,6 +81,10 @@ import org.trustedcomputinggroup.xml.schema.integrity_report_v1_0_.QuoteType;
 import org.trustedcomputinggroup.xml.schema.integrity_report_v1_0_.ReportType;
 import org.trustedcomputinggroup.xml.schema.integrity_report_v1_0_.SnapshotType;
 import org.trustedcomputinggroup.xml.schema.integrity_report_v1_0_.PcrCompositeType.PcrValue;
+import org.trustedcomputinggroup.xml.schema.integrity_report_v1_0_.TpmDigestValueType;
+import org.trustedcomputinggroup.xml.schema.simple_object_v1_0_.SimpleObjectType;
+import org.trustedcomputinggroup.xml.schema.simple_object_v1_0_.ValuesType;
+import org.trustedcomputinggroup.xml.schema.core_integrity_v1_0_1_.DigestValueType;
 import org.w3._2000._09.xmldsig_.KeyInfoType;
 import org.w3._2000._09.xmldsig_.KeyValueType;
 import org.w3._2000._09.xmldsig_.SignatureMethodType;
@@ -1129,6 +1136,120 @@ public class StandaloneHIS
         
         return snap;
     }
+
+	/** 
+	 * Creates an element SnapshotCollection for the given PCR number.
+	 * 
+	 * @param pcrIndex Number of the PCR whose measurements will be
+	 *        placed in the SnapshotCollection
+	 * @param UUID UUID of the SnapshotCollection
+	 * @return The SnapshotCollection to be included in the report
+	 */
+	private SnapshotType initializeSnapshot(String UUID, int pcrIndex) {
+		SnapshotType snap = new SnapshotType();
+
+		ComponentIDType component = new ComponentIDType();
+		VendorIdType vendorID = new VendorIdType();
+
+		vendorID.setName(hisProperties.getProperty(VENDOR_NAME_LABEL, "JJ")); 
+		vendorID.getTcgVendorIdOrSmiVendorIdOrVendorGUID().add(new ObjectFactory().createVendorIdTypeSmiVendorId(new BigInteger("0")));
+		vendorID.getTcgVendorIdOrSmiVendorIdOrVendorGUID().add(new ObjectFactory().createVendorIdTypeTcgVendorId("DEMO"));
+
+		component.setVendorID(vendorID);
+		component.setId("CID_" + pcrIndex);
+		component.setModelSystemClass ("TBD");
+		if (pcrIndex == 10)
+			component.setSimpleName ("OAT IMA");
+		else
+			component.setSimpleName ("JJ");
+		component.setVersionBuild (new BigInteger ("1250694000000"));
+		component.setVersionString ("JJ");
+
+		DigestMethodType digestMethod = new DigestMethodType();
+		digestMethod.setAlgorithm ("unknown");
+		digestMethod.setId ("sha1");
+		snap.getDigestMethod().add(digestMethod);
+
+		//Set the IDs
+		snap.setUUID(UUID);
+		snap.setId("IR_" + UUID);
+		snap.setRevLevel(new BigInteger(SNAPSHOT_REV_LEVEL));
+
+		snap.setComponentID(component);
+		return snap;
+	}
+
+	/** 
+	 * Creates an element Values and adds it to the received
+	 * SnapshotCollection; if the SnapshotCollection is null
+	 * the function also creates it.
+	 * 
+	 * @param snap SnapshotCollection to be created or extended
+	 * @param UUID UUID of the SnapshotCollection
+	 * @param pcrIndex Index of the PCR the hash refers to
+	 * @param eventType Number used to compose the Id of element Hash
+	 * @param eventCount Number used to compose the Id of element Hash
+	 * @param hashValue Content of element Hash
+	 * @param imageValue Content of parameter Image in element Objects
+	 * @return The SnapshotCollection to be included in the report
+	 */
+	private SnapshotType createValuesType(SnapshotType snap, String UUID, int pcrIndex, String eventType, int eventCount, byte[] hashValue, byte[] imageValue) throws NoSuchAlgorithmException {
+		MessageDigest md = MessageDigest.getInstance("SHA-1");
+		byte[] startHash = new byte[PCR_SIZE];
+
+		ValueType messageValue = new ValueType();
+		TpmDigestValueType pcrHash;
+		ValuesType objects = new ValuesType();
+		DigestValueType hash = new DigestValueType();
+		SimpleObjectType simpleObject = (new org.trustedcomputinggroup.xml.schema.simple_object_v1_0_.ObjectFactory()).createSimpleObjectType();
+
+		String levelString = "LV0";
+		String eventTypeString = eventType.replaceFirst("^0+(?!$)", "");
+		if (eventType.contains("ima")) {
+			levelString = "LV1";
+			eventTypeString = "0";
+		} 
+
+		hash.setId("PCR_" + pcrIndex + "_" + levelString + "_" + eventTypeString + "_" + eventCount + "_EVENT");
+		hash.setAlgRef(snap.getDigestMethod().get(0).getId());
+		hash.setValue(hashValue);
+
+		objects.getHash().add(hash);
+		objects.setImage(imageValue);
+		objects.setType(eventType);
+
+		simpleObject.getObjects().add(objects);
+		messageValue.setAny(new org.trustedcomputinggroup.xml.schema.simple_object_v1_0_.ObjectFactory().createSimpleObject (simpleObject));
+		snap.getValues().add(messageValue);
+
+		/*
+		 * PcrHash
+		 */
+		if (snap.getPcrHash().size() == 0) {
+			pcrHash = new TpmDigestValueType();
+
+			pcrHash.setAlgRef("sha1");
+			pcrHash.setId("PCR_" + pcrIndex + "_" + levelString + "_HASH");
+			pcrHash.setIsResetable(false);
+			pcrHash.setNumber(BigInteger.valueOf(pcrIndex));
+			pcrHash.setStartHash(startHash);
+
+			snap.getPcrHash().add(pcrHash);
+		} else {
+			pcrHash = snap.getPcrHash().get(0);
+			startHash = snap.getPcrHash().get(0).getValue();
+		}
+
+		md.reset();
+		md.update (startHash, 0, PCR_SIZE);
+		if (hexString(hashValue).equals("0000000000000000000000000000000000000000"))
+			md.update(unHexString("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"), 0, PCR_SIZE);
+		else
+			md.update(hashValue, 0, PCR_SIZE);
+		pcrHash.setValue(md.digest());
+
+		return snap;
+	}
     
     /** Takes raw PCR data and constructs a QuoteData element that conrails the a PCR value quote and a corresponding signature.  
      * @param id The report ID to for use by the Quote Data object.
