@@ -196,6 +196,7 @@ cp -R /tmp/OAT_Server_Install/AttestationService $TOMCAT_INSTALL_DIR/$TOMCAT_NAM
 echo "$TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties has updated"
 
 mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/AttestationService/WEB-INF/classes/OpenAttestationWebServices.properties /etc/oat-appraiser/OpenAttestationWebServices.properties
+sed -i "s/<server.domain>/$(hostname)/g" /etc/oat-appraiser/OpenAttestationWebServices.properties
 #sed -i "s/<server.domain>/$(hostname)/g" $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/OpenAttestationAdminConsole/WEB-INF/classes/manifest.properties
 #configuring hibernateHis for OAT appraiser setup
 cp /tmp/OAT_Server_Install/hibernateOat.cfg.xml /tmp/

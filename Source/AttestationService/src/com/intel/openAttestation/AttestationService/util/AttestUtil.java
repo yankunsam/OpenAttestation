@@ -30,6 +30,7 @@ public class AttestUtil {
    
 	private static Long timeout;
 	private static Long checkAttestInterval;
+	private static String portalAddress;
    
 	public static void  loadProp(){
 		FileInputStream attestationPropertyFile = null;
@@ -39,6 +40,14 @@ public class AttestUtil {
 	    	   attestationProperties.load(attestationPropertyFile);
 	    	   timeout = Long.parseLong(attestationProperties.getProperty("default_attest_timeout"));
 	    	   checkAttestInterval = Long.parseLong(attestationProperties.getProperty("check_attest_interval", "1000"));
+	    	   portalAddress = attestationProperties.getProperty("portal_address");
+	    	   if (portalAddress == null) {
+	    	       try {
+	    	           portalAddress = java.net.InetAddress.getLocalHost().getHostName();
+	    	       } catch (java.net.UnknownHostException e) {
+	    	           portalAddress = "localhost";
+	    	       } 
+	    	   }
 	    	   attestationPropertyFile.close();
 	       } 
 	        catch (IOException e) {
@@ -60,6 +69,9 @@ public class AttestUtil {
 	
 	public static Long getCheckAttestInterval(){
 		return checkAttestInterval;
+	}
+	public static String getPortalAddress() {
+		return portalAddress;
 	}
 
 	

@@ -32,6 +32,8 @@
  */
 package gov.niarl.sal.webservices.hisWebService.client;
 
+import gov.niarl.sal.webservices.hisWebServices.clientWsImport.HisDownloadReportService;
+import gov.niarl.sal.webservices.hisWebServices.clientWsImport.HisDownloadReportServiceService;
 import gov.niarl.sal.webservices.hisWebServices.clientWsImport.HisEnrollmentWebService;
 import gov.niarl.sal.webservices.hisWebServices.clientWsImport.HisEnrollmentWebServiceService;
 import gov.niarl.sal.webservices.hisWebServices.clientWsImport.HisPollingWebService;
@@ -96,6 +98,21 @@ public class HisWebServicesClientInvoker {
 		try {
 			HisPollingWebServiceService hisPollingWebService = new HisPollingWebServiceService(new URL(url + "/hisPollingWebService?wsdl"), new QName("http://server.hisWebService.webservices.sal.niarl.gov/", "HisPollingWebServiceService"));
 			return hisPollingWebService.getHisPollingWebServicePort();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+
+	/**
+	 * Creates a HisDownloadReportService instance.
+	 * @param url The URL of the web application.
+	 * @return A HisDownloadReportService instance.
+	 */
+	public static HisDownloadReportService getHisDownloadReportService(String url) {
+		try {
+			HisDownloadReportServiceService hisDownloadReportServiceService = new HisDownloadReportServiceService(new URL(url + "/hisDownloadReportService?wsdl"), new QName("http://server.hisWebService.webservices.sal.niarl.gov/", "HisDownloadReportServiceService"));
+			return hisDownloadReportServiceService.getHisDownloadReportServicePort();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);

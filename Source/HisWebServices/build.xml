@@ -110,6 +110,14 @@
 			package="gov.niarl.sal.webservices.hisWebServices.clientWsImport"
 			wsdl="${basedir}/wsdl/hisPollingWebService.wsdl"
 			xnocompile="true" />
+		<wsimport 
+			debug="true" 
+			verbose="true" 
+			keep="true" 
+			sourcedestdir="clientsrc" 
+			package="gov.niarl.sal.webservices.hisWebServices.clientWsImport"
+			wsdl="${basedir}/wsdl/hisDownloadReportService.wsdl"
+			xnocompile="true" />
 		<javac debug="true" destdir="client"
 			source="1.5" target="1.5">
 			<src path="src"/>

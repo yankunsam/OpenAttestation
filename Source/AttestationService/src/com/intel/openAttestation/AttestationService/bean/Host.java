@@ -30,6 +30,8 @@ public class Host {
 	
 	private Date vtime;
 
+	private String url;
+
 	public String getTrust_lvl() {
 		return trust_lvl;
 	}
@@ -60,5 +62,13 @@ public class Host {
 
 	public void setHost_name(String host_name) {
 		this.host_name = host_name;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }

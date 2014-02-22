@@ -50,6 +50,7 @@ import gov.niarl.hisAppraiser.hibernate.domain.MachineCert;
 import gov.niarl.hisAppraiser.hibernate.util.AttestService;
 import gov.niarl.hisAppraiser.hibernate.util.HibernateUtilHis;
 import gov.niarl.hisAppraiser.hibernate.util.ResultConverter;
+import gov.niarl.hisAppraiser.integrityReport.HisReportIO;
 import gov.niarl.hisAppraiser.util.AlertConfiguration;
 import gov.niarl.hisAppraiser.util.Emailer;
 import gov.niarl.hisAppraiser.util.HisUtil;
@@ -57,10 +58,16 @@ import gov.niarl.hisAppraiser.util.HisUtil;
 import java.io.ByteArrayInputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.security.cert.X509Certificate;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.InputMismatchException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -141,21 +148,37 @@ public class HisReportUtil {
 			differenceReport.setPCRDescription(HisReportValidator.getPcrDescription(pcrNumber, false));
 
 			CurrentValue currentValue = objectFactory.createPCRDifferenceReportCurrentValue();
-			HisReportValidator currentValuehisReportValidator = new HisReportValidator(auditLogDifferentThanPrevious.getReport(), null, null, null, null, null);
+			String reportString = null;
+
+			AuditLog auditLogPrevious = new HisAuditDao().getPreviousAuditLog(auditLogDifferentThanPrevious.getMachineName(), auditLogDifferentThanPrevious.getId());
+			String report = null;
+			if (auditLogPrevious != null)
+				report = HisReportIO.readIR(auditLogPrevious.getId(), auditLogPrevious.getReport());
+			if (auditLogDifferentThanPrevious != null)
+				reportString = HisReportIO.readIR(auditLogDifferentThanPrevious.getId(), auditLogDifferentThanPrevious.getReport());
+
+			if ((auditLogDifferentThanPrevious != null && reportString == null) || (auditLogPrevious != null && report == null)) {
+				StringWriter stringWriter = new StringWriter();
+				Marshaller marshaller = JAXBContext.newInstance(JAXBContextPCR_DifferenceString.contextString).createMarshaller();
+				marshaller.setProperty(Marshaller.JAXB_SCHEMA_LOCATION, "PCR_Difference.xsd");
+				marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE);
+				marshaller.marshal(differenceReport, stringWriter);
+				return stringWriter.toString();
+			}
+
+			HisReportValidator currentValuehisReportValidator = new HisReportValidator(reportString, null, null, null, null, null);
 			currentValue.setReportID(currentValuehisReportValidator.getHisReportData().getReportID());
 			GregorianCalendar gregorianCalendar = new GregorianCalendar();
 			gregorianCalendar.setTime(auditLogDifferentThanPrevious.getTimestamp());
 			currentValue.setTimestamp(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar));
 			currentValue.setValue(currentValuehisReportValidator.getPcrValue(pcrNumber));
 
-			AuditLog auditLogPrevious = new HisAuditDao().getPreviousAuditLog(auditLogDifferentThanPrevious.getMachineName(), auditLogDifferentThanPrevious.getId());
 			PreviousValue previousValue = objectFactory.createPCRDifferenceReportPreviousValue();
 			
 //			String report  = auditLogPrevious.getReport();
 			
 			if (auditLogPrevious != null)
 			{
-				String report  = auditLogPrevious.getReport();
 				HisReportValidator previousValuehisReportValidator = new HisReportValidator(report, null, null, null, null, null);
 				previousValue.setReportID(previousValuehisReportValidator.getHisReportData().getReportID());
 				GregorianCalendar gregorianCalendarPrevious = new GregorianCalendar();
@@ -208,7 +231,12 @@ public class HisReportUtil {
 		HisAuditDao hisAuditDao = new HisAuditDao();
 
 		AuditLog lastAuditLog = hisAuditDao.getLastAuditLog(machineNameInput);
-		String previousReportString = lastAuditLog == null ? null : lastAuditLog.getReport();
+		String previousReportString = null;
+
+		if (lastAuditLog != null) {
+			previousReportString = HisReportIO.readIR(lastAuditLog.getId(), lastAuditLog.getReport());
+		}
+
 		
 		HisReportValidator hisReportValidator = new HisReportValidator(reportString, nonceInput, pcrSelectInput, machineNameInput, machineCertificate, previousReportString);
 		
@@ -244,12 +272,19 @@ public class HisReportUtil {
 		auditLog.setPcrSelect(HisUtil.hexString(pcrSelectInput));
 		auditLog.setSignatureVerified(hisReportValidator.isSignatureVerified());
 		auditLog.setMachine(machineCert);
-		auditLog.setReport(reportString);
 		auditLog.setPreviousDifferences(hisReportValidator.getPreviousReportDifferences());
 		auditLog.setReportErrors(hisReportValidator.getErrors());
 
 		hisAuditDao.saveAuditLog(auditLog);
 		
+		try {
+			String reportDBString = HisReportIO.writeIR(auditLog.getId(), reportString);
+			auditLog.setReport(reportDBString);
+		} catch (Exception e) {
+			logger.error("A problem occurred writing report to file");
+		}
+		hisAuditDao.updateAuditLog(auditLog);
+
 		
 		/********************************************************************************************************
 		 * OpenAttestation code:
@@ -260,7 +295,7 @@ public class HisReportUtil {
 		HisAuditDao auditLogDao = new HisAuditDao();
 		AuditLog newAuditLog = auditLogDao.getLastAuditLog(machineNameInput);
 		AttestRequest latestPolledRequest = attestDao.getLatestPolledRequest(machineNameInput);
-		if (latestPolledRequest.getId() != null && newAuditLog != null) {
+		if (latestPolledRequest.getId() != null && newAuditLog != null && newAuditLog.getReport() != null) {
 			System.out.println("latestPolledRequest" +latestPolledRequest.getId());
 			latestPolledRequest.setAuditLog(newAuditLog);
 
@@ -302,5 +337,24 @@ public class HisReportUtil {
 			HibernateUtilHis.beginTransaction();
 			Emailer.sendDefaultAlertEmail();
 		}
+	}
+
+	public static String fetchReport(Long reportId) {
+		String reportXML = "";
+		try {
+			if (reportId == null) {
+				throw new Exception("fetchReport(): null reportId received");
+			}
+
+			HisAuditDao auditDao = new HisAuditDao();
+			AuditLog auditLog = auditDao.getAuditLog(reportId.intValue());
+			if (auditLog == null) {
+				throw new Exception("fetchReport(): no report with id '" + reportId + "'");
+			}
+			reportXML = HisReportIO.readIR(reportId, auditLog.getReport());
+		} catch (Exception exception) {
+			logger.error(exception.getMessage());
+		}
+		return reportXML;
 	}
 }

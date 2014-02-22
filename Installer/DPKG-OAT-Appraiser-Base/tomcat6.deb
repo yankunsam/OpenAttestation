@@ -42,6 +42,16 @@ fi
 start () {
         echo -n "Starting $PROG: "
 
+        if [ -f /etc/oat-appraiser/OAT.properties ]; then
+                . /etc/oat-appraiser/OAT.properties >> /dev/null 2>&1
+                IR_DIR=$(echo $IR_DIR|tr -d '\r')
+                if [ ! -d $IR_DIR ]; then
+                        echo "Missing directory $IR_DIR"
+                        echo "Unable to start $PROG"
+                        exit 6;
+                fi
+        fi
+
         # start daemon
         $TOMCAT_DIR/bin/catalina.sh 1>/dev/null start
         RETVAL=$?

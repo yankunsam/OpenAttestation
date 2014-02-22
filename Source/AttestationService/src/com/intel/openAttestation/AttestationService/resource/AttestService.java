@@ -113,6 +113,11 @@ public class AttestService {
 			host.setHost_name(attest.getHostName());
 			host.setTrust_lvl(ResultConverter.getStringFromInt(result));
 			host.setVtime(new Date());
+
+			if (attest.getAuditLog() != null) {
+				AttestUtil.loadProp();
+				host.setUrl("http://" + AttestUtil.getPortalAddress() + "/OAT/report.php?id=" + attest.getAuditLog().getId());
+			}
 			hosts.add(host);
 		}
 		resp.setHosts(hosts);

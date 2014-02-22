@@ -27,18 +27,18 @@ die("Error: Invalid ID.");
 //REPORTS ARE IN XML FORMAT SO MAKE SURE THE USER'S BROWSER KNOWS THAT
 header ("Content-Type:text/xml");
 
-//CONNECT TO THE DATABASE
-include("includes/dbconnect.php");
+//INCLUDE FUNCTION getReport() FOR READING REPORT FROM WEB SERVICE
+include("includes/wsutils.php"); 
 
-//GET THE REPORT FROM THE DATABASE
-$result = mysql_query("SELECT report FROM audit_log WHERE id = " . $id);
+//GET THE REPORT FROM THE WEB SERVICE
+$result = getReport($id);
 
 //PRINT OUT ALL THE XML
-while($row = mysql_fetch_array($result))
-{
-echo $row["report"];
+foreach ($result as $key=>$value) {
+	if ($key == 'reportString') {
+		echo $value;
+		break;
+	}
 }
 
-//CLOSE THE DATABASE CONNECTION
-include("includes/dbclose.php");
 ?>

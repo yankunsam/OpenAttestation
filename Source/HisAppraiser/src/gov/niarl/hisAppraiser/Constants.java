@@ -52,6 +52,17 @@ public class Constants {
 	 * Create properties object using location of properties file.
 	 */
 	private static Properties properties = loadProperties("/etc/oat-appraiser/OAT.properties");
+
+	/**
+	 * Determines where to place integrity reports
+	 */
+	public static final String IR_DIR = (getProperty("IR_DIR") == null) ? null : (getProperty("IR_DIR") + "/").replace("//", "/");
+
+	/**
+	 * Get the digest algorithm to use to check the integrity of reports 
+	 */
+	public static final String IR_DIGEST_METHOD = (getProperty("IR_DIGEST_METHOD") == null) ? "SHA-256" : getProperty("IR_DIGEST_METHOD");
+
 	/**
 	 * Determines which alerts to generate. 
 	 */
