@@ -134,6 +134,19 @@ create table PCR_WHITE_LIST
    primary key (ID)
 );
 
+/*==============================================================*/ 
+/* Table: analysis_types                                        */
+/*==============================================================*/
+CREATE TABLE analysis_types (
+	id int(11) NOT NULL AUTO_INCREMENT,
+	name varchar(64) NOT NULL,
+	module varchar(64) NOT NULL,
+	version int NOT NULL,
+	url varchar(256) NOT NULL,
+	deleted tinyint(1) NOT NULL DEFAULT 0,
+	PRIMARY KEY (id)
+);
+
 /*==============================================================*/
 /* End 								*/
 /*==============================================================*/

@@ -27,5 +27,6 @@
 		<mapping resource="com/intel/openAttestation/manifest/hibernate/mapping/OS.hbm.xml"/>
 		<mapping resource="com/intel/openAttestation/manifest/hibernate/mapping/PcrWhiteList.hbm.xml"/>
 		<mapping resource="com/intel/openAttestation/manifest/hibernate/mapping/MLE.hbm.xml"/>
+		<mapping resource="com/intel/openAttestation/manifest/hibernate/mapping/analysisTypes.hbm.xml"/>
 	</session-factory>
 </hibernate-configuration>
