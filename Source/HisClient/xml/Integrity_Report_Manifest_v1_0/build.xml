@@ -19,6 +19,7 @@
 		<mkdir dir="src" />
 		<xjc destdir="src">
 			<schema dir="./">
+				<include name="Simple_Object_v1_0.xsd" />
 				<include name="Core_Integrity_Manifest_v1_0_1.xsd" />
 				<include name="Integrity_Report_Manifest_v1_0.xsd" />
 			</schema>

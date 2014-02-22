@@ -97,7 +97,9 @@ public class AttestService {
 				analysisParameters = analysis.substring(analysis.indexOf(',') + 1);
 			}
 			
-			String[] env_var = { "ANALYSIS=" + analysisType.getName() + "," + analysisParameters, "OS=" + os_name};
+			AttestUtil.loadProp();
+			String[] env_var = { "ANALYSIS=" + analysisType.getName() + "," + analysisParameters, "OS=" + os_name,
+			                     "URL=" + AttestUtil.getDownloadIRWebServiceUrl(), "IR=" + attestRequest.getAuditLog().getId()};
 			Runtime r = Runtime.getRuntime();
 			String script_string = analysisType.getURL();
 			Process p = r.exec(script_string, env_var);

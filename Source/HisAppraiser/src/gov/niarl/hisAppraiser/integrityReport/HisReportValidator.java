@@ -32,20 +32,39 @@
  */
 package gov.niarl.hisAppraiser.integrityReport;
 
+import gov.niarl.his.xsd.JAXBContextIntegrity_Report_Manifest_v1_0String;
+import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.core_Integrity_v1_0_1.DigestValueType;
+import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.core_Integrity_v1_0_1.ValueType;
+import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.integrity_Report_v1_0.PcrCompositeType.PcrValue;
 import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.integrity_Report_v1_0.QuoteType;
+import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.integrity_Report_v1_0.ReportType;
+import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.integrity_Report_v1_0.SnapshotType;
+import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.simple_object_v1_0_.SimpleObjectType;
+import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.simple_object_v1_0_.ValuesType;
+
 import gov.niarl.hisAppraiser.hibernate.dao.HisMachineCertDao;
+
 import gov.niarl.hisAppraiser.util.HisUtil;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.PrintStream;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.Signature;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
 
@@ -73,6 +92,9 @@ public class HisReportValidator {
 	 * generated below.
 	 */
 	public final static String ERROR_SEPARATOR = "----------------------------------------------------------------------";
+
+	public static final int PCR_HASH_SIZE = 20;
+	public static final int PCR_MAX_NUM = 24;
 
 	HisReportData hisReportData;
 	String reportString;
@@ -236,6 +258,8 @@ public class HisReportValidator {
 			} else {
 				logger.info("HisReportParser: No previous report for comparison. Report ID:" + hisReportData.getReportID());
 			}
+
+			validateMeasurements(reportString);
 		} catch (HisReportException hisReportException) {
 			logger.fatal(hisReportException, hisReportException);
 			throw hisReportException;
@@ -249,6 +273,93 @@ public class HisReportValidator {
 	}
 
 	/**
+	 * Reads each SnapshoCollection from the integrity report,
+	 * extends measures inside them and compare the result with
+	 * the element PcrHash and the PCR value read from the
+	 * Quote. If values match it sets the field result of
+	 * attestation request to TRUSTED.
+	 * @param attestRequest The attestation request to be fulfilled
+	 */
+	public void validateMeasurements(String reportString) {
+		boolean[] snapFound = new boolean[PCR_MAX_NUM];
+		for (int i = 0; i < PCR_MAX_NUM; i++)
+			snapFound[i] = false;
+
+		
+		ReportType report = null;
+		Unmarshaller unmarshaller;
+		try {
+			InputStream stream = new ByteArrayInputStream(reportString.getBytes());
+			JAXBContext context = JAXBContext.newInstance(JAXBContextIntegrity_Report_Manifest_v1_0String.contextString + ":gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.simple_object_v1_0_");
+			unmarshaller = context.createUnmarshaller();
+			report = ((JAXBElement<ReportType>) unmarshaller.unmarshal(stream)).getValue();
+
+			List<PcrValue> pcrValues = report.getQuoteData().get(0).getQuote().getPcrComposite().getPcrValue();
+
+			for (SnapshotType snapCollection : report.getSnapshotCollection()) {
+				List<ValueType> values = snapCollection.getValues();
+
+				SimpleObjectType objects;
+				DigestValueType hash;
+
+				BigInteger pcrNumber = snapCollection.getPcrHash().get(0).getNumber();
+				String hashString;
+
+				MessageDigest md = MessageDigest.getInstance("SHA-1");
+				byte[] pcr = snapCollection.getPcrHash().get(0).getStartHash();
+
+				if (!HisUtil.hexString(pcr).equals("0000000000000000000000000000000000000000"))
+					errors.add("PCR " + pcrNumber + ": Unexpected value of StartHash");
+
+				for (int i = 0; i < values.size(); i++) {
+					objects = ((JAXBElement<SimpleObjectType>) values.get(i).getAny()).getValue();
+
+					ValuesType tmp = objects.getObjects().get(0);
+					hash = tmp.getHash().get(0);
+					hashString = HisUtil.hexString(hash.getValue()).toLowerCase();
+
+					md.reset();
+					md.update(pcr, 0, PCR_HASH_SIZE);
+
+					if (hashString.equals("0000000000000000000000000000000000000000"))
+						hashString = "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF";
+
+					md.update(HisUtil.unHexString(hashString), 0, PCR_HASH_SIZE);
+					md.digest(pcr, 0, PCR_HASH_SIZE);
+				}
+
+				//Comparison with PCR value read from PcrHash element
+				if (!HisUtil.hexString(snapCollection.getPcrHash().get(0).getValue()).equals(HisUtil.hexString(pcr)))
+					errors.add("PCR " + pcrNumber + ": PcrHash does not match the extension of PCRs in report");
+
+				//Comparison with PCR value read from Quote
+				for (PcrValue pcrValue : pcrValues) {
+					if (pcrValue.getPcrNumber().equals(pcrNumber)) {
+						if (!HisUtil.hexString(pcrValue.getValue()).equals(HisUtil.hexString(pcr)))
+							errors.add("PCR " + pcrNumber + ": PCR value in the quote does not match the extension of PCRs in report");
+						break;
+					}
+				}
+
+				snapFound[pcrNumber.intValue()] = true;
+			}
+
+			for (PcrValue pcrValue : pcrValues) {
+				if (pcrValue.getPcrNumber().intValue() > 15)
+					continue;
+
+				if (!HisUtil.hexString(pcrValue.getValue()).equals("0000000000000000000000000000000000000000")
+					&& !snapFound[pcrValue.getPcrNumber().intValue()]) {
+					errors.add("PCR " + pcrValue.getPcrNumber() + ": SnapshotCollection expected but not found"); 
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			errors.add("An error occurred during measurements validation");
+		}
+	}
+
+	/**
 	 * Size of select + select + length of data + data  
 	 * @return resulting byte array.
 	 */
@@ -256,7 +367,11 @@ public class HisReportValidator {
 		try {
 			int sizeOfSelect = hisReportData.getPcrSizeOfSelect();
 			byte[] select = hisReportData.generatePcrSelect();
-			int dataLength = hisReportData.generatePcrSelectedCount() * hisReportData.getPcrValueSize();
+			/*
+			 * WRONG!! According to TCG specs, ValueSize is the total size of the array of PcrValue structures
+			 *   int dataLength = hisReportData.generatePcrSelectedCount() * hisReportData.getPcrValueSize();
+			 */
+			int dataLength = hisReportData.getPcrValueSize();
 
 			//concatenate the values 
 			String stringDigest = HisUtil.hexString(HisUtil.intToByteArray(sizeOfSelect, 2));

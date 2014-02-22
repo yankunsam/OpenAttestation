@@ -35,6 +35,7 @@ public class AttestUtil {
 	
 	private static String manifestWSURL ="";
 	private static String trustStorePath = "";
+	private static String downloadIRWebServiceUrl = "";
 	
 	private static String PROPERTIES_NAME = "OpenAttestation.properties";
 	private static Properties attestationProperties = new Properties();
@@ -48,8 +49,10 @@ public class AttestUtil {
 	    	   attestationProperties.load(attestationPropertyFile);
 	    	   String manifesturl = attestationProperties.getProperty("ManifestWebServicesUrl");
 	    	   String truststore = attestationProperties.getProperty("TrustStore");
+	    	   String downloadWS = attestationProperties.getProperty("DownloadIRWebServiceUrl");
 	    	   manifestWSURL = manifesturl == null ? "":manifesturl;
 	    	   trustStorePath =truststore == null? "":truststore;
+	    	   downloadIRWebServiceUrl = (downloadWS == null) ? "" : downloadWS;
 			} 
 	       catch (IOException e) {
                e.printStackTrace();
@@ -75,6 +78,10 @@ public class AttestUtil {
 		return trustStorePath;
 	}
 	
+	public static String getDownloadIRWebServiceUrl(){
+		return downloadIRWebServiceUrl;
+	}
+
 	public static WebResource getClient(String url){
 		if (url.startsWith("https")){
 			System.setProperty("javax.net.ssl.trustStore", trustStorePath);

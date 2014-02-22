@@ -92,11 +92,24 @@ public class HisReportData {
 	 */
 	public byte[] generatePcrSelect() {
 		byte[] pcrSelect = null;
+		byte pcrSelect_tmp;
+		int m, n;
+
 		if (pcrSelectSubstitute != null) {
 			pcrSelect = pcrSelectSubstitute;
 		} else {
 			pcrSelect = getQuote().getPcrComposite().getPcrSelection().getPcrSelect();
 		}
+		for (m = 0; m < pcrSelect.length; m++) {
+			pcrSelect_tmp = pcrSelect[m];
+			pcrSelect[m] = 0;
+
+			for (n = 0; n < 8; n++) {
+				if ((128 >> n & pcrSelect_tmp) != 0)
+					pcrSelect[m] += 1 << n;
+			}
+		}
+
 		//truncate or pad
 		int length = getPcrSizeOfSelect() - pcrSelect.length;
 		StringBuffer sb = new StringBuffer();

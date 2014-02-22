@@ -286,6 +286,14 @@ public class HisReportUtil {
 		}
 		hisAuditDao.updateAuditLog(auditLog);
 
+		/*
+		 * New AuditLog has to be immediately saved on DB in order
+		 * to realise analyses, because analysis tools rely on
+		 * information on DB in order to obtain the IR.
+		 */
+		HibernateUtilHis.commitTransaction();
+		HibernateUtilHis.beginTransaction();
+
 		
 		/********************************************************************************************************
 		 * OpenAttestation code:
