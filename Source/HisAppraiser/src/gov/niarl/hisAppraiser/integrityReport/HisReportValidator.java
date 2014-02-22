@@ -110,6 +110,8 @@ public class HisReportValidator {
 
 	ArrayList<String> errors = new ArrayList<String>();
 	ArrayList<String> compareErrors = new ArrayList<String>();
+	HisReportValidator previousReportValidator;
+	boolean FIRST_IR;
 
 	/**
 	 * The constructor does all the work for verifying the report and returning 
@@ -141,9 +143,11 @@ public class HisReportValidator {
 			}
 			//Can't do this for machineCertificate
 			if (previousReportString == null) {
+				previousReportValidator = null;
 				previousReportString = "";
 			}
 
+			this.FIRST_IR = true;
 			this.reportString = reportString;
 			this.machineCertificate = machineCertificate;
 			try {
@@ -273,6 +277,15 @@ public class HisReportValidator {
 	}
 
 	/**
+	 * Returns true if the validated report contains the first
+	 * part of measurements; returns false otherwise.
+	 * @return True/False depending on the type of report validated
+	 */
+	boolean isFirstIR() {
+		return FIRST_IR;
+	}
+
+	/**
 	 * Reads each SnapshoCollection from the integrity report,
 	 * extends measures inside them and compare the result with
 	 * the element PcrHash and the PCR value read from the
@@ -294,6 +307,16 @@ public class HisReportValidator {
 			unmarshaller = context.createUnmarshaller();
 			report = ((JAXBElement<ReportType>) unmarshaller.unmarshal(stream)).getValue();
 
+			String[] splittedReportId = report.getID().split("-");
+			FIRST_IR = true;
+			if (splittedReportId.length > 2)
+				FIRST_IR = !splittedReportId[splittedReportId.length - 2].equals("continue");
+
+			if (!FIRST_IR && previousReportValidator == null) {
+				errors.add("Report type \"continue\" but no previous report found");
+				return;
+			}
+
 			List<PcrValue> pcrValues = report.getQuoteData().get(0).getQuote().getPcrComposite().getPcrValue();
 
 			for (SnapshotType snapCollection : report.getSnapshotCollection()) {
@@ -308,8 +331,14 @@ public class HisReportValidator {
 				MessageDigest md = MessageDigest.getInstance("SHA-1");
 				byte[] pcr = snapCollection.getPcrHash().get(0).getStartHash();
 
-				if (!HisUtil.hexString(pcr).equals("0000000000000000000000000000000000000000"))
+				boolean startHashMatch = true;
+				if (previousReportValidator != null)
+					startHashMatch = previousReportValidator.getPcrValue(pcrNumber.intValue()).equals(HisUtil.hexString(pcr));
+
+				if ((FIRST_IR && !HisUtil.hexString(pcr).equals("0000000000000000000000000000000000000000")) ||
+				    (!FIRST_IR && !startHashMatch)) {
 					errors.add("PCR " + pcrNumber + ": Unexpected value of StartHash");
+				}
 
 				for (int i = 0; i < values.size(); i++) {
 					objects = ((JAXBElement<SimpleObjectType>) values.get(i).getAny()).getValue();
@@ -348,8 +377,12 @@ public class HisReportValidator {
 				if (pcrValue.getPcrNumber().intValue() > 15)
 					continue;
 
-				if (!HisUtil.hexString(pcrValue.getValue()).equals("0000000000000000000000000000000000000000")
-					&& !snapFound[pcrValue.getPcrNumber().intValue()]) {
+				boolean pcrMatch = true;
+				if (previousReportValidator != null)
+					pcrMatch = previousReportValidator.getPcrValue(pcrValue.getPcrNumber().intValue()).equals(getPcrValue(pcrValue.getPcrNumber().intValue()));
+
+				if (((FIRST_IR && !HisUtil.hexString(pcrValue.getValue()).equals("0000000000000000000000000000000000000000")) ||
+				    (!FIRST_IR && !pcrMatch)) && !snapFound[pcrValue.getPcrNumber().intValue()]) {
 					errors.add("PCR " + pcrValue.getPcrNumber() + ": SnapshotCollection expected but not found"); 
 				}
 			}
@@ -435,6 +468,7 @@ public class HisReportValidator {
 	private void comparePreviousReport(String previousReportString) {
 		logger.info("----------begin comparing to previous report----------");
 		HisReportValidator hisReportValidator = new HisReportValidator(previousReportString, null, null, null, null, null);
+		this.previousReportValidator = hisReportValidator;
 		StringBuffer sb = new StringBuffer();
 
 		SortedSet<Integer> possiblePcrs = new TreeSet<Integer>();

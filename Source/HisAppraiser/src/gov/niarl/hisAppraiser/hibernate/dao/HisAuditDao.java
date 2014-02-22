@@ -182,6 +182,32 @@ public class HisAuditDao {
 		}
 	}
 
+	/** 
+	 * Retrieves a list of AuditLog entries containing portions of the
+	 * integrity measurements list, whose last part is contained in
+	 * the given AuditLog.
+	 * The function queries the database for all the AuditLog entries
+	 * between the firstReport and the ID of the given AuditLog,
+	 * considering only entries with same machineName.
+	 * @param auditLog The AuditLog entry containing the last part of
+	 * integrity measurements list.
+	 * @return List of AuditLog entries in descending order (from the
+	 * newest to the oldest).
+	 */
+	public List<AuditLog> getRelatedAuditLogs(AuditLog auditLog) {
+		try {
+			Query query = HibernateUtilHis.getSession().createQuery("from AuditLog a where a.machineName = :machineName and a.id >= :firstReportId and a.id < :lastReportId order by a.id desc");
+			query.setLong("firstReportId", auditLog.getFirstReport());
+			query.setLong("lastReportId", auditLog.getId());
+			query.setString("machineName", auditLog.getMachineName());
+
+			return (List<AuditLog>) query.list();
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			throw new RuntimeException(e);
+		}
+	}
+
 	/**
 	 * Retrieve a list of AuditLog entries beginning with  
 	 * @param order Integer 0,1 indicated whether to sort by machine name or by time stamp

@@ -74,7 +74,7 @@ public class HisDownloadReportService {
 	 * @return The string of report having the given ID.   
 	 */
 	@WebResult(name = "reportString")
-	public String fetchReport(@WebParam(name = "reportId") Long reportId) {
+	public String fetchReport(@WebParam(name = "reportId") Long reportId, @WebParam(name = "partial") Boolean partial) {
 		logger.debug("fetchReport called with reportId:" + reportId);
 		String reportXML = "";
 		HibernateUtilHis.beginTransaction();
@@ -83,7 +83,7 @@ public class HisDownloadReportService {
 		HttpServletResponse response =  (HttpServletResponse) msgCtx.get(MessageContext.SERVLET_RESPONSE);
 
 		try {
-			reportXML = HisReportUtil.fetchReport(reportId);
+			reportXML = HisReportUtil.fetchReport(reportId, (partial == null) ? false : partial);
 			if (reportXML.equals("")) {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			}

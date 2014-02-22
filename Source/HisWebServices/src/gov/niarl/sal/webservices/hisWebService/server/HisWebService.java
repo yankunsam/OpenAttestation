@@ -33,6 +33,8 @@
 package gov.niarl.sal.webservices.hisWebService.server;
 
 import gov.niarl.hisAppraiser.Constants;
+import gov.niarl.hisAppraiser.hibernate.dao.HisAuditDao;
+import gov.niarl.hisAppraiser.hibernate.domain.AuditLog;
 import gov.niarl.hisAppraiser.hibernate.util.HibernateUtilHis;
 import gov.niarl.hisAppraiser.integrityReport.HisReportUtil;
 import gov.niarl.hisAppraiser.util.HisUtil;
@@ -80,12 +82,19 @@ public class HisWebService {
 	@WebResult(name = "nonceSelect")
 	public NonceSelect getNonce(@WebParam(name = "machineName") String machineName, @WebParam(name = "userName") String userName) {
 		logger.debug("getNonce called with machine name:" + machineName + " userName:" + userName);
+		HisAuditDao auditLogDao = new HisAuditDao(); 
+		AuditLog lastAuditLog = auditLogDao.getLastAuditLog(machineName);
 		this.machineName = machineName;
 		this.userName = userName;
 		nonceSelect = new NonceSelect();
 		nonceSelect.setNonce(HisUtil.generateSecureRandom(20));
 		nonceSelect.setSelect(HisUtil.unHexString(Constants.PCR_SELECT));
 		nonceSelect.setQuote(NonceSelect.Quote.QUOTE1);
+
+		nonceSelect.setReportType("start");
+		if (Constants.SCALABILITY && lastAuditLog != null && lastAuditLog.getReport() != null && !lastAuditLog.getFirstReport().equals((long) -1)) {
+			nonceSelect.setReportType("continue");
+		}
 		return nonceSelect;
 	}
 

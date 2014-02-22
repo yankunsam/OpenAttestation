@@ -77,6 +77,7 @@ public class AuditLog {
 	String previousDifferences;
 	String reportCompareErrors;
 	String validationErrors;
+	Long firstReport;
 
 	/**
 	 * @return the id
@@ -581,4 +582,19 @@ public class AuditLog {
 	public void setValidationErrors(String validationErrors) {
 		this.validationErrors = validationErrors;
 	}
+
+	/**
+	 * @return the firstReport
+	 */
+	public Long getFirstReport() {
+		return firstReport;
+	}
+
+	/**
+	 * @param firstReport the firstReport to set
+	 */
+	public void setFirstReport(Long firstReport) {
+		this.firstReport = firstReport;
+	}
+
 }
