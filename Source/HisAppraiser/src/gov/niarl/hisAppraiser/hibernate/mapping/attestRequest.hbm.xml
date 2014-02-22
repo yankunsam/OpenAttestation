@@ -20,6 +20,8 @@
 	    <property name="isSync" column="is_sync"/>
 	    <property name="result"></property>
 	    <property name="validateTime" column="validate_time"></property>
+	    <property name="analysisRequest" column="analysis_request"></property>
+	    <property name="analysisResults" column="analysis_results"></property>
 	</class>
 </hibernate-mapping>
 

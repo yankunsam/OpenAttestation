@@ -40,6 +40,7 @@
 		<property name="signatureVerified" column="signature_verified"/>
 		<property name="report" column="report"/>
 		<property name="previousDifferences" column="previous_differences"/>
-		<property name="reportErrors" column="report_errors"/>
+		<property name="reportCompareErrors" column="report_compare_errors"/>
+		<property name="validationErrors" column="validation_errors"/>
 	</class>
 </hibernate-mapping>

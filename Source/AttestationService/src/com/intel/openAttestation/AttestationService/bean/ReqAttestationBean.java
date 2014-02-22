@@ -24,6 +24,8 @@ public class ReqAttestationBean {
 	private Long timeThreshold;
 	
 	private String PCRmask;
+
+	private String analysisType;
 	
     public ReqAttestationBean(){
     	
@@ -53,5 +55,12 @@ public class ReqAttestationBean {
 		PCRmask = pCRmask;
 	}
 
+	public String getAnalysisType() {
+		return analysisType;
+	}
+
+	public void setAnalysisType(String analysisType) {
+		this.analysisType = analysisType;
+	}
 	
 }

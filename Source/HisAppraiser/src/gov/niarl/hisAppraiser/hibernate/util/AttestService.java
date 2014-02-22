@@ -31,7 +31,64 @@ import com.sun.jersey.api.client.WebResource;
 
 public class AttestService {
 	
+	/**
+	 * Reads the list of analyses requested within the attestation
+	 * request received and executes them.
+	 * @param attestRequest The attestation request to be fulfilled
+	 * @return The attestation request received, updated with analyses
+	 * result.
+	 */
+	public static AttestRequest doAnalyses(AttestRequest attestRequest, String machineName) {
+		String analysisReqString = "VALIDATE_PCR;COMPARE_REPORT";
+		if (attestRequest.getAnalysisRequest() != null) {
+			analysisReqString = attestRequest.getAnalysisRequest();
+		}
+
+		String[] analysisReqList = analysisReqString.split(";");
+		for (String analysis : analysisReqList) {
+			if (analysis.length() == 0 && analysisReqList.length == 1) {
+				break;
+			} else if (analysis.equals("VALIDATE_PCR")) {
+				attestRequest = validatePCRReport(attestRequest, machineName);
+			} else if (analysis.equals("COMPARE_REPORT")) {
+				attestRequest = evaluateCompareReport(attestRequest);
+			} else {
+				attestRequest = updateAnalysisResult(attestRequest, "NULL", false, "ANALYSIS_NOT_FOUND", "");
+				attestRequest.setResult(ResultConverter.getIntFromResult(AttestResult.UN_TRUSTED));
+			}
+		}
+		return attestRequest;
+	}
+
 	
+	/** 
+	 * Verifies if any errors occurred during the report comparison.
+	 * It updates the fields Result and analysisResults of the recevied
+	 * attestRequest and returns the updated object.
+	 * @param attestRequest The attestation request to be analysed
+	 * @return The updated attestRequest
+	 */
+	public static AttestRequest evaluateCompareReport(AttestRequest attestRequest) {
+		boolean analysisResult = false;
+		String analysisOutput = "";
+		AuditLog auditLog = attestRequest.getAuditLog();
+		if (auditLog != null && attestRequest.getIsConsumedByPollingWS()) {
+			if (auditLog.getReportCompareErrors() != null) {
+				analysisOutput = auditLog.getReportCompareErrors().trim();
+			} else {
+				analysisResult = true;
+			}
+		} else {
+			analysisOutput = "Analysis requested for a not valid report";
+		}
+
+		if (!analysisResult) {
+			attestRequest.setResult(ResultConverter.getIntFromResult(AttestResult.UN_TRUSTED));
+		}
+		attestRequest = updateAnalysisResult(attestRequest, "COMPARE_REPORT", analysisResult, "ANALYSIS_COMPLETED", analysisOutput);
+		return attestRequest;
+	}
+
 	/**
 	 * validate PCR value of a request. Here is 4 cases, that is timeout, unknown, trusted and untrusted.
 	 * case1 (timeout): attest's time is greater than default timeout of attesting from OpenAttestation.properties. In generally, it is usually set as 60 seconds;
@@ -42,6 +99,7 @@ public class AttestService {
 	 * @return 
 	 */
 	public static AttestRequest validatePCRReport(AttestRequest attestRequest,String machineNameInput){
+		String analysisOutput = "";
 		attestRequest.getAuditLog();
 		List<PcrWhiteList> whiteList = new ArrayList<PcrWhiteList>();
 		AttestDao dao = new AttestDao();
@@ -60,22 +118,40 @@ public class AttestService {
 				for(int i=0; i<whiteList.size(); i++){
 					int pcrNumber = Integer.valueOf(whiteList.get(i).getPcrName()).intValue();
 						if(!whiteList.get(i).getPcrDigest().equalsIgnoreCase(pcrs.get(pcrNumber))){
+							analysisOutput += "PCR #" + whiteList.get(i).getPcrName() + " mismatch. ";
 							flag = false;
-							break;
 						}
 				}
 			} else {
+				analysisOutput += "No PCR in white list.";
 				flag = false;
 			}
 			
 			if (!flag){
 				attestRequest.setResult(ResultConverter.getIntFromResult(AttestResult.UN_TRUSTED));
 			}
-			else
-				attestRequest.setResult(ResultConverter.getIntFromResult(AttestResult.TRUSTED));
-			attestRequest.setValidateTime(new Date());
+			attestRequest = updateAnalysisResult(attestRequest, "VALIDATE_PCR", flag, "ANALYSIS_COMPLETED", analysisOutput.trim());
 		}
 		 return attestRequest;
+	}
+
+	/**
+	 * Receives the current content of field analysisResult of table
+	 * AttestRequest and updates it with received information
+	 * about the analysis: name, result, status and output.
+	 * @param prevAnalysisResult Previous content of field analysisResult
+	 * @param analysis The analysis to be added to analysisResult
+	 * @param result Result of the analysis to be added to analysisResult
+	 * @param status Status of the analysis to be added to analysisResult
+	 * @param output Output of the analysis to be added to analysisResult
+	 * @return The updated content of field analysisResult
+	 */
+	public static AttestRequest updateAnalysisResult(AttestRequest attestRequest, String analysis, boolean result, String status, String output) {
+		String analysisResult = (attestRequest.getAnalysisResults() == null) ? "" : attestRequest.getAnalysisResults();
+		analysisResult += analysis + "|" + result + "|" + status + "|" + output.length() + "|" + output + ";";
+		attestRequest.setAnalysisResults(analysisResult);
+
+		return attestRequest;
 	}
 	
 	/*

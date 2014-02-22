@@ -75,7 +75,8 @@ public class AuditLog {
 	Boolean signatureVerified;
 	String report;
 	String previousDifferences;
-	String reportErrors;
+	String reportCompareErrors;
+	String validationErrors;
 
 	/**
 	 * @return the id
@@ -553,17 +554,31 @@ public class AuditLog {
 		this.previousDifferences = previousDifferences;
 	}
 
-	/**
-	 * @return the reportErrors
+	/** 
+	 * @return the reportCompareErrors
 	 */
-	public String getReportErrors() {
-		return reportErrors;
+	public String getReportCompareErrors() {
+		return reportCompareErrors;
 	}
 
 	/**
-	 * @param reportErrors the reportErrors to set
+	 * @param reportCompareErrors the reportCompareErrors to set
 	 */
-	public void setReportErrors(String reportErrors) {
-		this.reportErrors = reportErrors;
+	public void setReportCompareErrors(String reportCompareErrors) {
+		this.reportCompareErrors = reportCompareErrors;
+	}
+
+	/**
+	 * @return the validationErrors
+	 */
+	public String getValidationErrors() {
+		return validationErrors;
+	}
+
+	/**
+	 * @param validationErrors the validationErrors to set
+	 */
+	public void setValidationErrors(String validationErrors) {
+		this.validationErrors = validationErrors;
 	}
 }

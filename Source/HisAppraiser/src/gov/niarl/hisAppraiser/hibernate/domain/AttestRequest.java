@@ -49,6 +49,10 @@ public class AttestRequest {
 	
 	private Date validateTime; 
 	
+	private String analysisRequest;
+
+	private String analysisResults;
+
 	public Date getValidateTime() {
 		return validateTime;
 	}
@@ -169,5 +173,21 @@ public class AttestRequest {
 
 	public void setRequestHost(String requestHost) {
 		this.requestHost = requestHost;
+	}
+
+	public String getAnalysisRequest() {
+		return analysisRequest;
+	}
+
+	public void setAnalysisRequest(String analysisRequest) {
+		this.analysisRequest = analysisRequest;
+	}
+
+	public String getAnalysisResults() {
+		return analysisResults;
+	}
+
+	public void setAnalysisResults(String analysisResults) {
+		this.analysisResults = analysisResults;
 	}
 }

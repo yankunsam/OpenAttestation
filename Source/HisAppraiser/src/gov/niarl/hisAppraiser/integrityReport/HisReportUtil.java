@@ -273,7 +273,8 @@ public class HisReportUtil {
 		auditLog.setSignatureVerified(hisReportValidator.isSignatureVerified());
 		auditLog.setMachine(machineCert);
 		auditLog.setPreviousDifferences(hisReportValidator.getPreviousReportDifferences());
-		auditLog.setReportErrors(hisReportValidator.getErrors());
+		auditLog.setReportCompareErrors(hisReportValidator.getCompareErrors());
+		auditLog.setValidationErrors(hisReportValidator.getErrors());
 
 		hisAuditDao.saveAuditLog(auditLog);
 		
@@ -299,13 +300,14 @@ public class HisReportUtil {
 			System.out.println("latestPolledRequest" +latestPolledRequest.getId());
 			latestPolledRequest.setAuditLog(newAuditLog);
 
-			if (newAuditLog.getReportErrors() != null) {
+			if (newAuditLog.getValidationErrors() != null) {
 				latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.UN_TRUSTED));
-				latestPolledRequest.setValidateTime(new Date());
 			} else {
-				latestPolledRequest = AttestService.validatePCRReport(latestPolledRequest, machineNameInput);
+				latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.TRUSTED));
+				latestPolledRequest = AttestService.doAnalyses(latestPolledRequest, machineNameInput);
 			}
 
+			latestPolledRequest.setValidateTime(new Date());
 			attestDao.updateRequest(latestPolledRequest);
 	     	System.out.println("------------------------OpenAttestation complete!------------------------------------------");
 		 /****************************************************************************************************/
@@ -314,10 +316,9 @@ public class HisReportUtil {
 		AlertConfiguration alertConfiguration = Constants.ALERT_CONFIGURATION;
 		boolean createAlert = false;
 		if (alertConfiguration.getAllAlerts()) {
-			if (auditLog.getReportErrors() == null || auditLog.getReportErrors().length() < 1) {
-				//Do nothing				
-			} else {
-				createAlert = true;
+			if ((auditLog.getValidationErrors() != null && auditLog.getValidationErrors().length() > 0) ||
+				(auditLog.getReportCompareErrors() != null && auditLog.getReportCompareErrors().length() > 0)) {
+				createAlert = true;			
 			}
 		}
 		if (alertConfiguration.getSignatureAlerts() && !auditLog.getSignatureVerified()) {
