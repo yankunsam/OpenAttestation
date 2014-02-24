@@ -694,7 +694,6 @@ public class StandaloneHIS
                     	commandProcessor(CLEAN_COMMAND_LABEL, actionDelay.getArgs() == null? "":actionDelay.getArgs());
                     break;
 	    }
-            actionDelay = null;
             action = null;
             //delay for the poll interval
             try
