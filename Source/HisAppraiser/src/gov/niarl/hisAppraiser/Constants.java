@@ -101,6 +101,12 @@ public class Constants {
 	 */
 	public static final String ALERT_MESSAGE_BODY = getProperty("alert.message.body");
 
+	public static final long PERIODIC_TIME_EXPIRED = -1;
+	public static final long PERIODIC_IDLE_EXPIRED = -2;
+	public static final long PERIODIC_DELETED_BY_USER = -3;
+	public static final long PERIODIC_HOST_UNTRUSTED = -4;
+	public static final long PERIODIC_HOST_UNREACHABLE = -5;
+
 	/**
 	 * Creates properties object from file name.
 	 */
