@@ -356,19 +356,28 @@ public class HisReportUtil {
 		AttestDao attestDao = new AttestDao();
 		HisAuditDao auditLogDao = new HisAuditDao();
 		AuditLog newAuditLog = auditLogDao.getLastAuditLog(machineNameInput);
-		AttestRequest latestPolledRequest = attestDao.getLatestPolledRequest(machineNameInput);
-		if (latestPolledRequest.getId() != null && newAuditLog != null && newAuditLog.getReport() != null) {
-			System.out.println("latestPolledRequest" +latestPolledRequest.getId());
-			latestPolledRequest.setAuditLog(newAuditLog);
+		AttestRequest latestPolledRequest = attestDao.getPendingRequests(machineNameInput, true).get(0);
 
-			if (newAuditLog.getValidationErrors() != null) {
-				latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.UN_TRUSTED));
-			} else {
-				latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.TRUSTED));
-				latestPolledRequest = AttestService.doAnalyses(latestPolledRequest, machineNameInput);
+		boolean DO_ANALYSES = latestPolledRequest.getThreshold() == null || latestPolledRequest.getResult() == null;
+		DO_ANALYSES |= latestPolledRequest.getThreshold() != null && !IDENTICAL_REPORT;
+		if (latestPolledRequest.getId() != null && newAuditLog != null && newAuditLog.getReport() != null) {
+			Date validateTime = null;
+			if (DO_ANALYSES) {
+				System.out.println("latestPolledRequest" +latestPolledRequest.getId());
+				latestPolledRequest.setAnalysisResults("");
+				latestPolledRequest.setAuditLog(newAuditLog);
+
+				if (newAuditLog.getValidationErrors() != null) {
+					latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.UN_TRUSTED));
+				} else {
+					latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.TRUSTED));
+					latestPolledRequest = AttestService.doAnalyses(latestPolledRequest, machineNameInput);
+				}
+				validateTime = new Date();
+				latestPolledRequest.setCurrentProcessingTime(validateTime.getTime() - latestPolledRequest.getRequestTime().getTime());
 			}
 
-			latestPolledRequest.setValidateTime(new Date());
+			latestPolledRequest.setValidateTime((validateTime != null) ? validateTime : new Date());
 			attestDao.updateRequest(latestPolledRequest);
 	     	System.out.println("------------------------OpenAttestation complete!------------------------------------------");
 		 /****************************************************************************************************/
