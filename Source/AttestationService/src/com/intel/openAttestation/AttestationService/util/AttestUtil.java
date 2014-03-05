@@ -31,6 +31,7 @@ public class AttestUtil {
 	private static Long timeout;
 	private static Long checkAttestInterval;
 	private static String portalAddress;
+	private static Long defaultExpirationTime;
    
 	public static void  loadProp(){
 		FileInputStream attestationPropertyFile = null;
@@ -41,6 +42,7 @@ public class AttestUtil {
 	    	   timeout = Long.parseLong(attestationProperties.getProperty("default_attest_timeout"));
 	    	   checkAttestInterval = Long.parseLong(attestationProperties.getProperty("check_attest_interval", "1000"));
 	    	   portalAddress = attestationProperties.getProperty("portal_address");
+	    	   defaultExpirationTime = Long.parseLong(attestationProperties.getProperty("default_expiration_time", "7"));
 	    	   if (portalAddress == null) {
 	    	       try {
 	    	           portalAddress = java.net.InetAddress.getLocalHost().getHostName();
@@ -74,6 +76,9 @@ public class AttestUtil {
 		return portalAddress;
 	}
 
+	public static Long getDefaultExpirationTime() {
+		return defaultExpirationTime;
+	}
 	
 	public static synchronized String generateRequestId(String label){
 		byte[] nonce = HisUtil.generateSecureRandom(16);
