@@ -340,7 +340,12 @@ public class HisReportUtil {
 		
 		HisReportValidator hisReportValidator = new HisReportValidator(reportString, nonceInput, pcrSelectInput, machineNameInput, machineCertificate, previousReportString);
 		
-		AuditLog auditLog = createAuditLog(machineCert, lastAuditLog, hisReportValidator, sid, reportString, nonceInput, pcrSelectInput, machineNameInput); 
+		boolean IDENTICAL_REPORT = (lastAuditLog != null && !lastAuditLog.getFirstReport().equals((long)-1));
+		IDENTICAL_REPORT &= (hisReportValidator.getErrors() == null && hisReportValidator.getPreviousReportDifferences().equals("")); 
+		AuditLog auditLog = null;
+		if (!(Constants.DISCARD_IDENTICAL_IR && IDENTICAL_REPORT)) { 
+			auditLog = createAuditLog(machineCert, lastAuditLog, hisReportValidator, sid, reportString, nonceInput, pcrSelectInput, machineNameInput); 
+		}
 
 		
 		/********************************************************************************************************
@@ -368,7 +373,9 @@ public class HisReportUtil {
 	     	System.out.println("------------------------OpenAttestation complete!------------------------------------------");
 		 /****************************************************************************************************/
 		}
-		createAlert(auditLog);
+		if (!(Constants.DISCARD_IDENTICAL_IR && IDENTICAL_REPORT)) { 
+			createAlert(auditLog);
+		}
 	}
 
 	public static String fetchReport(Long reportId, boolean partial) throws IllegalStateException {
