@@ -211,40 +211,8 @@ public class HisReportUtil {
 		}
 	}
 
-	/**
-	 * This function is used by both the login module and the web services
-	 * to submit an integrity report. It calls alert creation functions and 
-	 * email functionality.
-	 * @param sid The SID sent from the client.
-	 * @param reportString The integrity report sent form the client.
-	 * @param nonceInput The nonce provided to the client.
-	 * @param pcrSelectInput The PCR select provided to the client.
-	 * @param machineNameInput The machine name sent from the client.
-	 */
-	public static void submitReport(String sid, String reportString, byte[] nonceInput, byte[] pcrSelectInput, String machineNameInput) {
-	
-		HisMachineCertDao hisMachineCertDao = new HisMachineCertDao();
-		MachineCert machineCert = null;
-		X509Certificate machineCertificate = null;
-		machineCert = hisMachineCertDao.getMachineCert(machineNameInput);
-		if (machineCert == null) {
-			logger.error("Machine '" + machineNameInput + "' is not enrolled.");
-		} else {
-			machineCertificate = pemToX509Certificate(machineCert.getCertificate());
-		}
-
+	private static AuditLog createAuditLog(MachineCert machineCert, AuditLog lastAuditLog, HisReportValidator hisReportValidator, String sid, String reportString, byte[] nonceInput, byte[] pcrSelectInput, String machineNameInput) {
 		HisAuditDao hisAuditDao = new HisAuditDao();
-
-		AuditLog lastAuditLog = hisAuditDao.getLastAuditLog(machineNameInput);
-		String previousReportString = null;
-
-		if (lastAuditLog != null) {
-			previousReportString = HisReportIO.readIR(lastAuditLog.getId(), lastAuditLog.getReport());
-		}
-
-		
-		HisReportValidator hisReportValidator = new HisReportValidator(reportString, nonceInput, pcrSelectInput, machineNameInput, machineCertificate, previousReportString);
-		
 		AuditLog auditLog = new AuditLog();
 		auditLog.setPcr0(hisReportValidator.getPcrValue(0));
 		auditLog.setPcr1(hisReportValidator.getPcrValue(1));
@@ -306,6 +274,74 @@ public class HisReportUtil {
 		HibernateUtilHis.commitTransaction();
 		HibernateUtilHis.beginTransaction();
 
+		return auditLog;
+	}
+
+	private static void createAlert(AuditLog auditLog) {
+		HisAuditDao hisAuditDao = new HisAuditDao();
+		AlertConfiguration alertConfiguration = Constants.ALERT_CONFIGURATION;
+		boolean createAlert = false;
+		if (alertConfiguration.getAllAlerts()) {
+			if ((auditLog.getValidationErrors() != null && auditLog.getValidationErrors().length() > 0) ||
+				(auditLog.getReportCompareErrors() != null && auditLog.getReportCompareErrors().length() > 0)) {
+				createAlert = true;			
+			}
+		}
+		if (alertConfiguration.getSignatureAlerts() && !auditLog.getSignatureVerified()) {
+			createAlert = true;
+		}
+		for (int i = 0; i < 24; i++) {
+			if (alertConfiguration.getPcrAlerts(i) && auditLog.getPreviousDifferences().contains(HisReportValidator.DIFFERENCE_SEPARATOR + Integer.toString(i) + HisReportValidator.DIFFERENCE_SEPARATOR)) {
+				createAlert = true;
+				break;
+			}
+		}
+		if (createAlert) {
+			hisAuditDao.createAlert(auditLog);
+			//Save before attempting to send an email.
+			HibernateUtilHis.commitTransaction();
+			//Begin a new transaction if needed further on in the code.
+			HibernateUtilHis.beginTransaction();
+			Emailer.sendDefaultAlertEmail();
+		}
+	}
+	
+	/**
+	 * This function is used by both the login module and the web services
+	 * to submit an integrity report. It calls alert creation functions and 
+	 * email functionality.
+	 * @param sid The SID sent from the client.
+	 * @param reportString The integrity report sent form the client.
+	 * @param nonceInput The nonce provided to the client.
+	 * @param pcrSelectInput The PCR select provided to the client.
+	 * @param machineNameInput The machine name sent from the client.
+	 */
+	public static void submitReport(String sid, String reportString, byte[] nonceInput, byte[] pcrSelectInput, String machineNameInput) {
+	
+		HisMachineCertDao hisMachineCertDao = new HisMachineCertDao();
+		MachineCert machineCert = null;
+		X509Certificate machineCertificate = null;
+		machineCert = hisMachineCertDao.getMachineCert(machineNameInput);
+		if (machineCert == null) {
+			logger.error("Machine '" + machineNameInput + "' is not enrolled.");
+		} else {
+			machineCertificate = pemToX509Certificate(machineCert.getCertificate());
+		}
+
+		HisAuditDao hisAuditDao = new HisAuditDao();
+
+		AuditLog lastAuditLog = hisAuditDao.getLastAuditLog(machineNameInput);
+		String previousReportString = null;
+
+		if (lastAuditLog != null) {
+			previousReportString = HisReportIO.readIR(lastAuditLog.getId(), lastAuditLog.getReport());
+		}
+
+		
+		HisReportValidator hisReportValidator = new HisReportValidator(reportString, nonceInput, pcrSelectInput, machineNameInput, machineCertificate, previousReportString);
+		
+		AuditLog auditLog = createAuditLog(machineCert, lastAuditLog, hisReportValidator, sid, reportString, nonceInput, pcrSelectInput, machineNameInput); 
+
 		
 		/********************************************************************************************************
 		 * OpenAttestation code:
@@ -332,32 +368,7 @@ public class HisReportUtil {
 	     	System.out.println("------------------------OpenAttestation complete!------------------------------------------");
 		 /****************************************************************************************************/
 		}
-		
-		AlertConfiguration alertConfiguration = Constants.ALERT_CONFIGURATION;
-		boolean createAlert = false;
-		if (alertConfiguration.getAllAlerts()) {
-			if ((auditLog.getValidationErrors() != null && auditLog.getValidationErrors().length() > 0) ||
-				(auditLog.getReportCompareErrors() != null && auditLog.getReportCompareErrors().length() > 0)) {
-				createAlert = true;			
-			}
-		}
-		if (alertConfiguration.getSignatureAlerts() && !auditLog.getSignatureVerified()) {
-			createAlert = true;
-		}
-		for (int i = 0; i < 24; i++) {
-			if (alertConfiguration.getPcrAlerts(i) && auditLog.getPreviousDifferences().contains(HisReportValidator.DIFFERENCE_SEPARATOR + Integer.toString(i) + HisReportValidator.DIFFERENCE_SEPARATOR)) {
-				createAlert = true;
-				break;
-			}
-		}
-		if (createAlert) {
-			hisAuditDao.createAlert(auditLog);
-			//Save before attempting to send an email.
-			HibernateUtilHis.commitTransaction();
-			//Begin a new transaction if needed further on in the code.
-			HibernateUtilHis.beginTransaction();
-			Emailer.sendDefaultAlertEmail();
-		}
+		createAlert(auditLog);
 	}
 
 	public static String fetchReport(Long reportId, boolean partial) throws IllegalStateException {
