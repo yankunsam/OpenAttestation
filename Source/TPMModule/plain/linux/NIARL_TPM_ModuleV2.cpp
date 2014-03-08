@@ -1409,27 +1409,9 @@ void NIARL_TPM_ModuleV2::quote()
 
 	for(UINT32 i = 0; i < pcrmask.size; i++)
 	{
-		result = Tspi_TPM_PcrRead(tpm, pcrmask.index[i], &pcr_size, &pcr_blob);
-			if(b_debug)	cerr << ' ' << result << " read pcr index " << pcrmask.index[i] << endl;
-			if(b_log)	cerr << ' ' << result << " read pcr index " << pcrmask.index[i] << endl;
-
 		result = Tspi_PcrComposite_SelectPcrIndex(pcr, pcrmask.index[i]);
 			if(b_debug)	cerr << ' ' << result << " select composite index" << endl;
 			if(b_log)	cerr << ' ' << result << " select composite index" << endl;
-
-		result = Tspi_PcrComposite_SetPcrValue(pcr, pcrmask.index[i], pcr_size, pcr_blob);
-			if(b_debug)	cerr << ' ' << result << " set pcr value" << endl;
-			if(b_log)	cerr << ' ' << result << " set pcr value" << endl;
-
-		for(UINT32 j = 0; j < pcr_size; j++)
-			cout << setw(2) << setfill('0') << setbase(16) << (int)pcr_blob[j];
-		if(!b_debug && !b_log) cout << ' ';
-		if(b_debug) cerr << endl;
-		if(b_log) clog << endl;
-
-		result = Tspi_Context_FreeMemory(context, pcr_blob);
-			if(b_debug)	cerr << ' ' << result << " clear dynamic array" << endl;
-			if(b_log)	cerr << ' ' << result << " clear dynamic array" << endl;
 	}
 
 
@@ -1454,6 +1436,23 @@ void NIARL_TPM_ModuleV2::quote()
 
 	if(result == 0)
 	{
+		for(UINT32 i = 0; i < pcrmask.size; i++)
+		{
+			result = Tspi_PcrComposite_GetPcrValue(pcr, pcrmask.index[i], &pcr_size, &pcr_blob);
+				if(b_debug)	cerr << ' ' << result << " set pcr value" << endl;
+				if(b_log)	cerr << ' ' << result << " set pcr value" << endl;
+
+			for(UINT32 j = 0; j < pcr_size; j++)
+				cout << setw(2) << setfill('0') << setbase(16) << (int)pcr_blob[j];
+			if(!b_debug && !b_log) cout << ' ';
+			if(b_debug) cerr << endl;
+			if(b_log) clog << endl;
+
+			result = Tspi_Context_FreeMemory(context, pcr_blob);
+				if(b_debug)	cerr << ' ' << result << " clear dynamic array" << endl;
+				if(b_log)	cerr << ' ' << result << " clear dynamic array" << endl;
+		}
+
 		for(UINT32 i = 0; i < validation.ulExternalDataLength; i++)
 			cout << setw(2) << setfill('0') << setbase(16) << (int)validation.rgbExternalData[i];
 
@@ -5484,27 +5483,9 @@ void NIARL_TPM_ModuleV2::quote2()
 
 	for(UINT32 i = 0; i < pcrmask.size; i++)
 	{
-		result = Tspi_TPM_PcrRead(tpm, pcrmask.index[i], &pcr_size, &pcr_blob);
-			if(b_debug)	cerr << ' ' << result << " read pcr index " << pcrmask.index[i] << endl;
-			if(b_log)	cerr << ' ' << result << " read pcr index " << pcrmask.index[i] << endl;
-
 		result = Tspi_PcrComposite_SelectPcrIndexEx(pcr, pcrmask.index[i], TSS_PCRS_DIRECTION_RELEASE);
 			if(b_debug)	cerr << ' ' << result << " select composite index" << endl;
 			if(b_log)	cerr << ' ' << result << " select composite index" << endl;
-
-		result = Tspi_PcrComposite_SetPcrValue(pcr, pcrmask.index[i], pcr_size, pcr_blob);
-			if(b_debug)	cerr << ' ' << result << " set pcr value" << endl;
-			if(b_log)	cerr << ' ' << result << " set pcr value" << endl;
-
-		for(UINT32 j = 0; j < pcr_size; j++)
-			cout << setw(2) << setfill('0') << setbase(16) << (int)pcr_blob[j];
-		if(!b_debug && !b_log) cout << ' ';
-		if(b_debug) cerr << endl;
-		if(b_log) clog << endl;
-
-		result = Tspi_Context_FreeMemory(context, pcr_blob);
-			if(b_debug)	cerr << ' ' << result << " clear dynamic array" << endl;
-			if(b_log)	cerr << ' ' << result << " clear dynamic array" << endl;
 	}
 
 
@@ -5532,6 +5513,23 @@ void NIARL_TPM_ModuleV2::quote2()
 
 	if(result == 0)
 	{
+		for(UINT32 i = 0; i < pcrmask.size; i++)
+		{
+			result = Tspi_PcrComposite_GetPcrValue(pcr, pcrmask.index[i], &pcr_size, &pcr_blob);
+				if(b_debug)	cerr << ' ' << result << " set pcr value" << endl;
+				if(b_log)	cerr << ' ' << result << " set pcr value" << endl;
+
+			for(UINT32 j = 0; j < pcr_size; j++)
+				cout << setw(2) << setfill('0') << setbase(16) << (int)pcr_blob[j];
+			if(!b_debug && !b_log) cout << ' ';
+			if(b_debug) cerr << endl;
+			if(b_log) clog << endl;
+
+			result = Tspi_Context_FreeMemory(context, pcr_blob);
+				if(b_debug)	cerr << ' ' << result << " clear dynamic array" << endl;
+				if(b_log)	cerr << ' ' << result << " clear dynamic array" << endl;
+		}
+
 		for(UINT32 i = 0; i < validation.ulExternalDataLength; i++)
 			cout << setw(2) << setfill('0') << setbase(16) << (int)validation.rgbExternalData[i];
 

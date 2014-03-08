@@ -1249,7 +1249,7 @@ public class StandaloneHIS
 			lastByteIMA += 4 * 3 + templateNameSize + imageSize + PCR_SIZE + ((digestValue != null) ? PCR_SIZE : 0);
 			lastEventCount[pcrNumber] = eventCount;
 
-			if (hexString(hashValue).equals(tpmOutput.split(" ")[pcrNumber]))
+			if (hexString(lastPcrHash[pcrNumber]).toUpperCase().equals(tpmOutput.split(" ")[pcrNumber].toUpperCase()))
 				break;
 		}
 
@@ -1342,7 +1342,7 @@ public class StandaloneHIS
 			lastByteBIOS += 4 * 3 + PCR_SIZE + imageSize;
 			lastEventCount[pcrNumber] = eventCount[pcrNumber];
 
-			if (hexString(hashValue).equals(tpmOutput.split(" ")[pcrNumber]))
+			if (hexString(lastPcrHash[pcrNumber]).toUpperCase().equals(tpmOutput.split(" ")[pcrNumber].toUpperCase())))
 				pcrValueReached[pcrNumber] = true;
 		}
 
