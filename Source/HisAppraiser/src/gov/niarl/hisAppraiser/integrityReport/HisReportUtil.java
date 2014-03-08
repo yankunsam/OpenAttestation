@@ -211,40 +211,8 @@ public class HisReportUtil {
 		}
 	}
 
-	/**
-	 * This function is used by both the login module and the web services
-	 * to submit an integrity report. It calls alert creation functions and 
-	 * email functionality.
-	 * @param sid The SID sent from the client.
-	 * @param reportString The integrity report sent form the client.
-	 * @param nonceInput The nonce provided to the client.
-	 * @param pcrSelectInput The PCR select provided to the client.
-	 * @param machineNameInput The machine name sent from the client.
-	 */
-	public static void submitReport(String sid, String reportString, byte[] nonceInput, byte[] pcrSelectInput, String machineNameInput) {
-	
-		HisMachineCertDao hisMachineCertDao = new HisMachineCertDao();
-		MachineCert machineCert = null;
-		X509Certificate machineCertificate = null;
-		machineCert = hisMachineCertDao.getMachineCert(machineNameInput);
-		if (machineCert == null) {
-			logger.error("Machine '" + machineNameInput + "' is not enrolled.");
-		} else {
-			machineCertificate = pemToX509Certificate(machineCert.getCertificate());
-		}
-
+	private static AuditLog createAuditLog(MachineCert machineCert, AuditLog lastAuditLog, HisReportValidator hisReportValidator, String sid, String reportString, byte[] nonceInput, byte[] pcrSelectInput, String machineNameInput) {
 		HisAuditDao hisAuditDao = new HisAuditDao();
-
-		AuditLog lastAuditLog = hisAuditDao.getLastAuditLog(machineNameInput);
-		String previousReportString = null;
-
-		if (lastAuditLog != null) {
-			previousReportString = HisReportIO.readIR(lastAuditLog.getId(), lastAuditLog.getReport());
-		}
-
-		
-		HisReportValidator hisReportValidator = new HisReportValidator(reportString, nonceInput, pcrSelectInput, machineNameInput, machineCertificate, previousReportString);
-		
 		AuditLog auditLog = new AuditLog();
 		auditLog.setPcr0(hisReportValidator.getPcrValue(0));
 		auditLog.setPcr1(hisReportValidator.getPcrValue(1));
@@ -306,33 +274,11 @@ public class HisReportUtil {
 		HibernateUtilHis.commitTransaction();
 		HibernateUtilHis.beginTransaction();
 
-		
-		/********************************************************************************************************
-		 * OpenAttestation code:
-		 * Validating host's PCR with table PCR_manifest.  
-		 * 
-		 *******************************************************************************************************/
-		AttestDao attestDao = new AttestDao();
-		HisAuditDao auditLogDao = new HisAuditDao();
-		AuditLog newAuditLog = auditLogDao.getLastAuditLog(machineNameInput);
-		AttestRequest latestPolledRequest = attestDao.getLatestPolledRequest(machineNameInput);
-		if (latestPolledRequest.getId() != null && newAuditLog != null && newAuditLog.getReport() != null) {
-			System.out.println("latestPolledRequest" +latestPolledRequest.getId());
-			latestPolledRequest.setAuditLog(newAuditLog);
+		return auditLog;
+	}
 
-			if (newAuditLog.getValidationErrors() != null) {
-				latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.UN_TRUSTED));
-			} else {
-				latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.TRUSTED));
-				latestPolledRequest = AttestService.doAnalyses(latestPolledRequest, machineNameInput);
-			}
-
-			latestPolledRequest.setValidateTime(new Date());
-			attestDao.updateRequest(latestPolledRequest);
-	     	System.out.println("------------------------OpenAttestation complete!------------------------------------------");
-		 /****************************************************************************************************/
-		}
-		
+	private static void createAlert(AuditLog auditLog) {
+		HisAuditDao hisAuditDao = new HisAuditDao();
 		AlertConfiguration alertConfiguration = Constants.ALERT_CONFIGURATION;
 		boolean createAlert = false;
 		if (alertConfiguration.getAllAlerts()) {
@@ -357,6 +303,87 @@ public class HisReportUtil {
 			//Begin a new transaction if needed further on in the code.
 			HibernateUtilHis.beginTransaction();
 			Emailer.sendDefaultAlertEmail();
+		}
+	}
+	
+	/**
+	 * This function is used by both the login module and the web services
+	 * to submit an integrity report. It calls alert creation functions and 
+	 * email functionality.
+	 * @param sid The SID sent from the client.
+	 * @param reportString The integrity report sent form the client.
+	 * @param nonceInput The nonce provided to the client.
+	 * @param pcrSelectInput The PCR select provided to the client.
+	 * @param machineNameInput The machine name sent from the client.
+	 */
+	public static void submitReport(String sid, String reportString, byte[] nonceInput, byte[] pcrSelectInput, String machineNameInput) {
+	
+		HisMachineCertDao hisMachineCertDao = new HisMachineCertDao();
+		MachineCert machineCert = null;
+		X509Certificate machineCertificate = null;
+		machineCert = hisMachineCertDao.getMachineCert(machineNameInput);
+		if (machineCert == null) {
+			logger.error("Machine '" + machineNameInput + "' is not enrolled.");
+		} else {
+			machineCertificate = pemToX509Certificate(machineCert.getCertificate());
+		}
+
+		HisAuditDao hisAuditDao = new HisAuditDao();
+
+		AuditLog lastAuditLog = hisAuditDao.getLastAuditLog(machineNameInput);
+		String previousReportString = null;
+
+		if (lastAuditLog != null) {
+			previousReportString = HisReportIO.readIR(lastAuditLog.getId(), lastAuditLog.getReport());
+		}
+
+		
+		HisReportValidator hisReportValidator = new HisReportValidator(reportString, nonceInput, pcrSelectInput, machineNameInput, machineCertificate, previousReportString);
+		
+		boolean IDENTICAL_REPORT = (lastAuditLog != null && !lastAuditLog.getFirstReport().equals((long)-1));
+		IDENTICAL_REPORT &= (hisReportValidator.getErrors() == null && hisReportValidator.getPreviousReportDifferences().equals("")); 
+		AuditLog auditLog = null;
+		if (!(Constants.DISCARD_IDENTICAL_IR && IDENTICAL_REPORT)) { 
+			auditLog = createAuditLog(machineCert, lastAuditLog, hisReportValidator, sid, reportString, nonceInput, pcrSelectInput, machineNameInput); 
+		}
+
+		
+		/********************************************************************************************************
+		 * OpenAttestation code:
+		 * Validating host's PCR with table PCR_manifest.  
+		 * 
+		 *******************************************************************************************************/
+		AttestDao attestDao = new AttestDao();
+		HisAuditDao auditLogDao = new HisAuditDao();
+		AuditLog newAuditLog = auditLogDao.getLastAuditLog(machineNameInput);
+		AttestRequest latestPolledRequest = attestDao.getPendingRequests(machineNameInput, true).get(0);
+
+		boolean DO_ANALYSES = latestPolledRequest.getThreshold() == null || latestPolledRequest.getResult() == null;
+		DO_ANALYSES |= latestPolledRequest.getThreshold() != null && !IDENTICAL_REPORT;
+		if (latestPolledRequest.getId() != null && newAuditLog != null && newAuditLog.getReport() != null) {
+			Date validateTime = null;
+			if (DO_ANALYSES) {
+				System.out.println("latestPolledRequest" +latestPolledRequest.getId());
+				latestPolledRequest.setAnalysisResults("");
+				latestPolledRequest.setAuditLog(newAuditLog);
+
+				if (newAuditLog.getValidationErrors() != null) {
+					latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.UN_TRUSTED));
+				} else {
+					latestPolledRequest.setResult(ResultConverter.getIntFromResult(ResultConverter.AttestResult.TRUSTED));
+					latestPolledRequest = AttestService.doAnalyses(latestPolledRequest, machineNameInput);
+				}
+				validateTime = new Date();
+				latestPolledRequest.setCurrentProcessingTime(validateTime.getTime() - latestPolledRequest.getRequestTime().getTime());
+			}
+
+			latestPolledRequest.setValidateTime((validateTime != null) ? validateTime : new Date());
+			attestDao.updateRequest(latestPolledRequest);
+	     	System.out.println("------------------------OpenAttestation complete!------------------------------------------");
+		 /****************************************************************************************************/
+		}
+		if (!(Constants.DISCARD_IDENTICAL_IR && IDENTICAL_REPORT)) { 
+			createAlert(auditLog);
 		}
 	}
 

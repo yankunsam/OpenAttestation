@@ -53,6 +53,14 @@ public class AttestRequest {
 
 	private String analysisResults;
 
+	private Long threshold;
+
+	private Date expirationTime; 
+
+	private Date lastReadTime; 
+
+	private Long currentProcessingTime; 
+
 	public Date getValidateTime() {
 		return validateTime;
 	}
@@ -189,5 +197,37 @@ public class AttestRequest {
 
 	public void setAnalysisResults(String analysisResults) {
 		this.analysisResults = analysisResults;
+	}
+
+	public Long getThreshold() {
+		return threshold;
+	}
+
+	public void setThreshold(Long threshold) {
+		this.threshold = threshold;
+	}
+
+	public Date getExpirationTime() {
+		return expirationTime;
+	}
+
+	public void setExpirationTime(Date expirationTime) {
+		this.expirationTime = expirationTime;
+	}
+
+	public Date getLastReadTime() {
+		return lastReadTime;
+	}
+
+	public void setLastReadTime(Date lastReadTime) {
+		this.lastReadTime = lastReadTime;
+	}
+
+	public Long getCurrentProcessingTime() {
+		return currentProcessingTime;
+	}
+
+	public void setCurrentProcessingTime(Long currentProcessingTime) {
+		this.currentProcessingTime = currentProcessingTime;
 	}
 }

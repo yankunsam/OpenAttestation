@@ -69,6 +69,12 @@ public class Constants {
 	 */
 	public static final boolean SCALABILITY = (getProperty("SCALABILITY") != null && getProperty("SCALABILITY").equals("on")) ? true : false;
 
+	/** 
+	 * Returns true if the DISCARD_IDENTICAL_IR property is set to "on";
+	 * returns false otherwise.
+	 */
+	public static final boolean DISCARD_IDENTICAL_IR = (getProperty("DISCARD_IDENTICAL_IR") != null && getProperty("DISCARD_IDENTICAL_IR").equals("on")) ? true : false;
+
 	/**
 	 * Determines which alerts to generate. 
 	 */
@@ -94,6 +100,12 @@ public class Constants {
 	 * Body of the default email.
 	 */
 	public static final String ALERT_MESSAGE_BODY = getProperty("alert.message.body");
+
+	public static final long PERIODIC_TIME_EXPIRED = -1;
+	public static final long PERIODIC_IDLE_EXPIRED = -2;
+	public static final long PERIODIC_DELETED_BY_USER = -3;
+	public static final long PERIODIC_HOST_UNTRUSTED = -4;
+	public static final long PERIODIC_HOST_UNREACHABLE = -5;
 
 	/**
 	 * Creates properties object from file name.

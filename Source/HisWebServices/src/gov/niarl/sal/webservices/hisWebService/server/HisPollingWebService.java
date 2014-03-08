@@ -39,6 +39,8 @@ import gov.niarl.sal.webservices.hisWebService.server.domain.ActionConverter;
 import gov.niarl.sal.webservices.hisWebService.server.domain.ActionDelay;
 import gov.niarl.sal.webservices.hisWebService.server.domain.ActionDelay.Action;
 
+import java.util.Date;
+
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
@@ -69,10 +71,24 @@ public class HisPollingWebService {
 		try {
 			HibernateUtilHis.beginTransaction();
 			AttestDao attestDao = new AttestDao();
-			AttestRequest attestRequest = attestDao.getFirstRequest(machineName);
+			attestDao.disableUnusedRequests(machineName);
+			AttestRequest attestRequest = attestDao.getPendingRequests(machineName, false).get(0);
 			action = ActionConverter.getActionFromInt(attestRequest.getNextAction() == null? ActionConverter.getIntFromAction(Action.DO_NOTHING) : attestRequest.getNextAction());
 			
 			if (attestRequest.getId()!= null){
+				/*
+				 * If the attestation request is periodic two
+				 * operation are needed:
+				 *  - action must be set to SEND_REPORT, because
+				 *    periodic request don't use action written on DB;
+				 *  - requestTime must be updated in order to known
+				 *    the time needed for attesting the host
+				 *    (validateTime - requestTime).
+				 */
+				if (attestRequest.getThreshold() != null) {
+					attestRequest.setRequestTime(new Date());
+					action = Action.SEND_REPORT;
+				}
 				attestRequest.setNextAction(ActionConverter.getIntFromAction(Action.DO_NOTHING));
 				attestRequest.setIsConsumedByPollingWS(true);
 				attestDao.updateRequest(attestRequest);

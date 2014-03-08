@@ -36,6 +36,9 @@ public class AttestUtil {
 	private static String manifestWSURL ="";
 	private static String trustStorePath = "";
 	private static String downloadIRWebServiceUrl = "";
+	private static double anticipationFactor = 0;
+	private static long maxIdleTime = 0;
+	private static long minAttestInterval = 0;
 	
 	private static String PROPERTIES_NAME = "OpenAttestation.properties";
 	private static Properties attestationProperties = new Properties();
@@ -50,9 +53,15 @@ public class AttestUtil {
 	    	   String manifesturl = attestationProperties.getProperty("ManifestWebServicesUrl");
 	    	   String truststore = attestationProperties.getProperty("TrustStore");
 	    	   String downloadWS = attestationProperties.getProperty("DownloadIRWebServiceUrl");
+	    	   String anticipation = attestationProperties.getProperty("anticipationFactor");
+	    	   String idleTime = attestationProperties.getProperty("maxIdleTime");
+	    	   String attestInterval = attestationProperties.getProperty("minAttestInterval");
 	    	   manifestWSURL = manifesturl == null ? "":manifesturl;
 	    	   trustStorePath =truststore == null? "":truststore;
 	    	   downloadIRWebServiceUrl = (downloadWS == null) ? "" : downloadWS;
+	    	   anticipationFactor = (anticipation == null) ? 1.5 : Double.parseDouble(anticipation);
+	    	   maxIdleTime = (idleTime == null) ? 7 : Integer.parseInt(idleTime);
+	    	   minAttestInterval = (attestInterval == null) ? 300000 : Integer.parseInt(attestInterval);
 			} 
 	       catch (IOException e) {
                e.printStackTrace();
@@ -80,6 +89,18 @@ public class AttestUtil {
 	
 	public static String getDownloadIRWebServiceUrl(){
 		return downloadIRWebServiceUrl;
+	}
+
+	public static double getAnticipationFactor(){
+		return anticipationFactor;
+	}
+
+	public static long getMaxIdleTime(){
+		return maxIdleTime;
+	}
+
+	public static long getMinAttestInterval(){
+		return minAttestInterval;
 	}
 
 	public static WebResource getClient(String url){

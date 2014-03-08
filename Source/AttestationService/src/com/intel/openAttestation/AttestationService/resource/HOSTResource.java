@@ -46,9 +46,12 @@ import com.intel.openAttestation.AttestationService.resource.HOSTResource;
 import com.intel.openAttestation.AttestationService.resource.AttestService;
 import com.intel.openAttestation.AttestationService.bean.HostBean;
 import com.intel.openAttestation.AttestationService.bean.RespSyncBean;
+import com.intel.openAttestation.AttestationService.bean.AsyncBean;
 import com.intel.openAttestation.AttestationService.bean.ReqAttestationBean;
+import com.intel.openAttestation.AttestationService.hibernate.dao.AttestDao;
 import com.intel.openAttestation.AttestationService.util.ActionConverter;
 
+import gov.niarl.hisAppraiser.Constants;
 import gov.niarl.hisAppraiser.util.HisUtil;
 
 import com.intel.openAttestation.AttestationService.util.ActionDelay.Action;
@@ -429,6 +432,251 @@ public class HOSTResource {
 	
 	
 	/**
+	 * Receives an attestation ID and disables its threshold
+	 * in order to remove the AttestationRequest periodicity.
+	 * @param uriInfo An object containing information about request URI
+	 * @param reqAttestation An object mapping the attestation request
+	 * @param request An object providing request information for HTTP servlets
+	 * @return An object mapping the attestation response
+	 */
+	@DELETE
+	@Path("/PostHosts")
+	@Consumes("application/json")
+	@Produces("application/json")
+	public Response delPostHosts(@Context UriInfo uriInfo, AsyncBean reqAttestation, @Context javax.servlet.http.HttpServletRequest request) {
+		UriBuilder b = uriInfo.getBaseUriBuilder();
+		b = b.path(HOSTResource.class);
+		Response.Status status = Response.Status.OK;
+		String requestHost = request.getRemoteHost();
+		
+		try {
+			AttestDao attestDao = new AttestDao();
+			List<AttestRequest> requestsList = attestDao.getRequestsByRequestId(reqAttestation.getRequestId());
+			if (requestsList.size() == 0)
+				throw new IllegalArgumentException("Can't find a request with given ID (" + reqAttestation.getRequestId() + ")");
+
+			for (AttestRequest attest : requestsList) {
+				if (reqAttestation.getRequestId().startsWith("Poll") || attest.getThreshold() == null)
+					throw new IllegalArgumentException("The requested attestation is not periodic");
+				else if (attest.getThreshold() < 0)
+					throw new IllegalArgumentException("The requested periodic attestation has been already deleted");
+
+				attest.setThreshold(Constants.PERIODIC_DELETED_BY_USER);
+				attestDao.updateRequest(attest);
+			}
+
+			return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True").build();
+		} catch (Exception e) {
+			status = Response.Status.INTERNAL_SERVER_ERROR;
+
+			AttestationResponseFault fault = null;
+			if (e instanceof IllegalArgumentException)
+				fault = new AttestationResponseFault(AttestationResponseFault.FaultName.FAULT_ITEM_NOT_FOUND);
+			else {
+				fault = new AttestationResponseFault(AttestationResponseFault.FaultName.FAULT_ATTEST_ERROR);
+				logger.fatal(fault.getMessage(), e);
+			}
+			fault.setMessage("PostHosts failed.");
+			fault.setDetail(e.getMessage());
+
+			return Response.status(status).header("Location", b.build()).entity(fault).build();
+		}
+	}
+
+	/**
+	 * Receives an attestation ID and returns corresponding result.
+	 * @param uriInfo An object containing information about request URI
+	 * @param reqAttestation An object mapping the attestation request
+	 * @param request An object providing request information for HTTP servlets
+	 * @return An object mapping the attestation response
+	 */
+	@GET
+	@Path("/PostHosts")
+	@Consumes("application/json")
+	@Produces("application/json")
+	public Response getPostHosts(@Context UriInfo uriInfo, AsyncBean reqAttestation, @Context javax.servlet.http.HttpServletRequest request){
+		UriBuilder b = uriInfo.getBaseUriBuilder();
+		b = b.path(HOSTResource.class);
+		Response.Status status = Response.Status.OK;
+		String requestHost = request.getRemoteHost();
+
+		AttestUtil.loadProp();
+		try {
+			AttestDao attestDao = new AttestDao();
+			List<AttestRequest> requestsList = attestDao.getRequestsByRequestId(reqAttestation.getRequestId());
+			if (requestsList.size() == 0)
+				throw new IllegalArgumentException("Can't find an attestation request with given ID (" + reqAttestation.getRequestId() + ")");
+
+			for (AttestRequest attest : requestsList) {
+				if (reqAttestation.getRequestId().startsWith("Poll"))
+					throw new IllegalArgumentException("The attestation request is neither periodic nor asynchronous");
+
+				long timeUsed = System.currentTimeMillis() - attest.getRequestTime().getTime();
+
+				boolean DISABLE_EXCEPTION  = (reqAttestation.getLastResult() == null);
+				DISABLE_EXCEPTION  |= reqAttestation.getLastResult() != null && !reqAttestation.getLastResult().equals("true");
+				if (attest.getThreshold() != null) {
+					if (DISABLE_EXCEPTION && attest.getThreshold() == Constants.PERIODIC_DELETED_BY_USER)
+						throw new IllegalArgumentException("The attestation request has been deleted by the user");
+					else if (DISABLE_EXCEPTION && attest.getThreshold() == Constants.PERIODIC_TIME_EXPIRED)
+						throw new IllegalArgumentException("The attestation request has been deleted because the expiration time was reached");
+					else if (DISABLE_EXCEPTION && attest.getThreshold() == Constants.PERIODIC_IDLE_EXPIRED)
+						throw new IllegalArgumentException("The attestation request has been deleted because unread for too much time");
+					else if (DISABLE_EXCEPTION && attest.getThreshold() == Constants.PERIODIC_HOST_UNREACHABLE)
+						throw new IllegalArgumentException("The attestation request has been deleted because one or more of requested hosts were not reachable");
+					else if (DISABLE_EXCEPTION && attest.getThreshold() == Constants.PERIODIC_HOST_UNTRUSTED)
+						throw new IllegalArgumentException("The attestation request has been deleted because one or more of requested hosts were untrusted.");
+
+					if (attest.getResult() != null && attest.getResult() == ResultConverter.getIntFromResult(AttestResult.UN_KNOWN))
+						continue;
+
+					/*
+					 * A periodic request is disabled if time between
+					 * current time and last attestation is higher then
+					 * three times the threshold value.
+					 * All entry with given requestId must be disabled,
+					 * but only for current request the result should
+					 * be set to TIME_OUT, in order to maintain previous
+					 * results of the other entries.
+					 */
+					if (attest.getThreshold() >= 0 && timeUsed > 3 * attest.getThreshold()) {
+						for (AttestRequest attestRequest : requestsList) {
+							attestRequest.setThreshold(Constants.PERIODIC_HOST_UNREACHABLE);
+							attestDao.updateRequest(attestRequest);
+						}
+						attest.setResult(ResultConverter.getIntFromResult(AttestResult.TIME_OUT));
+						attest.setValidateTime(new Date());
+					}
+				} else if (attest.getResult() == null && timeUsed > AttestUtil.getDefaultAttestTimeout()){
+					/*
+					 * If an asynchronous request was submitted for an
+					 * unreachable host, the TIME_OUT result is set.
+					 */
+					attest.setResult(ResultConverter.getIntFromResult(AttestResult.TIME_OUT));
+					attest.setValidateTime(new Date());
+				}
+
+				attest.setLastReadTime(new Date());
+				attestDao.updateRequest(attest);
+			}
+
+			RespSyncBean syncResult = AttestService.getRespSyncResult(reqAttestation.getRequestId());
+
+			logger.info("requestId:" + reqAttestation.getRequestId() +" has returned the attested result");
+			return Response.status(status).header("Location", b.build()).entity(syncResult).build();
+		} catch (Exception e) {
+			status = Response.Status.INTERNAL_SERVER_ERROR;
+
+			AttestationResponseFault fault = null;
+			if (e instanceof IllegalArgumentException)
+				fault = new AttestationResponseFault(AttestationResponseFault.FaultName.FAULT_ITEM_NOT_FOUND);
+			else {
+				fault = new AttestationResponseFault(AttestationResponseFault.FaultName.FAULT_ATTEST_ERROR);
+				logger.fatal(fault.getMessage(), e);
+			}
+			fault.setMessage("PostHosts failed.");
+			fault.setDetail(e.getMessage());
+
+			return Response.status(status).header("Location", b.build()).entity(fault).build();
+		}
+	}
+
+	/**
+	 * Receives an attestation request, writes it on DB and returns
+	 * the ID to be used to retrieve attestation result.
+	 * @param uriInfo An object containing information about request URI
+	 * @param reqAttestation An object mapping the attestation request
+	 * @param request An object providing request information for HTTP servlets
+	 * @return An object mapping the attestation response
+	 */
+	@POST
+	@Path("/PostHosts")
+	@Consumes("application/json")
+	@Produces("application/json")
+	public Response postHosts(@Context UriInfo uriInfo, ReqAttestationBean reqAttestation, @Context javax.servlet.http.HttpServletRequest request){
+		UriBuilder b = uriInfo.getBaseUriBuilder();
+		b = b.path(HOSTResource.class);
+		Response.Status status = Response.Status.OK;
+		String requestHost = request.getRemoteHost();
+		gov.niarl.hisAppraiser.hibernate.util.AttestUtil.loadProp();
+		AttestUtil.loadProp();
+		try {
+			HOSTDAO dao = new HOSTDAO();
+			List<String> host = reqAttestation.getHosts();
+
+			if (host == null || host.size() == 0)
+				throw new IllegalArgumentException("The request must contain at least one host.");
+
+			HashMap parameters = new HashMap();
+			for (int i = 0; i < host.size(); i++){
+				parameters.put(host.get(i), 50);
+				if (host.get(i).length() == 0)
+					throw new IllegalArgumentException("Parameters validation failed.");
+			}
+
+			if (!HisUtil.validParas(parameters))
+				throw new IllegalArgumentException("Parameters validation failed.");
+
+			/*
+			 * Required checks differ between periodic and asynchronous
+			 * attestation requests. In the first case it's necessary
+			 * to validate the expirationTime format and the
+			 * timeThreshold value.
+			 * 
+			 * Syntax of the element "expirationTime" is as follows:
+			 *     <number>[d|h|m|s] | never
+			 * If the given expirationTime does not match this
+			 * syntax an error is returned.
+			 * 
+			 * On the contrary, asynchronous requests require that
+			 * either expirationTime and threshold are not
+			 * specified. 
+			 */
+			if (reqAttestation.getTimeThreshold() != null) {
+				String expirationTime = reqAttestation.getExpirationTime();
+				try {
+					if (expirationTime != null && !expirationTime.equals("never") &&
+					    expirationTimeToLong(expirationTime) < reqAttestation.getTimeThreshold())
+						throw new IllegalArgumentException("Given expirationTime can't be lower than threshold.");
+				} catch (Exception e) {
+					if (e instanceof IllegalArgumentException)
+						throw e;
+					throw new IllegalArgumentException("Wrong syntax of element \"expirationTime\"");
+				}
+
+				double anticipationFactor = gov.niarl.hisAppraiser.hibernate.util.AttestUtil.getAnticipationFactor();
+				long minAttestInterval = gov.niarl.hisAppraiser.hibernate.util.AttestUtil.getMinAttestInterval();
+				double minThreshold = minAttestInterval + (AttestUtil.getDefaultAttestTimeout() * anticipationFactor);
+				if (reqAttestation.getTimeThreshold() < minThreshold)
+					throw new IllegalArgumentException("Minimum acceptable value for \"timeThreshold\" is: " + Math.ceil(minThreshold) + "ms.");
+			} else if (reqAttestation.getExpirationTime() != null)
+				throw new IllegalArgumentException("Only periodic requests can contain the element \"expirationTime\".");
+
+			String requestId = addRequests(reqAttestation, requestHost, false);
+
+			AsyncBean asyncResult = new AsyncBean();
+			asyncResult.setRequestId(requestId);
+
+			logger.info("requestId:" +requestId +" has returned the attested result");
+			return Response.status(status).header("Location", b.build()).entity(asyncResult).build();
+		} catch (Exception e) {
+			status = Response.Status.INTERNAL_SERVER_ERROR;
+
+			AttestationResponseFault fault = null;
+			if (e instanceof IllegalArgumentException)
+				fault = new AttestationResponseFault(OpenAttestationResponseFault.FaultCode.FAULT_500);
+			else {
+				fault = new AttestationResponseFault(AttestationResponseFault.FaultName.FAULT_ATTEST_ERROR);
+				logger.fatal(fault.getMessage(), e);
+			}
+			fault.setMessage("PostHosts failed.");
+			fault.setDetail(e.getMessage());
+
+			return Response.status(status).header("Location", b.build()).entity(fault).build();
+		}
+	}
+
+	/**
 	 * synchronous attest model: client sends hosts and pcrmask to be attested, server attest these hosts and return specific PCR values.
 	 * in this model, the client will always wait the response of server 
 	 * @param Xauthuser
@@ -609,6 +857,28 @@ public class HOSTResource {
 		}
 		return hostBeanList;
 	}
+
+	public static long expirationTimeToLong(String expirationTime) {
+		long toMillisecontFactor = 1;
+		long expirationValue = 0;
+		
+		if (expirationTime.substring(expirationTime.length() - 1).equals("d")) {
+			toMillisecontFactor =  1000 * 60 * 60 * 24;
+			expirationValue = Long.valueOf(expirationTime.substring(0, expirationTime.length() - 1)).longValue();
+		} else if (expirationTime.substring(expirationTime.length() - 1).equals("h")) {
+			toMillisecontFactor =  1000 * 60 * 60;
+			expirationValue = Long.valueOf(expirationTime.substring(0, expirationTime.length() - 1)).longValue();
+		} else if (expirationTime.substring(expirationTime.length() - 1).equals("m")) {
+			toMillisecontFactor =  1000 * 60;
+			expirationValue = Long.valueOf(expirationTime.substring(0, expirationTime.length() - 1)).longValue();
+		} else if (expirationTime.substring(expirationTime.length() - 1).equals("s")) {
+			toMillisecontFactor =  1000;
+			expirationValue = Long.valueOf(expirationTime.substring(0, expirationTime.length() - 1)).longValue();
+		} else if (!expirationTime.equals("never")) {
+			expirationValue = Long.valueOf(expirationTime).longValue();
+		}
+		return expirationValue * toMillisecontFactor;
+	}
 	
 	public static String addRequests(ReqAttestationBean reqAttestation, String requestHost, boolean isSync) {
 		HOSTDAO dao = new HOSTDAO();
@@ -639,6 +909,27 @@ public class HOSTResource {
 			attestRequests[i].setPCRMask(reqAttestation.getPCRmask());
 			attestRequests[i].setIsSync(isSync);
 			attestRequests[i].setAnalysisRequest(reqAttestation.getAnalysisType());
+
+			if (!isSync) {
+				AttestUtil.loadProp();
+
+				attestRequests[i].setThreshold(reqAttestation.getTimeThreshold());
+				attestRequests[i].setLastReadTime(new Date());
+
+				String expirationTime = reqAttestation.getExpirationTime();
+				if (expirationTime == null)
+					expirationTime = AttestUtil.getDefaultExpirationTime() + "d";
+
+				long expirationValue = expirationTimeToLong(expirationTime);
+				if (expirationValue != 0) {
+					long currentTime = requestTime.getTime();
+					attestRequests[i].setExpirationTime(new Date(currentTime + expirationValue));
+				}
+				if (attestRequests[i].getMachineCert() == null ){
+					attestRequests[i].setResult(ResultConverter.getIntFromResult(AttestResult.UN_KNOWN));
+					attestRequests[i].setValidateTime(new Date());
+				}
+			}
 		}
 		for(AttestRequest req: attestRequests)
 			dao.saveRequest(req);
