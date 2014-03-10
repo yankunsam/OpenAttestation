@@ -221,6 +221,8 @@ sed -i "s/<server.domain>/$(hostname)/g" /etc/oat-appraiser/OpenAttestation.prop
 sed -i "s/^truststore_path.*$/truststore_path=\/var\/lib\/oat-appraiser\/Certificate\/TrustStore.jks/g" /etc/oat-appraiser/OpenAttestation.properties
 
 sed -i "s/^TrustStore.*$/TrustStore=\/var\/lib\/oat-appraiser\/Certificate\/TrustStore.jks/g"  /etc/oat-appraiser/OpenAttestation.properties
+
+mkdir -p /var/log/oat_ir
 #placing OAT web portal in correct folder to be seen by tomcat6
 rm -rf /%{name}/OAT
 unzip /%{name}/OAT.zip -d /%{name}/
