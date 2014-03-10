@@ -1175,6 +1175,21 @@ public class StandaloneHIS
 		}
 	}
 
+	private String getValueFromPcrNumber(int pcrNumber) {
+		int intBitmask = (pcrBitmask[2] & 0xFF) | ((pcrBitmask[1] & 0xFF) << 8) | ((pcrBitmask[0] & 0xFF) << 16);
+		int pcrPosition = -1;
+
+		for (int i = 0; i < PCR_MAX_NUM; i++) {
+			if ((intBitmask & (0x00800000 >> i)) != 0)
+				pcrPosition++;
+			if (i == pcrNumber)
+				break;
+		}
+		if (pcrPosition == -1)
+			return null;
+		return tpmOutput.split(" ")[pcrPosition];
+	}
+
 	/**
 	 * Creates an element SnapshotCollection, writes IMA measurements
 	 * inside it and adds it to the given ReportType element.
@@ -1249,7 +1264,7 @@ public class StandaloneHIS
 			lastByteIMA += 4 * 3 + templateNameSize + imageSize + PCR_SIZE + ((digestValue != null) ? PCR_SIZE : 0);
 			lastEventCount[pcrNumber] = eventCount;
 
-			if (hexString(lastPcrHash[pcrNumber]).toUpperCase().equals(tpmOutput.split(" ")[pcrNumber].toUpperCase()))
+			if (hexString(lastPcrHash[pcrNumber]).toUpperCase().equals(getValueFromPcrNumber(pcrNumber).toUpperCase()))
 				break;
 		}
 
@@ -1317,6 +1332,9 @@ public class StandaloneHIS
 			imageBuffer.put(readImageSize);
 			imageBuffer.put(digestValue);
 
+			/* 4 * 3 bytes are for PCR number, template name length and template data length */ 
+			lastByteBIOS += 4 * 3 + PCR_SIZE + imageSize;
+
 			if (pcrValueReached[pcrNumber] || (intBitmask & (0x00800000 >> pcrNumber)) == 0)
 				continue;
 
@@ -1337,12 +1355,9 @@ public class StandaloneHIS
 			}
 
 			eventCount[pcrNumber]++;
-
-			/* 4 * 3 bytes are for PCR number, template name length and template data length */ 
-			lastByteBIOS += 4 * 3 + PCR_SIZE + imageSize;
 			lastEventCount[pcrNumber] = eventCount[pcrNumber];
 
-			if (hexString(lastPcrHash[pcrNumber]).toUpperCase().equals(tpmOutput.split(" ")[pcrNumber].toUpperCase())))
+			if (hexString(lastPcrHash[pcrNumber]).toUpperCase().equals(getValueFromPcrNumber(pcrNumber).toUpperCase()))
 				pcrValueReached[pcrNumber] = true;
 		}
 
