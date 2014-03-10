@@ -208,6 +208,7 @@ unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/AttestationService.war -d $TOMCAT
 rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/WLMService.war
 rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/AttestationService.war
 mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/AttestationService/WEB-INF/classes/OpenAttestationWebServices.properties /etc/oat-appraiser/OpenAttestationWebServices.properties
+sed -i "s/<server.domain>/$(hostname)/g" /etc/oat-appraiser/OpenAttestationWebServices.properties
 #configuring hibernateHis for OAT appraiser setup
 cp /tmp/OAT_Server_Install/hibernateOat.cfg.xml /tmp/
 sed -i 's/<property name="connection.username">root<\/property>/<property name="connection.username">oatAppraiser<\/property>/' /tmp/hibernateOat.cfg.xml
