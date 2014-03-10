@@ -641,6 +641,9 @@ public class StandaloneHIS
             } 
             catch (Exception e) 
             {
+                resetScalabilityCounters();
+                lastReportSendSuccess = false;
+
                 //we want to trigger the default polling interval if there is a web service exception
                 pollInterval=0;
 
