@@ -1417,7 +1417,7 @@ public class StandaloneHIS
 
 		String levelString = "LV0";
 		String eventTypeString = eventType.replaceFirst("^0+(?!$)", "");
-		if (eventType.contains("ima")) {
+		if (pcrIndex == 10) {
 			levelString = "LV1";
 			eventTypeString = "0";
 		} 
