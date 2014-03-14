@@ -97,7 +97,8 @@ public class AttestService {
 			}
 			
 			AttestUtil.loadProp();
-			String[] env_var = { "ANALYSIS=" + analysisType.getName() + "," + analysisParameters, "OS=" + os_name,
+			String path = System.getenv("PATH");
+			String[] env_var = { "PATH=" + path, "ANALYSIS=" + analysisType.getName() + "," + analysisParameters, "OS=" + os_name,
 			                     "URL=" + AttestUtil.getDownloadIRWebServiceUrl(), "IR=" + attestRequest.getAuditLog().getId()};
 			Runtime r = Runtime.getRuntime();
 			String script_string = analysisType.getURL();
