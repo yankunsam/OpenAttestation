@@ -47,6 +47,7 @@ import gov.niarl.hisAppraiser.hibernate.dao.HisMachineCertDao;
 import gov.niarl.hisAppraiser.hibernate.dao.MLEDao;
 import gov.niarl.hisAppraiser.hibernate.domain.AuditLog;
 
+import gov.niarl.hisAppraiser.Constants;
 import gov.niarl.hisAppraiser.util.HisUtil;
 
 import java.io.ByteArrayInputStream;
@@ -340,6 +341,9 @@ public class HisReportValidator {
 
 			List<PcrValue> pcrValues = report.getQuoteData().get(0).getQuote().getPcrComposite().getPcrValue();
 
+			byte[] pcrIMLMask = HisUtil.unHexString(this.currentPcrIMLMask);
+			int intPcrIMLMask = (pcrIMLMask[2] & 0xFF) | ((pcrIMLMask[1] & 0xFF) << 8) | ((pcrIMLMask[0] & 0xFF) << 16);
+
 			for (SnapshotType snapCollection : report.getSnapshotCollection()) {
 				List<ValueType> values = snapCollection.getValues();
 
@@ -347,6 +351,9 @@ public class HisReportValidator {
 				DigestValueType hash;
 
 				BigInteger pcrNumber = snapCollection.getPcrHash().get(0).getNumber();
+				if ((intPcrIMLMask & (0x00800000 >> pcrNumber.intValue())) == 0)
+					continue;
+
 				String hashString;
 
 				MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -395,7 +402,7 @@ public class HisReportValidator {
 			}
 
 			for (PcrValue pcrValue : pcrValues) {
-				if (pcrValue.getPcrNumber().intValue() > 15)
+				if ((intPcrIMLMask & (0x00800000 >> pcrValue.getPcrNumber().intValue())) == 0)
 					continue;
 
 				boolean pcrMatch = true;
