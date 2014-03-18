@@ -1263,8 +1263,8 @@ public class StandaloneHIS
 
 			eventCount++;
 
-			/* 4 * 3 bytes are for PCR number, template name length and template data length */ 
-			lastByteIMA += 4 * 3 + templateNameSize + imageSize + PCR_SIZE + ((digestValue != null) ? PCR_SIZE : 0);
+			/* 3 * 4 bytes are for PCR number, template name length and template data length */ 
+			lastByteIMA += 3 * 4 + templateNameSize + imageSize + PCR_SIZE;
 			lastEventCount[pcrNumber] = eventCount;
 
 			if (hexString(lastPcrHash[pcrNumber]).toUpperCase().equals(getValueFromPcrNumber(pcrNumber).toUpperCase()))
