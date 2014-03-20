@@ -14,6 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 package gov.niarl.hisAppraiser.hibernate.util;
 import gov.niarl.hisAppraiser.hibernate.dao.AnalysisTypesDao;
 import gov.niarl.hisAppraiser.hibernate.dao.AttestDao;
+import gov.niarl.hisAppraiser.hibernate.dao.MLEDao;
 import gov.niarl.hisAppraiser.hibernate.dao.OSDao;
 import gov.niarl.hisAppraiser.hibernate.domain.AnalysisTypes;
 import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
@@ -21,6 +22,7 @@ import gov.niarl.hisAppraiser.hibernate.domain.AuditLog;
 import gov.niarl.hisAppraiser.hibernate.domain.PCRManifest;
 import gov.niarl.hisAppraiser.hibernate.domain.PcrWhiteList;
 import gov.niarl.hisAppraiser.hibernate.util.ResultConverter.AttestResult;
+import gov.niarl.hisAppraiser.util.HisUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -96,6 +98,46 @@ public class AttestService {
 				analysisParameters = analysis.substring(analysis.indexOf(',') + 1);
 			}
 			
+			int intParamPcrMask = -1;
+			for (String parameter : analysisParameters.split(",")) {
+				if (!parameter.startsWith("pcrs="))
+					continue;
+
+				intParamPcrMask = 0;
+
+				for (String pcr : parameter.substring("pcrs=".length()).split("\\|")) {
+					if (pcr.trim().equals(""))
+						continue;
+					try {
+						int intPcr = Integer.parseInt(pcr.trim());
+						if (intPcr < 0 || intPcr > 23)
+							throw new IllegalArgumentException("Wrong syntax: requested PCRs not in the allowed range [0-23]");
+						intParamPcrMask |= (0x00800000 >> intPcr);
+					} catch (Exception e) {
+						throw new IllegalArgumentException("Wrong syntax: requested PCRs are not integers");
+					}
+				}
+				break;
+			}
+
+			byte[] requiredPcrMask = HisUtil.unHexString(analysisType.getRequiredPcrMask());
+			int intRequiredPcrMask = (requiredPcrMask[2] & 0xFF) | ((requiredPcrMask[1] & 0xFF) << 8) | ((requiredPcrMask[0] & 0xFF) << 16);
+
+			byte[] pcrIMLMask = HisUtil.unHexString(new MLEDao().getPcrIMLMask(attestRequest.getHostName()));
+			int intPcrIMLMask = (pcrIMLMask[2] & 0xFF) | ((pcrIMLMask[1] & 0xFF) << 8) | ((pcrIMLMask[0] & 0xFF) << 16);
+
+			/*
+			 * If the request does not contain the "pcrs" parameter
+			 * the entire list of PCRs from requiredPcrMask is assumed
+			 * to be requested by the analysis.
+			 */
+			if (intParamPcrMask == -1)
+				intParamPcrMask = intRequiredPcrMask;
+			else if ((intParamPcrMask | intRequiredPcrMask) != intRequiredPcrMask)
+				throw new UnsupportedOperationException("PCRs specified as parameter are not in the set of PCRs required by the analysis");
+			if ((intParamPcrMask | intPcrIMLMask) != intPcrIMLMask)
+				throw new UnsupportedOperationException("The host does not provide the complete logs (IML) for requested PCRs");
+
 			AttestUtil.loadProp();
 			String path = System.getenv("PATH");
 			String[] env_var = { "PATH=" + path, "ANALYSIS=" + analysisType.getName() + "," + analysisParameters, "OS=" + os_name,
@@ -135,6 +177,9 @@ public class AttestService {
 			analysisResult = false;
 			analysisStatus = "OAT_ERROR";
 			analysisOutput = "";
+
+			if (e instanceof UnsupportedOperationException || e instanceof IllegalArgumentException)
+				analysisOutput = e.getMessage();
 		}
 
 		if (!analysisResult)
