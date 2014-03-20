@@ -86,6 +86,7 @@ create table MLE
    ATTESTATION_TYPE     varchar(50),
    MLE_TYPE             varchar(50),
    DESCRIPTION          varchar(100),
+   PCR_IML_MASK         varchar(50),
    primary key (ID)
 );
 

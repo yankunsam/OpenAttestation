@@ -15,6 +15,7 @@
 		<property name="Attestation_Type" column="ATTESTATION_TYPE"/>
 		<property name="MLE_Type" column="MLE_TYPE"/>
 		<property name="Description" column="DESCRIPTION"/>
+		<property name="pcrIMLMask" column="PCR_IML_MASK"></property>
 		
 	</class>
 </hibernate-mapping>
