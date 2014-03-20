@@ -89,6 +89,11 @@ public class AnalysisTypesResource {
 				throw new Exception("Spaces not allowed in field \"name\"");
 			}
 
+			if (analysisTypeBean.getRequiredPcrMask() != null &&
+			    !analysisTypeBean.getRequiredPcrMask().matches("[0-9A-Fa-f]{6}")) {
+				throw new Exception("Wrong syntax for \"requiredPcrMask\", six hexadecimal numbers expected");
+			}
+
 			String analysisName = analysisTypeBean.getName();
 			if (analysisName.equals("COMPARE_REPORT") || analysisName.equals("VALIDATE_PCR")) {
 				throw new Exception("Analysis name '" + analysisName + "' not allowed; built-in analysis.");
@@ -107,6 +112,7 @@ public class AnalysisTypesResource {
 			analysisType.setModule(analysisTypeBean.getModule());
 			analysisType.setVersion(analysisTypeBean.getVersion());
 			analysisType.setURL(analysisTypeBean.getUrl());
+			analysisType.setRequiredPcrMask((analysisTypeBean.getRequiredPcrMask() == null) ? "000000" : analysisTypeBean.getRequiredPcrMask());
 			analysisType.setDeleted(false);
 
 			dao.saveAnalysisType(analysisType);

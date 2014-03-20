@@ -47,6 +47,7 @@ public class AnalysisTypesBean {
 	private String module;
 	private Integer version;
 	private String url;
+	private String requiredPcrMask;
 	
 	public String getName() {
 		return name;
@@ -75,6 +76,13 @@ public class AnalysisTypesBean {
 	@XmlElement(name="url")
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	public String getRequiredPcrMask() {
+		return requiredPcrMask;
+	}
+	@XmlElement(name="requiredPcrMask")
+	public void setRequiredPcrMask(String requiredPcrMask) {
+		this.requiredPcrMask = requiredPcrMask;
 	}
 	
 }

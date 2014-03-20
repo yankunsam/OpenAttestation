@@ -34,6 +34,8 @@ public class AnalysisTypes {
 
 	private boolean deleted;
 
+	private String requiredPcrMask;
+
 	public AnalysisTypes() {
 	}
 
@@ -77,5 +79,12 @@ public class AnalysisTypes {
 	}
 	public boolean getDeleted() {
 		return deleted;
+	}
+
+	public void setRequiredPcrMask(String requiredPcrMask) {
+		this.requiredPcrMask = requiredPcrMask;
+	}
+	public String getRequiredPcrMask() {
+		return requiredPcrMask;
 	}
 }
