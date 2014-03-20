@@ -14,6 +14,7 @@ public class MLE {
 	private String Attestation_Type;
 	private String MLE_Type;
 	private String Description;
+	private String pcrIMLMask;
 	
 	
 	public Long getMLEID() {
@@ -84,5 +85,13 @@ public class MLE {
 		Description = description;
 	}
 
+	@XmlElement(name = "pcrIMLMask")
+	public void setPcrIMLMask(String pcrIMLMask) {
+		this.pcrIMLMask = pcrIMLMask;
+	}
+
+	public String getPcrIMLMask() {
+		return pcrIMLMask;
+	}
 
 }
