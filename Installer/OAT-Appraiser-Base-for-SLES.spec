@@ -208,6 +208,7 @@ unzip $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/AttestationService.war -d $TOMCAT
 rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/WLMService.war
 rm -f $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/AttestationService.war
 mv $TOMCAT_INSTALL_DIR/$TOMCAT_NAME/webapps/AttestationService/WEB-INF/classes/OpenAttestationWebServices.properties /etc/oat-appraiser/OpenAttestationWebServices.properties
+sed -i "s/<server.domain>/$(hostname)/g" /etc/oat-appraiser/OpenAttestationWebServices.properties
 #configuring hibernateHis for OAT appraiser setup
 cp /tmp/OAT_Server_Install/hibernateOat.cfg.xml /tmp/
 sed -i 's/<property name="connection.username">root<\/property>/<property name="connection.username">oatAppraiser<\/property>/' /tmp/hibernateOat.cfg.xml
@@ -220,6 +221,8 @@ sed -i "s/<server.domain>/$(hostname)/g" /etc/oat-appraiser/OpenAttestation.prop
 sed -i "s/^truststore_path.*$/truststore_path=\/var\/lib\/oat-appraiser\/Certificate\/TrustStore.jks/g" /etc/oat-appraiser/OpenAttestation.properties
 
 sed -i "s/^TrustStore.*$/TrustStore=\/var\/lib\/oat-appraiser\/Certificate\/TrustStore.jks/g"  /etc/oat-appraiser/OpenAttestation.properties
+
+mkdir -p /var/log/oat_ir
 #placing OAT web portal in correct folder to be seen by tomcat6
 rm -rf /%{name}/OAT
 unzip /%{name}/OAT.zip -d /%{name}/

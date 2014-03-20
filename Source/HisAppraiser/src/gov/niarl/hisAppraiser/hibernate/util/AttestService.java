@@ -14,10 +14,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 package gov.niarl.hisAppraiser.hibernate.util;
 import gov.niarl.hisAppraiser.hibernate.dao.AnalysisTypesDao;
 import gov.niarl.hisAppraiser.hibernate.dao.AttestDao;
+import gov.niarl.hisAppraiser.hibernate.dao.OSDao;
 import gov.niarl.hisAppraiser.hibernate.domain.AnalysisTypes;
 import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
 import gov.niarl.hisAppraiser.hibernate.domain.AuditLog;
-import gov.niarl.hisAppraiser.hibernate.domain.OS;
 import gov.niarl.hisAppraiser.hibernate.domain.PCRManifest;
 import gov.niarl.hisAppraiser.hibernate.domain.PcrWhiteList;
 import gov.niarl.hisAppraiser.hibernate.util.ResultConverter.AttestResult;
@@ -33,8 +33,6 @@ import javax.ws.rs.core.GenericEntity;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-
-import org.hibernate.Query;
 
 public class AttestService {
 	
@@ -74,12 +72,13 @@ public class AttestService {
 	 * @return The updated AttestRequest
 	 */
 	public static AttestRequest analysisLauncher(AttestRequest attestRequest, String analysis) {
+		OSDao osDao = new OSDao();
 		boolean analysisResult = false;
 		String analysisStatus = "ANALYSIS_COMPLETED";
 		String analysisOutput = "";
 		String analysisName = analysis.split(",")[0].trim();
 		String analysisParameters = "";
-		String os_name = findHostOS(attestRequest.getHostName());
+		String os_name = osDao.findHostOS(attestRequest.getHostName());
 		AnalysisTypesDao ATDao = new AnalysisTypesDao();
 		AnalysisTypes analysisType = ATDao.getAnalysisTypeByName(analysisName);
 
@@ -98,7 +97,8 @@ public class AttestService {
 			}
 			
 			AttestUtil.loadProp();
-			String[] env_var = { "ANALYSIS=" + analysisType.getName() + "," + analysisParameters, "OS=" + os_name,
+			String path = System.getenv("PATH");
+			String[] env_var = { "PATH=" + path, "ANALYSIS=" + analysisType.getName() + "," + analysisParameters, "OS=" + os_name,
 			                     "URL=" + AttestUtil.getDownloadIRWebServiceUrl(), "IR=" + attestRequest.getAuditLog().getId()};
 			Runtime r = Runtime.getRuntime();
 			String script_string = analysisType.getURL();
@@ -143,34 +143,6 @@ public class AttestService {
 		attestRequest = updateAnalysisResult(attestRequest, "DB:" + analysisType.getId().toString(),
 		                                     analysisResult, analysisStatus, analysisOutput);
 		return attestRequest;
-	}
-
-	/**
-	 * Obtains the OS from the host name reading
-	 * information stored on DB.
-	 * @param hostName The host name to look for
-	 * @return The OS associated with the host name received
-	 */
-	private static String findHostOS(String hostName) {
-		String os_name = null;
-		try {
-			HibernateUtilHis.beginTransaction();
-			Query query = HibernateUtilHis.getSession().createQuery("select c from OS c where ID in " + 
-				"(select a.os from MLE a where ID in (select b.mle from HOST_MLE b where HOST_ID in " + 
-				"(select h.ID from HOST h where HOST_NAME = :host_name)))");
-			query.setString("host_name", hostName);
-
-			List list = query.list();
-
-			if (list.size() > 0) {
-				os_name = ((OS)list.get(0)).getName();
-			}
-			return os_name;
-		} catch (Exception e) {
-			HibernateUtilHis.rollbackTransaction();
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
 	}
 	
 	/** 
