@@ -42,7 +42,10 @@ import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.sch
 import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.simple_object_v1_0_.SimpleObjectType;
 import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.simple_object_v1_0_.ValuesType;
 
+import gov.niarl.hisAppraiser.hibernate.dao.HisAuditDao;
 import gov.niarl.hisAppraiser.hibernate.dao.HisMachineCertDao;
+import gov.niarl.hisAppraiser.hibernate.dao.MLEDao;
+import gov.niarl.hisAppraiser.hibernate.domain.AuditLog;
 
 import gov.niarl.hisAppraiser.util.HisUtil;
 
@@ -112,6 +115,7 @@ public class HisReportValidator {
 	ArrayList<String> compareErrors = new ArrayList<String>();
 	HisReportValidator previousReportValidator;
 	boolean FIRST_IR;
+	String currentPcrIMLMask;
 
 	/**
 	 * The constructor does all the work for verifying the report and returning 
@@ -150,6 +154,7 @@ public class HisReportValidator {
 			this.FIRST_IR = true;
 			this.reportString = reportString;
 			this.machineCertificate = machineCertificate;
+			this.currentPcrIMLMask = new MLEDao().getPcrIMLMask(machineNameInput);
 			try {
 				hisReportData = new HisReportData(reportString);
 				//drop null reports
@@ -286,6 +291,14 @@ public class HisReportValidator {
 	}
 
 	/**
+	 * Returns the value of the pcrIMLMask used to validate the PCRs.
+	 * @return pcrIMLMask used to validate the PCRs
+	 */
+	String getPcrIMLMask() {
+		return currentPcrIMLMask;
+	}
+
+	/**
 	 * Reads each SnapshoCollection from the integrity report,
 	 * extends measures inside them and compare the result with
 	 * the element PcrHash and the PCR value read from the
@@ -314,6 +327,14 @@ public class HisReportValidator {
 
 			if (!FIRST_IR && previousReportValidator == null) {
 				errors.add("Report type \"continue\" but no previous report found");
+				return;
+			}
+
+			String hostName = splittedReportId[0];
+			AuditLog lastAuditLog = new HisAuditDao().getLastAuditLog(hostName);
+
+			if (!FIRST_IR && !lastAuditLog.getPcrIMLMask().equals(this.currentPcrIMLMask)) {
+				errors.add("Report type \"continue\" but pcrIMLMask is changed");
 				return;
 			}
 

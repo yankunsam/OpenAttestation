@@ -249,6 +249,7 @@ public class HisReportUtil {
 		auditLog.setReportCompareErrors(hisReportValidator.getCompareErrors());
 		auditLog.setValidationErrors(hisReportValidator.getErrors());
 		auditLog.setFirstReport((long) -1);
+		auditLog.setPcrIMLMask(hisReportValidator.getPcrIMLMask());
 
 		hisAuditDao.saveAuditLog(auditLog);
 
