@@ -56,12 +56,12 @@ bash oat_pollhosts -h his8 '{"hosts":["his8"]}'
 ^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*
 #oem
 bash oat_pcrwhitelist -a -h his8 '{"pcrName":"8","pcrDigest":"DE1343582097C9BC739C9311D60B5B5F5603A", "mleName":"NewMLE1","mleVersion":"v123", "oemName": "OEM1"}'
-bash oat_pcrwhitelist -e -h his8 '{"pcrName":"8","pcrDigest":"###########################", "mleName":"NewMLE1","mleVersion":"v123", "oemName": "OEM1"}'
+bash oat_pcrwhitelist -e -h his8 '{"pcrName":"8","pcrDigest":"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", "mleName":"NewMLE1","mleVersion":"v123", "oemName": "OEM1"}'
 bash oat_pcrwhitelist -d -h his8 '{"pcrName":"8","mleName":"NewMLE1","mleVersion":"v123","oemName":"OEM1"}'
 
 #os
 bash oat_pcrwhitelist -a -h his8 '{"pcrName":"5","pcrDigest":"DE1343582097C9BC739C9311D60B5B5F5603A","mleName":"NewMLE2","mleVersion":"v123","osName":"OS1","osVersion":"v1"}'
-bash oat_pcrwhitelist -e -h his8 '{"pcrName":"5","pcrDigest":"###########################", "mleName":"NewMLE2","mleVersion":"v123","osName":"OS1","osVersion":"v1"}'
+bash oat_pcrwhitelist -e -h his8 '{"pcrName":"5","pcrDigest":"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", "mleName":"NewMLE2","mleVersion":"v123","osName":"OS1","osVersion":"v1"}'
 bash oat_pcrwhitelist -d -h his8 '{"pcrName":"5","mleName":"NewMLE2","mleVersion":"v123","osName":"OS1","osVersion":"v1"}'
 
 ^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*
