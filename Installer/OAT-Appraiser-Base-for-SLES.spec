@@ -17,7 +17,7 @@ Group: Department of Defense
 #we use mysql for OAT Appraiser, and php is needed for the web portal
 #openjdk 1.6 is not available anymore from the latest distro
 #Requires: mysql, php5, php5-mysql, apache2, apache2-mod_php5, java-1_6_0-openjdk, openssl
-Requires: mysql, php5, php5-mysql, apache2, apache2-mod_php5,openssl
+Requires: mysql, php5, php5-mysql, apache2, apache2-mod_php5,openssl,xerces-j2
 %description OATapp
 The Host Integrity at Startup Installation 
 of the OAT Appraiser Server Base Install

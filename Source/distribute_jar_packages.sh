@@ -893,14 +893,6 @@ else
   ShowLogFaild "$JAR_SOURCE/apache-tomcat-6.0.29.tar.gz"
 fi
 
-if test -e $JAR_SOURCE/xerces-j2.jar;then
-  cp -f $JAR_SOURCE/xerces-j2.jar $OAT_SOURCE/HisPrivacyCAWebServices2/WEB-INF/lib/xerces-j2.jar
-  cp -f $JAR_SOURCE/xerces-j2.jar $OAT_SOURCE/HisWebServices/WEB-INF/lib/xerces-j2.jar
-  cp -f $JAR_SOURCE/xerces-j2.jar $OAT_SOURCE/HisClient/lib/xerces-j2.jar
-else
-  ShowLogFaild "$JAR_SOURCE/xerces-2.4.0.jar"
-fi
-
 ####### SALlib #####
 cp -f $JAR_SOURCE/hibernate3.jar  $OAT_SOURCE/HisPrivacyCAWebServices2/ClientFiles/lib/SALlib_hibernate3.jar
 cp -f $JAR_SOURCE/log4j-1.2.8.jar $OAT_SOURCE/HisPrivacyCAWebServices2/WEB-INF/lib/SALlib_log4j-1.2.8.jar
