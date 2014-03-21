@@ -9,9 +9,9 @@ INFO=""
 PORT=8443
 ShowExample()
 {
-  echo -e "Add  oem example:\033[31;49;5;1m bash oat_oem -a -h HOSTNAME_OF_OAT-APPRAISER '{"Name":"OEM_NAME","Description":"DESCRIPTION"}'\033[0m"
-  echo -e  "Edit oem example:\033[31;49;5;1m bash oat_oem -e -h HOSTNAME_OF_OAT-APPRAISER '{"Name":"OEM_NAME","Description":"DESCRIPTION"}'\033[0m"
-  echo -e "Del  oem example:\033[31;49;5;1m bash oat_oem -d -h HOSTNAME_OF_OAT-APPRAISER '{"Name":"OEM_NAME"}'\033[0m"
+  echo -e "Add  oem example:\033[31;49;5;1m bash oat_oem -a -h HOSTNAME_OF_OAT-APPRAISER '{\"Name\":\"OEM_NAME\",\"Description\":\"DESCRIPTION\"}'\033[0m"
+  echo -e  "Edit oem example:\033[31;49;5;1m bash oat_oem -e -h HOSTNAME_OF_OAT-APPRAISER '{\"Name\":\"OEM_NAME\",\"Description\":\"DESCRIPTION\"}'\033[0m"
+  echo -e "Del  oem example:\033[31;49;5;1m bash oat_oem -d -h HOSTNAME_OF_OAT-APPRAISER '{\"Name\":\"OEM_NAME\"}'\033[0m"
 }
 
 if [ $# -lt 4 ];then
