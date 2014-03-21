@@ -78,6 +78,7 @@ public class AuditLog {
 	String reportCompareErrors;
 	String validationErrors;
 	Long firstReport;
+	String pcrIMLMask;
 
 	/**
 	 * @return the id
@@ -595,6 +596,20 @@ public class AuditLog {
 	 */
 	public void setFirstReport(Long firstReport) {
 		this.firstReport = firstReport;
+	}
+
+	/**
+	 * @return the pcrIMLMask
+	 */
+	public String getPcrIMLMask() {
+		return pcrIMLMask;
+	}
+
+	/**
+	 * @param pcrIMLMask the pcrIMLMask to set
+	 */
+	public void setPcrIMLMask(String pcrIMLMask) {
+		this.pcrIMLMask = pcrIMLMask;
 	}
 
 }
