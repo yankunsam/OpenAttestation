@@ -191,6 +191,40 @@ public class MLEDAO {
 		}
 	}
 	
+	/**
+	 * Updates the field pcrIMLMask for the MLE entry
+	 * with given name an version.
+	 * @param mleName The name of the MLE to be updated
+	 * @param mleVersion The version of the MLE to be updated
+	 * @param pcrIMLMask The pcrIMLMask to be set
+	 */
+	public void editMLEPcrIMLMask(String mleName, String mleVersion, String pcrIMLMask) {
+		try {
+			HibernateUtilHis.beginTransaction();
+			Session session = HibernateUtilHis.getSession();
+			Query query = HibernateUtilHis.getSession().createQuery("from MLE m where m.Name = :name and m.Version = :version");
+			query.setString("name",mleName);
+			query.setString("version", mleVersion);
+			List list = query.list();
+
+			if (list.size() < 1) {
+				HibernateUtilHis.rollbackTransaction();
+				throw new Exception ("Object not found");
+			}
+
+			MLE mle = (MLE)list.get(0);
+			mle.setPcrIMLMask(pcrIMLMask);
+			session.update(mle);
+			HibernateUtilHis.commitTransaction();
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} finally {
+			HibernateUtilHis.closeSession();
+		}
+	}
+
 	public void editMLEDesc(String mleName, String mleVersion, String description){
 		try{
 			HibernateUtilHis.beginTransaction();

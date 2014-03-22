@@ -12,5 +12,6 @@
 		<property name="version" column="version"/>
 		<property name="URL" column="url"/>
 		<property name="deleted" type="boolean" column="deleted"/>
+		<property name="requiredPcrMask" type="string" column="required_pcr_mask"/>
 	</class>
 </hibernate-mapping>

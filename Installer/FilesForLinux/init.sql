@@ -86,6 +86,7 @@ create table MLE
    ATTESTATION_TYPE     varchar(50),
    MLE_TYPE             varchar(50),
    DESCRIPTION          varchar(100),
+   PCR_IML_MASK         varchar(50),
    primary key (ID)
 );
 
@@ -148,6 +149,7 @@ CREATE TABLE analysis_types (
 	version int NOT NULL,
 	url varchar(256) NOT NULL,
 	deleted tinyint(1) NOT NULL DEFAULT 0,
+	required_pcr_mask varchar(50) DEFAULT NULL,
 	PRIMARY KEY (id)
 );
 

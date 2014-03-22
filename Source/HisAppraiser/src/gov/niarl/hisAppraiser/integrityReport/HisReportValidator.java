@@ -42,8 +42,12 @@ import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.sch
 import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.simple_object_v1_0_.SimpleObjectType;
 import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.simple_object_v1_0_.ValuesType;
 
+import gov.niarl.hisAppraiser.hibernate.dao.HisAuditDao;
 import gov.niarl.hisAppraiser.hibernate.dao.HisMachineCertDao;
+import gov.niarl.hisAppraiser.hibernate.dao.MLEDao;
+import gov.niarl.hisAppraiser.hibernate.domain.AuditLog;
 
+import gov.niarl.hisAppraiser.Constants;
 import gov.niarl.hisAppraiser.util.HisUtil;
 
 import java.io.ByteArrayInputStream;
@@ -112,6 +116,7 @@ public class HisReportValidator {
 	ArrayList<String> compareErrors = new ArrayList<String>();
 	HisReportValidator previousReportValidator;
 	boolean FIRST_IR;
+	String currentPcrIMLMask;
 
 	/**
 	 * The constructor does all the work for verifying the report and returning 
@@ -150,6 +155,7 @@ public class HisReportValidator {
 			this.FIRST_IR = true;
 			this.reportString = reportString;
 			this.machineCertificate = machineCertificate;
+			this.currentPcrIMLMask = new MLEDao().getPcrIMLMask(machineNameInput);
 			try {
 				hisReportData = new HisReportData(reportString);
 				//drop null reports
@@ -286,6 +292,14 @@ public class HisReportValidator {
 	}
 
 	/**
+	 * Returns the value of the pcrIMLMask used to validate the PCRs.
+	 * @return pcrIMLMask used to validate the PCRs
+	 */
+	String getPcrIMLMask() {
+		return currentPcrIMLMask;
+	}
+
+	/**
 	 * Reads each SnapshoCollection from the integrity report,
 	 * extends measures inside them and compare the result with
 	 * the element PcrHash and the PCR value read from the
@@ -317,7 +331,18 @@ public class HisReportValidator {
 				return;
 			}
 
+			String hostName = splittedReportId[0];
+			AuditLog lastAuditLog = new HisAuditDao().getLastAuditLog(hostName);
+
+			if (!FIRST_IR && !lastAuditLog.getPcrIMLMask().equals(this.currentPcrIMLMask)) {
+				errors.add("Report type \"continue\" but pcrIMLMask is changed");
+				return;
+			}
+
 			List<PcrValue> pcrValues = report.getQuoteData().get(0).getQuote().getPcrComposite().getPcrValue();
+
+			byte[] pcrIMLMask = HisUtil.unHexString(this.currentPcrIMLMask);
+			int intPcrIMLMask = (pcrIMLMask[2] & 0xFF) | ((pcrIMLMask[1] & 0xFF) << 8) | ((pcrIMLMask[0] & 0xFF) << 16);
 
 			for (SnapshotType snapCollection : report.getSnapshotCollection()) {
 				List<ValueType> values = snapCollection.getValues();
@@ -326,6 +351,9 @@ public class HisReportValidator {
 				DigestValueType hash;
 
 				BigInteger pcrNumber = snapCollection.getPcrHash().get(0).getNumber();
+				if ((intPcrIMLMask & (0x00800000 >> pcrNumber.intValue())) == 0)
+					continue;
+
 				String hashString;
 
 				MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -374,7 +402,7 @@ public class HisReportValidator {
 			}
 
 			for (PcrValue pcrValue : pcrValues) {
-				if (pcrValue.getPcrNumber().intValue() > 15)
+				if ((intPcrIMLMask & (0x00800000 >> pcrValue.getPcrNumber().intValue())) == 0)
 					continue;
 
 				boolean pcrMatch = true;

@@ -2,7 +2,7 @@
  * (copyright) 2012 United States Government, as represented by the 
  * Secretary of Defense.  All rights reserved.
  * 
- * Copyright (C) 2013 Politecnico di Torino, Italy
+ * Copyright (C) 2014 Politecnico di Torino, Italy
  *                    TORSEC group -- http://security.polito.it
  * 
  * Redistribution and use in source and binary forms, with or without 
@@ -33,56 +33,45 @@
  * WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE. 
  */
-package com.intel.openAttestation.manifest.bean;
+
+package gov.niarl.hisAppraiser.hibernate.dao;
+
+import gov.niarl.hisAppraiser.hibernate.domain.MLE;
+import gov.niarl.hisAppraiser.hibernate.util.HibernateUtilHis;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import org.hibernate.Query;
 
-@XmlRootElement
-public class AnalysisTypesBean {
+public class MLEDao {
+	public MLEDao() {
+	}
 
-	private String name;
-	private String module;
-	private Integer version;
-	private String url;
-	private String requiredPcrMask;
-	
-	public String getName() {
-		return name;
+	/**
+	 * Obtains the pcrIMLMask from the host name reading
+	 * information stored on DB.
+	 * @param hostName The host name to look for
+	 * @return The validationMask associated with the host name received
+	 */
+	public String getPcrIMLMask(String hostName) {
+		String pcrLogMask = null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("select a from MLE a where ID in " + 
+			    "(select b.mle from HOST_MLE b where HOST_ID in " + 
+			    "(select h.ID from HOST h where HOST_NAME = :host_name))");
+			query.setString("host_name", hostName);
+
+			List list = query.list();
+
+			if (list.size() > 0) {
+				pcrLogMask = ((MLE)list.get(0)).getPcrIMLMask();
+			}
+			return pcrLogMask;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
-	@XmlElement(name="name")
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getModule() {
-		return module;
-	}
-	@XmlElement(name="module")
-	public void setModule(String module) {
-		this.module = module;
-	}
-	public Integer getVersion() {
-		return version;
-	}
-	@XmlElement(name="version")
-	public void setVersion(Integer version) {
-		this.version = version;
-	}
-	public String getUrl() {
-		return url;
-	}
-	@XmlElement(name="url")
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	public String getRequiredPcrMask() {
-		return requiredPcrMask;
-	}
-	@XmlElement(name="requiredPcrMask")
-	public void setRequiredPcrMask(String requiredPcrMask) {
-		this.requiredPcrMask = requiredPcrMask;
-	}
-	
 }

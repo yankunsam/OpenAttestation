@@ -1305,10 +1305,13 @@ public class StandaloneHIS
 		for (int i=0; i<PCR_MAX_NUM; i++)
 			pcrValueReached[i] = false;
 
-		FileInputStream tpmFileStream = new FileInputStream("/sys/kernel/security/tpm0/binary_bios_measurements");
-
-		if (tpmFileStream == null)
-			throw new Exception("Can't read file \"/sys/kernel/security/tpm0/binary_bios_measurements\"");
+		FileInputStream tpmFileStream = null;
+		try {
+			tpmFileStream = new FileInputStream("/sys/kernel/security/tpm0/binary_bios_measurements");
+		} catch (Exception e) {
+			System.out.println("Can't read file \"/sys/kernel/security/tpm0/binary_bios_measurements\"");
+			return;
+		}
 
 		tpmFileStream.skip(lastByteBIOS);
 		while (tpmFileStream.read(tmpBytes, 0, 4) == 4) {

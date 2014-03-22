@@ -18,6 +18,7 @@ public class MLEBean {
 	private String MLE_Type;
 	private String Description;
 	private List<MLE_Manifest> MLE_Manifests;
+	private String pcrIMLMask;
 	
 	public String getName() {
 		return Name;
@@ -101,4 +102,12 @@ public class MLEBean {
 		MLE_Manifests = mLE_Manifests;
 	}
 	
+	public String getPcrIMLMask() {
+		return pcrIMLMask;
+	}
+
+	@XmlElement(name="pcrIMLMask")
+	public void setPcrIMLMask(String pcrIMLMask) {
+		this.pcrIMLMask = pcrIMLMask;
+	}
 }

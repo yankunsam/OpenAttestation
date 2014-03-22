@@ -47,6 +47,7 @@ CREATE TABLE audit_log (
 	nonce varchar(100),
 	signature_verified tinyint NOT NULL DEFAULT 0,
 	first_report int NOT NULL DEFAULT -1,
+	pcr_iml_mask varchar(50),
   PRIMARY KEY (id)
 );
 CREATE TABLE machine_cert (

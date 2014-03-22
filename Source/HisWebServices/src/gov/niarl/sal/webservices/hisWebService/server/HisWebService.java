@@ -34,6 +34,7 @@ package gov.niarl.sal.webservices.hisWebService.server;
 
 import gov.niarl.hisAppraiser.Constants;
 import gov.niarl.hisAppraiser.hibernate.dao.HisAuditDao;
+import gov.niarl.hisAppraiser.hibernate.dao.MLEDao;
 import gov.niarl.hisAppraiser.hibernate.domain.AuditLog;
 import gov.niarl.hisAppraiser.hibernate.util.HibernateUtilHis;
 import gov.niarl.hisAppraiser.integrityReport.HisReportUtil;
@@ -91,8 +92,10 @@ public class HisWebService {
 		nonceSelect.setSelect(HisUtil.unHexString(Constants.PCR_SELECT));
 		nonceSelect.setQuote(NonceSelect.Quote.QUOTE1);
 
+		String currentIMLMask = new MLEDao().getPcrIMLMask(machineName);
 		nonceSelect.setReportType("start");
-		if (Constants.SCALABILITY && lastAuditLog != null && lastAuditLog.getReport() != null && !lastAuditLog.getFirstReport().equals((long) -1)) {
+		if (Constants.SCALABILITY && lastAuditLog != null && lastAuditLog.getReport() != null
+		    && !lastAuditLog.getFirstReport().equals((long) -1) && lastAuditLog.getPcrIMLMask().equals(currentIMLMask)) {
 			nonceSelect.setReportType("continue");
 		}
 		return nonceSelect;
