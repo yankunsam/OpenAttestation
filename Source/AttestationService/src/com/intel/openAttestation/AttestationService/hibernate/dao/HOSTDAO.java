@@ -427,7 +427,7 @@ public class HOSTDAO {
 		try {
 			HibernateUtilHis.beginTransaction();
 			Session session = HibernateUtilHis.getSession();
-			Query query = HibernateUtilHis.getSession().createQuery("from HOST h where a.hostName = :hostName");
+			Query query = HibernateUtilHis.getSession().createQuery("from HOST h where h.hostName = :hostName");
 			query.setString("hostName", hostName);
 			List list = query.list();
 

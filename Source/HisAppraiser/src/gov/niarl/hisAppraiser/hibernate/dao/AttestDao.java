@@ -247,7 +247,7 @@ public class AttestDao {
 		String pcrLogMask = null;
 		try {
 			HibernateUtilHis.beginTransaction();
-			Query query = HibernateUtilHis.getSession().createQuery("select h from HOST h where a.hostName = :hostName");
+			Query query = HibernateUtilHis.getSession().createQuery("select h from HOST h where h.hostName = :hostName");
 			query.setString("hostName", hostName);
 			
 			List list = query.list();
