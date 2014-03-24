@@ -381,8 +381,7 @@ public class HOSTResource {
 			host.setHostName(hostFullObj.getHostName());
 			host.setIPAddress(hostFullObj.getIPAddress());
 			host.setPort(hostFullObj.getPort());
-			if (hostFullObj.getPcrIMLMask() != null)
-				dao.editMLEPcrIMLMask(hostFullObj.getHostName());
+			host.setPcrIMLMask(hostFullObj.getPcrIMLMask());
 			
 			dao.updatehostEntry(host);
 			return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True").build();

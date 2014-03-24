@@ -77,6 +77,9 @@ public class HOSTDAO {
 			hostOld.setEmail(host.getEmail());
 			hostOld.setIPAddress(host.getIPAddress());
 			hostOld.setPort(host.getPort());
+			if ( host.getPcrIMLMask() != null )
+				hostOld.setPcrIMLMask(host.getPcrIMLMask());
+			session.update(hostOld);
 			HibernateUtilHis.commitTransaction();
 			return host;
 		} catch (Exception e) {
@@ -415,37 +418,4 @@ public class HOSTDAO {
 			throw new RuntimeException(e);
 		}
 	}
-
-	/**
-	 * Updates the field pcrIMLMask for the MLE entry
-	 * with given name an version.
-	 * @param mleName The name of the MLE to be updated
-	 * @param mleVersion The version of the MLE to be updated
-	 * @param pcrIMLMask The pcrIMLMask to be set
-	 */
-	public void editMLEPcrIMLMask(String hostName) {
-		try {
-			HibernateUtilHis.beginTransaction();
-			Session session = HibernateUtilHis.getSession();
-			Query query = HibernateUtilHis.getSession().createQuery("from HOST h where h.hostName = :hostName");
-			query.setString("hostName", hostName);
-			List list = query.list();
-
-			if (list.size() < 1) {
-				HibernateUtilHis.rollbackTransaction();
-				throw new Exception ("Object not found");
-			}
-
-			HOST host = (HOST)list.get(0);
-			session.update(host);
-			HibernateUtilHis.commitTransaction();
-		} catch (Exception e) {
-			HibernateUtilHis.rollbackTransaction();
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		} finally {
-			HibernateUtilHis.closeSession();
-		}
-	}
-
 }
