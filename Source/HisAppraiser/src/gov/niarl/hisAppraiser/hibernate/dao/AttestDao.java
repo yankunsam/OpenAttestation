@@ -22,6 +22,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 
+
+
 import gov.niarl.hisAppraiser.Constants;
 import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
 import gov.niarl.hisAppraiser.hibernate.domain.MLE;
@@ -31,6 +33,7 @@ import gov.niarl.hisAppraiser.hibernate.domain.PcrWhiteList;
 import gov.niarl.hisAppraiser.hibernate.util.AttestUtil;
 import gov.niarl.hisAppraiser.hibernate.util.HibernateUtilHis;
 import gov.niarl.hisAppraiser.hibernate.util.ResultConverter;
+import gov.niarl.hisAppraiser.hibernate.domain.HOST;
 
 public class AttestDao {
 	
@@ -232,5 +235,31 @@ public class AttestDao {
 		}
 		
 		return pcrs;
+	}
+	
+	/**
+	 * Obtains the pcrIMLMask from the host name reading
+	 * information stored on DB.
+	 * @param hostName The host name to look for
+	 * @return The validationMask associated with the host name received
+	 */
+	public String getPcrIMLMask(String hostName) {
+		String pcrLogMask = null;
+		try {
+			HibernateUtilHis.beginTransaction();
+			Query query = HibernateUtilHis.getSession().createQuery("select h from HOST h where a.hostName = :hostName");
+			query.setString("hostName", hostName);
+			
+			List list = query.list();
+
+			if (list.size() > 0) {
+				pcrLogMask = ((HOST)list.get(0)).getPcrIMLMask();
+			}
+			return pcrLogMask;
+		} catch (Exception e) {
+			HibernateUtilHis.rollbackTransaction();
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 }

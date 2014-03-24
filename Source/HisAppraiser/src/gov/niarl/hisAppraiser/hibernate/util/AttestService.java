@@ -14,7 +14,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 package gov.niarl.hisAppraiser.hibernate.util;
 import gov.niarl.hisAppraiser.hibernate.dao.AnalysisTypesDao;
 import gov.niarl.hisAppraiser.hibernate.dao.AttestDao;
-import gov.niarl.hisAppraiser.hibernate.dao.MLEDao;
 import gov.niarl.hisAppraiser.hibernate.dao.OSDao;
 import gov.niarl.hisAppraiser.hibernate.domain.AnalysisTypes;
 import gov.niarl.hisAppraiser.hibernate.domain.AttestRequest;
@@ -31,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
 import javax.ws.rs.core.GenericEntity;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -123,7 +123,7 @@ public class AttestService {
 			byte[] requiredPcrMask = HisUtil.unHexString(analysisType.getRequiredPcrMask());
 			int intRequiredPcrMask = (requiredPcrMask[2] & 0xFF) | ((requiredPcrMask[1] & 0xFF) << 8) | ((requiredPcrMask[0] & 0xFF) << 16);
 
-			byte[] pcrIMLMask = HisUtil.unHexString(new MLEDao().getPcrIMLMask(attestRequest.getHostName()));
+			byte[] pcrIMLMask = HisUtil.unHexString(new AttestDao().getPcrIMLMask(attestRequest.getHostName()));
 			int intPcrIMLMask = (pcrIMLMask[2] & 0xFF) | ((pcrIMLMask[1] & 0xFF) << 8) | ((pcrIMLMask[0] & 0xFF) << 16);
 
 			/*

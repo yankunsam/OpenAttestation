@@ -141,8 +141,14 @@ public class HOSTResource {
 			}
 				
 			if (hostFullObj.getDescription() != null){
-                                parameters.put(hostFullObj.getDescription(), 100);
-                        }
+                parameters.put(hostFullObj.getDescription(), 100);
+            }
+			if (hostFullObj.getPcrIMLMask() != null){
+				if (hostFullObj.getPcrIMLMask().matches("[0-9A-Fa-f]{6}"))
+					parameters.put(hostFullObj.getPcrIMLMask(), 50);
+				else
+					isValidKey = false;
+			}
 
 			if (!isValidKey || hostFullObj.getHostName().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
@@ -153,8 +159,6 @@ public class HOSTResource {
 				return Response.status(status).header("Location", b.build()).entity(fault)
 						.build();
 			}
-			
-
 			
 			//Check if the HOST Name exists
 			if (dao.isHOSTExisted(hostFullObj.getHostName())){
@@ -211,6 +215,7 @@ public class HOSTResource {
 			host.setHostName(hostFullObj.getHostName());
 			host.setIPAddress(hostFullObj.getIPAddress());
 			host.setPort(hostFullObj.getPort());
+			host.setPcrIMLMask((hostFullObj.getPcrIMLMask() == null) ? "000000" : hostFullObj.getPcrIMLMask());
 			
 			dao.addHOSTEntry(host);
 			
@@ -298,8 +303,14 @@ public class HOSTResource {
 			}
 			
 			if (hostFullObj.getDescription() != null){
-                                parameters.put(hostFullObj.getDescription(), 100);
-                        }
+                parameters.put(hostFullObj.getDescription(), 100);
+            }
+			if (hostFullObj.getPcrIMLMask() != null){
+				if (hostFullObj.getPcrIMLMask().matches("[0-9A-Fa-f]{6}"))
+					parameters.put(hostFullObj.getPcrIMLMask(), 50);
+				else
+					isValidKey = false;
+			}
 
 			if (!isValidKey || hostFullObj.getHostName().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
@@ -370,6 +381,8 @@ public class HOSTResource {
 			host.setHostName(hostFullObj.getHostName());
 			host.setIPAddress(hostFullObj.getIPAddress());
 			host.setPort(hostFullObj.getPort());
+			if (hostFullObj.getPcrIMLMask() != null)
+				dao.editMLEPcrIMLMask(hostFullObj.getHostName());
 			
 			dao.updatehostEntry(host);
 			return Response.status(status).header("Location", b.build()).type(MediaType.TEXT_PLAIN).entity("True").build();

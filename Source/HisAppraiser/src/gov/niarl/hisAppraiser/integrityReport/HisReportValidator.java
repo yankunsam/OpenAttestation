@@ -41,12 +41,10 @@ import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.sch
 import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.integrity_Report_v1_0.SnapshotType;
 import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.simple_object_v1_0_.SimpleObjectType;
 import gov.niarl.his.xsd.integrity_Report_v1_0.org.trustedcomputinggroup.xml.schema.simple_object_v1_0_.ValuesType;
-
+import gov.niarl.hisAppraiser.hibernate.dao.AttestDao;
 import gov.niarl.hisAppraiser.hibernate.dao.HisAuditDao;
 import gov.niarl.hisAppraiser.hibernate.dao.HisMachineCertDao;
-import gov.niarl.hisAppraiser.hibernate.dao.MLEDao;
 import gov.niarl.hisAppraiser.hibernate.domain.AuditLog;
-
 import gov.niarl.hisAppraiser.Constants;
 import gov.niarl.hisAppraiser.util.HisUtil;
 
@@ -155,7 +153,7 @@ public class HisReportValidator {
 			this.FIRST_IR = true;
 			this.reportString = reportString;
 			this.machineCertificate = machineCertificate;
-			this.currentPcrIMLMask = new MLEDao().getPcrIMLMask(machineNameInput);
+			this.currentPcrIMLMask = new AttestDao().getPcrIMLMask(machineNameInput);
 			try {
 				hisReportData = new HisReportData(reportString);
 				//drop null reports

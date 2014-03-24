@@ -13,6 +13,7 @@ public class HOST {
 	private String Email;
 	private String AddOn_Connection_String;
 	private String Description;
+	private String pcrIMLMask;
 	public Long getID() {
 		return ID;
 	}
@@ -66,5 +67,13 @@ public class HOST {
 	@XmlElement(name = "Description")
 	public void setDescription(String description) {
 		Description = description;
+	}
+	public String getPcrIMLMask() {
+		return pcrIMLMask;
+	}
+
+	@XmlElement(name="pcrIMLMask")
+	public void setPcrIMLMask(String pcrIMLMask) {
+		this.pcrIMLMask = pcrIMLMask;
 	}
 }

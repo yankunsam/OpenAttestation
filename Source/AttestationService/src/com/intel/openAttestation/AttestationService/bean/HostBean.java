@@ -33,6 +33,7 @@ public class HostBean {
 	private String VMMOSName;
 	private String VMMOSVersion;
 	private String Location;
+	private String pcrIMLMask;
 	
 	
 	public Long getID() {
@@ -156,5 +157,12 @@ public class HostBean {
 		Location = location;
 	}
 
-	
+	public String getPcrIMLMask() {
+		return pcrIMLMask;
+	}
+
+	@XmlElement(name="pcrIMLMask")
+	public void setPcrIMLMask(String pcrIMLMask) {
+		this.pcrIMLMask = pcrIMLMask;
+	}
 }

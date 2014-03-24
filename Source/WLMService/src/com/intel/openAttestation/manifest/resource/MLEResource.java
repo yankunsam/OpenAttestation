@@ -100,13 +100,6 @@ public class MLEResource {
 			if (mleBean.getDescription() != null){
 				parameters.put(mleBean.getDescription(), 100);
 			}
-
-			if (mleBean.getPcrIMLMask() != null) {
-				if (mleBean.getPcrIMLMask().matches("[0-9A-Fa-f]{6}"))
-					parameters.put(mleBean.getPcrIMLMask(), 50);
-				else
-					isValidKey = false;
-			}
 			
 			if (mleBean.getMLE_Manifests() != null){
 				List<MLE_Manifest> pcrList = mleBean.getMLE_Manifests();
@@ -122,7 +115,6 @@ public class MLEResource {
 					}
 					parameters.put(list.getValue(), 100);
 				}
-				
 			}
 			
 			parameters.put(mleBean.getDescription(), 100);
@@ -185,7 +177,6 @@ public class MLEResource {
 		    mle.setAttestation_Type(mleBean.getAttestation_Type());
 		    mle.setDescription(mleBean.getDescription());
 		    mle.setMLE_Type(mleBean.getMLE_Type());
-		    mle.setPcrIMLMask((mleBean.getPcrIMLMask() == null) ? "000000" : mleBean.getPcrIMLMask());
 			dao.addMLEEntry(mle);
 			if (mleBean.getMLE_Manifests()!=null){
 				for(MLE_Manifest mle_manifest:mleBean.getMLE_Manifests()){
@@ -243,13 +234,6 @@ public class MLEResource {
 				parameters.put(mleBean.getDescription(), 100);
 			}
 
-			if (mleBean.getPcrIMLMask() != null) {
-				if (mleBean.getPcrIMLMask().matches("[0-9A-Fa-f]{6}"))
-					parameters.put(mleBean.getPcrIMLMask(), 50);
-				else
-					isValidKey = false;
-			}
-
 			if (!isValidKey || mleBean.getVersion().length() < 1 ||  mleBean.getName().length() < 1 || !HisUtil.validParas(parameters)){
 				status = Response.Status.INTERNAL_SERVER_ERROR;
 				OpenAttestationResponseFault fault = new OpenAttestationResponseFault(
@@ -269,8 +253,6 @@ public class MLEResource {
 								.build();
 	        	}
 				MLE mle = mleDao.getMLE(mleBean.getName(),mleBean.getVersion());
-				if (mleBean.getPcrIMLMask() != null)
-					mleDao.editMLEPcrIMLMask(mleBean.getName(), mleBean.getVersion(), mleBean.getPcrIMLMask());
 				if(mleBean.getDescription()!=null)    //update description
 					mleDao.editMLEDesc(mleBean.getName(),mleBean.getVersion(), mleBean.getDescription());
 				if (mleBean.getMLE_Manifests()!=null){  //update whitelist
@@ -422,7 +404,6 @@ public class MLEResource {
 			    	}
 			    	mleBean.setMLE_Manifests(mleManifest);
 					mleBean.setMLE_Type(mle.getMLE_Type());
-			    	mleBean.setPcrIMLMask(mle.getPcrIMLMask());
 			    	mleBeanList.add(mleBean);
 				}		
 			}
