@@ -172,36 +172,38 @@ public class AttestService {
 			}
 
 			String[] analysisList = {"VALIDATE_PCR", "COMPARE_REPORT"};
-			if (attest.getAnalysisRequest() != null)
-				analysisList = attest.getAnalysisRequest().split(";");
-
-			String analysisResults = attest.getAnalysisResults();
-			List<AnalysisDetails> detailsList = null;
-
-			if (analysisResults != null && !analysisResults.equals("")) {
-				detailsList = new ArrayList<AnalysisDetails>();
-				int analysisCounter = 0;
-				while (analysisResults.length() > 0) {
-					String[] analysisElements = analysisResults.split("\\|", 5);
-					AnalysisDetails detail = new AnalysisDetails();
-
-					int outputLength = Integer.parseInt(analysisElements[3]);
-					int tmpLength = 0;
-					for (int i = 0; i < 4; i++)
-						tmpLength += analysisElements[i].length() + 1;
-
-					detail.setName(analysisList[analysisCounter].split(",")[0]);
-					detail.setResult(analysisElements[1]);
-					detail.setStatus(analysisElements[2]);
-					detail.setOutput(analysisResults.substring(tmpLength, tmpLength + outputLength));
-					detailsList.add(detail);
-
-					analysisResults = analysisResults.substring(tmpLength + outputLength + 1);
-					analysisCounter++;
+			String analysisRequest = attest.getAnalysisRequest();
+			if (analysisRequest != null) {
+				analysisList = analysisRequest.split(";");
+	
+				String analysisResults = attest.getAnalysisResults();
+				List<AnalysisDetails> detailsList = null;
+	
+				if (analysisResults != null && !analysisResults.equals("")) {
+					detailsList = new ArrayList<AnalysisDetails>();
+					int analysisCounter = 0;
+					while (analysisResults.length() > 0) {
+						String[] analysisElements = analysisResults.split("\\|", 5);
+						AnalysisDetails detail = new AnalysisDetails();
+	
+						int outputLength = Integer.parseInt(analysisElements[3]);
+						int tmpLength = 0;
+						for (int i = 0; i < 4; i++)
+							tmpLength += analysisElements[i].length() + 1;
+	
+						detail.setName(analysisList[analysisCounter].split(",")[0]);
+						detail.setResult(analysisElements[1]);
+						detail.setStatus(analysisElements[2]);
+						detail.setOutput(analysisResults.substring(tmpLength, tmpLength + outputLength));
+						detailsList.add(detail);
+	
+						analysisResults = analysisResults.substring(tmpLength + outputLength + 1);
+						analysisCounter++;
+					}
 				}
+	
+				host.setAnalysis_details(detailsList);
 			}
-
-			host.setAnalysis_details(detailsList);
 			hosts.add(host);
 		}
 		resp.setHosts(hosts);
