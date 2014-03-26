@@ -158,22 +158,22 @@ public class AttestService {
 			}
 			host.setVtime(attest.getValidateTime());
 
-			if (attest.getAuditLog() != null) {
-				AttestUtil.loadProp();
-				host.setUrl("http://" + AttestUtil.getPortalAddress() + "/OAT/report.php?id=" + attest.getAuditLog().getId());
-			}
-			host.setReport_is_valid(false);
-
-			if (attest.getAuditLog() != null) {
-				AuditLog auditlog = dao.getAuditLogById(attest.getAuditLog().getId());
-				if (auditlog.getValidationErrors() == null) {
-					host.setReport_is_valid(true);
-				}
-			}
-
 			String[] analysisList = {"VALIDATE_PCR", "COMPARE_REPORT"};
 			String analysisRequest = attest.getAnalysisRequest();
 			if (analysisRequest != null) {
+				if (attest.getAuditLog() != null) {
+					AttestUtil.loadProp();
+					host.setUrl("http://" + AttestUtil.getPortalAddress() + "/OAT/report.php?id=" + attest.getAuditLog().getId());
+				}
+				host.setReport_is_valid(false);
+	
+				if (attest.getAuditLog() != null) {
+					AuditLog auditlog = dao.getAuditLogById(attest.getAuditLog().getId());
+					if (auditlog.getValidationErrors() == null) {
+						host.setReport_is_valid(true);
+					}
+				}
+	
 				analysisList = analysisRequest.split(";");
 	
 				String analysisResults = attest.getAnalysisResults();
