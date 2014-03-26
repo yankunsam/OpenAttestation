@@ -108,14 +108,15 @@ public class AttestService {
 				for (String pcr : parameter.substring("pcrs=".length()).split("\\|")) {
 					if (pcr.trim().equals(""))
 						continue;
+					int intPcr;
 					try {
-						int intPcr = Integer.parseInt(pcr.trim());
-						if (intPcr < 0 || intPcr > 23)
-							throw new IllegalArgumentException("Wrong syntax: requested PCRs not in the allowed range [0-23]");
-						intParamPcrMask |= (0x00800000 >> intPcr);
+						intPcr = Integer.parseInt(pcr.trim());
 					} catch (Exception e) {
 						throw new IllegalArgumentException("Wrong syntax: requested PCRs are not integers");
 					}
+					if (intPcr < 0 || intPcr > 23)
+						throw new IllegalArgumentException("Wrong syntax: requested PCRs not in the allowed range [0-23]");
+					intParamPcrMask |= (0x00800000 >> intPcr);
 				}
 				break;
 			}

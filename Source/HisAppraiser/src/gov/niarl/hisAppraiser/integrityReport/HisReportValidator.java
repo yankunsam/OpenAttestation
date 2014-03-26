@@ -134,6 +134,16 @@ public class HisReportValidator {
 	 */
 	public HisReportValidator(String reportString, byte[] nonceInput, byte[] pcrSelectInput, String machineNameInput, X509Certificate machineCertificate, String previousReportString) {
 		try {
+			boolean DO_VALIDATION = true;
+
+			/*
+			 * If all parameters except reportString are null,
+			 * HisReportValidator is used only to parse the
+			 * report, then the validation of measurements is
+			 * not required.
+			 */
+			if (nonceInput == null && pcrSelectInput == null && machineNameInput == null && machineCertificate == null && previousReportString == null)
+				DO_VALIDATION = false;
 			// replace nulls for null pointer exceptions
 			if (nonceInput == null) {
 				nonceInput = new byte[1];
@@ -267,7 +277,8 @@ public class HisReportValidator {
 				logger.info("HisReportParser: No previous report for comparison. Report ID:" + hisReportData.getReportID());
 			}
 
-			validateMeasurements(reportString);
+			if (DO_VALIDATION)
+				validateMeasurements(reportString);
 		} catch (HisReportException hisReportException) {
 			logger.fatal(hisReportException, hisReportException);
 			throw hisReportException;
