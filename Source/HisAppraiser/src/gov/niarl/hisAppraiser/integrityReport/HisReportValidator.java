@@ -164,6 +164,7 @@ public class HisReportValidator {
 			this.reportString = reportString;
 			this.machineCertificate = machineCertificate;
 			this.currentPcrIMLMask = new AttestDao().getPcrIMLMask(machineNameInput);
+			this.currentPcrIMLMask = this.currentPcrIMLMask==null?"000000":this.currentPcrIMLMask;
 			try {
 				hisReportData = new HisReportData(reportString);
 				//drop null reports
