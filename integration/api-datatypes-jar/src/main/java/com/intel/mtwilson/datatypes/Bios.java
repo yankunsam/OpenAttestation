@@ -25,7 +25,8 @@ public class Bios {
 
     private String name = null;
     private String version = null;
-
+    private String oem = null;
+    
     public String getOem() {
         return oem;
     }
@@ -36,7 +37,7 @@ public class Bios {
         }
         this.oem = value;
     }
-    private String oem = null;
+
 
     public Bios(String name, String version, String oemName) {
         setName(name);
@@ -67,6 +68,6 @@ public class Bios {
     }
 
     public String toString() {
-        return String.format("%s:%s", name, version);
+        return String.format("%s:%s:%s", name, version, oem);
     }
 }
