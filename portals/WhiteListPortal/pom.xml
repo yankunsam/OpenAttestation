@@ -48,12 +48,12 @@
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-jaxrs</artifactId>
-            <version>1.8.3</version>
+            <version>1.9.11</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
-            <version>1.8.3</version>
+            <version>1.9.11</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -73,9 +73,9 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>3.1.1.RELEASE</version> <!-- was 2.5.6 -->
+            <version>2.5.6</version> <!-- was 2.5.6 -->
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <version>3.1.1.RELEASE</version>
@@ -84,12 +84,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>3.1.1.RELEASE</version>
-        </dependency>
-        <dependency>
+        </dependency-->
+        <!--dependency>
             <groupId>com.google.collections</groupId>
             <artifactId>google-collections</artifactId>
             <version>1.0</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>com.intel.mtwilson.core.integration</groupId>
             <artifactId>api-datatypes</artifactId>
@@ -103,7 +103,7 @@
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.8.3</version>
+            <version>1.9.11</version>
             <type>jar</type>
         </dependency>
         <dependency>

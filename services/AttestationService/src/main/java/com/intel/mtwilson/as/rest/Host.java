@@ -35,7 +35,7 @@ import com.intel.mtwilson.datatypes.ErrorCode;
 import com.intel.mtwilson.datatypes.*;
 //import javax.annotation.security.RolesAllowed;
 import java.util.List;
-import org.codehaus.enunciate.jaxrs.TypeHint;
+//import org.codehaus.enunciate.jaxrs.TypeHint;
 
 /**
  * REST Web Service

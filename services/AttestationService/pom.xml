@@ -119,11 +119,11 @@
 			<artifactId>api-datatypes</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
+		<!--dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jackson-provider</artifactId>
 			<version>2.0-RC1</version>
-		</dependency>
+		</dependency-->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-jaxrs</artifactId>
@@ -191,9 +191,9 @@
 			<version>1.6</version>
 		</dependency>
 		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.6</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -300,11 +300,11 @@
 			<version>1.4.01</version>
 			<type>jar</type>
 		</dependency>
-		<dependency>
+		<!--dependency>
 			<groupId>org.codehaus.enunciate</groupId>
 			<artifactId>enunciate-rt</artifactId>
 			<version>1.26</version>
-		</dependency>
+		</dependency-->
 
 		<dependency>
 			<groupId>com.intel.mtwilson.core.database</groupId>
