@@ -49,8 +49,12 @@ public class TextConsoleTest {
         } catch (Exception e){
             System.out.println("error message " + e.toString()); 
         } finally {
-            fos.close();
-            bis.close();
+            try {
+            	fos.close();
+            	bis.close();
+	    } catch(IOException e){
+		System.out.println("error message " + e.toString());
+		}
         }
     }
 }
