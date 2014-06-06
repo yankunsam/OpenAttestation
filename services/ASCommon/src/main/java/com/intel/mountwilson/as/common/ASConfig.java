@@ -100,5 +100,9 @@ public class ASConfig extends ConfigBase{
         // Return timeout in milliseconds
         return getConfiguration().getInt("com.intel.mtwilson.as.business.trust.sleepTime", 2) * 1000;
     }
+    
+    public static ASConfig getInstance(){
+        return ASConfig.global;
+    }
 
 }
