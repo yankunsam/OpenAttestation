@@ -2,6 +2,7 @@
 #undeploy OpenAttestation 2.x
 
 mysql_password="______ MySQL PASSWD ______"
+
 conf_dir=${conf_dir:-/etc/intel/cloudsecurity}
 tomcat_dir=${tomcat_dir:-/var/lib/tomcat6}
 oat_home_dir=${oat_home_dir:-$HOME/.oat}
