@@ -1,15 +1,17 @@
-##parase config to get param value
+#!/bin/bash
+#deploy OpenAttestation 2.x
 
 ### configuration ###
-oat_server_ip="10.239.131.175"
-mysql_password="abc123"
+oat_server_ip="___ IP ___"
+mysql_password="______ MySQL PASSWD ______"
 saml_password="samlpasswd2"
 portal_password="portalpasswd2"
 p12_password="p12passwd2"
-
+java_home="/usr/lib/jvm/java-7-openjdk-amd64/"
 ###########
+
 TOP_DIR=$(cd .. && pwd)
-export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
+export JAVA_HOME=$java_home
 
 conf_dir=${conf_dir:-/etc/intel/cloudsecurity}
 [ -d $conf_dir ] && rm -rf $csonf_dir
@@ -28,7 +30,7 @@ $TOP_DIR/database/mysql/src/main/resources/com/intel/mtwilson/database/mysql/mtw
 cd $conf_dir
 mtwilson_properties()
 {
-   cat <<'EOF' > "$conf_dir/mtwilson.properties"
+    cat <<'EOF' > "$conf_dir/mtwilson.properties"
 mtwilson.api.baseurl=https://OATAPPR_IP:8181
 mtwilson.api.ssl.policy=TRUST_FIRST_CERTIFICATE
 mtwilson.db.driver=com.mysql.jdbc.Driver
@@ -40,7 +42,7 @@ EOF
 
 trust_properties()
 {
-   cat <<'EOF' > "$conf_dir/trust-dashboard.properties"
+    cat <<'EOF' > "$conf_dir/trust-dashboard.properties"
 mtwilson.tdbpkeystore.dir=/etc/intel/cloudsecurity
 mtwilson.tdbp.keystore.password=PORTAL_PASSWD
 imagesRootPath= images/
@@ -60,7 +62,7 @@ EOF
 
 whitelist_properties()
 {
-   cat <<'EOF' > "$conf_dir/whitelist-portal.properties"
+    cat <<'EOF' > "$conf_dir/whitelist-portal.properties"
 mtwilson.wlmp.keystore.dir=/etc/intel/cloudsecurity
 mtwilson.wlmp.keystore.password=PORTAL_PASSWD
 mtwilson.wlmp.openSourceHypervisors=KVM;Xen
@@ -72,7 +74,7 @@ EOF
 
 attestation_properties()
 {
-   cat <<'EOF' > "$conf_dir/attestation-service.properties"
+    cat <<'EOF' > "$conf_dir/attestation-service.properties"
 com.intel.mountwilson.as.trustagent.timeout=3
 com.intel.mountwilson.as.attestation.hostTimeout=60
 com.intel.mountwilson.as.home=/var/opt/intel/aikverifyhome
@@ -91,7 +93,7 @@ EOF
 
 privacyca_client_properties()
 {
-   cat <<'EOF' > "$conf_dir/privacyca-client.properties"
+    cat <<'EOF' > "$conf_dir/privacyca-client.properties"
 PrivacyCaUrl=https://OATAPPR_IP:8181/HisPrivacyCAWebServices2
 PrivacyCaSubjectName=HIS_PRIVACY_CA
 PrivacyCaPassword=***replace***
@@ -106,10 +108,9 @@ TpmOwnerAuth=1111111111111111111111111111111111111111
 EOF
 }
 
-
 privacyca_properties()
 {
-   cat <<'EOF' > "$conf_dir/PrivacyCA.properties"
+    cat <<'EOF' > "$conf_dir/PrivacyCA.properties"
 ClientFilesDownloadUsername=admin
 ClientFilesDownloadPassword=PRIVACY_CA_PASSWD
 EOF
@@ -150,11 +151,6 @@ saml_key_password="`att_parse "saml.key.password"`"
 server_keystore_password="`date  +%s%N`"
 server_key_password=$server_keystore_password
 
-echo ${saml_key_aslias}
-echo ${saml_keystore_file}
-echo ${saml_keystore_password}
-echo ${saml_key_password}
-
 ### Create SAML Signing Key ###
 keytool -genkey -alias $saml_key_aslias -keyalg RSA -keysize 2048 \
         -keystore $saml_keystore_file -storepass $saml_keystore_password \
@@ -188,8 +184,8 @@ keytool -exportcert -alias s1as -keystore $oat_home_dir/keystore.jks \
         -storepass $server_keystore_password \
         -file $oat_home_dir/ssl.${privacyca_server}.crt
 
-cp -f $oat_home_dir/keystore.jks /var/lib/tomcat6/Certificate/
-cp -f $oat_home_dir/ssl.${privacyca_server}.crt /var/lib/tomcat6/Certificate/
+cp -f $oat_home_dir/keystore.jks $tomcat_dir/Certificate/
+cp -f $oat_home_dir/ssl.${privacyca_server}.crt $tomcat_dir/Certificate/
 
 ### Create Portal Signing Key ###
 tdbp_password="`trust_tdb_parse "mtwilson.tdbp.keystore.password"`"
@@ -205,7 +201,7 @@ keytool -importcert -file $oat_home_dir/ssl.${privacyca_server}.crt  \
         -keystore $oat_home_dir/portal.jks \
         -storepass $tdbp_password -alias "mtwilson (ssl)"
 
-sed -i "/<\/Service>/i\    <Connector port=\"8181\" minSpareThreads=\"5\" maxSpareThreads=\"75\" enableLookups=\"false\" disableUploadTimeout=\"true\" acceptCount=\"100\" maxThreads=\"200\" scheme=\"https\" secure=\"true\" SSLEnabled=\"true\" clientAuth=\"want\" sslProtocol=\"TLS\" ciphers=\"TLS_ECDH_anon_WITH_AES_256_CBC_SHA, TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA, TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA\" keystoreFile=\"Certificate\/keystore.jks\" keystorePass=\"$server_keystore_password\" truststoreFile=\"Certificate\/keystore.jks\" truststorePass=\"$server_key_password\"\/>" /var/lib/tomcat6/conf/server.xml
+sed -i "/<\/Service>/i\    <Connector port=\"8181\" minSpareThreads=\"5\" maxSpareThreads=\"75\" enableLookups=\"false\" disableUploadTimeout=\"true\" acceptCount=\"100\" maxThreads=\"200\" scheme=\"https\" secure=\"true\" SSLEnabled=\"true\" clientAuth=\"want\" sslProtocol=\"TLS\" ciphers=\"TLS_ECDH_anon_WITH_AES_256_CBC_SHA, TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA, TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA\" keystoreFile=\"Certificate\/keystore.jks\" keystorePass=\"$server_keystore_password\" truststoreFile=\"Certificate\/keystore.jks\" truststorePass=\"$server_key_password\"\/>" $tomcat_dir/conf/server.xml
 
 ### copy oat war packages ###
 copy_war_package()

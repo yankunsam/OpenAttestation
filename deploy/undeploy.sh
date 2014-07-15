@@ -1,5 +1,7 @@
+#!/bin/bash
+#undeploy OpenAttestation 2.x
 
-mysql_password="abc123"
+mysql_password="______ MySQL PASSWD ______"
 conf_dir=${conf_dir:-/etc/intel/cloudsecurity}
 tomcat_dir=${tomcat_dir:-/var/lib/tomcat6}
 oat_home_dir=${oat_home_dir:-$HOME/.oat}
@@ -12,7 +14,7 @@ delete()
 delete "$conf_dir/*"
 delete "$oat_home_dir/*"
 
-mysql -uroot -pabc123 -e 'drop database mw_as';
+mysql -uroot -p$mysql_password -e 'drop database mw_as';
 line="`grep -n "<\/Service>" $tomcat_dir/conf/server.xml | \
        awk -F: '{print $1}'`"
 line=$[$line - 1]
