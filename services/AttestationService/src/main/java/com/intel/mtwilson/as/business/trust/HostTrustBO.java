@@ -56,7 +56,6 @@ public class HostTrustBO extends BaseBO {
     private static final Logger log = LoggerFactory.getLogger(HostTrustBO.class);
     Marker sysLogMarker = MarkerFactory.getMarker("SYSLOG"); // TODO we should create a single class to contain all the markers we want to use throughout the code
     private final int CACHE_VALIDITY_SECS = 3600;
-    private MwKeystoreJpaController keystoreJpa = new MwKeystoreJpaController(getEntityManagerFactory());
     
     private HostBO hostBO;
     private HashMap<String, String> hostStatus = new HashMap<String, String>();
@@ -65,7 +64,7 @@ public class HostTrustBO extends BaseBO {
     }
     
     public void setHostBO(HostBO hostBO) { this.hostBO = hostBO; }
-            
+              
     /**
      * 
      * @param hostName must not be null
@@ -98,18 +97,12 @@ public class HostTrustBO extends BaseBO {
             throw new ASException(ErrorCode.AS_INTEL_TXT_NOT_ENABLED, hostName.toString());
         }
         
-        IManifestStrategy manifestStrategy;
-        IManifestStrategyFactory strategyFactory;
-
-        strategyFactory = new DefaultManifestStrategyFactory();
-
-        manifestStrategy = strategyFactory.getManifestStategy(tblHosts, getEntityManagerFactory());
+        IManifestStrategy manifestStrategy = getManifestStrategy(tblHosts);
 
         try {
             long start = System.currentTimeMillis();
             
             pcrManifestMap = manifestStrategy.getManifest(tblHosts);
-            
             log.info("Manifest Time {}", (System.currentTimeMillis() - start));
             
         } catch (ASException e) {
@@ -124,7 +117,7 @@ public class HostTrustBO extends BaseBO {
          * Get GKV for the given host
 		 *
          */
-        IGKVStrategy gkvStrategy = new DefaultGKVStrategyFactory().getGkStrategy(tblHosts);
+        IGKVStrategy gkvStrategy = getGkvStrategy(tblHosts);
 
         gkvBiosPcrManifestMap = gkvStrategy.getBiosGoodKnownManifest(tblHosts.getBiosMleId().getName(),
                 tblHosts.getBiosMleId().getVersion(), tblHosts.getBiosMleId().getOemId().getName());
@@ -263,7 +256,7 @@ public class HostTrustBO extends BaseBO {
         taLog.setTrustStatus(pcrManifest.getVerifyStatus());
         taLog.setUpdatedOn(today);
 
-        new TblTaLogJpaController(getEntityManagerFactory()).create(taLog);
+        getTblTaLogJpaController().create(taLog);
         
 
     }
@@ -280,7 +273,7 @@ public class HostTrustBO extends BaseBO {
         taLog.setManifestValue(" ");
         taLog.setUpdatedOn(today);
 
-        new TblTaLogJpaController(getEntityManagerFactory()).create(taLog);
+        getTblTaLogJpaController().create(taLog);
 
     }
 
@@ -312,7 +305,7 @@ public class HostTrustBO extends BaseBO {
         }
     }
   
-    private TblHosts getHostByIpAddress(String ipAddress) {
+    public TblHosts getHostByIpAddress(String ipAddress) {
         try {
             return hostBO.getHostByIpAddress(ipAddress);
         }
@@ -560,6 +553,23 @@ public class HostTrustBO extends BaseBO {
         }     
         
         return hostTrust;
+    }
+
+    public IManifestStrategy getManifestStrategy(TblHosts tblHosts) {
+    	IManifestStrategyFactory strategyFactory = getManifestStrategyFactory();
+    	return strategyFactory.getManifestStategy(tblHosts, getEntityManagerFactory());
+    }
+    
+    public IManifestStrategyFactory getManifestStrategyFactory() {
+    	return new DefaultManifestStrategyFactory();
+    }
+    
+    public IGKVStrategy getGkvStrategy(TblHosts tblHosts) {
+    	return new DefaultGKVStrategyFactory().getGkStrategy(tblHosts);
+    }
+    
+    public TblTaLogJpaController getTblTaLogJpaController() {
+    	return new TblTaLogJpaController(getEntityManagerFactory());
     }
 
 }

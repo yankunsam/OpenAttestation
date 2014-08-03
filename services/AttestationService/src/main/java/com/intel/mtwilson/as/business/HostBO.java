@@ -23,6 +23,7 @@ import com.intel.mtwilson.agent.HostAgentFactory;
 import com.intel.mtwilson.as.controller.TblHostsJpaController;
 import com.intel.mtwilson.as.controller.TblLocationPcrJpaController;
 import com.intel.mtwilson.as.controller.TblMleJpaController;
+import com.intel.mtwilson.as.controller.TblPcrManifestJpaController;
 import com.intel.mtwilson.as.controller.TblTaLogJpaController;
 import com.intel.mtwilson.as.controller.exceptions.IllegalOrphanException;
 import com.intel.mtwilson.as.controller.exceptions.NonexistentEntityException;
@@ -34,6 +35,7 @@ import com.intel.mtwilson.crypto.CryptographyException;
 import com.intel.mtwilson.crypto.X509Util;
 import com.intel.mtwilson.datatypes.*;
 import com.intel.mtwilson.util.ResourceFinder;
+
 import java.io.FileInputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -45,6 +47,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.persistence.EntityManagerFactory;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,8 +159,7 @@ public class HostBO extends BaseBO {
 		try {
 
 			// bug #538 check the host capability before we try to get a manifest
-			HostAgentFactory factory = new HostAgentFactory();
-			HostAgent agent = factory.getHostAgent(tblHosts);
+			HostAgent agent = getHostAgent(tblHosts);
 			if (agent.isTpmAvailable()) {
 
 				HashMap<String, ? extends IManifest> pcrMap = getPcrModuleManifestMap(tblHosts, host);
@@ -177,7 +181,7 @@ public class HostBO extends BaseBO {
         
 	private HashMap<String, ? extends IManifest> getPcrModuleManifestMap( TblHosts tblHosts, TxtHost host) {
 
-		HostAgentFactory hostAgentFactory = new HostAgentFactory();
+		HostAgentFactory hostAgentFactory = getHostAgentFactory();
 		HashMap<String, ? extends IManifest> pcrMap = hostAgentFactory.getManifest(tblHosts);
 		return pcrMap;
 	}
@@ -242,7 +246,7 @@ public class HostBO extends BaseBO {
 			tblHosts.setVmmMleId(vmmMleId);
 
 			log.info("Updating Host in database");
-			new TblHostsJpaController(getEntityManagerFactory()).edit(tblHosts);
+			getHostsJpaController().edit(tblHosts);
 
 		} catch (ASException ase) {
 			throw ase;
@@ -269,7 +273,7 @@ public class HostBO extends BaseBO {
 
 			deleteTALogs(tblHosts.getId());
 
-			new TblHostsJpaController(getEntityManagerFactory()).destroy(tblHosts.getId());
+			getHostsJpaController().destroy(tblHosts.getId());
 		} catch (ASException ase) {
 			throw ase;
 		} catch (CryptographyException e) {
@@ -284,7 +288,7 @@ public class HostBO extends BaseBO {
        
 	private void deleteTALogs(Integer hostId) throws IllegalOrphanException {
 
-		TblTaLogJpaController tblTaLogJpaController = new TblTaLogJpaController(getEntityManagerFactory());
+		TblTaLogJpaController tblTaLogJpaController = getTaLogJpaController();
 
 		List<TblTaLog> taLogs = tblTaLogJpaController.findLogsByHostId(hostId, new Date());
 
@@ -304,8 +308,7 @@ public class HostBO extends BaseBO {
         
 
 	private String getAIKCertificateForHost(TblHosts tblHosts, TxtHost host) {
-		HostAgentFactory factory = new HostAgentFactory(); // we could call IntelHostAgentFactory but then we have to create the TlsPolicy object ourselves... the HostAgentFactory does that for us.
-		HostAgent agent = factory.getHostAgent(tblHosts);
+		HostAgent agent = getHostAgent(tblHosts);
 		if( agent.isAikAvailable() ) {
 		    X509Certificate cert = agent.getAikCertificate();
 		    try {
@@ -321,8 +324,7 @@ public class HostBO extends BaseBO {
 
 
 	private void getBiosAndVMM(TxtHost host) {
-		TblMleJpaController mleController = new TblMleJpaController(
-				getEntityManagerFactory());
+		TblMleJpaController mleController = getMleJpaController();
 		this.biosMleId = mleController.findBiosMle(host.getBios().getName(),
 				host.getBios().getVersion(), host.getBios().getOem());
 		if (biosMleId == null) {
@@ -352,8 +354,7 @@ public class HostBO extends BaseBO {
 				tblHosts.getTlsKeystore() == null ? "null" : tblHosts
 						.getTlsKeystore().length);
 
-		TblHostsJpaController hostController = new TblHostsJpaController(
-				getEntityManagerFactory());
+		TblHostsJpaController hostController = getHostsJpaController();
 		tblHosts.setAddOnConnectionInfo(host.getAddOn_Connection_String());
 		tblHosts.setBiosMleId(biosMleId);
 		tblHosts.setDescription(host.getDescription());
@@ -402,12 +403,12 @@ public class HostBO extends BaseBO {
 	}
 
 	private void checkForDuplicate(TxtHost host) throws CryptographyException {
-		/*TblHostsJpaController tblHostsJpaController = new TblHostsJpaController(
-				getEntityManagerFactory());
-		TblHosts tblHosts = tblHostsJpaController.findByName(host.getHostName()
-				.toString()); // datatype.Hostname*/
-                TblHosts tblHosts = getHostByName(host.getHostName());
-		if (tblHosts != null) {
+		TblHostsJpaController tblHostsJpaController = getHostsJpaController();
+		TblHosts tblHosts1 = tblHostsJpaController.findByName(host.getHostName()
+				.toString()); // datatype.Hostname
+		TblHosts tblHosts2 = tblHostsJpaController.findByIPAddress(host.getIPAddress()
+				.toString());
+		if (tblHosts1 != null) {
 			throw new ASException(
 					ErrorCode.AS_HOST_EXISTS,
 					host.getHostName());
@@ -513,5 +514,28 @@ public class HostBO extends BaseBO {
 		return hostObj;
 	}
 
+	public TblHostsJpaController getHostsJpaController () throws CryptographyException {
+		return new TblHostsJpaController(getEntityManagerFactory());
+	}
+
+	public EntityManagerFactory getEntityManagerFactory() {
+		return getEntityManagerFactory();
+	}
+	
+	public TblMleJpaController getMleJpaController() {
+		return new TblMleJpaController(getEntityManagerFactory());
+	}
+	
+	public HostAgent getHostAgent(TblHosts tblHosts) {
+		return new HostAgentFactory().getHostAgent(tblHosts);
+	}
+	
+	public HostAgentFactory getHostAgentFactory() {
+		return new HostAgentFactory();
+	}
+	
+	public TblTaLogJpaController getTaLogJpaController() {
+		return new TblTaLogJpaController(getEntityManagerFactory());
+	}
 }
 

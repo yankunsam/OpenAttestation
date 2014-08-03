@@ -56,14 +56,14 @@ public class ReportsBO extends BaseBO {
         try {
             HostsTrustReportType hostsTrustReportType = new HostsTrustReportType();
             for (Hostname host : hostNames) {
-                TblHosts tblHosts = new TblHostsJpaController(getEntityManagerFactory()).findByName(host.toString()); // datatype.Hostname
+                TblHosts tblHosts = getTblHostsJpaController().findByName(host.toString()); // datatype.Hostname
 
 
                 if (tblHosts == null) {
                     throw new ASException(ErrorCode.AS_HOST_NOT_FOUND, host);
                 }
 
-                List<TblTaLog> logs = new TblTaLogJpaController(getEntityManagerFactory()).findTrustStatusByHostId(tblHosts.getId(), 5);
+                List<TblTaLog> logs = getTblTaLogJpaController().findTrustStatusByHostId(tblHosts.getId(), 5);
 
                 if (logs != null) {
 
@@ -99,7 +99,7 @@ public class ReportsBO extends BaseBO {
          */
         TblHosts tblHosts = null;
         try {
-            tblHosts = new TblHostsJpaController(getEntityManagerFactory()).findByName(hostName.toString()); // datatype.Hostname
+            tblHosts = getTblHostsJpaController().findByName(hostName.toString()); // datatype.Hostname
         } catch (CryptographyException e) {
             throw new ASException(e, ErrorCode.AS_ENCRYPTION_ERROR, e.getCause() == null ? e.getMessage() : e.getCause().getMessage());
         }
@@ -108,11 +108,11 @@ public class ReportsBO extends BaseBO {
             throw new ASException(ErrorCode.AS_HOST_NOT_FOUND, hostName.toString());
         }
 
-        Date lastStatusTs = new TblTaLogJpaController(getEntityManagerFactory()).findLastStatusTs(tblHosts.getId());
+        Date lastStatusTs = getTblTaLogJpaController().findLastStatusTs(tblHosts.getId());
 
 
         if (lastStatusTs != null) {
-            List<TblTaLog> logs = new TblTaLogJpaController(getEntityManagerFactory()).findLogsByHostId(tblHosts.getId(), lastStatusTs);
+            List<TblTaLog> logs = getTblTaLogJpaController().findLogsByHostId(tblHosts.getId(), lastStatusTs);
             com.intel.mountwilson.as.hostmanifestreport.data.HostType hostType = new com.intel.mountwilson.as.hostmanifestreport.data.HostType();
             hostType.setName(hostName.toString()); // datatype.Hostname
             if (logs != null) {
@@ -176,16 +176,13 @@ public class ReportsBO extends BaseBO {
 
         try {
 
-            tblHosts = new TblHostsJpaController(getEntityManagerFactory()).findByName(hostName.toString());
+            tblHosts = getTblHostsJpaController().findByName(hostName.toString());
 
             if (tblHosts == null) {
                 throw new ASException(ErrorCode.AS_HOST_NOT_FOUND, hostName.toString());
             }
 
-            // BUG #497 needs to use HostAgentFactory and HostAgent
-            strategyFactory = new DefaultManifestStrategyFactory();
-
-            manifestStrategy = strategyFactory.getManifestStategy(tblHosts, getEntityManagerFactory());
+            manifestStrategy = getManifestStrategy(tblHosts);
            // BUG #497  this is now obtained by IntelHostAgent using TAHelper's getQuoteInformationForHost which is what was called by TrustAgentManifestStrategy.getManifest()
             pcrManifestMap = manifestStrategy.getManifest(tblHosts); 
 
@@ -259,8 +256,7 @@ public class ReportsBO extends BaseBO {
 
         TblHosts tblHosts = null;
 		try {
-			tblHosts = new TblHostsJpaController(getEntityManagerFactory())
-					.findByName(hostName.toString()); // datatype.Hostname
+			tblHosts = getTblHostsJpaController().findByName(hostName.toString()); // datatype.Hostname
 		} catch (CryptographyException e) {
 			throw new ASException(e, ErrorCode.AS_ENCRYPTION_ERROR,
 					e.getCause() == null ? e.getMessage() : e.getCause()
@@ -271,11 +267,11 @@ public class ReportsBO extends BaseBO {
             throw new ASException(ErrorCode.AS_HOST_NOT_FOUND, hostName.toString());
         }
 
-        Date lastStatusTs = new TblTaLogJpaController(getEntityManagerFactory()).findLastStatusTs(tblHosts.getId());
+        Date lastStatusTs = getTblTaLogJpaController().findLastStatusTs(tblHosts.getId());
 
 
         if (lastStatusTs != null) {
-            List<TblTaLog> logs = new TblTaLogJpaController(getEntityManagerFactory()).findLogsByHostId(tblHosts.getId(), lastStatusTs);
+            List<TblTaLog> logs = getTblTaLogJpaController().findLogsByHostId(tblHosts.getId(), lastStatusTs);
 			com.intel.mountwilson.as.hostmanifestreport.data.HostType hostType = new com.intel.mountwilson.as.hostmanifestreport.data.HostType();
             hostType.setName(hostName.toString()); // datatype.Hostname
             if (logs != null) {
@@ -320,5 +316,22 @@ public class ReportsBO extends BaseBO {
         }
         throw new ASException(ErrorCode.AS_PCR_MANIFEST_MISSING,manifestName,mleId,tblHosts.getName());
         
+    }
+    
+    public TblHostsJpaController getTblHostsJpaController() throws CryptographyException {
+    	return new TblHostsJpaController(getEntityManagerFactory());
+    }
+    
+    public TblTaLogJpaController getTblTaLogJpaController() {
+    	return new TblTaLogJpaController(getEntityManagerFactory());
+    }
+    
+    public IManifestStrategy getManifestStrategy(TblHosts tblHosts) {
+    	IManifestStrategyFactory strategyFactory = getManifestStrategyFactory();
+    	return strategyFactory.getManifestStategy(tblHosts, getEntityManagerFactory());
+    }
+    
+    public IManifestStrategyFactory getManifestStrategyFactory() {
+    	return new DefaultManifestStrategyFactory();
     }
 }

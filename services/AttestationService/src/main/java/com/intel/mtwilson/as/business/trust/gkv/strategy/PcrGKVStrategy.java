@@ -38,8 +38,7 @@ public class PcrGKVStrategy extends BaseBO implements IGKVStrategy {
 	public HashMap<String, ? extends IManifest> getBiosGoodKnownManifest(
 			String mleName, String mleVersion, String oemName) {
 		// Call query method to avoid the objects from the cache
-		TblMle biosMle = new TblMleJpaController(getEntityManagerFactory())
-				.findBiosMle(mleName, mleVersion, oemName);
+		TblMle biosMle = getMleJpaController().findBiosMle(mleName, mleVersion, oemName);
 		HashMap<String, ? extends IManifest> pcrManifestMap = getPcrManifestMap(biosMle);
 		return pcrManifestMap;
 	}
@@ -49,10 +48,8 @@ public class PcrGKVStrategy extends BaseBO implements IGKVStrategy {
 			String mleName, String mleVersion, String osName, String osVersion, Integer hostId) {
 		HashMap<String, ? extends IManifest> pcrManifestMap;
 		// Call query method to avoid the objects from the cache
-		TblMle vmmMle = new TblMleJpaController(getEntityManagerFactory())
-				.findVmmMle(mleName, mleVersion, osName, osVersion);
-
-			pcrManifestMap = getPcrManifestMap(vmmMle);
+		TblMle vmmMle = getMleJpaController().findVmmMle(mleName, mleVersion, osName, osVersion);
+		pcrManifestMap = getPcrManifestMap(vmmMle);
 
 		return pcrManifestMap;
 	}
@@ -62,9 +59,7 @@ public class PcrGKVStrategy extends BaseBO implements IGKVStrategy {
 
 		for (TblPcrManifest pcrMf : mle.getTblPcrManifestCollection()) {
 			// Call query method to avoid the objects from the cache
-			pcrMf = new TblPcrManifestJpaController(getEntityManagerFactory())
-					.findPcrManifestById(pcrMf.getId());
-
+			pcrMf = getPcrManifestJpaController().findPcrManifestById(pcrMf.getId());
 			 pcrManifests.put(pcrMf.getName().trim(), new
 			 PcrManifest(Integer.valueOf(pcrMf.getName()),
 			 pcrMf.getValue().trim()));
@@ -75,6 +70,16 @@ public class PcrGKVStrategy extends BaseBO implements IGKVStrategy {
 		}
 
 		return pcrManifests;
+	}
+
+	public TblMleJpaController getMleJpaController() {
+		return new TblMleJpaController(getEntityManagerFactory());
+		
+	}
+
+	public TblPcrManifestJpaController getPcrManifestJpaController() {
+		return new TblPcrManifestJpaController(getEntityManagerFactory());
+		
 	}
 
 }
