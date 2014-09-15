@@ -118,15 +118,16 @@ public class ProvisionTPM {
 		
 			EcValidityDays = Integer.parseInt(HisProvisionerProperties.getProperty(EC_VALIDITY, ""));
 			tpmOwnerAuth = HisProvisionerProperties.getProperty(OWNER_AUTH, "");
-			if (tpmOwnerAuth.length() == 20) {
-			    log.info("owner authentication is char formatted");
+			if (tpmOwnerAuth.length() != 0) {
+			//    log.info("owner authentication is char formatted");
 			    TpmOwnerAuth = tpmOwnerAuth.getBytes();
-			} else if (tpmOwnerAuth.length() == 40) {
-			    log.info("owner authentication is hex code formatted");
-			    TpmOwnerAuth = TpmUtils.hexStringToByteArray(tpmOwnerAuth);
-			} else {
-			    log.info("illegal owner authentication detected! accepted owner authentication is 20 or 40 long characters");
-			}
+			} 
+                        //else if (tpmOwnerAuth.length() == 40) {
+			//    log.info("owner authentication is hex code formatted");
+			//    TpmOwnerAuth = TpmUtils.hexStringToByteArray(tpmOwnerAuth);
+			//} else {
+			//    log.info("illegal owner authentication detected! accepted owner authentication is 20 or 40 long characters");
+			//}
 			//TpmOwnerAuth = TpmUtils.hexStringToByteArray(HisProvisionerProperties.getProperty(OWNER_AUTH, ""));
 			PrivacyCaUrl = HisProvisionerProperties.getProperty(PRIVACY_CA_URL, "");
 			PrivacyCaCertFile = HisProvisionerProperties.getProperty(PRIVACY_CA_CERT, "");
@@ -156,8 +157,8 @@ public class ProvisionTPM {
 			errorString += " - \"EcValidityDays\" value must be the number of validity days for the Endorsement Credential\n";
 			hasErrors = true;
 		}
-		if(TpmOwnerAuth == null || TpmOwnerAuth.length != 20){
-			errorString += " - \"TpmOwnerAuth\" value must be a 40 hexidecimal digit (20 byte) value representing the TPM owner auth\n";
+		if(TpmOwnerAuth == null) {// || TpmOwnerAuth.length != 20){
+			errorString += " - \"TpmOwnerAuth\" value must be set representing the TPM owner auth\n";
 			hasErrors = true;
 		}
 		if(hasErrors){

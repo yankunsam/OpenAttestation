@@ -131,15 +131,16 @@ public class CreateIdentity  {
 			
 			log.info("Home folder : " + homeFolder);
 			tpmOwnerAuth = HisProvisionerProperties.getProperty(OWNER_AUTH, "");
-			if (tpmOwnerAuth.length() == 20) {
-			    log.info("owner authentication is char formatted");
+			if (tpmOwnerAuth.length() != 0) {
+			//    log.info("owner authentication is char formatted");
 			    TpmOwnerAuth = tpmOwnerAuth.getBytes();
-			} else if (tpmOwnerAuth.length() == 40) {
-			    log.info("owner authentication is hex code formatted");
-			    TpmOwnerAuth = TpmUtils.hexStringToByteArray(tpmOwnerAuth);
-			} else {
-			    log.info("illegal owner authentication detected! accepted owner authentication is 20 or 40 long characters");
-			}
+			} 
+                        // else if (tpmOwnerAuth.length() == 40) {
+			//    log.info("owner authentication is hex code formatted");
+			//    TpmOwnerAuth = TpmUtils.hexStringToByteArray(tpmOwnerAuth);
+			//} else {
+			//    log.info("illegal owner authentication detected! accepted owner authentication is 20 or 40 long characters");
+			//}
 			//TpmOwnerAuth = TpmUtils.hexStringToByteArray(HisProvisionerProperties.getProperty(OWNER_AUTH));
 			HisIdentityLabel = HisProvisionerProperties.getProperty(HIS_IDENTITY_LABEL, "");
 			HisIdentityIndex = Integer.parseInt(HisProvisionerProperties.getProperty(HIS_IDENTITY_INDEX, "0"));
@@ -172,8 +173,8 @@ public class CreateIdentity  {
 		String errorString = "Properties file \"" + homeFolder  + "hisprovisioner.properties contains errors:\n";
 		
 		boolean hasErrors = false;
-		if(TpmOwnerAuth ==null ||  TpmOwnerAuth.length != 20){
-			errorString += " - \"TpmOwnerAuth\" value must be a 40 hexidecimal digit (20 byte) value representing the TPM owner authentication\n";
+		if(TpmOwnerAuth == null) { // ||  TpmOwnerAuth.length != 20){
+			errorString += " - \"TpmOwnerAuth\" value must be set representing the TPM owner authentication\n";
 			hasErrors = true;
 		}
 		if(HisIdentityLabel.length() == 0){
