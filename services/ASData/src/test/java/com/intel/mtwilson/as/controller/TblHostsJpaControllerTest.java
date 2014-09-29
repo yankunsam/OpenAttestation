@@ -33,7 +33,7 @@ public class TblHostsJpaControllerTest {
     private EntityTransaction transaction;
     
     @Spy
-    private TblHostsJpaController tblHostsJpaController = new TblHostsJpaController(emf);
+    private TblHostsJpaController tblHostsJpaController = new TblHostsJpaController(emf, true);
     
     private int HOST_ID = 1;
 

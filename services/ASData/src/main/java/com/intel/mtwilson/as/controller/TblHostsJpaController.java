@@ -45,7 +45,11 @@ public class TblHostsJpaController implements Serializable {
 
     private EntityManagerFactory emf = null;
 
-    public TblHostsJpaController(EntityManagerFactory emf) {
+    public TblHostsJpaController(EntityManagerFactory emf) throws CryptographyException {
+        this.emf = emf;
+    }
+
+    public TblHostsJpaController(EntityManagerFactory emf, boolean isTest) {
         this.emf = emf;
     }
     
