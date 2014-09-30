@@ -118,7 +118,7 @@ public class ProvisionTPM {
 		
 			EcValidityDays = Integer.parseInt(HisProvisionerProperties.getProperty(EC_VALIDITY, ""));
 			tpmOwnerAuth = HisProvisionerProperties.getProperty(OWNER_AUTH, "");
-			if (tpmOwnerAuth.length() != 0) {
+			if (tpmOwnerAuth != null) {
 			//    log.info("owner authentication is char formatted");
 			    TpmOwnerAuth = tpmOwnerAuth.getBytes();
 			} 

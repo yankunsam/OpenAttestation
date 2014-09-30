@@ -131,7 +131,7 @@ public class CreateIdentity  {
 			
 			log.info("Home folder : " + homeFolder);
 			tpmOwnerAuth = HisProvisionerProperties.getProperty(OWNER_AUTH, "");
-			if (tpmOwnerAuth.length() != 0) {
+			if (tpmOwnerAuth != null) {
 			//    log.info("owner authentication is char formatted");
 			    TpmOwnerAuth = tpmOwnerAuth.getBytes();
 			} 
