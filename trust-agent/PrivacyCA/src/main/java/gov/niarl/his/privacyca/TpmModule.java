@@ -144,7 +144,6 @@ public class TpmModule {
 			newExeName = TpmModuleProperties.getProperty(new_EXE_NAME, "NIARL_TPM_Module");
 			newTrousersMode = TpmModuleProperties.getProperty(new_TROUSERS_MODE, "False");
 			debugMode = TpmModuleProperties.getProperty(DEBUG_MODE, "False");
-			System.out.println("debug mode: " + debugMode);
 		} catch (FileNotFoundException e) {
 			System.out.println("Error finding TPM Module properties file; using defaults.");
 		} catch (IOException e) {
@@ -160,19 +159,19 @@ public class TpmModule {
 			}
 		}
 		boolean TrousersMode = false;
-		if (newTrousersMode.toLowerCase().equals("true"))
+		if (newTrousersMode.trim().toLowerCase().equals("true"))
 			TrousersMode = true;
 		boolean DebugMode = false;
-		if (debugMode.toLowerCase().equals("true"))
+		if (debugMode.trim().toLowerCase().equals("true"))
 			DebugMode = true;
 		List<String> commandLine = new ArrayList<String>(Arrays.asList(newTpmModuleExePath + newExeName,
                 "-mode", Integer.toString(mode)));
         commandLine.addAll(args);
 		if (TrousersMode && useTrousersMode)
 			commandLine.add("-trousers");
-		System.out.println("\"" + commandLine.toString() + "\"");
+
 		if (DebugMode){ 
-                	System.out.println("\"" + commandLine.toString() + "\"");
+            System.out.println("\"" + commandLine.toString() + "\"");
 			Logger.getAnonymousLogger().info("Command: " + commandLine.toString());
 		}
 		Process p = Runtime.getRuntime().exec(commandLine.toArray(new String[commandLine.size()]));
@@ -192,7 +191,7 @@ public class TpmModule {
 				if (input != null)
 					input.close();
 			}
-			
+
 		}
 		if (DebugMode){
 			System.out.println("\"" + line + "\"");
