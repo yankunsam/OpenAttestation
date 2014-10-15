@@ -6,7 +6,7 @@ oat_server_ip="___ IP ___"
 mysql_password="______ MySQL PASSWD ______"
 saml_password="samlpasswd2"
 portal_password="portalpasswd2"
-p12_password="p12passwd2"
+p12_password="p2"
 java_home="/usr/lib/jvm/java-7-openjdk-amd64/"
 
 ###########
@@ -15,11 +15,13 @@ export JAVA_HOME=$java_home
 conf_dir=${conf_dir:-/etc/intel/cloudsecurity}
 [ -d $conf_dir ] && rm -rf $csonf_dir
 install -d  $conf_dir
+chown -R tomcat:tomcat $conf_dir
 
 tomcat_dir=${tomcat_dir:-/usr/share/tomcat}
 oat_home_dir=${oat_home_dir:-$HOME/.oat}
 [ -d $oat_home_dir ] && rm -rf $oat_home_dir
 install -d  $oat_home_dir
+chown -R tomcat:tomcat $oat_home_dir
 
 ###MySQL ### 
 mysql -uroot -p$mysql_password -e 'create database mw_as';
@@ -123,8 +125,9 @@ attestation_properties
 privacyca_properties
 privacyca_client_properties
 
-sed -i "s/OATAPPR_IP/$oat_server_ip/g" $conf_dir/mtwilson.properties
-sed -i "s/OATAPPR_IP/$oat_server_ip/g" $conf_dir/attestation-service.properties
+sed -i "s/OATAPPR_IP/$oat_server/g" $conf_dir/mtwilson.properties
+sed -i "s/OATAPPR_IP/$oat_server/g" $conf_dir/attestation-service.properties
+sed -i "s/OATAPPR_IP/$oat_server/g" $conf_dir/privacyca-client.properties
 sed -i "s/MYSQL_PASSWD/$mysql_password/g" $conf_dir/mtwilson.properties
 sed -i "s/PORTAL_PASSWD/$portal_password/g" $conf_dir/trust-dashboard.properties
 sed -i "s/PORTAL_PASSWD/$portal_password/g" $conf_dir/whitelist-portal.properties
@@ -154,7 +157,7 @@ server_key_password=$server_keystore_password
 ### Create SAML Signing Key ###
 keytool -genkey -alias $saml_key_aslias -keyalg RSA -keysize 2048 \
         -keystore $saml_keystore_file -storepass $saml_keystore_password \
-        -dname "CN=OpenAttestation, O=My Org, OU=Mt Wilson, C=US" \
+        -dname "CN=AttestationService, OU=MtWilson, O=MyOrg, C=US" \
         -validity 3650 -keypass $saml_key_password
 
 keytool -export -alias $saml_key_aslias -keystore $saml_keystore_file \
@@ -165,9 +168,24 @@ find $TOP_DIR -name "HisPrivacyCAWebServices2*-setup.jar" | \
       xargs -i java -jar {} 
 cp $conf_dir/clientfiles/PrivacyCA.cer $conf_dir
 
+### aikqverify install ###
+pdir=$(pwd)
+[ -d $oat_home_dir/aikqverify-* ] &&  \
+    rm -rf $oat_home_dir/aikqverify-*
+
+find $TOP_DIR -name "aikqverify-*.zip"  | \
+    xargs -i unzip {} -d $oat_home_dir
+cd $oat_home_dir/aikqverify-*
+make
+make install
+cd $pdir
+
 ### Create Attestation Server Certificate ###
 privacyca_server="`att_parse "privacyca.server"`"
 install -d $tomcat_dir/Certificate
+chown -R tomcat:tomcat $tomcat_dir/Certificate/
+chown -R tomcat:tomcat /var/opt
+
 [ -e $tomcat_dir/Certificate/keystore.jks ] && \
      rm -f $tomcat_dir/Certificate/keystore.jks
 

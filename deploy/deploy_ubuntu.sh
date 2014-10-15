@@ -6,7 +6,7 @@ oat_server_ip="___ IP ___"
 mysql_password="______ MySQL PASSWD ______"
 saml_password="samlpasswd2"
 portal_password="portalpasswd2"
-p12_password="p12passwd2"
+p12_password="p2"
 java_home="/usr/lib/jvm/java-7-openjdk-amd64/"
 ###########
 
@@ -16,11 +16,13 @@ export JAVA_HOME=$java_home
 conf_dir=${conf_dir:-/etc/intel/cloudsecurity}
 [ -d $conf_dir ] && rm -rf $csonf_dir
 install -d  $conf_dir
+chown -R tomcat6:tomcat6 $conf_dir
 
 tomcat_dir=${tomcat_dir:-/var/lib/tomcat6}
 oat_home_dir=${oat_home_dir:-$HOME/.oat}
 [ -d $oat_home_dir ] && rm -rf $oat_home_dir
 install -d  $oat_home_dir
+#chown -R tomcat6:tomcat6 $oat_home_dir
 
 ###MySQL ### 
 mysql -uroot -p$mysql_password -e 'create database mw_as';
@@ -125,6 +127,7 @@ privacyca_client_properties
 
 sed -i "s/OATAPPR_IP/$oat_server_ip/g" $conf_dir/mtwilson.properties
 sed -i "s/OATAPPR_IP/$oat_server_ip/g" $conf_dir/attestation-service.properties
+sed -i "s/OATAPPR_IP/$oat_server_ip/g" $conf_dir/privacyca-client.properties
 sed -i "s/MYSQL_PASSWD/$mysql_password/g" $conf_dir/mtwilson.properties
 sed -i "s/PORTAL_PASSWD/$portal_password/g" $conf_dir/trust-dashboard.properties
 sed -i "s/PORTAL_PASSWD/$portal_password/g" $conf_dir/whitelist-portal.properties
@@ -165,9 +168,27 @@ find $TOP_DIR -name "HisPrivacyCAWebServices2*-setup.jar" | \
       xargs -i java -jar {} 
 cp $conf_dir/clientfiles/PrivacyCA.cer $conf_dir
 
+### change the configuration folder user group to tomcat:tomcat ###
+chown -R tomcat6:tomcat6 $conf_dir
+
+### aikqverify install ###
+pdir=$(pwd)
+[ -e $oat_home_dir/aikqverify-* ] &&  \
+    rm -rf $oat_home_dir/aikqverify-*
+
+find $TOP_DIR -name "aikqverify-*.zip"  | \
+    xargs -i unzip {} -d $oat_home_dir
+cd $oat_home_dir/aikqverify-*
+make
+make install
+cd $pdir
+
 ### Create Attestation Server Certificate ###
 privacyca_server="`att_parse "privacyca.server"`"
 install -d $tomcat_dir/Certificate
+chown -R tomcat6:tomcat6 $tomcat_dir/Certificate
+chown -R tomcat6:tomcat6 /var/opt
+
 [ -e $tomcat_dir/Certificate/keystore.jks ] && \
      rm -f $tomcat_dir/Certificate/keystore.jks
 
