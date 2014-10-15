@@ -246,10 +246,7 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 1 -owner_auth <40 char hex blob> -nonce <40 char hex blob>
 		 * return: no return ***
 		 */
-        String hexOwnerAuth = TpmUtils.byteArrayToHexString(ownerAuth);
-        if(hexOwnerAuth.length() == 0 )
-            hexOwnerAuth = "''";
-		String argument = "-owner_auth " + hexOwnerAuth + " -nonce " + TpmUtils.byteArrayToHexString(nonce);
+		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) + " -nonce " + TpmUtils.byteArrayToHexString(nonce);
 		commandLineResult result = executeVer2Command(1, argument, 0, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.takeOwnership returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return;
@@ -268,10 +265,7 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 2 -owner_auth <40 char hex blob>
 		 * return: no return ***
 		 */
-        String hexOwnerAuth = TpmUtils.byteArrayToHexString(ownerAuth);
-        if(hexOwnerAuth.length() == 0 )
-            hexOwnerAuth = "''";
-		String argument = "-owner_auth " + hexOwnerAuth;
+		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth);
 		commandLineResult result = executeVer2Command(2, argument, 0, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.clearOwnership returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return;
@@ -299,10 +293,7 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 3 -owner_auth <40 char hex blob> -key_auth <40 char hex blob> -key_label <hex string in ASCII> -pcak <public key blob for Privacy CA> -key_index <integer index> [-ec_blob <hex blob of endorsement credential> -ec_nvram -trousers]
 		 * return: <identity request> <aik modulus> <aik complete key blob>
 		 */
-        String hexOwnerAuth = TpmUtils.byteArrayToHexString(ownerAuth);
-        if(hexOwnerAuth.length() == 0 )
-            hexOwnerAuth = "''";
-		String argument = "-owner_auth " + hexOwnerAuth
+		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth)
 						+ " -key_auth " + TpmUtils.byteArrayToHexString(keyAuth) 
 						+ " -key_label " + TpmUtils.byteArrayToHexString(keyLabel.getBytes()) 
 						+ " -pcak " + TpmUtils.byteArrayToHexString(pcaPubKeyBlob) 
@@ -339,10 +330,7 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 4 -owner_auth <40 char hex blob> -key_auth <40 char hex blob> -asym <> -sym <> -key_index <integer index>
 		 * return: <aik certificate>
 		 */
-        String hexOwnerAuth = TpmUtils.byteArrayToHexString(ownerAuth);
-        if(hexOwnerAuth.length() == 0 )
-            hexOwnerAuth = "''";
-		String argument = "-owner_auth " + hexOwnerAuth
+		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) 
 						+ " -key_auth " + TpmUtils.byteArrayToHexString(keyAuth) 
 						+ " -asym " + TpmUtils.byteArrayToHexString(asymCaContents) 
 						+ " -sym " + TpmUtils.byteArrayToHexString(symCaAttestation) 
@@ -372,10 +360,7 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 4 -owner_auth <40 char hex blob> -key_auth <40 char hex blob> -asym <> -sym <> -key_index <integer index>
 		 * return: <aik certificate>
 		 */
-        String hexOwnerAuth = TpmUtils.byteArrayToHexString(ownerAuth);
-        if(hexOwnerAuth.length() == 0 )
-            hexOwnerAuth = "''";
-		String argument = "-owner_auth " + hexOwnerAuth
+		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) 
 						+ " -key_auth " + TpmUtils.byteArrayToHexString(keyAuth) 
 						+ " -asym " + TpmUtils.byteArrayToHexString(asymCaContents) 
 						+ " -sym " + TpmUtils.byteArrayToHexString(symCaAttestation) 
@@ -459,10 +444,7 @@ public class TpmModule {
 		 * 
 		 * What is the key index for??
 		 */
-        String hexOwnerAuth = TpmUtils.byteArrayToHexString(ownerAuth);
-        if(hexOwnerAuth.length() == 0 )
-            hexOwnerAuth = "''";
-		String argument = "-owner_auth " + hexOwnerAuth
+		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) 
 						+ " -reset " + TpmUtils.byteArrayToHexString(resetData) 
 						+ " -nonce " + TpmUtils.byteArrayToHexString(nonce) 
 						+ " -key_index " + keyIndex;
@@ -485,10 +467,7 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 7 -owner_auth <40 char hex blob> -reset <>
 		 * return: no return ***
 		 */
-        String hexOwnerAuth = TpmUtils.byteArrayToHexString(ownerAuth);
-        if(hexOwnerAuth.length() == 0 )
-            hexOwnerAuth = "''";
-		String argument = "-owner_auth " + hexOwnerAuth
+		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) 
 						+ " -reset " + TpmUtils.byteArrayToHexString(resetData);
 		commandLineResult result = executeVer2Command(7, argument, 0, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.revokeRevocableEndorsementKey returned nonzero error: " + result.getReturnCode() + "(" + ")");
@@ -593,10 +572,7 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 10 -key_type EK -owner_auth <40 char hex blob> -nonce <40 char hex blob>
 		 * return: <modulus>
 		 */
-        String hexOwnerAuth = TpmUtils.byteArrayToHexString(ownerAuth);
-        if(hexOwnerAuth.length() == 0 )
-            hexOwnerAuth = "''";
-		String argument = "-key_type ek -owner_auth " + hexOwnerAuth + " -nonce " + TpmUtils.byteArrayToHexString(nonce);
+		String argument = "-key_type ek -owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) + " -nonce " + TpmUtils.byteArrayToHexString(nonce);
 		commandLineResult result = executeVer2Command(10, argument, 1, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.getPublicEndorsementKey returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return TpmUtils.hexStringToByteArray(result.getResult(0));
@@ -639,11 +615,8 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 12 -owner_auth <40 char hex blob> -cred_type <"EC" | "CC" | "PC" | "PCC"> -blob <>[-trousers]
 		 * return: no return ***
 		 */
-        String hexOwnerAuth = TpmUtils.byteArrayToHexString(ownerAuth);
-        if(hexOwnerAuth.length() == 0 )
-            hexOwnerAuth = "''";
 		if (!(credType.equals("EC") || credType.equals("CC") || credType.equals("PC")|| credType.equals("PCC"))) throw new TpmModuleException("TpmModule.setCredential: credential type parameter must be \"EC\", \"CC\", \"PC\", or \"PCC\".");
-		String argument = "-owner_auth " + hexOwnerAuth + " -cred_type " + credType + " -blob " + TpmUtils.byteArrayToHexString(credBlob);
+		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) + " -cred_type " + credType + " -blob " + TpmUtils.byteArrayToHexString(credBlob);
 		// TROUSERS MODE OPTIONAL
 		commandLineResult result = executeVer2Command(12, argument, 0, true);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.setCredential returned nonzero error: " + result.getReturnCode() + "(" + ")");
@@ -665,11 +638,8 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 13 -owner_auth <40 char hex blob> -cred_type <"EC" | "CC" | "PC" | "PCC"> [-trousers]
 		 * return: <cred blob>
 		 */
-        String hexOwnerAuth = TpmUtils.byteArrayToHexString(ownerAuth);
-        if(hexOwnerAuth.length() == 0 )
-            hexOwnerAuth = "''";
  		if (!(credType.equals("EC") || credType.equals("CC") || credType.equals("PC")|| credType.equals("PCC"))) throw new TpmModuleException("TpmModule.getCredential: credential type parameter must be \"EC\", \"CC\", \"PC\", or \"PCC\".");
-		String argument = "-owner_auth " + hexOwnerAuth + " -cred_type " + credType;
+		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) + " -cred_type " + credType;
 		// TROUSERS MODE OPTIONAL
 		commandLineResult result = executeVer2Command(13, argument, 1, true);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.getCredential returned nonzero error: " + result.getReturnCode() + "(" + ")");
@@ -690,11 +660,8 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 14 -owner_auth <40 char hex blob> -cred_type <"EC" | "CC" | "PC" | "PCC">
 		 * return: no return ***
 		 */
-        String hexOwnerAuth = TpmUtils.byteArrayToHexString(ownerAuth);
-        if(hexOwnerAuth.length() == 0 )
-            hexOwnerAuth = "''";
 		if (!(credType.equals("EC") || credType.equals("CC") || credType.equals("PC")|| credType.equals("PCC"))) throw new TpmModuleException("TpmModule.clearCredential: credential type parameter must be \"EC\", \"CC\", \"PC\", or \"PCC\".");
-		String argument = "-owner_auth " + hexOwnerAuth + " -cred_type " + credType;
+		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) + " -cred_type " + credType;
 		commandLineResult result = executeVer2Command(14, argument, 0, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.clearCredential returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return;
