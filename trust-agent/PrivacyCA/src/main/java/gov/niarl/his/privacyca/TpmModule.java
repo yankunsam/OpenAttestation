@@ -122,7 +122,7 @@ public class TpmModule {
 	 * @return
 	 * @throws IOException
 	 */
-	private static commandLineResult executeVer2Command(int mode, String args, int returnCount, boolean useTrousersMode)
+	private static commandLineResult executeVer2Command(int mode, List<String> args, int returnCount, boolean useTrousersMode)
 			throws IOException {
 		int returnCode = 0;
 		final String new_TPM_MODULE_EXE_PATH = "TpmModuleExePath";
@@ -144,7 +144,7 @@ public class TpmModule {
 			newExeName = TpmModuleProperties.getProperty(new_EXE_NAME, "NIARL_TPM_Module");
 			newTrousersMode = TpmModuleProperties.getProperty(new_TROUSERS_MODE, "False");
 			debugMode = TpmModuleProperties.getProperty(DEBUG_MODE, "False");
-			//System.out.println("debug mode: " + debugMode);
+			System.out.println("debug mode: " + debugMode);
 		} catch (FileNotFoundException e) {
 			System.out.println("Error finding TPM Module properties file; using defaults.");
 		} catch (IOException e) {
@@ -165,15 +165,17 @@ public class TpmModule {
 		boolean DebugMode = false;
 		if (debugMode.toLowerCase().equals("true"))
 			DebugMode = true;
-		String commandLine = newTpmModuleExePath + newExeName + " -mode " + mode + " " + args;
+		List<String> commandLine = new ArrayList<String>(Arrays.asList(newTpmModuleExePath + newExeName,
+                "-mode", Integer.toString(mode)));
+        commandLine.addAll(args);
 		if (TrousersMode && useTrousersMode)
-			commandLine += " -trousers";
-		//System.out.println("\"" + commandLine + "\"");
+			commandLine.add("-trousers");
+		System.out.println("\"" + commandLine.toString() + "\"");
 		if (DebugMode){ 
-                	System.out.println("\"" + commandLine + "\"");
-			Logger.getAnonymousLogger().info("Command: " + commandLine);
+                	System.out.println("\"" + commandLine.toString() + "\"");
+			Logger.getAnonymousLogger().info("Command: " + commandLine.toString());
 		}
-		Process p = Runtime.getRuntime().exec(commandLine);
+		Process p = Runtime.getRuntime().exec(commandLine.toArray(new String[commandLine.size()]));
 		String line = "";
 		if (returnCount != 0){
 			BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -246,7 +248,10 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 1 -owner_auth <40 char hex blob> -nonce <40 char hex blob>
 		 * return: no return ***
 		 */
-		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) + " -nonce " + TpmUtils.byteArrayToHexString(nonce);
+		List<String> argument = new ArrayList<String>(Arrays.asList("-owner_auth",
+                TpmUtils.byteArrayToHexString(ownerAuth),
+                "-nonce",
+                TpmUtils.byteArrayToHexString(nonce)));
 		commandLineResult result = executeVer2Command(1, argument, 0, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.takeOwnership returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return;
@@ -265,7 +270,7 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 2 -owner_auth <40 char hex blob>
 		 * return: no return ***
 		 */
-		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth);
+        List<String> argument = new ArrayList<String>(Arrays.asList("-owner_auth", TpmUtils.byteArrayToHexString(ownerAuth)));
 		commandLineResult result = executeVer2Command(2, argument, 0, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.clearOwnership returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return;
@@ -293,15 +298,18 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 3 -owner_auth <40 char hex blob> -key_auth <40 char hex blob> -key_label <hex string in ASCII> -pcak <public key blob for Privacy CA> -key_index <integer index> [-ec_blob <hex blob of endorsement credential> -ec_nvram -trousers]
 		 * return: <identity request> <aik modulus> <aik complete key blob>
 		 */
-		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth)
-						+ " -key_auth " + TpmUtils.byteArrayToHexString(keyAuth) 
-						+ " -key_label " + TpmUtils.byteArrayToHexString(keyLabel.getBytes()) 
-						+ " -pcak " + TpmUtils.byteArrayToHexString(pcaPubKeyBlob) 
-						+ " -key_index " + keyIndex;
-		if (endorsmentCredential != null)
-			argument += " -ec_blob " + TpmUtils.byteArrayToHexString(endorsmentCredential.getEncoded());
+        List<String> argument = new ArrayList<String>(Arrays.asList("-owner_auth",
+                TpmUtils.byteArrayToHexString(ownerAuth),
+                "-key_auth", TpmUtils.byteArrayToHexString(keyAuth),
+                "-key_label", TpmUtils.byteArrayToHexString(keyLabel.getBytes()),
+                "-pcak", TpmUtils.byteArrayToHexString(pcaPubKeyBlob),
+                "-key_index", Integer.toString(keyIndex)));
+		if (endorsmentCredential != null) {
+            argument.add("-ec_blob");
+            argument.add(TpmUtils.byteArrayToHexString(endorsmentCredential.getEncoded()));
+        }
 		if (useECinNvram)
-			argument += " -ec_nvram";
+			argument.add("-ec_nvram");
 		// TROUSERS MODE OPTIONAL
 		commandLineResult result = executeVer2Command(3, argument, 3, true);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.collateIdentityRequest returned nonzero error: " + result.getReturnCode() + "(" + ")");
@@ -330,11 +338,11 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 4 -owner_auth <40 char hex blob> -key_auth <40 char hex blob> -asym <> -sym <> -key_index <integer index>
 		 * return: <aik certificate>
 		 */
-		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) 
-						+ " -key_auth " + TpmUtils.byteArrayToHexString(keyAuth) 
-						+ " -asym " + TpmUtils.byteArrayToHexString(asymCaContents) 
-						+ " -sym " + TpmUtils.byteArrayToHexString(symCaAttestation) 
-						+ " -key_index " + keyIndex;
+        List<String> argument = new ArrayList<String>(Arrays.asList("-owner_auth", TpmUtils.byteArrayToHexString(ownerAuth),
+						"-key_auth", TpmUtils.byteArrayToHexString(keyAuth),
+						"-asym", TpmUtils.byteArrayToHexString(asymCaContents),
+						"-sym", TpmUtils.byteArrayToHexString(symCaAttestation),
+						"-key_index", Integer.toString(keyIndex)));
 		commandLineResult result = executeVer2Command(4, argument, 1, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.activateIdentity returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		byte [] identityCredential = TpmUtils.hexStringToByteArray(result.getResult(0));
@@ -360,11 +368,11 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 4 -owner_auth <40 char hex blob> -key_auth <40 char hex blob> -asym <> -sym <> -key_index <integer index>
 		 * return: <aik certificate>
 		 */
-		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) 
-						+ " -key_auth " + TpmUtils.byteArrayToHexString(keyAuth) 
-						+ " -asym " + TpmUtils.byteArrayToHexString(asymCaContents) 
-						+ " -sym " + TpmUtils.byteArrayToHexString(symCaAttestation) 
-						+ " -key_index " + keyIndex;
+        List<String> argument = new ArrayList<String>(Arrays.asList("-owner_auth", TpmUtils.byteArrayToHexString(ownerAuth),
+                "-key_auth", TpmUtils.byteArrayToHexString(keyAuth),
+                "-asym", TpmUtils.byteArrayToHexString(asymCaContents),
+                "-sym", TpmUtils.byteArrayToHexString(symCaAttestation),
+                "-key_index", Integer.toString(keyIndex)));
 		commandLineResult result = executeVer2Command(4, argument, 2, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.activateIdentity returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		HashMap<String,byte[]> results = new HashMap<String, byte[]>(); 
@@ -408,10 +416,10 @@ public class TpmModule {
 					pcrCount++; //count the bits!
 			}
 		}
-		String argument = "-key_auth " + TpmUtils.byteArrayToHexString(keyAuth) 
-						+ " -nonce " + TpmUtils.byteArrayToHexString(nonce) 
-						+ " -mask " + TpmUtils.byteArrayToHexString(mask) 
-						+ " -key_index " + keyIndex;
+        List<String> argument = new ArrayList<String>(Arrays.asList("-key_auth", TpmUtils.byteArrayToHexString(keyAuth),
+						"-nonce", TpmUtils.byteArrayToHexString(nonce),
+						"-mask", TpmUtils.byteArrayToHexString(mask),
+						"-key_index", Integer.toString(keyIndex)));
 		commandLineResult result = executeVer2Command(5, argument, pcrCount + 3, false);
 		// command line app should return <pcrCount> pcrs, (1 nonce,) 1 quote, and 1 signature
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.quote returned nonzero error: " + result.getReturnCode() + "(" + ")");
@@ -444,10 +452,10 @@ public class TpmModule {
 		 * 
 		 * What is the key index for??
 		 */
-		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) 
-						+ " -reset " + TpmUtils.byteArrayToHexString(resetData) 
-						+ " -nonce " + TpmUtils.byteArrayToHexString(nonce) 
-						+ " -key_index " + keyIndex;
+        List<String> argument = new ArrayList<String>(Arrays.asList("-owner_auth ", TpmUtils.byteArrayToHexString(ownerAuth),
+						"-reset", TpmUtils.byteArrayToHexString(resetData),
+						"-nonce", TpmUtils.byteArrayToHexString(nonce),
+						"-key_index", Integer.toString(keyIndex)));
 		commandLineResult result = executeVer2Command(6, argument, 1, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.createRevocableEndorsementKey returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return TpmUtils.hexStringToByteArray(result.getResult(0));
@@ -467,8 +475,8 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 7 -owner_auth <40 char hex blob> -reset <>
 		 * return: no return ***
 		 */
-		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) 
-						+ " -reset " + TpmUtils.byteArrayToHexString(resetData);
+        List<String> argument = new ArrayList<String>(Arrays.asList("-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth),
+						"-reset", TpmUtils.byteArrayToHexString(resetData)));
 		commandLineResult result = executeVer2Command(7, argument, 0, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.revokeRevocableEndorsementKey returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return;
@@ -495,7 +503,9 @@ public class TpmModule {
 		 * return: <modulus> <key blob>
 		 */
 		if (!(keyType.equals("sign") || keyType.equals("bind"))) throw new TpmModuleException("TpmModule.createKey: key type parameter must be \"sign\" or \"bind\".");
-		String argument = "-key_type " + keyType + " -key_auth " + TpmUtils.byteArrayToHexString(keyAuth) + " -key_index " + keyIndex;
+        List<String> argument = new ArrayList<String>(Arrays.asList("-key_type ", keyType,
+                "-key_auth", TpmUtils.byteArrayToHexString(keyAuth),
+                "-key_index", Integer.toString(keyIndex)));
 		commandLineResult result = executeVer2Command(8, argument, 2, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.createKey returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		byte [] tempArray = TpmUtils.hexStringToByteArray(result.getResult(0)); //modulus - discard in favor of blob
@@ -521,7 +531,10 @@ public class TpmModule {
 		 * return: no return ***
 		 */
 		if (!(keyType.equals("sign") || keyType.equals("bind") || keyType.equals("identity"))) throw new TpmModuleException("TpmModule.setKey: key type parameter must be \"sign\", \"bind\", or \"identity\".");
-		String argument = "-key_type " + keyType + " -key_auth " + TpmUtils.byteArrayToHexString(keyAuth) + " -key_blob " + TpmUtils.byteArrayToHexString(keyBlob) + " -key_index " + keyIndex;
+        List<String> argument = new ArrayList<String>(Arrays.asList("-key_type", keyType,
+                "-key_auth", TpmUtils.byteArrayToHexString(keyAuth),
+                "-key_blob", TpmUtils.byteArrayToHexString(keyBlob),
+                "-key_index", Integer.toString(keyIndex)));
 		commandLineResult result = executeVer2Command(9, argument, 0, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.setKey returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return;
@@ -548,7 +561,9 @@ public class TpmModule {
 		 * return: <modulus> <key blob>
 		 */
 		if (!(keyType.equals("sign") || keyType.equals("bind") || keyType.equals("identity"))) throw new TpmModuleException("TpmModule.getKey: key type parameter must be \"sign\", \"bind\", or \"identity\".");
-		String argument = "-key_type " + keyType + " -key_index " + keyIndex + " -key_auth " + TpmUtils.byteArrayToHexString(keyAuth);
+        List<String> argument = new ArrayList<String>(Arrays.asList("-key_type", keyType,
+                "-key_index", Integer.toString(keyIndex),
+                "-key_auth", TpmUtils.byteArrayToHexString(keyAuth)));
 		commandLineResult result = executeVer2Command(10, argument, 2, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.getKey returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		byte [] tempArray = TpmUtils.hexStringToByteArray(result.getResult(0)); //modulus - discard in favor of blob
@@ -572,7 +587,9 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 10 -key_type EK -owner_auth <40 char hex blob> -nonce <40 char hex blob>
 		 * return: <modulus>
 		 */
-		String argument = "-key_type ek -owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) + " -nonce " + TpmUtils.byteArrayToHexString(nonce);
+        List<String> argument = new ArrayList<String>(Arrays.asList("-key_type", "ek",
+                "-owner_auth", TpmUtils.byteArrayToHexString(ownerAuth),
+                "-nonce", TpmUtils.byteArrayToHexString(nonce)));
 		commandLineResult result = executeVer2Command(10, argument, 1, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.getPublicEndorsementKey returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return TpmUtils.hexStringToByteArray(result.getResult(0));
@@ -594,7 +611,9 @@ public class TpmModule {
 		 * return: no return ***
 		 */
 		if (!(keyType.equals("sign") || keyType.equals("bind") || keyType.equals("identity"))) throw new TpmModuleException("TpmModule.clearKey: key type parameter must be \"sign\", \"bind\", or \"identity\".");
-		String argument = "-key_type " + keyType + " -key_auth " + TpmUtils.byteArrayToHexString(keyAuth) + " -key_index " + keyIndex;
+        List<String> argument = new ArrayList<String>(Arrays.asList("-key_type", keyType,
+                "-key_auth", TpmUtils.byteArrayToHexString(keyAuth),
+                "-key_index", Integer.toString(keyIndex)));
 		commandLineResult result = executeVer2Command(11, argument, 0, true);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.clearKey returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return;
@@ -616,7 +635,9 @@ public class TpmModule {
 		 * return: no return ***
 		 */
 		if (!(credType.equals("EC") || credType.equals("CC") || credType.equals("PC")|| credType.equals("PCC"))) throw new TpmModuleException("TpmModule.setCredential: credential type parameter must be \"EC\", \"CC\", \"PC\", or \"PCC\".");
-		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) + " -cred_type " + credType + " -blob " + TpmUtils.byteArrayToHexString(credBlob);
+        List<String> argument = new ArrayList<String>(Arrays.asList("-owner_auth", TpmUtils.byteArrayToHexString(ownerAuth),
+                "-cred_type", credType,
+                "-blob", TpmUtils.byteArrayToHexString(credBlob)));
 		// TROUSERS MODE OPTIONAL
 		commandLineResult result = executeVer2Command(12, argument, 0, true);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.setCredential returned nonzero error: " + result.getReturnCode() + "(" + ")");
@@ -639,7 +660,8 @@ public class TpmModule {
 		 * return: <cred blob>
 		 */
  		if (!(credType.equals("EC") || credType.equals("CC") || credType.equals("PC")|| credType.equals("PCC"))) throw new TpmModuleException("TpmModule.getCredential: credential type parameter must be \"EC\", \"CC\", \"PC\", or \"PCC\".");
-		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) + " -cred_type " + credType;
+        List<String> argument = new ArrayList<String>(Arrays.asList("-owner_auth", TpmUtils.byteArrayToHexString(ownerAuth),
+                "-cred_type", credType));
 		// TROUSERS MODE OPTIONAL
 		commandLineResult result = executeVer2Command(13, argument, 1, true);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.getCredential returned nonzero error: " + result.getReturnCode() + "(" + ")");
@@ -661,7 +683,8 @@ public class TpmModule {
 		 * return: no return ***
 		 */
 		if (!(credType.equals("EC") || credType.equals("CC") || credType.equals("PC")|| credType.equals("PCC"))) throw new TpmModuleException("TpmModule.clearCredential: credential type parameter must be \"EC\", \"CC\", \"PC\", or \"PCC\".");
-		String argument = "-owner_auth " + TpmUtils.byteArrayToHexString(ownerAuth) + " -cred_type " + credType;
+        List<String> argument = new ArrayList<String>(Arrays.asList("-owner_auth", TpmUtils.byteArrayToHexString(ownerAuth),
+                "-cred_type", credType));
 		commandLineResult result = executeVer2Command(14, argument, 0, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.clearCredential returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return;
@@ -686,7 +709,9 @@ public class TpmModule {
 		if ((mask.length > 3)||(mask.length == 0)) {
 			throw new IllegalArgumentException ("TpmModule.seal: Mask must be between 1 and 3 bytes in length.");
 		}
-		String argument = "-blob " + TpmUtils.byteArrayToHexString(blob) + " -blob_auth " + TpmUtils.byteArrayToHexString(blobAuth) + " -mask " + TpmUtils.byteArrayToHexString(mask);
+        List<String> argument = new ArrayList<String>(Arrays.asList("-blob", TpmUtils.byteArrayToHexString(blob),
+                "-blob_auth", TpmUtils.byteArrayToHexString(blobAuth),
+                "-mask", TpmUtils.byteArrayToHexString(mask)));
 		commandLineResult result = executeVer2Command(15, argument, 1, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.seal returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return TpmUtils.hexStringToByteArray(result.getResult(0));
@@ -707,7 +732,8 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 16 -blob <> -blob_auth <40 char hex blob>
 		 * return: <unsealed data>
 		 */
-		String argument = "-blob " + TpmUtils.byteArrayToHexString(blob) + " -blob_auth " + TpmUtils.byteArrayToHexString(blobAuth);
+        List<String> argument = new ArrayList<String>(Arrays.asList("-blob", TpmUtils.byteArrayToHexString(blob),
+                "-blob_auth", TpmUtils.byteArrayToHexString(blobAuth)));
 		commandLineResult result = executeVer2Command(16, argument, 1, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.unseal returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return TpmUtils.hexStringToByteArray(result.getResult(0));
@@ -730,7 +756,10 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 17 -blob <> -blob_auth <40 char hex blob> -key_auth <40 char hex blob> -key_index <integer index>
 		 * return: <bound data blob>
 		 */
-		String argument = "-blob " + TpmUtils.byteArrayToHexString(blob) + " -blob_auth " + TpmUtils.byteArrayToHexString(blobAuth) + " -key_auth " + TpmUtils.byteArrayToHexString(keyAuth) + " -key_index " + keyIndex;
+        List<String> argument = new ArrayList<String>(Arrays.asList("-blob", TpmUtils.byteArrayToHexString(blob),
+                "-blob_auth", TpmUtils.byteArrayToHexString(blobAuth),
+                "-key_auth", TpmUtils.byteArrayToHexString(keyAuth),
+                "-key_index", Integer.toString(keyIndex)));
 		commandLineResult result = executeVer2Command(17, argument, 1, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.bind returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return TpmUtils.hexStringToByteArray(result.getResult(0));
@@ -753,7 +782,10 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 18 -blob <> -blob_auth <40 char hex blob> -key_auth <40 char hex blob> -key_index <integer index>
 		 * return: <unbound data>
 		 */
-		String argument = "-blob " + TpmUtils.byteArrayToHexString(blob) + " -blob_auth " + TpmUtils.byteArrayToHexString(blobAuth) + " -key_auth " + TpmUtils.byteArrayToHexString(keyAuth) + " -key_index " + keyIndex;
+        List<String> argument = new ArrayList<String>(Arrays.asList("-blob", TpmUtils.byteArrayToHexString(blob),
+                "-blob_auth", TpmUtils.byteArrayToHexString(blobAuth),
+                "-key_auth", TpmUtils.byteArrayToHexString(keyAuth),
+                "-key_index", Integer.toString(keyIndex)));
 		commandLineResult result = executeVer2Command(18, argument, 1, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.unbind returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return TpmUtils.hexStringToByteArray(result.getResult(0));
@@ -781,7 +813,11 @@ public class TpmModule {
 		if ((mask.length > 3)||(mask.length == 0)) {
 			throw new IllegalArgumentException ("TpmModule.sealBind: Mask must be between 1 and 3 bytes in length.");
 		}
-		String argument = "-blob " + TpmUtils.byteArrayToHexString(blob) + " -blob_auth " + TpmUtils.byteArrayToHexString(blobAuth) + " -key_auth " + TpmUtils.byteArrayToHexString(keyAuth) + " -key_index " + keyIndex + " -mask " + TpmUtils.byteArrayToHexString(mask);
+        List<String> argument = new ArrayList<String>(Arrays.asList("-blob", TpmUtils.byteArrayToHexString(blob),
+                "-blob_auth", TpmUtils.byteArrayToHexString(blobAuth),
+                "-key_auth", TpmUtils.byteArrayToHexString(keyAuth),
+                "-key_index", Integer.toString(keyIndex),
+                "-mask", TpmUtils.byteArrayToHexString(mask)));
 		commandLineResult result = executeVer2Command(19, argument, 1, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.sealBind returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return TpmUtils.hexStringToByteArray(result.getResult(0));
@@ -804,7 +840,10 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 20 -blob <> -blob_auth <40 char hex blob> -key_auth <40 char hex blob> -key_index <integer index>
 		 * return: <unsealed unbound data>
 		 */
-		String argument = "-blob " + TpmUtils.byteArrayToHexString(blob) + " -blob_auth " + TpmUtils.byteArrayToHexString(blobAuth) + " -key_auth " + TpmUtils.byteArrayToHexString(keyAuth) + " -key_index " + keyIndex;
+        List<String> argument = new ArrayList<String>(Arrays.asList("-blob", TpmUtils.byteArrayToHexString(blob),
+                "-blob_auth", TpmUtils.byteArrayToHexString(blobAuth),
+                "-key_auth", TpmUtils.byteArrayToHexString(keyAuth),
+                "-key_index", Integer.toString(keyIndex)));
 		commandLineResult result = executeVer2Command(20, argument, 1, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.unsealUnbind returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return TpmUtils.hexStringToByteArray(result.getResult(0));
@@ -827,7 +866,7 @@ public class TpmModule {
 		if (numBytes < 0) {
 			throw new IllegalArgumentException ("TpmModule.getRandomInteger: number of bytes requested must be a positive number.");
 		}
-		String argument = "-bytes " + numBytes;
+        List<String> argument = new ArrayList<String>(Arrays.asList("-bytes", Integer.toString(numBytes)));
 		commandLineResult result = executeVer2Command(21, argument, 1, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.getRandomInteger returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return TpmUtils.hexStringToByteArray(result.getResult(0));
@@ -849,7 +888,9 @@ public class TpmModule {
 		 * NIARL_TPM_Module -mode 22 -blob <> -key_auth <40 char hex blob> -key_index <integer index>
 		 * return: <signature>
 		 */
-		String argument = "-blob " + TpmUtils.byteArrayToHexString(blob) + " -key_auth " + TpmUtils.byteArrayToHexString(keyAuth) + " -key_index " + keyIndex;
+        List<String> argument = new ArrayList<String>(Arrays.asList("-blob", TpmUtils.byteArrayToHexString(blob),
+                "-key_auth", TpmUtils.byteArrayToHexString(keyAuth),
+                "-key_index", Integer.toString(keyIndex)));
 		commandLineResult result = executeVer2Command(22, argument, 1, false);
 		if (result.getReturnCode() != 0) throw new TpmModuleException("TpmModule.sign returned nonzero error: " + result.getReturnCode() + "(" + ")");
 		return TpmUtils.hexStringToByteArray(result.getResult(0));
