@@ -134,7 +134,7 @@ public class CreateIdentity  {
 			tpmOwnerAuth = HisProvisionerProperties.getProperty(OWNER_AUTH, "");
 			if (tpmOwnerAuth != null) {
 			//    log.info("owner authentication is char formatted");
-			    TpmOwnerAuth = tpmOwnerAuth.getBytes();
+			    TpmOwnerAuth = tpmOwnerAuth.getBytes("UTF-8");
 			} 
                         // else if (tpmOwnerAuth.length() == 40) {
 			//    log.info("owner authentication is hex code formatted");
