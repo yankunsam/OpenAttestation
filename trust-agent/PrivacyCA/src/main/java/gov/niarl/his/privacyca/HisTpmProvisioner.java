@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.security.cert.X509Certificate;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -86,7 +87,7 @@ public class HisTpmProvisioner {
 			File propFile = ResourceFinder.getFile("hisprovisioner.properties");
 			PropertyFile = new FileInputStream(propFile);
 			Properties HisProvisionerProperties = new Properties();
-			HisProvisionerProperties.load(PropertyFile);
+			HisProvisionerProperties.load(new InputStreamReader(PropertyFile, "UTF-8"));
 			
 			
 			homeFolder = propFile.getAbsolutePath();
