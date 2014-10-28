@@ -8,6 +8,7 @@ saml_password="samlpasswd2"
 portal_password="portalpasswd2"
 p12_password="p2"
 java_home="/usr/lib/jvm/java-7-openjdk-amd64/"
+log_dir="/var/log/tomcat"
 
 ###########
 TOP_DIR=$(cd .. && pwd)
@@ -125,9 +126,9 @@ attestation_properties
 privacyca_properties
 privacyca_client_properties
 
-sed -i "s/OATAPPR_IP/$oat_server/g" $conf_dir/mtwilson.properties
-sed -i "s/OATAPPR_IP/$oat_server/g" $conf_dir/attestation-service.properties
-sed -i "s/OATAPPR_IP/$oat_server/g" $conf_dir/privacyca-client.properties
+sed -i "s/OATAPPR_IP/$oat_server_ip/g" $conf_dir/mtwilson.properties
+sed -i "s/OATAPPR_IP/$oat_server_ip/g" $conf_dir/attestation-service.properties
+sed -i "s/OATAPPR_IP/$oat_server_ip/g" $conf_dir/privacyca-client.properties
 sed -i "s/MYSQL_PASSWD/$mysql_password/g" $conf_dir/mtwilson.properties
 sed -i "s/PORTAL_PASSWD/$portal_password/g" $conf_dir/trust-dashboard.properties
 sed -i "s/PORTAL_PASSWD/$portal_password/g" $conf_dir/whitelist-portal.properties
@@ -164,8 +165,11 @@ keytool -export -alias $saml_key_aslias -keystore $saml_keystore_file \
         -storepass $saml_keystore_password -file $oat_home_dir/saml.crt
 
 ### Create EK Signing Certificate ###
+pushd $(pwd)
+cd $log_dir
 find $TOP_DIR -name "HisPrivacyCAWebServices2*-setup.jar" | \
       xargs -i java -jar {} 
+popd
 cp $conf_dir/clientfiles/PrivacyCA.cer $conf_dir
 
 ### aikqverify install ###
@@ -209,7 +213,7 @@ cp -f $oat_home_dir/ssl.${privacyca_server}.crt $tomcat_dir/Certificate/
 tdbp_password="`trust_tdb_parse "mtwilson.tdbp.keystore.password"`"
 
 keytool -genkey -alias admin -keyalg RSA -keysize 2048 -keystore $oat_home_dir/portal.jks \
-        -storepass $tdbp_password "CN=Portal User, OU=Mt Wilson, O=My Org, C=US" \
+        -storepass $tdbp_password -dname "CN=Portal User, OU=Mt Wilson, O=My Org, C=US" \
         -validity 3650 -keypass $tdbp_password
 
 keytool -importcert -file $oat_home_dir/saml.crt -keystore $oat_home_dir/portal.jks \
