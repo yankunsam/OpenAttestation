@@ -34,9 +34,16 @@ import org.slf4j.LoggerFactory;
  */
 public class ResourceFinder {
     private static Logger log = LoggerFactory.getLogger(ResourceFinder.class);
-    
+    private static String homeFolder = "/etc/intel/cloudsecurity/";
+    private static String clientHomeFolder = "/etc/oat-client/";
+
     // returns a File from which you can getAbsolutePath or wrap with FileInputStream
     public static File getFile(String filename) throws FileNotFoundException {
+        return getFile(filename, false);
+    }
+    
+    // returns a File from which you can getAbsolutePath or wrap with FileInputStream
+    public static File getFile(String filename, boolean isClient) throws FileNotFoundException {
         // try standard install locations        
 //        System.out.println("ResourceFinder os.name="+System.getProperty("os.name"));
         ArrayList<File> files = new ArrayList<File>();
@@ -51,7 +58,11 @@ public class ResourceFinder {
         // linux-specific location
         if( System.getProperty("os.name", "").toLowerCase().contains("linux") || System.getProperty("os.name", "").toLowerCase().contains("unix") ) {
             files.add(new File("./config/"+filename));
-            files.add(new File("/etc/intel/cloudsecurity/"+filename));
+            if(isClient)
+                files.add(new File(clientHomeFolder+filename));
+            else
+                files.add(new File(homeFolder + filename));
+
             files.add(new File(System.getProperty("user.home")+File.separator+filename));
         }
         // try all the files we found
@@ -60,8 +71,8 @@ public class ResourceFinder {
                 return f;
             }
         }
-        
-        throw new FileNotFoundException("cannot find "+filename+" [os.name="+System.getProperty("os.name")+"]");        
+
+        throw new FileNotFoundException("cannot find "+filename+" [os.name="+System.getProperty("os.name")+"]");
     }
     
     public static URL getURL(String filename) throws FileNotFoundException {

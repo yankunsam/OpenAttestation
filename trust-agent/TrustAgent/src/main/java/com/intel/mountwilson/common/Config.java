@@ -51,16 +51,17 @@ public class Config {
 	}
 
 
-
 	static{
 		File propFile;
+        homeFolder = "/var/lib/oat-client";
 		try {
-			propFile = TAConfig.getFile("trustagent.properties");
-			homeFolder = propFile.getAbsolutePath();
-			homeFolder = homeFolder.substring(0,homeFolder.indexOf("trustagent.properties") -1);
-			LoggerFactory.getLogger(Config.class.getName()).warn("Home folder. Using " + homeFolder);
-		} catch (FileNotFoundException e) {
-			LoggerFactory.getLogger(Config.class.getName()).warn("Could Not find the home folder. Using " + homeFolder);
+            propFile = new File(homeFolder);
+            if(!propFile.isDirectory()) {
+                propFile.mkdir();
+                LoggerFactory.getLogger(Config.class.getName()).warn("Home folder. Using " + homeFolder);
+            }
+		} catch (Exception e) {
+			LoggerFactory.getLogger(Config.class.getName()).error("Could not create the home folder. Using " + homeFolder);
 		}
     }
     

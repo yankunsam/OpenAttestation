@@ -15,19 +15,7 @@
 
 package com.intel.mountwilson.manifest.helper;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -68,10 +56,12 @@ import com.intel.mountwilson.manifest.data.PcrManifest;
 import com.intel.mountwilson.ta.data.ClientRequestType;
 import com.intel.mtwilson.as.data.TblHosts;
 import com.intel.mtwilson.datatypes.ErrorCode;
-import java.io.StringWriter;
+
 import java.util.ArrayList;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
+
+import org.bouncycastle.openssl.PEMWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.bouncycastle.openssl.PEMReader;
@@ -85,10 +75,10 @@ public class TAHelper {
     private static final Logger log = LoggerFactory.getLogger(TAHelper.class);
 
     private String aikverifyhome;
-    private String aikverifyhomeData;
-    private String aikverifyhomeBin;
-    private String opensslCmd;
-    private String aikverifyCmd;
+    //private String aikverifyhomeData;
+    //private String aikverifyhomeBin;
+    //private String opensslCmd;
+    //private String aikverifyCmd;
     
     private Pattern pcrNumberPattern = Pattern.compile("[0-9]|[0-1][0-9]|2[0-3]"); // integer 0-23 with optional zero-padding (00, 01, ...)
     private Pattern pcrValuePattern = Pattern.compile("[0-9a-fA-F]{40}"); // 40-character hex string
@@ -105,28 +95,31 @@ public class TAHelper {
     public TAHelper(/*EntityManagerFactory entityManagerFactory*/) {
         Configuration config = ASConfig.getConfiguration();
         aikverifyhome = config.getString("com.intel.mountwilson.as.home", "C:/work/aikverifyhome");
-        aikverifyhomeData = aikverifyhome+File.separator+"data";
-        aikverifyhomeBin = aikverifyhome+File.separator+"bin";
-        opensslCmd = aikverifyhomeBin + File.separator + config.getString("com.intel.mountwilson.as.openssl.cmd", "openssl.bat");
+        //aikverifyhomeData = aikverifyhome+File.separator+"data";
+        //aikverifyhomeBin = aikverifyhome+File.separator+"bin";
+        //opensslCmd = aikverifyhomeBin + File.separator + config.getString("com.intel.mountwilson.as.openssl.cmd", "openssl.bat");
         //aikverifyCmd = aikverifyhomeBin + File.separator + config.getString("com.intel.mountwilson.as.aikqverify.cmd", "aikqverify.exe");
         
-        boolean foundAllRequiredFiles = true;
-        String required[] = new String[] { aikverifyhome, opensslCmd, aikverifyhomeData };
-        for(String filename : required) {
-            File file = new File(filename);
-            if( !file.exists() ) {
-                log.error( String.format("Invalid service configuration: Cannot find %s", filename ));
-                foundAllRequiredFiles = false;
-            }
-        }
-        if( !foundAllRequiredFiles ) {
-            throw new ASException(ErrorCode.AS_CONFIGURATION_ERROR, "Cannot find aikverify files");
-        }
+//        boolean foundAllRequiredFiles = true;
+//        String required[] = new String[] { aikverifyhome, };
+//        for(String filename : required) {
+//            File file = new File(filename);
+//            if( !file.exists() ) {
+//                log.error( String.format("Invalid service configuration: Cannot find %s", filename ));
+//                foundAllRequiredFiles = false;
+//            }
+//        }
+//        if( !foundAllRequiredFiles ) {
+//            throw new ASException(ErrorCode.AS_CONFIGURATION_ERROR, "Cannot find aikverify files");
+//        }
         
-        // we must be able to write to the data folder in order to save certificates, nones, public keys, etc.
-        File datafolder = new File(aikverifyhomeData);
+        // we must be able to write to the data folder in order to save certificates, nonces, public keys, etc.
+        File datafolder = new File(aikverifyhome);
+        if( !datafolder.exists() ) {
+            throw new ASException(ErrorCode.AS_CONFIGURATION_ERROR, String.format("Cannot find aikverify home: %s", aikverifyhome));
+        }
         if( !datafolder.canWrite() ) {
-            throw new ASException(ErrorCode.AS_CONFIGURATION_ERROR, String.format(" Cannot write to %s", aikverifyhomeData));            
+            throw new ASException(ErrorCode.AS_CONFIGURATION_ERROR, String.format(" Cannot write to %s", aikverifyhome));
         }
         
 //        this.setEntityManagerFactory(entityManagerFactory);
@@ -355,21 +348,21 @@ public class TAHelper {
 
         try {
             assert aikverifyhome != null;
-            log.info( String.format("saving file %s to [%s]", fileName, aikverifyhomeData));
-            fileOutputStream = new FileOutputStream(aikverifyhomeData + File.separator +fileName);
+            log.info( String.format("saving file %s to [%s]", fileName, aikverifyhome));
+            fileOutputStream = new FileOutputStream(aikverifyhome + File.separator +fileName);
             assert fileOutputStream != null;
             assert contents != null;
             fileOutputStream.write(contents);
             fileOutputStream.flush();
         }
         catch(FileNotFoundException e) {
-            log.info( String.format("cannot save to file %s in [%s]: %s", fileName, aikverifyhomeData, e.getMessage()));
+            log.info( String.format("cannot save to file %s in [%s]: %s", fileName, aikverifyhome, e.getMessage()));
             throw e;
         } finally {
                  try {
                     fileOutputStream.close();
                 } catch (IOException ex) {
-                    log.error(String.format("Cannot close file %s in [%s]: %s", fileName, aikverifyhomeData, ex.getMessage()), ex);
+                    log.error(String.format("Cannot close file %s in [%s]: %s", fileName, aikverifyhome, ex.getMessage()), ex);
                 }
         }
 
@@ -388,12 +381,21 @@ public class TAHelper {
           saveFile(getNonceFileName(sessionId), nonceBytes);
     }
 
-    private void createRSAKeyFile(String sessionId)  {
-        
-        String command = String.format("%s %s %s",opensslCmd,aikverifyhomeData + File.separator + getCertFileName(sessionId),aikverifyhomeData + File.separator+getRSAPubkeyFileName(sessionId)); 
-        log.info( "RSA Key Command {}", command);
-        CommandUtil.runCommand(command, false, "CreateRsaKey" );
-        //log.log(Level.INFO, "Result - {0} ", result);
+    private void createRSAKeyFile(String sessionId)
+            throws KeyStoreException,
+            IOException,
+            NoSuchAlgorithmException,
+            javax.security.cert.CertificateException,
+            java.security.cert.CertificateException
+    {
+        X509Certificate cert = certFromFile(aikverifyhome + File.separator + getCertFileName(sessionId));
+        FileWriter fw = new FileWriter(aikverifyhome + File.separator + getRSAPubkeyFileName(sessionId));
+        PEMWriter pemWriter = new PEMWriter(fw);
+        pemWriter.writeObject(cert.getPublicKey());
+        pemWriter.flush();
+        fw.flush();
+        pemWriter.close();
+        fw.close();
     }
 
     private String getRSAPubkeyFileName(String sessionId) {
@@ -409,7 +411,7 @@ public class TAHelper {
         log.info( "verifyQuoteAndGetPcr for session {}",sessionId);
         //log.info( "Command: {}",command);
         //List<String> result = CommandUtil.runCommand(command,true,"VerifyQuote");
-        String certFileName = aikverifyhomeData + File.separator + getCertFileName(sessionId);
+        String certFileName = aikverifyhome + File.separator + getCertFileName(sessionId);
         //need verify AIC here by the privacyCA's public key
         //1. get privacy CA's public key
         //2. verification
@@ -424,7 +426,7 @@ public class TAHelper {
                 SetupProperties.load(PropertyFile);
                 X509Certificate machineCertificate = pemToX509Certificate(certFileName);
                 String clientPath = SetupProperties.getProperty(CLIENT_PATH, "clientfiles");
-                X509Certificate pcaCert = certFromFile(fileLocation + clientPath + "/" + PrivacyCaCertFileName);
+                X509Certificate pcaCert = certFromFile(fileLocation + PrivacyCaCertFileName);
                 if (pcaCert !=null)
                     machineCertificate.verify(pcaCert.getPublicKey());
                 log.info("passed the verification");
@@ -432,9 +434,9 @@ public class TAHelper {
             log.error("Machine certificate was not signed by the privacy CA." + e.toString());
             throw new RuntimeException(e);
         }
-        String nonceFileName = aikverifyhomeData + File.separator+getNonceFileName(sessionId);
-        String quoteFileName = aikverifyhomeData + File.separator+getQuoteFileName(sessionId);
-        String rsaPubkeyFileName = aikverifyhomeData + File.separator+getRSAPubkeyFileName(sessionId);
+        String nonceFileName = aikverifyhome + File.separator+getNonceFileName(sessionId);
+        String quoteFileName = aikverifyhome + File.separator+getQuoteFileName(sessionId);
+        String rsaPubkeyFileName = aikverifyhome + File.separator+getRSAPubkeyFileName(sessionId);
         List<String> result = aikqverify(nonceFileName, rsaPubkeyFileName, quoteFileName);
         // Sample output from command:
         //  1 3a3f780f11a4b49969fcaa80cd6e3957c33b2275

@@ -107,7 +107,7 @@ public class HisConfig {
         }
         // linux-specific location
         if( System.getProperty("os.name", "").toLowerCase().equals("linux") || System.getProperty("os.name", "").toLowerCase().equals("unix") ) {
-            files.add(new File("/etc/intel/cloudsecurity/"+propertiesFilename));
+            files.add(new File("/etc/oat-client/"+propertiesFilename));
         }
         files.add(new File(System.getProperty("app.path")+File.separator+propertiesFilename)); // this line specific to TA for backwards compatibility, not needed in AS/AH
         // add all the files we found

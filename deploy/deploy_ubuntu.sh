@@ -2,16 +2,54 @@
 #deploy OpenAttestation 2.x
 
 ### configuration ###
-oat_server_ip="___ IP ___"
-mysql_password="______ MySQL PASSWD ______"
-saml_password="samlpasswd2"
-portal_password="portalpasswd2"
-p12_password="p2"
-java_home="/usr/lib/jvm/java-7-openjdk-amd64/"
+mysql_password=${mysql_password:-""}
+oat_server=${oat_server:-""}
+saml_password=${saml_password:-samlpasswd2}
+portal_password=${portal_password:-portalpasswd2}
+p12_password=${p12_password:-p2}
+log_dir=${log_dir:-/var/log/tomcat6}
+
+example()
+{
+    echo $"$0: Usage: $0 --mysql <MySQL passwd of oat server> --ip <IP of oatserver>}"
+}
+
+if [ $# -lt 3 ]; then
+    example
+    exit 1
+fi
+
+while [ $# -gt 1 ]; do
+  case $1 in
+    --mysql)
+        if [ "$2" != "--ip" ];then
+            mysql_password=$2
+            shift 2
+        else
+            shift 1
+        fi
+        ;;
+    --ip)
+        oat_server=$2
+        shift 2
+        ;;
+    *)
+        example
+        exit 1;;
+  esac
+done
+
+echo "oat_server = $oat_server"
+echo "mysql_password = $mysql_password"
+
+if [ "$oat_server" == "" ]; then
+    example
+    exit 1
+fi
+
 ###########
 
 TOP_DIR=$(cd .. && pwd)
-export JAVA_HOME=$java_home
 
 conf_dir=${conf_dir:-/etc/intel/cloudsecurity}
 [ -d $conf_dir ] && rm -rf $csonf_dir
@@ -25,9 +63,22 @@ install -d  $oat_home_dir
 #chown -R tomcat6:tomcat6 $oat_home_dir
 
 ###MySQL ### 
-mysql -uroot -p$mysql_password -e 'create database mw_as';
-mysql -uroot -p$mysql_password mw_as < \
-$TOP_DIR/database/mysql/src/main/resources/com/intel/mtwilson/database/mysql/mtwilson.sql
+mysql_status="`netstat -vulntp |grep -i mysql`"
+if [ -n "$mysql_status" ];then
+    echo "mysql service is running .."
+else
+    echo "starting mysql service .."
+    service mysql start
+fi
+if [ "$mysql_password" == "" ];then
+    mysql -uroot -e 'create database mw_as';
+    mysql -uroot mw_as < \
+    $TOP_DIR/database/mysql/src/main/resources/com/intel/mtwilson/database/mysql/mtwilson.sql
+else
+    mysql -uroot -p$mysql_password -e 'create database mw_as';
+    mysql -uroot -p$mysql_password mw_as < \
+    $TOP_DIR/database/mysql/src/main/resources/com/intel/mtwilson/database/mysql/mtwilson.sql
+fi
 
 cd $conf_dir
 mtwilson_properties()
@@ -125,9 +176,9 @@ attestation_properties
 privacyca_properties
 privacyca_client_properties
 
-sed -i "s/OATAPPR_IP/$oat_server_ip/g" $conf_dir/mtwilson.properties
-sed -i "s/OATAPPR_IP/$oat_server_ip/g" $conf_dir/attestation-service.properties
-sed -i "s/OATAPPR_IP/$oat_server_ip/g" $conf_dir/privacyca-client.properties
+sed -i "s/OATAPPR_IP/$oat_server/g" $conf_dir/mtwilson.properties
+sed -i "s/OATAPPR_IP/$oat_server/g" $conf_dir/attestation-service.properties
+sed -i "s/OATAPPR_IP/$oat_server/g" $conf_dir/privacyca-client.properties
 sed -i "s/MYSQL_PASSWD/$mysql_password/g" $conf_dir/mtwilson.properties
 sed -i "s/PORTAL_PASSWD/$portal_password/g" $conf_dir/trust-dashboard.properties
 sed -i "s/PORTAL_PASSWD/$portal_password/g" $conf_dir/whitelist-portal.properties
@@ -164,8 +215,11 @@ keytool -export -alias $saml_key_aslias -keystore $saml_keystore_file \
         -storepass $saml_keystore_password -file $oat_home_dir/saml.crt
 
 ### Create EK Signing Certificate ###
+pushd $(pwd)
+cd $log_dir
 find $TOP_DIR -name "HisPrivacyCAWebServices2*-setup.jar" | \
-      xargs -i java -jar {} 
+      xargs -i java -jar {}
+popd
 cp $conf_dir/clientfiles/PrivacyCA.cer $conf_dir
 
 ### change the configuration folder user group to tomcat:tomcat ###

@@ -125,7 +125,7 @@ public class TAConfig {
         // linux-specific location
         if( System.getProperty("os.name", "").toLowerCase().equals("linux") || System.getProperty("os.name", "").toLowerCase().equals("unix") ) {
             files.add(new File("./config/"+propertiesFilename));
-            files.add(new File("/etc/intel/cloudsecurity/"+propertiesFilename));
+            files.add(new File("/etc/oat-client/"+propertiesFilename));
         }
         files.add(new File(System.getProperty("app.path")+File.separator+propertiesFilename)); // this line specific to TA for backwards compatibility, not needed in AS/AH
         // add all the files we found
@@ -165,7 +165,7 @@ public class TAConfig {
         // linux-specific location
         if( System.getProperty("os.name", "").toLowerCase().contains("linux") || System.getProperty("os.name", "").toLowerCase().contains("unix") ) {
         	files.add(new File("./config/"+filename));
-            files.add(new File("/etc/intel/cloudsecurity/"+filename));
+            files.add(new File("/etc/oat-client/"+filename));
         }
         // try all the files we found
         for(File f : files) {
