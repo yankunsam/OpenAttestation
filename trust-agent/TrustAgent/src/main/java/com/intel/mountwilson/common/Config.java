@@ -53,7 +53,7 @@ public class Config {
 
 	static{
 		File propFile;
-        homeFolder = "/var/lib/oat-client";
+        homeFolder = "/etc/intel/cloudsecurity";
 		try {
             propFile = new File(homeFolder);
             if(!propFile.isDirectory()) {
