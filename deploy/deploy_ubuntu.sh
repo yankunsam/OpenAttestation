@@ -5,7 +5,7 @@
 mysql_password=${mysql_password:-""}
 oat_server=${oat_server:-""}
 oat_server_port=${oat_server_port:-8181}
-mysql_port=${mysql_port:-3307}
+mysql_port=${mysql_port:-3306}
 saml_password=${saml_password:-samlpasswd2}
 portal_password=${portal_password:-portalpasswd2}
 p12_password=${p12_password:-p2}
@@ -13,7 +13,7 @@ log_dir=${log_dir:-/var/log/tomcat6}
 
 example()
 {
-    echo $"$0: Usage: $0 --mysql <MySQL passwd of oat server> --ip <IP of oatserver> --port <Port of oatserver> --ha_master <IP of the ha master>"
+    echo $"$0: Usage: $0 --mysql <MySQL passwd of oat server> --ip <IP of oatserver> --port <Port of oatserver> --mysql_port <Port of mysql> --ha_master <IP of the ha master>"
 }
 
 if [ $# -lt 3 ]; then
@@ -36,13 +36,17 @@ while [ $# -gt 1 ]; do
         shift 2
         ;;
     --port)
-	oat_server_port=$2
-	shift 2
-	;;
+	    oat_server_port=$2
+	    shift 2
+	    ;;
+    --mysql_port)
+        mysql_port=$2
+        shift 2
+        ;;
     --ha_master)
-	ha_master=$2
-	shift 2
-	;;
+	    ha_master=$2
+	    shift 2
+	    ;;
     *)
         example
         exit 1;;
@@ -52,6 +56,7 @@ done
 echo "oat_server = $oat_server"
 echo "mysql_password = $mysql_password"
 echo "oat_server_port = $oat_server_port"
+echo "ha_master = $ha_master"
 
 if [ "$oat_server" == "" ]; then
     example
@@ -217,7 +222,7 @@ is_hamaster()
     return 1
 }
 
-if [ -n $ha_master ]; then
+if [ -n "$ha_master" ]; then
     if ! is_hamaster $ha_master; then
         # ha slave node 
         # copy the certificates and property file to slave
@@ -230,11 +235,13 @@ if [ -n $ha_master ]; then
 
         # install aikverify
         install_aikverify
+        
         # copy wars 
         for name in "HisPrivacyCAWebServices2" "WLMService" \
             "WhiteListPortal" "AttestationService" "TrustDashBoard";
         do
-            echo $name            
+            echo "Copying $name.war to tomcat webapp."
+            copy_war_package $name             
         done
 
         # set permissions
