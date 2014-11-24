@@ -235,6 +235,9 @@ if [ -n "$ha_master" ]; then
 
         # install aikverify
         install_aikverify
+
+	# grant root all the permission
+        mysql -uroot -p$mysql_password mysql -e "grant all privileges on *.* to root@'%' identified by '$mysql_password'"
         
         # copy wars 
         for name in "HisPrivacyCAWebServices2" "WLMService" \
