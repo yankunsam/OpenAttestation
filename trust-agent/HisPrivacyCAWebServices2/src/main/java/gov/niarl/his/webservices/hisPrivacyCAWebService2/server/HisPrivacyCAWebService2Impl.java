@@ -125,8 +125,7 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 			if(!propFileLoaded)
 				propFileLoaded = readPropertiesFile();
 
-			String filePath = "/etc/intel/cloudsecurity/";
-			String propertiesFileName = filePath + "EndorsementCA.properties";
+			String propertiesFileName = homeFolder + "EndorsementCA.properties";
 			String EC_P12_FILE = "TpmEndorsmentP12";
 			String EC_P12_PASSWORD = "EndorsementP12Pass";
 			FileInputStream PropertyFile = null;		
@@ -167,19 +166,19 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 			}
 			
 			//Generate Endorsement certificate
-			X509Certificate endorsementCert = TpmUtils.certFromP12(filePath + TpmEndorsmentP12, EndorsementP12Pass);
+			X509Certificate endorsementCert = TpmUtils.certFromP12(homeFolder + TpmEndorsmentP12, EndorsementP12Pass);
 			//X509Certificate endorsementCert = TpmUtils.certFromP12(TpmEndorsmentP12, EndorsementP12Pass);
-			RSAPrivateKey privKey = TpmUtils.privKeyFromP12(filePath + TpmEndorsmentP12, EndorsementP12Pass);
+			RSAPrivateKey privKey = TpmUtils.privKeyFromP12(homeFolder + TpmEndorsmentP12, EndorsementP12Pass);
 			
                         byte[] ekMod = new byte[256];
-                        PropertyFile = new FileInputStream( filePath + "PrivacyCA.properties");
+                        PropertyFile = new FileInputStream( homeFolder + "PrivacyCA.properties");
 			Properties HisProvisionerProperties = new Properties();
 			HisProvisionerProperties.load(PropertyFile);
 			EC_P12_FILE = "P12filename";
 			EC_P12_PASSWORD = "P12password";
 			String PrivacyCAP12 = HisProvisionerProperties.getProperty(EC_P12_FILE, "");
 			String PrivacyCAP12Pass = HisProvisionerProperties.getProperty(EC_P12_PASSWORD, "");
-			RSAPrivateKey privacyKey = TpmUtils.privKeyFromP12(filePath +  "/" + PrivacyCAP12, PrivacyCAP12Pass);
+			RSAPrivateKey privacyKey = TpmUtils.privKeyFromP12(homeFolder +  "/" + PrivacyCAP12, PrivacyCAP12Pass);
 			
 			//phase 1: construct sessionKey
 			byte[] deskey = decryptRSA(encryptedSessionKey, privacyKey);
@@ -319,21 +318,25 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 		return TpmUtils.concat(asymBlob, symBlob);
 	}
 	
-	private static byte[] decryptRSA(byte[] src, PrivateKey rk) throws Exception {
+	public static byte[] decryptRSA(byte[] src, PrivateKey rk) throws Exception {
     	Cipher cipher = Cipher.getInstance("RSA", new BouncyCastleProvider());
         cipher.init(Cipher.DECRYPT_MODE, rk);
         return cipher.doFinal(src);
     }
     
-    private static byte[] decryptDES(byte[] text, SecretKey key) throws Exception {
+    public static byte[] decryptDES(byte[] text, SecretKey key) throws Exception {
         Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");
     	cipher.init(Cipher.DECRYPT_MODE, key);
         return cipher.doFinal(text);
     }
     
-    private static byte[] encryptDES(byte[] text, SecretKey key) throws Exception {
+    public static byte[] encryptDES(byte[] text, SecretKey key) throws Exception {
     	Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");  
 	cipher.init(Cipher.ENCRYPT_MODE, key);  
 	return cipher.doFinal(text);
+    }
+    
+    public void setHomeFolder(String homeFolder) {
+    	this.homeFolder = homeFolder;
     }
 }
