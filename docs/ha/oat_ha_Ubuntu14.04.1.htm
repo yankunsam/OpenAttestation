@@ -439,7 +439,8 @@ span.BalloonTextChar
 	mso-style-link:"Balloon Text";
 	font-family:"Segoe UI",sans-serif;}
 .MsoChpDefault
-	{font-size:10.5pt;}
+	{font-size:10.5pt;
+	font-family:"Calibri",sans-serif;}
 .MsoPapDefault
 	{margin-bottom:6.0pt;
 	line-height:110%;}
@@ -472,83 +473,78 @@ style='font-size:28.0pt'>OAT High Availability Deployment</span></p>
 
 </div>
 
-<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc404598691">Preface<span
+<p class=MsoToc1><a href="#_Toc404598691">Preface<span style='color:windowtext;
+display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>1</span></a></p>
+
+<p class=MsoToc1><a href="#_Toc404598692">Prerequisites<span style='color:windowtext;
+display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>1</span></a></p>
+
+<p class=MsoToc2><a href="#_Toc404598693">Local Name Resolution<span
 style='color:windowtext;display:none;text-decoration:none'>. </span><span
-style='color:windowtext;display:none;text-decoration:none'>1</span></a></span></p>
+style='color:windowtext;display:none;text-decoration:none'>1</span></a></p>
 
-<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc404598692">Prerequisites<span
+<p class=MsoToc2><a href="#_Toc404598694">SSH Password-less Connection between
+Hosts<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>1</span></a></p>
+
+<p class=MsoToc1><a href="#_Toc404598695">Deploy the Web Applications with Load
+Balancers<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>1</span></a></p>
+
+<p class=MsoToc2><a href="#_Toc404598696">Set up Haproxy<span style='color:
+windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>1</span></a></p>
+
+<p class=MsoToc2><a href="#_Toc404598697">Enable Haproxy logging<span
 style='color:windowtext;display:none;text-decoration:none'>. </span><span
-style='color:windowtext;display:none;text-decoration:none'>1</span></a></span></p>
+style='color:windowtext;display:none;text-decoration:none'>4</span></a></p>
 
-<p class=MsoToc2><span class=MsoHyperlink><a href="#_Toc404598693">Local Name
-Resolution<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
-style='color:windowtext;display:none;text-decoration:none'>1</span></a></span></p>
+<p class=MsoToc1><a href="#_Toc404598698">Deploy the Web Applications with HA
+&amp; Load Balancer<span style='color:windowtext;display:none;text-decoration:
+none'> </span><span
+style='color:windowtext;display:none;text-decoration:none'>4</span></a></p>
 
-<p class=MsoToc2><span class=MsoHyperlink><a href="#_Toc404598694">SSH
-Password-less Connection between Hosts<span style='color:windowtext;display:
-none;text-decoration:none'>. </span><span
-style='color:windowtext;display:none;text-decoration:none'>1</span></a></span></p>
-
-<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc404598695">Deploy the
-Web Applications with Load Balancers<span style='color:windowtext;display:none;
-text-decoration:none'>. </span><span
-style='color:windowtext;display:none;text-decoration:none'>1</span></a></span></p>
-
-<p class=MsoToc2><span class=MsoHyperlink><a href="#_Toc404598696">Set up
-Haproxy<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
-style='color:windowtext;display:none;text-decoration:none'>1</span></a></span></p>
-
-<p class=MsoToc2><span class=MsoHyperlink><a href="#_Toc404598697">Enable
-Haproxy logging<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
-style='color:windowtext;display:none;text-decoration:none'>4</span></a></span></p>
-
-<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc404598698">Deploy the
-Web Applications with HA &amp; Load Balancer<span style='color:windowtext;
-display:none;text-decoration:none'> </span><span
-style='color:windowtext;display:none;text-decoration:none'>4</span></a></span></p>
-
-<p class=MsoToc2><span class=MsoHyperlink><a href="#_Toc404598699">Set up
-Keepalived<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
-style='color:windowtext;display:none;text-decoration:none'>4</span></a></span></p>
-
-<p class=MsoToc2><span class=MsoHyperlink><a href="#_Toc404598700">Deploy
-Mariadb and Galera Replicator<span style='color:windowtext;display:none;
-text-decoration:none'> </span><span
-style='color:windowtext;display:none;text-decoration:none'>6</span></a></span></p>
-
-<p class=MsoToc2><span class=MsoHyperlink><a href="#_Toc404598701">Setup Web
-Applications<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
-style='color:windowtext;display:none;text-decoration:none'>6</span></a></span></p>
-
-<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc404598702">Deploy
-Mariadb with HA<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
-style='color:windowtext;display:none;text-decoration:none'>7</span></a></span></p>
-
-<p class=MsoToc2><span class=MsoHyperlink><a href="#_Toc404598703">Galera
-Configuration with Two-node Cluster<span style='color:windowtext;display:none;
-text-decoration:none'> </span><span
-style='color:windowtext;display:none;text-decoration:none'>7</span></a></span></p>
-
-<p class=MsoToc2><span class=MsoHyperlink><a href="#_Toc404598704">Configure
-Mysql with HA &amp; Load Balancers<span style='color:windowtext;display:none;
-text-decoration:none'>. </span><span
-style='color:windowtext;display:none;text-decoration:none'>8</span></a></span></p>
-
-<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc404598705">Recover
-after a Failure<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
-style='color:windowtext;display:none;text-decoration:none'>9</span></a></span></p>
-
-<p class=MsoToc2><span class=MsoHyperlink><a href="#_Toc404598706">Reboot a
-Failed Node<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
-style='color:windowtext;display:none;text-decoration:none'>9</span></a></span></p>
-
-<p class=MsoToc2><span class=MsoHyperlink><a href="#_Toc404598707">Replace a
-Failed Node<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
-style='color:windowtext;display:none;text-decoration:none'>9</span></a></span></p>
-
-<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc404598708">References<span
+<p class=MsoToc2><a href="#_Toc404598699">Set up Keepalived<span
 style='color:windowtext;display:none;text-decoration:none'>. </span><span
-style='color:windowtext;display:none;text-decoration:none'>9</span></a></span></p>
+style='color:windowtext;display:none;text-decoration:none'>4</span></a></p>
+
+<p class=MsoToc2><a href="#_Toc404598700">Deploy Mariadb and Galera Replicator<span
+style='color:windowtext;display:none;text-decoration:none'> </span><span
+style='color:windowtext;display:none;text-decoration:none'>6</span></a></p>
+
+<p class=MsoToc2><a href="#_Toc404598701">Setup Web Applications<span
+style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>6</span></a></p>
+
+<p class=MsoToc1><a href="#_Toc404598702">Deploy Mariadb with HA<span
+style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>7</span></a></p>
+
+<p class=MsoToc2><a href="#_Toc404598703">Galera Configuration with Two-node
+Cluster<span style='color:windowtext;display:none;text-decoration:none'> </span><span
+style='color:windowtext;display:none;text-decoration:none'>7</span></a></p>
+
+<p class=MsoToc2><a href="#_Toc404598704">Configure Mysql with HA &amp; Load
+Balancers<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>8</span></a></p>
+
+<p class=MsoToc1><a href="#_Toc404598705">Recover after a Failure<span
+style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>9</span></a></p>
+
+<p class=MsoToc2><a href="#_Toc404598706">Reboot a Failed Node<span
+style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>9</span></a></p>
+
+<p class=MsoToc2><a href="#_Toc404598707">Replace a Failed Node<span
+style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>9</span></a></p>
+
+<p class=MsoToc1><a href="#_Toc404598708">References<span style='color:windowtext;
+display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>9</span></a></p>
 
 <p class=MsoNormal>&nbsp;</p>
 
@@ -572,7 +568,7 @@ for server failover, is also included to avoid the single point of failure
 
 <p class=MsoNormal style='text-align:justify;text-justify:inter-ideograph'><img
 width=720 height=395 id="Picture 1"
-src="oat_ha_files/image001.jpg"></p>
+src="oat_ha_Ubuntu14.04.1_files/image001.jpg"></p>
 
 <div style='border:none;border-bottom:solid #5B9BD5 1.0pt;padding:0in 0in 1.0pt 0in'>
 
@@ -771,7 +767,7 @@ option httpclose</span></p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
 font-family:"Calibri",sans-serif;color:#FFC000;background:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-server &lt;lb1 hostname&gt; &lt;lb2 IP&gt;:8080 cookie LSW_WEB01 check</span></p>
+server &lt;lb1 hostname&gt; &lt;lb1 IP&gt;:8080 cookie LSW_WEB01 check</span></p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
 font-family:"Calibri",sans-serif;color:#FFC000;background:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -863,7 +859,8 @@ default_backend WLM-https</span></p>
 font-family:"Calibri",sans-serif;color:#FFC000;background:black'>&nbsp;</span></p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
-font-family:"Calibri",sans-serif;color:#FFC000;background:black'>backend WLM-https</span></p>
+font-family:"Calibri",sans-serif;color:#FFC000;background:black'>backend
+WLM-https</span></p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
 font-family:"Calibri",sans-serif;color:#FFC000;background:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -891,7 +888,7 @@ server &lt;lb1 hostname&gt; &lt;lb1 IP&gt;:8181 check</span></p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
 font-family:"Calibri",sans-serif;color:#FFC000;background:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-server &lt;lb2 hostname&gt; &lt;lb1 IP&gt;:8181 check</span></p>
+server &lt;lb2 hostname&gt; &lt;lb2 IP&gt;:8181 check</span></p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
 font-family:"Calibri",sans-serif;color:#FFC000;background:black'>&nbsp;</span></p>
@@ -925,8 +922,8 @@ font-family:"Calibri",sans-serif;color:#FFC000;background:black'>&nbsp;&nbsp;&nb
 server &lt;lb1 hostname&gt; &lt;lb1 IP&gt;:8181 check</span></p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
-font-family:"Calibri",sans-serif;color:#FFC000;background:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-server &lt;lb2 hostname&gt; &lt;lb2 IP&gt;:8181 check</span></p>
+font-family:"Calibri",sans-serif;color:#FFC000;background:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;server &lt;lb2 hostname&gt; &lt;lb2 IP&gt;:8181 check</span></p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
 font-family:"Calibri",sans-serif;color:#FFC000;background:black'>&nbsp;</span></p>
@@ -1116,8 +1113,7 @@ inter-ideograph'><span style='font-size:11.0pt;font-family:"Calibri",sans-serif;
 background:#D9D9D9'>&nbsp;</span></p>
 
 <p class=MsoNormal style='text-align:justify;text-justify:inter-ideograph'>Now
-let＊s add the configuration for keepalived in the file
-/etc/keepalived/keepalived.conf.</p>
+let＊s add the configuration for keepalived in the file /etc/keepalived/keepalived.conf.</p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
 font-family:"Calibri",sans-serif;color:#FFC000;background:black'>global_defs {</span></p>
@@ -1296,10 +1292,10 @@ across the whole cluster, which prevents the cluster from the SNOF. </p>
 <p class=MsoNormal>Firstly, download the Codeship patched Mariadb </p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt'><span
-style='color:#FFC000;background:black'># add-apt-repository 'deb <a
+style='color:#FFC000;background:black'># add-apt-repository 'deb </span><a
 href="http://ftp.osuosl.org/pub/mariadb/repo/10.0/ubuntu"><span
-style='color:#FFC000;text-decoration:none'>http://ftp.osuosl.org/pub/mariadb/repo/10.0/ubuntu</span></a>
-trusty main'</span></p>
+style='color:#FFC000;background:black;text-decoration:none'>http://ftp.osuosl.org/pub/mariadb/repo/10.0/ubuntu</span></a><span
+style='color:#FFC000;background:black'> trusty main'</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt'><span
 style='color:#FFC000;background:black'># apt-get update</span></p>
@@ -1336,9 +1332,9 @@ the cluster. Therefore, the certificate will be generated on one server and
 transfer to other servers hosting web applications. </p>
 
 <p class=MsoNormal>Regarding how to install the OAT server, on the first
-server, download and compile the source code from git source (<span
-style='font-size:11.0pt;line-height:110%;color:black'><a
-href="https://github.com/OpenAttestation/OpenAttestation">https://github.com/OpenAttestation/OpenAttestation</a></span>)
+server, download and compile the source code from git source (<a
+href="https://github.com/OpenAttestation/OpenAttestation"><span
+style='font-size:11.0pt;line-height:110%'>https://github.com/OpenAttestation/OpenAttestation</span></a>)
 to $HOME folder</p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
@@ -1346,7 +1342,8 @@ font-family:"Calibri",sans-serif;color:#FFC000;background:black'># git checkout
 v2.2</span></p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
-font-family:"Calibri",sans-serif;color:#FFC000;background:black'># cd $HOME/OpenAttestation/</span></p>
+font-family:"Calibri",sans-serif;color:#FFC000;background:black'># cd
+$HOME/OpenAttestation/</span></p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
 font-family:"Calibri",sans-serif;color:#FFC000;background:black'># mvn clean
@@ -1358,7 +1355,7 @@ font-family:"Calibri",sans-serif;color:#FFC000;background:black'># cd deploy</sp
 <p class=MsoNormal>And redo it on the other oat web server. </p>
 
 <p class=MsoNormal><span style='color:#FFC000;background:black'>#
-./deploy_ubuntu.sh 每mysql &lt;mysql password&gt; --IP &lt;The virtual IP&gt;
+./deploy_ubuntu.sh 每mysql &lt;mysql password&gt; --ip &lt;The virtual IP&gt;
 --port &lt;the oatserver port on load balancer&gt; --mysql_port &lt;the mysql
 port on load balancer&gt;</span></p>
 
@@ -1373,9 +1370,8 @@ style='font-size:11.0pt;line-height:110%;color:#FFC000;background:black'>
 OpenAttestation/deploy</span></p>
 
 <p class=MsoNormal><span style='color:#FFC000;background:black'>#
-./deploy_ubuntu.sh 每mysql &lt;mysql password&gt; --IP &lt;The virtual IP&gt;
---port &lt;the oatserver port on load balancer&gt; --ha_master &lt;the first
-server IP&gt;</span></p>
+./deploy_ubuntu.sh 每mysql &lt;mysql password&gt; --ip &lt;The virtual IP&gt; --ha_master
+&lt;the first server IP&gt;</span></p>
 
 <p class=MsoNormal>Here the ha_master is the IP/hostname of the first web
 server deployed.</p>
@@ -1386,7 +1382,7 @@ server deployed.</p>
 
 </div>
 
-<h2><a name="_Toc404598703">Galera Configuration with Two-node Cluster</a></h2>
+<h2><a name="_Toc404598703">Galera Configuration with Three-node Cluster</a></h2>
 
 <p class=MsoNormal>After setting up the mysql server, let＊s configure the
 Galera replicator:</p>
@@ -1395,7 +1391,7 @@ Galera replicator:</p>
 communication:</p>
 
 <pre><span style='font-size:10.5pt;font-family:"Calibri",sans-serif;color:#FFC000;
-background:black'># mysql 每uroot 每p&lt;password&gt; mysql 每e ※create user &nbsp;sst@＊%＊ IDENTIFIED BY 'yourpass'; GRANT ALL PRIVILEGES ON *.* TO sst@'%' IDENTIFIED BY 'yourpass';&quot;</span></pre>
+background:black'># mysql 每uroot 每p&lt;password&gt; mysql 每e ※create user&nbsp; sst@＊%＊ IDENTIFIED BY 'yourpass'; GRANT ALL PRIVILEGES ON *.* TO sst@'%' IDENTIFIED BY 'yourpass';&quot;</span></pre>
 
 <p class=MsoNormal>Then open the firewall port:</p>
 
@@ -1405,8 +1401,9 @@ normal'><span style='color:#FFC000;background:black'>iptables -A INPUT -i
 ACCEPT</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='color:#FFC000;background:black'>iptables -A INPUT -i &lt;interface&gt;
--p tcp -m tcp --source &lt;subnet&gt;/24 --dport 4567 -j ACCEPT</span></p>
+normal'><span style='color:#FFC000;background:black'>iptables -A INPUT -i
+&lt;interface&gt; -p tcp -m tcp --source &lt;subnet&gt;/24 --dport 4567 -j
+ACCEPT</span></p>
 
 <p class=MsoNormal>After that, let＊s begin the configuration: </p>
 
@@ -1525,9 +1522,8 @@ cluster, you are able to find more detailed info in /var/log/syslog.</p>
 <h2><a name="_Toc404598704">Configure Mysql with HA &amp; Load Balancers</a></h2>
 
 <p class=MsoNormal>For the time being, there are two database nodes and one
-node for garbd. In OAT, one single entry point is needed to access the
-database.&nbsp; To avoid SNOF, a HAProxy is to set up on top of the existing
-Galera cluster. </p>
+node for garbd. In OAT, one single entry point is needed to access the database.&nbsp;
+To avoid SNOF, a HAProxy is to set up on top of the existing Galera cluster. </p>
 
 <p class=MsoNormal>Add the following configurations to the bottom of
 /etc/haproxy/haproxy.cfg. Redo this on the other load balancer server.</p>
@@ -1577,8 +1573,8 @@ haproxy restart</span><br>
 When it is done, update the OAT server configuration with the latest connection
 string. </p>
 
-<p class=MsoNormal>Remember to make the same change on the other web application
-server. Restart tomcat to take effect. </p>
+<p class=MsoNormal>Remember to make the same change on the other web
+application server. Restart tomcat to take effect. </p>
 
 <p class=MsoNormal><span style='color:#FFC000;background:black'># service
 tomcat6 restart</span></p>
@@ -1587,7 +1583,7 @@ tomcat6 restart</span></p>
 setup in a three-node cluster.</p>
 
 <p class=MsoNormal>Now, you are able to access the oat web portal by http://&lt;virtual
-IP&gt;:442/TrustDashBoard/login.htm and http://&lt;virtual IP&gt;:442/WhiteListPortal/login.html</p>
+IP&gt;:442/TrustDashBoard/login.htm and http://&lt;virtual IP&gt;:442/WhiteListPortal/login.htm</p>
 
 <div style='border:none;border-bottom:solid #5B9BD5 1.0pt;padding:0in 0in 1.0pt 0in'>
 
