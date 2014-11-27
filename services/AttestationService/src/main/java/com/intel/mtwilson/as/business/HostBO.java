@@ -518,10 +518,6 @@ public class HostBO extends BaseBO {
 		return new TblHostsJpaController(getEntityManagerFactory());
 	}
 
-	public EntityManagerFactory getEntityManagerFactory() {
-		return getEntityManagerFactory();
-	}
-	
 	public TblMleJpaController getMleJpaController() {
 		return new TblMleJpaController(getEntityManagerFactory());
 	}
