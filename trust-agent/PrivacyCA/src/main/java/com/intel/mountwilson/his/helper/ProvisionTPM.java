@@ -28,24 +28,27 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.Security;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
 import java.security.SecureRandom;
+
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.security.cert.CertificateException;
+
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 //import com.intel.mountwilson.as.common.ResourceFinder;
 import com.intel.mtwilson.util.ResourceFinder;
@@ -168,9 +171,7 @@ public class ProvisionTPM {
 		//Provision the TPM
 		log.info("Performing TPM provisioning...");
 
-		SecretKey deskey = null;
-		KeyGenerator keygen;
-		Cipher c;
+		SecretKey deskey = TpmUtils.generateSecretKey();
 		Security.addProvider(new BouncyCastleProvider());
 		// Take Ownership
 		byte [] nonce = null;		
@@ -189,16 +190,6 @@ public class ProvisionTPM {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
-		// Generate security key via 3DES algorithm
-		try {
-			keygen = KeyGenerator.getInstance("DESede", "BC"); 
-			keygen.init(new SecureRandom()); 
-			deskey = keygen.generateKey();  
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} 
 		
 		// Create Endorsement Certificate
 		try {
@@ -221,7 +212,7 @@ public class ProvisionTPM {
  		}
 		try {					
 			IHisPrivacyCAWebService2 hisPrivacyCAWebService2 = HisPrivacyCAWebServices2ClientInvoker.getHisPrivacyCAWebService2(PrivacyCaUrl);	
-			encryptCert = hisPrivacyCAWebService2.requestGetEC(encryptDES(pubEkMod, deskey), encryptRSA(deskey.getEncoded(), publicKey), EcValidityDays);	
+			encryptCert = hisPrivacyCAWebService2.requestGetEC(TpmUtils.encryptDES(pubEkMod, deskey), TpmUtils.encryptRSA(deskey.getEncoded(), publicKey), EcValidityDays);	
 		} catch (Exception e){
 			System.out.println("FAILED");
 			e.printStackTrace();
@@ -232,7 +223,7 @@ public class ProvisionTPM {
 		X509Certificate ekCert = null;		
 		try {
 			if (encryptCert != null){
-				ekCert = TpmUtils.certFromBytes(decryptDES(encryptCert, deskey));
+				ekCert = TpmUtils.certFromBytes(TpmUtils.decryptDES(encryptCert, deskey));
 			}
 		} catch (java.security.cert.CertificateException e) {
 			e.printStackTrace();
@@ -265,22 +256,5 @@ public class ProvisionTPM {
 		//System.exit(0);
 		return;
  	}
- 
-	private static byte[] encryptDES(byte[] text, SecretKey key) throws Exception {
-	    Cipher c = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");  
-	    c.init(Cipher.ENCRYPT_MODE, key);  
-		return c.doFinal(text);
-	}
-    
-        private static byte[] encryptRSA(byte[] text, PublicKey pubRSA) throws Exception {
-         	Cipher cipher = Cipher.getInstance("RSA", "BC");
-         	cipher.init(Cipher.ENCRYPT_MODE, pubRSA);
-         	return cipher.doFinal(text);
-        }
         
-        private static byte[] decryptDES(byte[] text, SecretKey key) throws Exception {
-            Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");
-            cipher.init(Cipher.DECRYPT_MODE, key);
-            return cipher.doFinal(text);
-        }                    
 }

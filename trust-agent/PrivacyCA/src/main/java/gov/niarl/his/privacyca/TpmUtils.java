@@ -26,14 +26,17 @@ import java.security.cert.*;
 import java.security.cert.Certificate;
 import java.security.spec.*;
 import java.security.interfaces.*;
+
 import javax.security.auth.x500.X500Principal;
 import javax.security.cert.CertificateException;
+
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.x509.*;
 import org.bouncycastle.x509.extension.AuthorityKeyIdentifierStructure;
 import org.bouncycastle.x509.extension.SubjectKeyIdentifierStructure;
 import org.bouncycastle.asn1.x509.*;
 import org.bouncycastle.jce.provider.*;
+
 import javax.crypto.*;
 import javax.crypto.spec.*;
 
@@ -1098,4 +1101,38 @@ public class TpmUtils {
 		}
 		return hostname;
 	}
+	
+	public static byte[] encryptDES(byte[] text, SecretKey key) throws Exception {
+		Security.addProvider(new BouncyCastleProvider());
+	    Cipher c = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");  
+	    c.init(Cipher.ENCRYPT_MODE, key);  
+		return c.doFinal(text);
+	}
+	
+	public static byte[] encryptRSA(byte[] text, PublicKey pubRSA) throws Exception {
+     	Cipher cipher = Cipher.getInstance("RSA", "BC");
+     	cipher.init(Cipher.ENCRYPT_MODE, pubRSA);
+     	return cipher.doFinal(text);
+    }
+	
+	public static byte[] decryptDES(byte[] text, SecretKey key) throws Exception {
+        Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        return cipher.doFinal(text);
+    } 
+	
+	// Generate security key via 3DES algorithm
+    public static SecretKey generateSecretKey() throws NoSuchProviderException {
+    	KeyGenerator keygen;
+		SecretKey desKey = null;
+		Security.addProvider(new BouncyCastleProvider());
+		try {
+			keygen = KeyGenerator.getInstance("DESede", "BC"); 
+			keygen.init(new SecureRandom()); 
+			desKey = keygen.generateKey();  
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} 
+        return desKey;
+    }
 }
