@@ -28,10 +28,12 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({TpmModule.class, HisPrivacyCAWebServices2ClientInvoker.class, TpmUtils.class})
+@PowerMockIgnore({"javax.crypto.SecretKey", "javax.crypto.KeyGenerator" })
 public class ProvisionTPMTest {
 	
 	ProvisionTPM provisionTPM = new ProvisionTPM();

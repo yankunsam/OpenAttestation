@@ -171,8 +171,8 @@ public class ProvisionTPM {
 		//Provision the TPM
 		log.info("Performing TPM provisioning...");
 
-		SecretKey deskey = TpmUtils.generateSecretKey();
 		Security.addProvider(new BouncyCastleProvider());
+		SecretKey deskey = TpmUtils.generateSecretKey();
 		// Take Ownership
 		byte [] nonce = null;		
 		try {

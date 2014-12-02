@@ -1103,7 +1103,6 @@ public class TpmUtils {
 	}
 	
 	public static byte[] encryptDES(byte[] text, SecretKey key) throws Exception {
-		Security.addProvider(new BouncyCastleProvider());
 	    Cipher c = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");  
 	    c.init(Cipher.ENCRYPT_MODE, key);  
 		return c.doFinal(text);
@@ -1125,7 +1124,6 @@ public class TpmUtils {
     public static SecretKey generateSecretKey() throws NoSuchProviderException {
     	KeyGenerator keygen;
 		SecretKey desKey = null;
-		Security.addProvider(new BouncyCastleProvider());
 		try {
 			keygen = KeyGenerator.getInstance("DESede", "BC"); 
 			keygen.init(new SecureRandom()); 
