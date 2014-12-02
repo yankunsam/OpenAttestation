@@ -1,0 +1,2050 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 14 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:SimSun;
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+@font-face
+	{font-family:SimSun;
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:"\@SimSun";
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:10.0pt;
+	margin-left:0in;
+	line-height:115%;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+h1
+	{mso-style-link:"Heading 1 Char";
+	margin-right:0in;
+	margin-left:0in;
+	font-size:24.0pt;
+	font-family:"Times New Roman","serif";
+	font-weight:bold;}
+h2
+	{mso-style-link:"Heading 2 Char";
+	margin-right:0in;
+	margin-left:0in;
+	font-size:18.0pt;
+	font-family:"Times New Roman","serif";
+	font-weight:bold;}
+h3
+	{mso-style-link:"Heading 3 Char";
+	margin-right:0in;
+	margin-left:0in;
+	font-size:13.5pt;
+	font-family:"Times New Roman","serif";
+	font-weight:bold;}
+h4
+	{mso-style-link:"Heading 4 Char";
+	margin-right:0in;
+	margin-left:0in;
+	font-size:12.0pt;
+	font-family:"Times New Roman","serif";
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+p
+	{margin-right:0in;
+	margin-left:0in;
+	font-size:12.0pt;
+	font-family:"Times New Roman","serif";}
+pre
+	{mso-style-link:"HTML Preformatted Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:"Courier New";}
+span.Heading1Char
+	{mso-style-name:"Heading 1 Char";
+	mso-style-link:"Heading 1";
+	font-family:"Times New Roman","serif";
+	font-weight:bold;}
+span.Heading2Char
+	{mso-style-name:"Heading 2 Char";
+	mso-style-link:"Heading 2";
+	font-family:"Times New Roman","serif";
+	font-weight:bold;}
+span.Heading3Char
+	{mso-style-name:"Heading 3 Char";
+	mso-style-link:"Heading 3";
+	font-family:"Times New Roman","serif";
+	font-weight:bold;}
+span.Heading4Char
+	{mso-style-name:"Heading 4 Char";
+	mso-style-link:"Heading 4";
+	font-family:"Times New Roman","serif";
+	font-weight:bold;}
+span.HTMLPreformattedChar
+	{mso-style-name:"HTML Preformatted Char";
+	mso-style-link:"HTML Preformatted";
+	font-family:"Courier New";}
+.MsoChpDefault
+	{font-family:"Calibri","sans-serif";}
+.MsoPapDefault
+	{margin-bottom:10.0pt;
+	line-height:115%;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link=blue vlink=purple>
+
+<div class=WordSection1>
+
+<p class=MsoNormal style='line-height:normal'><b><span style='font-size:18.0pt;
+font-family:"Times New Roman","serif"'>Build Open Attestation (2.2) </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-System_Requirement"></a><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>System Requirement </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>The build environment has been validated
+in RHEL7. </span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Proxy_Configuration_Setup"></a><b><span style='font-size:
+13.5pt;font-family:"Times New Roman","serif"'>Proxy Configuration Setup </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>If you build package behind firewall,
+you would need to setup following proxies in order to download source code and
+needed libraries. </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # export <a
+name="OLE_LINK2"></a><a name="OLE_LINK1">http_proxy= </a>http://&lt;proxy_server&gt;:&lt;proxy_port&gt;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # export
+https_proxy= https://&lt;proxy_server&gt;:&lt;proxy_port&gt;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # export
+ftp_proxy= ftp://&lt;proxy_server&gt;:&lt;proxy_port&gt;</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Install_Required_Packages"></a><b><span style='font-size:
+13.5pt;font-family:"Times New Roman","serif"'>Install Required Packages </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Take RHEL7 for example, you need install
+follow required packages: </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
+git maven</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # <a
+name="OLE_LINK6"></a><a name="OLE_LINK5">yum install </a><a name="OLE_LINK8"></a><a
+name="OLE_LINK7">java-1.7.0-openjdk</a></span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
+zip make gcc-c++ makeself</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a name="OLE_LINK10"></a><a
+name="OLE_LINK9"></a><a name="user-content-Download_Source_Code"></a><b><span
+style='font-size:13.5pt;font-family:"Times New Roman","serif"'>Download Source
+Code </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Using git tool to download the source
+code code, suppose your code is located in home directory </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # <a
+name="OLE_LINK12"></a><a name="OLE_LINK11">git clone
+https://github.com/OpenAttestation/OpenAttestation/</a></span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Download_XenServer_SDK_opti"></a><b><span style='font-size:
+13.5pt;font-family:"Times New Roman","serif"'>Download XenServer SDK {optional}
+</span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>If you plan to use XenServer feature,
+you need download </span><a
+href="http://downloadns.citrix.com.edgesuite.net/akdlm/7289/XenServer-6.2.0-SDK.zip"
+target="_blank"><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>XenServer-6.2.0-SDK.zip</span></a><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'> from XenServer
+website, and copy xenserver-6.2.0-1.jar from zip to citrix-sdk directory. </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # unzip
+XenServer-6.2.0-SDK.zip</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+XenServer-SDK/XenServerJava/bin/xenserver-6.2.0-1.jar
+$HOME/OpenAttestation/services/citrix-sdk/</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Build_Source_Code"></a><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>Build Source Code </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Open Attestation 2.1 uses maven tool to
+build source code. Run the following commands to build the source code, if the
+code is built behind the firewall, you need explicitly adjust
+&quot;settings.xml&quot; to add proxy for maven. </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+$HOME/OpenAttestation</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # git
+checkout v2.2</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # <a
+name="OLE_LINK14"></a><a name="OLE_LINK13">mvn clean install</a>      //compile
+general code</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> or</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mvn clean install
+–Dcompile.xenserver=true  //compile XenServer code</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Note: For RHEL OS, the package
+‘makeself’ is missing, you need download the SPRM and compile the package to
+install makeself </span><a
+href="http://rpmfind.net/linux/RPM/opensuse/12.1/noarch/makeself-2.1.5-3.1.1.noarch.html"
+target="_blank"><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>makeself</span></a><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>, for SLES OS,
+makeself is named makeself.sh, alias this shell script as ‘makeself’ and then
+it should be built successfully. </span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Attestation_Server_Installa"></a><b><span style='font-size:
+18.0pt;font-family:"Times New Roman","serif"'>Attestation Server Installation </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-System_Requirement-2"></a><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>System Requirement </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>So far, the server installation has been
+verified on Ubuntu12.10, Ubuntu13.04, Fedora 19, RHEL7, SLES 11 SP2,
+OpenSUSE12.3. </span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Firewall_configuration"></a><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>Firewall configuration </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Make sure TCP port 8181, 8080 are not
+blocked by firewall.</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>RHEL7 </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -A
+INPUT -p tcp --dport 8181 -j ACCEPT</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -A
+INPUT -p tcp --dport 8080 -j ACCEPT</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Install_Required_Packages-2"></a><b><span style='font-size:
+13.5pt;font-family:"Times New Roman","serif"'>Install Required Packages </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Install packages listed below: </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
+java-1.7.0-openjdk</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
+openssl</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # <a
+name="OLE_LINK16"></a><a name="OLE_LINK15">yum install openssl-devel</a></span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Also install the following packages: <br>
+Database system: MySQL 5.0 / MariaDB or later, or PostgreSQL <br>
+Java web application container: Glassfish 3.0 or later, or Tomcat 6.0 or later.
+<br>
+Notes: You should install &quot;libopenssl-devel&quot; instead of
+&quot;libssl-dev&quot; on SLES. </span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-JDK_Configuration"></a><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>Deploy</span></b></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'># cd
+$HOME/OpenAttestation/deploy</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'># bash deploy_rhel.sh
+--mysql &lt;MySQL passwd of oat server&gt; --ip &lt;IP of oatserver&gt;</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Note: If you want deploy them manually
+,see below</span></p>
+
+<p class=MsoNormal style='line-height:normal'><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>JDK Configuration </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Open Attestation 2.1 uses Bouncycastle
+JCE provider, add the provider to the list of trusted in
+$JAVA_HOME/jre/lib/security/java.security like this: </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> security.provider.10=org.bouncycastle.jce.provider.BouncyCastleProvider</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Besides, if you are using jdk6 and
+previous, pls copy corresponding jars to $JAVA_HOME/jre/lib/security to support
+the provider. Download these jars from Oracle website </span><a
+href="http://www.oracle.com/technetwork/java/javase/downloads/jce-6-download-429243.html"
+target="_blank"><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>jce-6-download</span></a><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>. </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # unzip
+jce_policy-6.zip</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+jce/*.jar  JAVA_HOME/jre/lib/security</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Notes: Some JDK, especially openJDK 1.6
+haven't integrated with bouncy castle, so you need copy the binary of bouncy
+castle, in some case named as &quot;bcprov-jdk*.jar&quot; to this directory:$JAVA_HOME/lib/ext,
+you can download Bouncy Castle provider from here </span><a
+href="http://www.bouncycastle.org/latest_releases.html" target="_blank"><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Bouncy Castle</span></a><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>. </span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Web_Container_Configuration"></a><b><span style='font-size:
+13.5pt;font-family:"Times New Roman","serif"'>Web Container Configuration </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Attestation requires glassfish version
+3.0, or tomcat 6.0 or later. <br>
+Attestation needs install Jackson library into the web container’s endorsed
+modules directory. These libraries’ version must be 1.9 or later, you can find
+them from
+$HOME/OpenAttestation/services/AttestationService/target/AttestationService-{version}/WEB-INF/lib
+after building the attestation. <br>
+If you use glassfish as the web container, you need copy these jars to
+GLASSFISH_HOME/modules. Do like this: </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> cp
+$HOME/OpenAttestation/services/AttestationService/target/AttestationService-{version}/WEB-INF/lib/jackson*.jar
+$GLASSFISH_HOME/modules</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Database_Initialization"></a><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>Database Initialization </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Execute following commands to create
+database schema: </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mysql -uroot
+-p&lt;password&gt; -e 'create database mw_as'; </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mysql -uroot
+-p&lt;password&gt; mw_as &lt; database/mysql/src/main/resources/com/intel/mtwilson/database/mysql/mtwilson.sql</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Create_Configuration_Files"></a><b><span style='font-size:
+13.5pt;font-family:"Times New Roman","serif"'>Create Configuration Files </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>We need to create some configuration
+files used by the later setup process. These configuration files include
+mtwilson.properties, privacyca-client.properties, PrivacyCA.properties, attestation-service.properties,
+trust-dashboard.properties and whitelist-portal.properties. </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mkdir -p
+/etc/intel/cloudsecurity</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # chown -R
+tomcat:tomcat /etc/intel  (take &quot;tomcat&quot; for example, you should make
+sure tomcat or glassfish have the permission on this folder)</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+/etc/intel/cloudsecurity</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # nano
+/etc/intel/cloudsecurity/mtwilson.properties</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mtwilson.api.baseurl=https://&lt;server
+ip&gt;:8181</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mtwilson.api.ssl.policy=TRUST_FIRST_CERTIFICATE</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mtwilson.db.driver=com.mysql.jdbc.Driver</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mtwilson.db.url=jdbc:mysql://localhost/mw_as
+</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mtwilson.db.user=root</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mtwilson.db.password=password</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # nano
+/etc/intel/cloudsecurity/privacyca-client.properties</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> PrivacyCaUrl=https://&lt;server
+ip&gt;:8181/HisPrivacyCAWebServices2</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> PrivacyCaSubjectName=HIS_Privacy_CA</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> PrivacyCaPassword=***replace***</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> EndorsementCaSubjectName=Endorsement_CA_Rev_1</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> EndorsementCaPassword=***replace***</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> CertValidityDays=3652</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> AikAuth=1111111111111111111111111111111111111111</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> ecStorage=NVRAM</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> ecSigningKeySize=2048</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> ecLocation=/opt/intel/cloudsecurity/trustagent</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> TpmOwnerAuth=1111111111111111111111111111111111111111</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Notes: </span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>TpmOwnerAuth only accept two type
+     value, 20 long characters or 40 long hex number. </span></li>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>The value of &quot;ecStorage&quot;
+     indicate where you store the EC file, you can specify the value as
+     &quot;FILE&quot; beside &quot;NVRAM&quot; if you want to store EC in file
+     system instead of non-volatile memory.</span></li>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>The field of &quot;server ip&quot;
+     in the context of this page can be replaced with host FQDN as well, the
+     benifit of using FQDN instead of IP address is there is no need to modify
+     the configuration file or re-generate the certificate after the changing
+     of IP address.</span></li>
+</ul>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # nano
+/etc/intel/cloudsecurity/PrivacyCA.properties</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> ClientFilesDownloadUsername=admin</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> ClientFilesDownloadPassword=password</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # nano
+/etc/intel/cloudsecurity/attestation-service.properties</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> com.intel.mountwilson.as.trustagent.timeout=3</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> com.intel.mountwilson.as.attestation.hostTimeout=60</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> com.intel.mountwilson.as.home=/var/opt/intel/aikverifyhome</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> com.intel.mountwilson.as.aikqverify.cmd=aikqverify</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> com.intel.mountwilson.as.openssl.cmd=openssl.sh</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> saml.key.alias=samlkey1</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> saml.keystore.file=SAML.jks</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> saml.keystore.password=changeit</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> saml.validity.seconds=3600</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> saml.issuer=https://&lt;server
+ip&gt;:8181 </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> saml.key.password=changeit</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> privacyca.server=&lt;server
+ip&gt;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> com.intel.mtwilson.as.business.trust.sleepTime=1</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # nano
+/etc/intel/cloudsecurity/trust-dashboard.properties</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mtwilson.tdbp.keystore.dir=/etc/intel/cloudsecurity</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mtwilson.tdbp.keystore.password=password</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> imagesRootPath
+= images/</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> trustUnknow =
+images/Unknown.png</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> trustTure =
+images/Trusted.png</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> trustFalse =
+images/UnTrusted.png</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> ubuntu =
+images/ubuntu.png</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> vmware =
+images/vmware.png</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> suse =
+images/suse.png</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> kvm =
+images/kvm.png</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> xen =
+images/xen.png</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mtwilson.tdbp.sessionTimeOut
+= 1800</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mtwilson.tdbp.paginationRowCount
+= 10</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # nano
+/etc/intel/cloudsecurity/whitelist-portal.properties</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mtwilson.wlmp.keystore.dir=/etc/intel/cloudsecurity</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mtwilson.wlmp.keystore.password=password</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mtwilson.wlmp.openSourceHypervisors=KVM;Xen</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mtwilson.wlmp.sessionTimeOut=1800</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> mtwilson.wlmp.pagingSize=8</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Install_aikqverify"></a><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>Install aikqverify </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Attestation service must use
+“aikqverify” program, so you need to compile and install it located in
+$HOME/OpenAttestation/services/aikqverify/target/aikqverify-2.1.zip. Here are
+the steps: </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+$HOME/OpenAttestation/services/aikqverify/target/aikqverify-2.1.zip $HOME</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # unzip
+aikqverify-2.1.zip</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+aikqverify-2.1</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # make</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # make
+install</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Besides, you need to make sure glassfish
+or tomcat have the write permission for the directory of
+&quot;/var/opt/intel/aikverifyhome/data&quot;. </span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Create_SAML_Signing_Key"></a><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>Create SAML Signing Key </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>In this section, you will create a
+keystore SAML.jks with a signing private key, and this private key must be
+protected by a password.</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>You can follow the below commands to
+generate these certificates. But you should modify the some fields according to
+your preference, find the definition in
+/etc/intel/cloudsecurity/attestation-service.properties. </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+/etc/intel/cloudsecurity</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
+-genkey -alias &lt;saml.key.alias&gt; -keyalg RSA  -keysize 2048 -keystore
+&lt;saml.keystore.file&gt; -storepass &lt;saml.keystore.password&gt; -dname
+&quot;CN=AttestationService, OU=Mt Wilson, O=My Org, C=US&quot; -validity 3650 
+-keypass &lt;saml.key.password&gt;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
+-export -alias &lt;saml.key.alias&gt; -keystore &lt;saml.keystore.file&gt;
+-storepass &lt;saml.keystore.password&gt; -file saml.crt</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Create_EK_Signing_Certifica"></a><b><span style='font-size:
+13.5pt;font-family:"Times New Roman","serif"'>Create EK Signing Certificate </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>The jar file will create a file
+/etc/intel/cloudsecurity/EndorsementCA.properties, and store the password in
+the file that defines the password as EndorsementP12Pass. The commands is as
+bellows: </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+/etc/intel/cloudsecurity</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # java -jar
+$HOME/OpenAttestation/trust-agent/HisPrivacyCAWebServices2/target/HisPrivacyCAWebServices2-2.1-setup.jar</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+/etc/intel/cloudsecurity/clientfiles/PrivacyCA.cer
+/etc/intel/cloudsecurity/PrivacyCA.cer</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Create_Attestation_Server_C"></a><b><span style='font-size:
+13.5pt;font-family:"Times New Roman","serif"'>Create Attestation Server
+Certificate </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>In this part, you will create an
+attestation server certificate, run the below commands: </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+$GLASSFISH_HOME/domains/domain1/config </span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>In case using tomcat as web container,
+please create a directory named &quot;Certificate&quot; in the $TOMCAT_HOME
+directory and go to &quot;Certificate&quot; instead. The default password is
+“changeit”, you can change the value. </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # rm -rf
+keystore.jks</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
+-genkey -alias s1as -keyalg RSA -keysize 2048 -keystore keystore.jks -storepass
+changeit -dname &quot;CN=&lt;server ip&gt;, OU=Mt Wilson, O=My Org, C=US&quot;
+-validity 3650 -ext san=IP:&lt;server ip&gt; -keypass changeit</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
+-exportcert -alias s1as -keystore keystore.jks -storepass changeit -file ssl.&lt;server
+ip&gt;.crt</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Notes: </span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>please use keytool from
+     &quot;openjdk-7-jre-headless&quot; to generate keystore.jks as keytool
+     from &quot;openjdk-6-jre-headless&quot; doesnot support extension
+     parameter provided in the above command.</span></li>
+</ul>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Create_Portal_Signing_Key"></a><b><span style='font-size:
+13.5pt;font-family:"Times New Roman","serif"'>Create Portal Signing Key </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>The following commands will create a
+keystore portal.jks, which is used for secure connection between Whitelist
+Portal and Trust Dashboard, and between Whitelist Service and Attestation
+Service. The &quot;password&quot; should be consistent with mtwilson.tdbp.keystore.password
+and mtwilson.wlmp.keystore.password from trust-dashboard.properties and
+whitelist-portal.properties. </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+/etc/intel/cloudsecurity</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
+-genkey -alias admin -keyalg RSA -keysize 2048 -keystore portal.jks -storepass
+password -dname &quot;CN=Portal User, OU=Mt Wilson, O=My Org, C=US&quot;
+-validity 3650 -keypass password</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
+-importcert -file saml.crt -keystore portal.jks -storepass password -alias
+&quot;mtwilson (saml)&quot;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
+-importcert -file $GLASSFISH/domains/domain1/config/ssl.&lt;server ip&gt;.crt
+-keystore portal.jks -storepass password -alias &quot;mtwilson (ssl)&quot;</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Note: For the last command of this
+section, replace the ssl certification directory with the corresponding
+directory in tomcat if using tomcat as the web container,
+&quot;$TOMCAT_HOME/Certificate&quot; for example. </span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Create_oVirt_Signing_Key_op"></a><b><span style='font-size:
+13.5pt;font-family:"Times New Roman","serif"'>Create oVirt Signing Key
+{optional} </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Here you will create the ovirt.jks file
+used for secure communicating with oVirt, this is an optional step is only
+needed in oVirt environment. The default password is “password”, you can change
+the value. Follow the following commands to generate the ovirt.jks: </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+/etc/intel/cloudsecurity</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
+-genkey -alias ovirtssl -keyalg RSA  -keysize 2048 -keystore ovirt.jks
+-storepass password -dname &quot;CN=&lt;server ip&gt;, OU=Mt Wilson, O=My Org,
+C=US&quot; -validity 3650  -keypass password</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
+-importcert -file $GLASSFISH/domains/domain1/config/ssl.&lt;server ip&gt;.crt
+-keystore ovirt.jks -storepass password  -alias &quot;attestation server&quot;</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-SSL_Configuration"></a><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>SSL Configuration </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>You need configure ciphers for SSL
+protocol, follow these steps to add suitable ciphers: </span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Login glassfish web portal,
+     suggestion to login via localhost, for example,
+     http://*.*.*.*:4848/common/index.jsf</span></li>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Browse to Configuration &gt;
+     server-config &gt; Network Config &gt; Protocols &gt; http-listener-2. </span></li>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Click on the “SSL” tab, add follow
+     ciphers: </span></li>
+</ul>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>TLS_ECDH_anon_WITH_AES_256_CBC_SHA,
+TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA,
+TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA,
+TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
+TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA,
+TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA,
+TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA,
+TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA,
+TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
+TLS_RSA_WITH_AES_128_CBC_SHA </span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Click “Save.”</span></li>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>restart domain </span></li>
+</ul>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> #
+/usr/share/glassfish3/glassfish/bin/asadmin restart-domain</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>If using tomcat as the web container,
+please modify tomcat configuration file by executing follow shell scripts: </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> sed -i
+&quot;s/ &lt;\/Service&gt;/&lt;Connector port=\&quot;8181\&quot;
+minSpareThreads=\&quot;5\&quot; maxSpareThreads=\&quot;75\&quot;
+enableLookups=\&quot;false\&quot; disableUploadTimeout=\&quot;true\&quot;
+acceptCount=\&quot;100\&quot; maxThreads=\&quot;200\&quot;
+scheme=\&quot;https\&quot; secure=\&quot;true\&quot;
+SSLEnabled=\&quot;true\&quot; clientAuth=\&quot;want\&quot;
+sslProtocol=\&quot;TLS\&quot; ciphers=\&quot;TLS_ECDH_anon_WITH_AES_256_CBC_SHA,
+TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA,
+TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA,
+TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
+TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA,
+TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA,
+TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA,
+TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA,
+TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA\&quot;
+keystoreFile=\&quot;Certificate\/keystore.jks\&quot;
+keystorePass=\&quot;changeit\&quot;
+truststoreFile=\&quot;Certificate\/keystore.jks\&quot;
+truststorePass=\&quot;changeit\&quot; \/&gt;&lt;\/Service&gt;/g&quot; $TOMCAT_HOME/conf/server.xml</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Note: the password &quot;changeit&quot;
+should be consistent with tomcat password from &quot;Create Attestation Server
+Certificate&quot; </span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Deploy_The_Web_Services"></a><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>Deploy The Web Services </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Deploying the compiled web services is
+very easy. <br>
+In case of using glassfish as web container, you need to copy the compiled war
+package to $GLASSFISH_HOME/domains/domain1/autodeploy directory in following
+order (suppose the build server and attestation server is the same host). </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+$GLASSFISH_HOME/domains/domain1/autodeploy</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+$HOME/OpenAttestation/trust-agent/HisPrivacyCAWebServices2/target/HisPrivacyCAWebServices2.war
+HisPrivacyCAWebServices2.war</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+$HOME/OpenAttestation/services/WLMService/target/WLMService-2.1-core.war
+WLMService.war</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+$HOME/OpenAttestation/portals/WhiteListPortal/target/WhiteListPortal-2.1-core.war
+WhiteListPortal.war</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+$HOME/OpenAttestation/services/AttestationService/target/AttestationService-2.1-core.war
+AttestationService.war</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+$HOME/OpenAttestation/portals/TrustDashBoard/target/TrustDashBoard-2.1-core.war
+TrustDashBoard.war</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>After deploying it, you should manually
+restart glassfish by running: </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> /usr/share/glassfish3/glassfish/bin/asadmin
+restart-domain</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>In case of using tomcat as web
+container, you need to copy the compiled war package to $TOMCAT_HOME/webapps
+directory in following order (suppose the build server and attestation server
+is the same host). </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+$TOMCAT_HOME/webapps</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+$HOME/OpenAttestation/trust-agent/HisPrivacyCAWebServices2/target/HisPrivacyCAWebServices2.war
+HisPrivacyCAWebServices2.war</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+$HOME/OpenAttestation/services/WLMService/target/WLMService-2.1-core.war
+WLMService.war</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+$HOME/OpenAttestation/portals/WhiteListPortal/target/WhiteListPortal-2.1-core.war
+WhiteListPortal.war</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+$HOME/OpenAttestation/services/AttestationService/target/AttestationService-2.1-core.war
+AttestationService.war</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+$HOME/OpenAttestation/portals/TrustDashBoard/target/TrustDashBoard-2.1-core.war
+TrustDashBoard.war</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>After deploying it, you should manually
+restart tomcat service by running: </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> service
+tomcat6 restart</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>or </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> service
+tomcat7 restart</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Attestation_Client_Installa"></a><b><span style='font-size:
+18.0pt;font-family:"Times New Roman","serif"'>Attestation Client Installation </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Firewall_configuration-2"></a><b><span style='font-size:
+13.5pt;font-family:"Times New Roman","serif"'>Firewall configuration </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Make sure TCP port 9999, 9998 are not
+blocked by firewall.</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>RHEL7.0</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -A
+INPUT -p tcp --dport 9999 -j ACCEPT</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -A
+INPUT -p tcp --dport 9998 -j ACCEPT</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Enable_Intel_TXT_in_BIOS"></a><b><span style='font-size:
+13.5pt;font-family:"Times New Roman","serif"'>Enable Intel® TXT in BIOS </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Client system must have TPM 1.2
+compliant device with driver installed, and TPM/TXT enabled in BIOS to perform
+the operation. Below is a example for HP8300 system: </span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Power on, ESC key -&gt; Startup
+     Menu -&gt; Computer Setup(F10)</span></li>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Security-&gt;Setup Password, set
+     setup password as xxxxxx then F10 save it.</span></li>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Security-&gt;System Security,
+     enable vtx/vtd/Embeded Security Device/Trusted Execution Technology, F10
+     save it.</span></li>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>File-&gt;Save Changes and Exit.</span></li>
+</ul>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-JDK_Configuration-2"></a><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>JDK Configuration </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Open Attestation 2.1 uses Bouncycastle
+JCE provider, add the provider to the list of trusted in
+$JAVA_HOME/jre/lib/security/java.security like this: </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> security.provider.10=org.bouncycastle.jce.provider.BouncyCastleProvider</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Besides, copy corresponding jars to
+$JAVA_HOME/jre/lib/security to support the provider. Download these jars from
+Oracle website </span><a
+href="http://www.oracle.com/technetwork/java/javase/downloads/jce-6-download-429243.html"
+target="_blank"><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>jce-6-download</span></a><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>. </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # unzip
+jce_policy-6.zip</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+jce/*.jar  JAVA_HOME/jre/lib/security</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Notes: Some JDK, especially openJDK 1.6
+haven't integrated with bouncy castle, so you need copy the binary of bouncy
+castle, in some case named as &quot;bcprov-jdk*.jar&quot; to this
+directory:$JAVA_HOME/lib/ext </span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Start_Agent_Service_in_Gene"></a><b><span style='font-size:
+13.5pt;font-family:"Times New Roman","serif"'>Start Agent Service in General
+Client </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>If you install client package before,
+you should uninstall it. </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # service 
+tagent  uninstall  (uninstall service)</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # rm -rf
+/etc/intel/cloudsecurity/* /opt/intel/cloudsecurity/*</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>You just need run the bin file located
+in
+$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.1.bin.
+After installed the bin package, you should make sure tagent service is
+running. If it is inactive, you must manually start it. </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # scp
+&lt;server
+ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.1.bin
+.</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> #
+./TrustAgentLinuxInstaller-2.1.bin</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # service 
+tagent  status (check service)</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # service 
+tagent  start (start service)</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Note: If TPM's ownership has been taken,
+please run &quot;service tagent fixek&quot; to forcibly generate EC. </span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Start_Agent_Service_in_XenS"></a><b><span style='font-size:
+13.5pt;font-family:"Times New Roman","serif"'>Start Agent Service in XenServer
+Client </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>The only thing that needs to be
+installed on the XenServer to make it work is the </span><a
+href="http://downloadns.citrix.com.edgesuite.net/akdlm/8161/XenServer-6.2-measured-boot.iso"
+target="_blank"><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>XenServer-6.2-measured-boot.iso</span></a><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'> </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mkdir
+/mnt/xenserver –p</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mount -o
+loop XenServer-6.2-measured-boot.iso /mnt/xenserver/</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+/mnt/xenserver/</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # ./install.sh</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a name=user-content-Examples></a><b><span
+style='font-size:18.0pt;font-family:"Times New Roman","serif"'>Examples </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>At least OEM, OS, MLE, and HOST
+information should be added to Attestation Server’s White List database. You
+can open the following two links to add a trusted host. </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> http://oatserver.*.com:8080/WhiteListPortal/home.html</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> http://oatserver.*.com:8080/TrustDashBoard/home.html</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Notes: oatserver.*.com should be the
+host name of attestation server. </span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>OAT2.1 also provides command tools,
+these command tools can be used to create data in the console, for example, add
+OEM by executing follow command in the console, users can read
+&quot;README&quot; for more information. </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> bash oat_oem
+-a -h his8
+'{&quot;Name&quot;:&quot;OEM1&quot;,&quot;Description&quot;:&quot;Newdescription&quot;}'</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a name="user-content-Add_OEM"></a><b><span
+style='font-size:13.5pt;font-family:"Times New Roman","serif"'>Add OEM </span></b></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Open the WhiteListPortal: </span><a
+     href="http://oatserver.*.com:8080/WhiteListPortal/home.html"><span
+     style='font-size:12.0pt;font-family:"Times New Roman","serif"'>http://oatserver.*.com:8080/WhiteListPortal/home.html</span></a><span
+     style='font-size:12.0pt;font-family:"Times New Roman","serif"'> </span></li>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Click OEM-&gt; Add OEM, then you
+     can see a portal for creation a new OEM manufacturer. Input OEM name and
+     description as below:</span></li>
+</ul>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Name:
+OEM1 Description: Newdescription </span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Click Add button</span></li>
+</ul>
+
+<p class=MsoNormal style='line-height:normal'><a name="user-content-Add_OS"></a><b><span
+style='font-size:13.5pt;font-family:"Times New Roman","serif"'>Add OS </span></b></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Open the WhiteListPortal</span></li>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Click OS-&gt; Add OS, then fill the
+     blank field shown in popup portal.</span></li>
+</ul>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Name:
+OS1 Version: v1 Description: Test1 </span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Click Add button</span></li>
+</ul>
+
+<p class=MsoNormal style='line-height:normal'><a name="user-content-Add_MLE"></a><b><span
+style='font-size:13.5pt;font-family:"Times New Roman","serif"'>Add MLE </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Add_VMM_Type_MLE"></a><b><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Add VMM Type MLE </span></b></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Open the WhiteListPortal</span></li>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Click MLE -&gt; Add, and input the
+     following info: </span></li>
+</ul>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>MLE-Type:
+VMM <br>
+HOST OS: OS1 V1 <br>
+VMM Name: KVM <br>
+VMM Version: v123 <br>
+Description: Test <br>
+Manifest List -&gt; 18: CE796BD88E58890534CF6131571D5AF652293E55 <br>
+Notes: &quot;18&quot; means PCR 18, the value could be got via &quot;# cat
+/sys/.../pcrs&quot; on oat agent system, but the space chars should be removed
+first. </span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Click Add Mle button</span></li>
+</ul>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Add_BIOS_Type_MLE"></a><b><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Add BIOS Type MLE </span></b></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Open the WhiteListPortal</span></li>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Click MLE -&gt; Add, and input the
+     following info: </span></li>
+</ul>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>MLE-Type:
+BIOS <br>
+OEM Vendor: OEM1 <br>
+BIOS Name: NewMLE1 <br>
+BIOS Version: v123 <br>
+Description: Test <br>
+Manifest List -&gt; 0: D8FE91C410E7A3F9CAD8C05F42AC2DDFF707902E <br>
+Notes: &quot;0&quot; means PCR 0, the value could be got via &quot;# cat
+/sys/.../pcrs&quot; on oat agent system, but the space chars should be removed
+first. </span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Click Add Mle button</span></li>
+</ul>
+
+<p class=MsoNormal style='line-height:normal'><a name="user-content-Add_HOST"></a><b><span
+style='font-size:13.5pt;font-family:"Times New Roman","serif"'>Add HOST </span></b></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Open TrustDashBoard portal</span></li>
+</ul>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><a href="http://oatserver.*.com:8080/TrustDashBoard/home.html"><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>http://oatserver.*.com:8080/TrustDashBoard/home.html</span></a><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'> </span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Click Host Mangement -&gt; Add
+     Host, and input the following info: </span></li>
+</ul>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Host
+Name: agent.*.com <br>
+Host Ip Address: 192.168.1.1 <br>
+Host Port: 9999 <br>
+OEM Vendor: OEM1 <br>
+BIOS Info: New MLE1 v123 <br>
+OS-VMM Info: OS1 v1|KVM:v123 <br>
+Notes: by far, &quot;IPAddress&quot; and &quot;Port&quot; are not really used,
+so just leave a placeholder there. &quot;HostName&quot;:&quot;agent.*.com&quot;
+should be the host name of the oat agent (same as what hostname cmd returns on
+the oat agent system). </span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Click Add Host button</span></li>
+</ul>
+
+<p class=MsoNormal style='line-height:normal'><a name="user-content-Query_HOST"></a><b><span
+style='font-size:13.5pt;font-family:"Times New Roman","serif"'>Query HOST </span></b></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Open TrustDashBoard portal</span></li>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Click Home, choose the
+     “agent.*.com”, and check its status.</span></li>
+</ul>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Field_Constraint"></a><b><span style='font-size:24.0pt;
+font-family:"Times New Roman","serif"'>Field Constraint </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>In our system, we made the constraint
+limit for every filed, and you need to refer to following values to input valid
+parameters. These fields is just for user input, and not containing all fields.
+</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a name=user-content-Host></a><b><span
+style='font-size:18.0pt;font-family:"Times New Roman","serif"'>Host </span></b></p>
+
+<table class=MsoNormalTable border=0 cellpadding=0>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Name </span></b></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Type </span></b></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Size </span></b></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Name
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>40
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>IpAddress
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>20
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Port
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Int
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>11
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Description
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>100
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Email
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>45
+  </span></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='line-height:normal'><a name=user-content-OEM></a><b><span
+style='font-size:18.0pt;font-family:"Times New Roman","serif"'>OEM </span></b></p>
+
+<table class=MsoNormalTable border=0 cellpadding=0>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Name </span></b></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Type </span></b></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Size </span></b></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Name
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>100
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Description
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>200
+  </span></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='line-height:normal'><a name=user-content-OS></a><b><span
+style='font-size:18.0pt;font-family:"Times New Roman","serif"'>OS </span></b></p>
+
+<table class=MsoNormalTable border=0 cellpadding=0>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Name </span></b></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Type </span></b></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Size </span></b></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Name
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>100
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Version
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>50
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Description
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>200
+  </span></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='line-height:normal'><a name=user-content-MLE></a><b><span
+style='font-size:18.0pt;font-family:"Times New Roman","serif"'>MLE </span></b></p>
+
+<table class=MsoNormalTable border=0 cellpadding=0>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Name </span></b></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Type </span></b></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Size </span></b></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Name
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>100
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Version
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>100
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Attestation_type
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>20
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Required_Manifest_List
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>100
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Description
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>200
+  </span></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Pcr_manifest"></a><b><span style='font-size:18.0pt;
+font-family:"Times New Roman","serif"'>Pcr_manifest </span></b></p>
+
+<table class=MsoNormalTable border=0 cellpadding=0>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Name </span></b></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Type </span></b></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Size </span></b></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Name
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>20
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Value
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>100
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>PCR_Description
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Varchar
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>100
+  </span></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='line-height:normal'><a name=user-content-Appendix></a><b><span
+style='font-size:18.0pt;font-family:"Times New Roman","serif"'>Appendix </span></b></p>
+
+<table class=MsoNormalTable border=0 cellpadding=0>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Item </span></b></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Description </span></b></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>FileName </span></b></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+  text-align:center;line-height:normal'><b><span style='font-size:12.0pt;
+  font-family:"Times New Roman","serif"'>Location </span></b></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Username
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Login
+  to download the Privacy CA client files </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>PrivacyCA.properties
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>/etc/intel/cloudsecurity
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Password
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Login
+  to download the Privacy CA client files </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>PrivacyCA.properties
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>/etc/intel/cloudsecurity
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>saml.key.alias
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>key
+  alias </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>attestation-service.properties
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>/etc/intel/cloudsecurity
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>saml.keystore.file
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>filename
+  of saml keystore </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>attestation-service.properties
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>/etc/intel/cloudsecurity
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>saml.key.password
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>saml
+  key password </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>attestation-service.properties
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>/etc/intel/cloudsecurity
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>saml.keystore.password
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>keystore
+  password </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>attestation-service.properties
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>/etc/intel/cloudsecurity
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>server
+  ip </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>the
+  IP of privacy CA </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>null
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>null
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>mtwilson.db.user
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>the
+  username used to login database </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>mtwilson.properties
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>/etc/intel/cloudsecurity
+  </span></p>
+  </td>
+ </tr>
+ <tr>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>mtwilson.db.password
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>the
+  password used to login database (optional) </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>mtwilson.properties
+  </span></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+  normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>/etc/intel/cloudsecurity
+  </span></p>
+  </td>
+ </tr>
+</table>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>To be continue. </span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Failure_Rootcausing"></a><b><span style='font-size:24.0pt;
+font-family:"Times New Roman","serif"'>Failure Root-causing </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Check log file when you met issues:
+client (/var/log/tagent.log), server (catalina.out)</span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><a
+     href="https://status.github.com/"><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Status</span></a></li>
+ <li class=MsoNormal style='line-height:normal'><a
+     href="https://developer.github.com"><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>API</span></a></li>
+ <li class=MsoNormal style='line-height:normal'><a
+     href="http://training.github.com"><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Training</span></a></li>
+ <li class=MsoNormal style='line-height:normal'><a href="http://shop.github.com"><span
+     style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Shop</span></a></li>
+ <li class=MsoNormal style='line-height:normal'><a
+     href="https://github.com/blog"><span style='font-size:12.0pt;font-family:
+     "Times New Roman","serif"'>Blog</span></a></li>
+ <li class=MsoNormal style='line-height:normal'><a
+     href="https://github.com/about"><span style='font-size:12.0pt;font-family:
+     "Times New Roman","serif"'>About</span></a></li>
+</ul>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>&nbsp;</span></li>
+</ul>
+
+<p class=MsoNormal>&nbsp;</p>
+
+</div>
+
+</body>
+
+</html>
