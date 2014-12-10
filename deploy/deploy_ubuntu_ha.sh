@@ -4,6 +4,8 @@
 ### configuration ###
 mysql_password=${mysql_password:-""}
 oat_server=${oat_server:-""}
+oat_server_port=${oat_server_port:-8181}
+mysql_port=${mysql_port:-3306}
 saml_password=${saml_password:-samlpasswd2}
 portal_password=${portal_password:-portalpasswd2}
 p12_password=${p12_password:-p2}
@@ -11,7 +13,7 @@ log_dir=${log_dir:-/var/log/tomcat6}
 
 example()
 {
-    echo $"$0: Usage: $0 --mysql <MySQL passwd of oat server> --ip <IP of oatserver>}"
+    echo $"$0: Usage: $0 --mysql <MySQL passwd of oat server> --ip <IP of oatserver> --port <Port of oatserver> --mysql_port <Port of mysql> --ha_master <IP of the ha master>"
 }
 
 if [ $# -lt 3 ]; then
@@ -33,6 +35,18 @@ while [ $# -gt 1 ]; do
         oat_server=$2
         shift 2
         ;;
+    --port)
+	    oat_server_port=$2
+	    shift 2
+	    ;;
+    --mysql_port)
+        mysql_port=$2
+        shift 2
+        ;;
+    --ha_master)
+	    ha_master=$2
+	    shift 2
+	    ;;
     *)
         example
         exit 1;;
@@ -41,6 +55,8 @@ done
 
 echo "oat_server = $oat_server"
 echo "mysql_password = $mysql_password"
+echo "oat_server_port = $oat_server_port"
+echo "ha_master = $ha_master"
 
 if [ "$oat_server" == "" ]; then
     example
@@ -60,7 +76,7 @@ tomcat_dir=${tomcat_dir:-/var/lib/tomcat6}
 oat_home_dir=${oat_home_dir:-$HOME/.oat}
 [ -d $oat_home_dir ] && rm -rf $oat_home_dir
 install -d  $oat_home_dir
-#chown -R tomcat6:tomcat6 $oat_home_dir
+chown -R tomcat6:tomcat6 $oat_home_dir
 
 ###MySQL ### 
 mysql_status="`netstat -vulntp |grep -i mysql`"
@@ -83,11 +99,11 @@ fi
 cd $conf_dir
 mtwilson_properties()
 {
-    cat <<'EOF' > "$conf_dir/mtwilson.properties"
-mtwilson.api.baseurl=https://OATAPPR_IP:8181
+    cat <<EOF > $conf_dir/mtwilson.properties
+mtwilson.api.baseurl=https://OATAPPR_IP:$oat_server_port
 mtwilson.api.ssl.policy=TRUST_FIRST_CERTIFICATE
 mtwilson.db.driver=com.mysql.jdbc.Driver
-mtwilson.db.url=jdbc:mysql://localhost/mw_as
+mtwilson.db.url=jdbc:mysql://OATAPPR_IP:$mysql_port/mw_as
 mtwilson.db.user=root
 mtwilson.db.password=MYSQL_PASSWD
 EOF
@@ -95,7 +111,7 @@ EOF
 
 trust_properties()
 {
-    cat <<'EOF' > "$conf_dir/trust-dashboard.properties"
+    cat <<EOF > $conf_dir/trust-dashboard.properties
 mtwilson.tdbpkeystore.dir=/etc/intel/cloudsecurity
 mtwilson.tdbp.keystore.password=PORTAL_PASSWD
 imagesRootPath= images/
@@ -115,7 +131,7 @@ EOF
 
 whitelist_properties()
 {
-    cat <<'EOF' > "$conf_dir/whitelist-portal.properties"
+    cat <<EOF > $conf_dir/whitelist-portal.properties
 mtwilson.wlmp.keystore.dir=/etc/intel/cloudsecurity
 mtwilson.wlmp.keystore.password=PORTAL_PASSWD
 mtwilson.wlmp.openSourceHypervisors=KVM;Xen
@@ -127,7 +143,7 @@ EOF
 
 attestation_properties()
 {
-    cat <<'EOF' > "$conf_dir/attestation-service.properties"
+    cat <<EOF > $conf_dir/attestation-service.properties
 com.intel.mountwilson.as.trustagent.timeout=3
 com.intel.mountwilson.as.attestation.hostTimeout=60
 com.intel.mountwilson.as.home=/var/opt/intel/aikverifyhome
@@ -137,7 +153,7 @@ saml.key.aslias=samlkey1
 saml.keystore.file=SAML.jks
 saml.keystore.password=SAML_KEYSTORE_PASSWD
 saml.validity.seconds=3600
-saml.issuer=https://OATAPPR_IP:8181
+saml.issuer=https://OATAPPR_IP:$oat_server_port
 saml.key.password=SAML_KEY_PASSWD
 privacyca.server=OATAPPR_IP
 com.intel.mtwilson.as.buisiness.trust.sleepTime=1
@@ -146,8 +162,8 @@ EOF
 
 privacyca_client_properties()
 {
-    cat <<'EOF' > "$conf_dir/privacyca-client.properties"
-PrivacyCaUrl=https://OATAPPR_IP:8181/HisPrivacyCAWebServices2
+    cat <<EOF > $conf_dir/privacyca-client.properties
+PrivacyCaUrl=https://OATAPPR_IP:$oat_server_port/HisPrivacyCAWebServices2
 PrivacyCaSubjectName=HIS_PRIVACY_CA
 PrivacyCaPassword=***replace***
 EndorsementCaSubjectName=Endorsement_CA_Rev_1
@@ -163,11 +179,83 @@ EOF
 
 privacyca_properties()
 {
-    cat <<'EOF' > "$conf_dir/PrivacyCA.properties"
+    cat <<EOF > $conf_dir/PrivacyCA.properties
 ClientFilesDownloadUsername=admin
 ClientFilesDownloadPassword=PRIVACY_CA_PASSWD
 EOF
 }
+
+install_aikverify()
+{
+    ### aikqverify install ###
+    pdir=$(pwd)
+    [ -e $oat_home_dir/aikqverify-* ] &&  \
+        rm -rf $oat_home_dir/aikqverify-*
+
+    find $TOP_DIR -name "aikqverify-*.zip"  | \
+        xargs -i unzip {} -d $oat_home_dir
+    cd $oat_home_dir/aikqverify-*
+    make
+    make install
+    cd $pdir
+}
+
+### copy oat war packages ###
+copy_war_package()
+{
+    find $TOP_DIR -name "$1*.war" | \
+        xargs -i cp {} $tomcat_dir/webapps/$1.war
+}
+
+is_hamaster()
+{
+    for host in `hostname -I`;
+    do
+        if [[ $1 == $host ]]; then
+            return 0
+            break;
+        fi
+    done
+    if [[ $1 =~ `hostname` ]]; then
+    return 0
+    fi
+    return 1
+}
+
+if [ -n "$ha_master" ]; then
+    if ! is_hamaster $ha_master; then
+        # ha slave node 
+        # copy the certificates and property file to slave
+        echo "ha slave"
+        for pth in $conf_dir $tomcat_dir/Certificate $oat_home_dir $tomcat_dir/conf/server.xml;
+        do
+            echo "Transfering $ha_master:$pth to $pth..."
+            rsync -avz $ha_master:$pth `dirname $pth`
+        done
+
+        # install aikverify
+        install_aikverify
+
+	# grant root all the permission
+        mysql -uroot -p$mysql_password mysql -e "grant all privileges on *.* to root@'%' identified by '$mysql_password'"
+        
+        # copy wars 
+        for name in "HisPrivacyCAWebServices2" "WLMService" \
+            "WhiteListPortal" "AttestationService" "TrustDashBoard";
+        do
+            echo "Copying $name.war to tomcat webapp."
+            copy_war_package $name             
+        done
+
+        # set permissions
+        chown -R tomcat6:tomcat6 $conf_dir
+        chown -R tomcat6:tomcat6 $tomcat_dir/Certificate
+        chown -R tomcat6:tomcat6 /var/opt        
+
+        service tomcat6 restart
+        exit 0
+        fi
+fi
 
 mtwilson_properties
 trust_properties
@@ -226,16 +314,17 @@ cp $conf_dir/clientfiles/PrivacyCA.cer $conf_dir
 chown -R tomcat6:tomcat6 $conf_dir
 
 ### aikqverify install ###
-pdir=$(pwd)
-[ -e $oat_home_dir/aikqverify-* ] &&  \
-    rm -rf $oat_home_dir/aikqverify-*
-
-find $TOP_DIR -name "aikqverify-*.zip"  | \
-    xargs -i unzip {} -d $oat_home_dir
-cd $oat_home_dir/aikqverify-*
-make
-make install
-cd $pdir
+install_aikverify
+#pdir=$(pwd)
+#[ -e $oat_home_dir/aikqverify-* ] &&  \
+#    rm -rf $oat_home_dir/aikqverify-*
+#
+#find $TOP_DIR -name "aikqverify-*.zip"  | \
+#    xargs -i unzip {} -d $oat_home_dir
+#cd $oat_home_dir/aikqverify-*
+#make
+#make install
+#cd $pdir
 
 ### Create Attestation Server Certificate ###
 privacyca_server="`att_parse "privacyca.server"`"
@@ -266,7 +355,7 @@ cp -f $oat_home_dir/ssl.${privacyca_server}.crt $tomcat_dir/Certificate/
 tdbp_password="`trust_tdb_parse "mtwilson.tdbp.keystore.password"`"
 
 keytool -genkey -alias admin -keyalg RSA -keysize 2048 -keystore $oat_home_dir/portal.jks \
-        -storepass $tdbp_password "CN=Portal User, OU=Mt Wilson, O=My Org, C=US" \
+        -storepass $tdbp_password -dname "CN=Portal User, OU=Mt Wilson, O=My Org, C=US" \
         -validity 3650 -keypass $tdbp_password
 
 keytool -importcert -file $oat_home_dir/saml.crt -keystore $oat_home_dir/portal.jks \
@@ -279,11 +368,11 @@ keytool -importcert -file $oat_home_dir/ssl.${privacyca_server}.crt  \
 sed -i "/<\/Service>/i\    <Connector port=\"8181\" minSpareThreads=\"5\" maxSpareThreads=\"75\" enableLookups=\"false\" disableUploadTimeout=\"true\" acceptCount=\"100\" maxThreads=\"200\" scheme=\"https\" secure=\"true\" SSLEnabled=\"true\" clientAuth=\"want\" sslProtocol=\"TLS\" ciphers=\"TLS_ECDH_anon_WITH_AES_256_CBC_SHA, TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA, TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA\" keystoreFile=\"Certificate\/keystore.jks\" keystorePass=\"$server_keystore_password\" truststoreFile=\"Certificate\/keystore.jks\" truststorePass=\"$server_key_password\"\/>" $tomcat_dir/conf/server.xml
 
 ### copy oat war packages ###
-copy_war_package()
-{
-    find $TOP_DIR -name "$1*.war" | \
-        xargs -i cp {} $tomcat_dir/webapps/$1.war
-}
+#copy_war_package()
+#{
+#    find $TOP_DIR -name "$1*.war" | \
+#        xargs -i cp {} $tomcat_dir/webapps/$1.war
+#}
 
 copy_war_package "HisPrivacyCAWebServices2"
 copy_war_package "WLMService"
