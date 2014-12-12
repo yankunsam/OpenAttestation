@@ -78,10 +78,10 @@ chown -R tomcat:tomcat $oat_home_dir
 ###MySQL ###
 mysql_status="`netstat -vulntp |grep -i mysqld`"
 if [ -n "$mysql_status" ];then
-    echo "mariaDB service is running .."
+    echo "mysqld service is running .."
 else
-    echo "starting mariaDB service .."
-    service mariadb start
+    echo "starting mysqld service .."
+    service mysqld start
 fi
 if [ "$mysql_password" == "" ];then
     mysql -uroot -e 'create database mw_as';
@@ -93,7 +93,7 @@ else
     $TOP_DIR/database/mysql/src/main/resources/com/intel/mtwilson/database/mysql/mtwilson.sql
 fi
 
-# grant root all the permissions
+# grant root all the permission
 mysql -uroot -p$mysql_password mysql -e "grant all privileges on *.* to root@'%' identified by '$mysql_password'"
 
 cd $conf_dir
@@ -225,7 +225,7 @@ is_hamaster()
 
 if [ -n "$ha_master" ]; then
     if ! is_hamaster $ha_master; then
-        # ha slave node
+        # ha slave node 
         # copy the certificates and property file to slave
         echo "ha slave"
         for pth in $conf_dir $tomcat_dir/Certificate $oat_home_dir $tomcat_dir/conf/server.xml;
@@ -237,10 +237,10 @@ if [ -n "$ha_master" ]; then
         # install aikverify
         install_aikverify
 
-        # grant root all the permission
-        #mysql -uroot -p$mysql_password mysql -e "grant all privileges on *.* to root@'%' identified by '$mysql_password'"
+	# grant root all the permission
+	#mysql -uroot -p$mysql_password mysql -e "grant all privileges on *.* to root@'%' identified by '$mysql_password'"
 
-        # copy wars
+        # copy wars 
         for name in "HisPrivacyCAWebServices2" "WLMService" \
             "WhiteListPortal" "AttestationService" "TrustDashBoard";
         do
@@ -316,7 +316,7 @@ install_aikverify
 #pdir=$(pwd)
 #[ -d $oat_home_dir/aikqverify-* ] &&  \
 #    rm -rf $oat_home_dir/aikqverify-*
-
+#
 #find $TOP_DIR -name "aikqverify-*.zip"  | \
 #    xargs -i unzip {} -d $oat_home_dir
 #cd $oat_home_dir/aikqverify-*

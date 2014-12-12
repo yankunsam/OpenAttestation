@@ -78,10 +78,10 @@ chown -R tomcat:tomcat $oat_home_dir
 ###MySQL ###
 mysql_status="`netstat -vulntp |grep -i mysqld`"
 if [ -n "$mysql_status" ];then
-    echo "mariaDB service is running .."
+    echo "mysql service is running .."
 else
-    echo "starting mariaDB service .."
-    service mariadb start
+    echo "starting mysql service .."
+    service mysql start
 fi
 if [ "$mysql_password" == "" ];then
     mysql -uroot -e 'create database mw_as';
@@ -210,7 +210,7 @@ copy_war_package()
 
 is_hamaster()
 {
-    for host in `hostname -I`;
+    for host in `/sbin/ifconfig |grep -B1 "inet addr" |awk '{ if ( $1 == "inet" ) { print $2 } else if ( $2 == "Link" ) { printf "%s:" ,$1 } }' |awk -F: '{ print $3 }'`;
     do
         if [[ $1 == $host ]]; then
             return 0
@@ -225,7 +225,7 @@ is_hamaster()
 
 if [ -n "$ha_master" ]; then
     if ! is_hamaster $ha_master; then
-        # ha slave node
+        # ha slave node 
         # copy the certificates and property file to slave
         echo "ha slave"
         for pth in $conf_dir $tomcat_dir/Certificate $oat_home_dir $tomcat_dir/conf/server.xml;
@@ -240,7 +240,7 @@ if [ -n "$ha_master" ]; then
         # grant root all the permission
         #mysql -uroot -p$mysql_password mysql -e "grant all privileges on *.* to root@'%' identified by '$mysql_password'"
 
-        # copy wars
+        # copy wars 
         for name in "HisPrivacyCAWebServices2" "WLMService" \
             "WhiteListPortal" "AttestationService" "TrustDashBoard";
         do
@@ -257,6 +257,8 @@ if [ -n "$ha_master" ]; then
         exit 0
         fi
 fi
+
+
 
 mtwilson_properties
 trust_properties
@@ -316,7 +318,7 @@ install_aikverify
 #pdir=$(pwd)
 #[ -d $oat_home_dir/aikqverify-* ] &&  \
 #    rm -rf $oat_home_dir/aikqverify-*
-
+#
 #find $TOP_DIR -name "aikqverify-*.zip"  | \
 #    xargs -i unzip {} -d $oat_home_dir
 #cd $oat_home_dir/aikqverify-*
@@ -363,11 +365,14 @@ keytool -importcert -file $oat_home_dir/ssl.${privacyca_server}.crt  \
         -keystore $oat_home_dir/portal.jks \
         -storepass $tdbp_password -alias "mtwilson (ssl)"
 
+#comments out '<Listener className=\"org.apache.catalina.core.AprLifecycleListener\" SSLEngine=\"on\" \/>'
+sed -i "s/<Listener className=\"org.apache.catalina.core.AprLifecycleListener\" SSLEngine=\"on\" \/>/<\!--Listener className=\"org.apache.catalina.core.AprLifecycleListener\" SSLEngine=\"on\" \/-->/g" $tomcat_dir/conf/server.xml
+
 sed -i "/<\/Service>/i\    <Connector port=\"8181\" minSpareThreads=\"5\" maxSpareThreads=\"75\" enableLookups=\"false\" disableUploadTimeout=\"true\" acceptCount=\"100\" maxThreads=\"200\" scheme=\"https\" secure=\"true\" SSLEnabled=\"true\" clientAuth=\"want\" sslProtocol=\"TLS\" ciphers=\"TLS_ECDH_anon_WITH_AES_256_CBC_SHA, TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA, TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA\" keystoreFile=\"Certificate\/keystore.jks\" keystorePass=\"$server_keystore_password\" truststoreFile=\"Certificate\/keystore.jks\" truststorePass=\"$server_key_password\"\/>" $tomcat_dir/conf/server.xml
 
 ### copy oat war packages ###
 #copy_war_package()
-#{
+#{
 #    find $TOP_DIR -name "$1*.war" | \
 #        xargs -i cp {} $tomcat_dir/webapps/$1.war
 #}

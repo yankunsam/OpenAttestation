@@ -96,6 +96,9 @@ else
     $TOP_DIR/database/mysql/src/main/resources/com/intel/mtwilson/database/mysql/mtwilson.sql
 fi
 
+# grant root all the permission
+mysql -uroot -p$mysql_password mysql -e "grant all privileges on *.* to root@'%' identified by '$mysql_password'"
+
 cd $conf_dir
 mtwilson_properties()
 {
@@ -237,7 +240,7 @@ if [ -n "$ha_master" ]; then
         install_aikverify
 
 	# grant root all the permission
-        mysql -uroot -p$mysql_password mysql -e "grant all privileges on *.* to root@'%' identified by '$mysql_password'"
+        #mysql -uroot -p$mysql_password mysql -e "grant all privileges on *.* to root@'%' identified by '$mysql_password'"
         
         # copy wars 
         for name in "HisPrivacyCAWebServices2" "WLMService" \
