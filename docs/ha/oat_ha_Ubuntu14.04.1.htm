@@ -578,7 +578,7 @@ src="oat_ha_files/image001.jpg"></p>
 
 <p class=MsoNormal>A minimum of three servers are required for this
 implementation. The deployment environment has been validated in Ubuntu 14.04.1,
-Fedora 21, RHEL 7 and SLES 12. This guide is intended for Ubuntu 14.04.1.</p>
+Fedora 21/20, RHEL 7 and SLES 12. This guide is intended for Ubuntu 14.04.1.</p>
 
 <h2><a name="_Toc404598693">Local Name Resolution</a></h2>
 
@@ -922,8 +922,8 @@ font-family:"Calibri",sans-serif;color:#FFC000;background:black'>&nbsp;&nbsp;&nb
 server &lt;lb1 hostname&gt; &lt;lb1 IP&gt;:8181 check</span></p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
-font-family:"Calibri",sans-serif;color:#FFC000;background:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;server &lt;lb2 hostname&gt; &lt;lb2 IP&gt;:8181 check</span></p>
+font-family:"Calibri",sans-serif;color:#FFC000;background:black'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+server &lt;lb2 hostname&gt; &lt;lb2 IP&gt;:8181 check</span></p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
 font-family:"Calibri",sans-serif;color:#FFC000;background:black'>&nbsp;</span></p>
@@ -998,8 +998,7 @@ IP.</p>
 HAProxy by editing the /etc/default/haproxy file.</p>
 
 <p class=MsoNormal style='text-align:justify;text-justify:inter-ideograph'><span
-style='color:#FFC000;background:black'># sed -i s/ENABLED=0/ENABLED=1/g
-/etc/default/haproxy</span></p>
+style='color:#FFC000;background:black'># sed -i s/ENABLED=0/ENABLED=1/g /etc/default/haproxy</span></p>
 
 <p class=MsoNormal style='text-align:justify;text-justify:inter-ideograph'>Then,
 start HAProxy</p>
@@ -1096,8 +1095,19 @@ style='color:#FFC000'> </span></p>
 
 <p class=MsoNormal style='text-align:justify;text-justify:inter-ideograph'>Good,
 keepalived is now installed. If you want to enable mail alert, be sure to
-install sendmail. Before we proceed with configuring keepalived itself, edit
-the following file and apply the setting. </p>
+install sendmail. </p>
+
+<p class=MsoNormal style='text-align:justify;text-justify:inter-ideograph'>Backup
+the original keepalived configuration.</p>
+
+<p style='margin:0in;margin-bottom:.0001pt;text-align:justify;text-justify:
+inter-ideograph'><span style='font-size:11.0pt;font-family:"Calibri",sans-serif;
+color:#FFC000;background:black'># mv /etc/ keepalived/keepalived.conf /etc/
+keepalived/keepalived.bak.conf</span></p>
+
+<p class=MsoNormal style='text-align:justify;text-justify:inter-ideograph'>Before
+we proceed with configuring keepalived itself, edit the following file and
+apply the setting. </p>
 
 <p style='margin:0in;margin-bottom:.0001pt;text-align:justify;text-justify:
 inter-ideograph'><span style='font-size:11.0pt;font-family:"Calibri",sans-serif;
@@ -1113,7 +1123,8 @@ inter-ideograph'><span style='font-size:11.0pt;font-family:"Calibri",sans-serif;
 background:#D9D9D9'>&nbsp;</span></p>
 
 <p class=MsoNormal style='text-align:justify;text-justify:inter-ideograph'>Now
-let＊s add the configuration for keepalived in the file /etc/keepalived/keepalived.conf.</p>
+let＊s add the configuration for keepalived in the file
+/etc/keepalived/keepalived.conf.</p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
 font-family:"Calibri",sans-serif;color:#FFC000;background:black'>global_defs {</span></p>
@@ -1316,8 +1327,7 @@ configuration file.</span></p>
 style='color:#FFC000;background:black'>sed -i s/'127.0.0.1'/&lt;db server
 ip&gt;/ /etc/mysql/my.cnf</span></p>
 
-<p class=MsoNormal>Repeat the same steps on the second and the third database
-server.</p>
+<p class=MsoNormal>Repeat the same steps on the second and the third database server.</p>
 
 <p class=MsoNormal>&nbsp;</p>
 
@@ -1329,7 +1339,7 @@ PrivacyCA certificate generated upon server setup.&nbsp; In the HA
 implementation, there are two or more web applications to offload each
 other.&nbsp; However, only one set of certificates will be created and used in
 the cluster. Therefore, the certificate will be generated on one server and
-transfer to other servers hosting web applications. </p>
+transferred to other servers hosting web applications. </p>
 
 <p class=MsoNormal>Regarding how to install the OAT server, on the first
 server, download and compile the source code from git source (<a
@@ -1391,19 +1401,41 @@ Galera replicator:</p>
 communication:</p>
 
 <pre><span style='font-size:10.5pt;font-family:"Calibri",sans-serif;color:#FFC000;
-background:black'># mysql 每uroot 每p&lt;password&gt; mysql 每e ※create user&nbsp; sst@＊%＊ IDENTIFIED BY 'yourpass'; GRANT ALL PRIVILEGES ON *.* TO sst@'%' IDENTIFIED BY 'yourpass';&quot;</span></pre>
+background:black'># mysql 每uroot 每p&lt;password&gt; mysql 每e ※create user&nbsp; sst@＊%＊ IDENTIFIED BY 'yourpass'; GRANT ALL PRIVILEGES ON *.* TO sst@'%' IDENTIFIED BY 'yourpass';&quot;</span></pre><pre><span
+style='font-size:10.5pt;font-family:"Calibri",sans-serif;color:#FFC000;
+background:black'># mysql -uroot 每p&lt;password&gt; mysql -e &quot;GRANT ALL PRIVILEGES ON *.* TO 'sst'@'localhost' IDENTIFIED BY 'yourpass&quot;;</span></pre>
+
+<p class=MsoNormal>Remove user accounts with empty user names because they
+cause problems:</p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='color:#FFC000;background:black'># mysql 每uroot
+每p&lt;password&gt; mysql -e &quot;DELETE FROM mysql.user WHERE user='';&quot;</span></p>
 
 <p class=MsoNormal>Then open the firewall port:</p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='color:#FFC000;background:black'>iptables -A INPUT -i
+normal'><span style='color:#FFC000;background:black'># iptables -A INPUT -i
 &lt;interface&gt; -p tcp -m tcp --source &lt;subnet&gt;/24 --dport 3306 -j
 ACCEPT</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='color:#FFC000;background:black'>iptables -A INPUT -i
+normal'><span style='color:#FFC000;background:black'># iptables -A INPUT -i
 &lt;interface&gt; -p tcp -m tcp --source &lt;subnet&gt;/24 --dport 4567 -j
 ACCEPT</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='color:#FFC000;background:black'># iptables -A INPUT -i
+&lt;interface&gt; -p tcp -m tcp --source &lt;subnet&gt;/24 --dport 4444 -j
+ACCEPT</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='color:#FFC000;background:black'># iptables -A INPUT -i
+&lt;interface&gt; -p tcp -m tcp --source &lt;subnet&gt;/24 --dport 4568 -j
+ACCEPT</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='color:#FFC000;background:black'># service iptables save</span></p>
 
 <p class=MsoNormal>After that, let＊s begin the configuration: </p>
 
@@ -1521,9 +1553,9 @@ cluster, you are able to find more detailed info in /var/log/syslog.</p>
 
 <h2><a name="_Toc404598704">Configure Mysql with HA &amp; Load Balancers</a></h2>
 
-<p class=MsoNormal>For the time being, there are two database nodes and one
-node for garbd. In OAT, one single entry point is needed to access the database.&nbsp;
-To avoid SNOF, a HAProxy is to set up on top of the existing Galera cluster. </p>
+<p class=MsoNormal>For the time being, there are three database nodes. In OAT,
+one single entry point is needed to access the database.&nbsp; To avoid SNOF, a
+HAProxy is to set up on top of the existing Galera cluster. </p>
 
 <p class=MsoNormal>Add the following configurations to the bottom of
 /etc/haproxy/haproxy.cfg. Redo this on the other load balancer server.</p>
@@ -1603,7 +1635,7 @@ details. &nbsp;</p>
 <h2><a name="_Toc404598707">Replace a Failed Node</a></h2>
 
 <p class=MsoNormal>If one of the nodes comes across some hardware failure or
-system crash, to setup a new node to join the HA cluster, please following this
+system crash, to setup a new node to join the HA cluster, please follow this
 guide to build a fresh node. </p>
 
 <div style='border:none;border-bottom:solid #5B9BD5 1.0pt;padding:0in 0in 1.0pt 0in'>
