@@ -130,21 +130,21 @@ ul
 font-family:"Times New Roman","serif"'>Build Open Attestation (2.2) </span></b></p>
 
 <p class=MsoNormal style='line-height:normal'><a
-name="user-content-System_Requirement"></a><b><span style='font-size:13.5pt;
-font-family:"Times New Roman","serif"'>System Requirement </span></b></p>
+name="user-content-System_Requirement"></a><span style='font-size:10.0pt;
+font-family:"Courier New"'>System Requirement </span></p>
 
-<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>The build environment has been validated
-in Ubuntu 14.04, Fedora 20. </span></p>
+<p class=MsoNormal style='line-height:normal'><span style='font-size:10.0pt;
+font-family:"Courier New"'>The build environment has been validated in Fedora 20.
+</span></p>
 
 <p class=MsoNormal style='line-height:normal'><a
-name="user-content-Proxy_Configuration_Setup"></a><b><span style='font-size:
-13.5pt;font-family:"Times New Roman","serif"'>Proxy Configuration Setup </span></b></p>
+name="user-content-Proxy_Configuration_Setup"></a><span style='font-size:10.0pt;
+font-family:"Courier New"'>Proxy Configuration Setup </span></p>
 
-<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>If you build package behind firewall,
-you would need to setup following proxies in order to download source code and
-needed libraries. </span></p>
+<p class=MsoNormal style='line-height:normal'><span style='font-size:10.0pt;
+font-family:"Courier New"'>If you build package behind firewall, you would need
+to setup following proxies in order to download source code and needed
+libraries. </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # export
@@ -159,12 +159,12 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # export
 ftp_proxy= ftp://&lt;proxy_server&gt;:&lt;proxy_port&gt;</span></p>
 
 <p class=MsoNormal style='line-height:normal'><a
-name="user-content-Install_Required_Packages"></a><b><span style='font-size:
-13.5pt;font-family:"Times New Roman","serif"'>Install Required Packages </span></b></p>
+name="user-content-Install_Required_Packages"></a><span style='font-size:10.0pt;
+font-family:"Courier New"'>Install Required Packages </span></p>
 
-<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>Take Fedora 20 OS for example, you need
-install follow required packages: </span></p>
+<p class=MsoNormal style='line-height:normal'><span style='font-size:10.0pt;
+font-family:"Courier New"'>Take Fedora 20 OS for example, you need install
+follow required packages: </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
@@ -179,17 +179,9 @@ name="OLE_LINK20"></a><a name="OLE_LINK8"></a><a name="OLE_LINK7">java-1.7.0-ope
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
 zip make gcc-c++ makeself</span></p>
 
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>For
-SLES 11.2, you can fetch makeself package from OpenSuSE repository, and you
-need link makeself.sh as makeself. </span></p>
-
 <p class=MsoNormal style='line-height:normal'><a
-name="user-content-Download_Source_Code"></a><b><span style='font-size:13.5pt;
-font-family:"Times New Roman","serif"'>Download Source Code </span></b></p>
+name="user-content-Download_Source_Code"></a><span style='font-size:10.0pt;
+font-family:"Courier New"'>Download Source Code </span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>Using git tool to download the source
@@ -225,126 +217,13 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
 XenServer-SDK/XenServerJava/bin/xenserver-6.2.0-1.jar
 $HOME/OpenAttestation/services/citrix-sdk/</span></p>
 
-<p class=MsoNormal style='line-height:normal'><a
-name="user-content-Build_Source_Code"></a><b><span style='font-size:13.5pt;
-font-family:"Times New Roman","serif"'>Build Source Code </span></b></p>
-
-<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>Open Attestation 2.1 uses maven tool to
-build source code. Run the following commands to build the source code, if the
-code is built behind the firewall, you need explicitly adjust
-&quot;settings.xml&quot; to add proxy for maven. </span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
-$HOME/OpenAttestation</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # git
-checkout v2.2</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mvn clean
-install      //compile general code</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> or</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mvn clean
-install –Dcompile.xenserver=true  //compile XenServer code</span></p>
-
-<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>Note: For RHEL OS, the package
-‘makeself’ is missing, you need download the SPRM and compile the package to
-install makeself </span><a
-href="http://rpmfind.net/linux/RPM/opensuse/12.1/noarch/makeself-2.1.5-3.1.1.noarch.html"
-target="_blank"><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>makeself</span></a><span
-style='font-size:12.0pt;font-family:"Times New Roman","serif"'>, for SLES OS,
-makeself is named makeself.sh, alias this shell script as ‘makeself’ and then
-it should be built successfully. </span></p>
-
-<p class=MsoNormal style='line-height:normal'><a
-name="user-content-Attestation_Server_Installa"></a><b><span style='font-size:
-18.0pt;font-family:"Times New Roman","serif"'>Attestation Server Installation </span></b></p>
-
-<p class=MsoNormal style='line-height:normal'><a
-name="user-content-System_Requirement-2"></a><b><span style='font-size:13.5pt;
-font-family:"Times New Roman","serif"'>System Requirement </span></b></p>
-
-<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>So far, the server installation has been
-verified on Ubuntu12.10, Ubuntu14.04, Fedora 20, RHEL7, SLES 11 SP2,
-OpenSUSE12.3. </span></p>
-
-<p class=MsoNormal style='line-height:normal'><a
-name="user-content-Firewall_configuration"></a><b><span style='font-size:13.5pt;
-font-family:"Times New Roman","serif"'>Firewall configuration </span></b></p>
-
-<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>Make sure TCP port 8181, 8080 are not
-blocked by firewall.</span></p>
-
-<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>Fedora 20</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -A
-INPUT -p tcp --dport 8181 -j ACCEPT</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -A
-INPUT -p tcp --dport 8080 -j ACCEPT</span></p>
-
-<p class=MsoNormal style='line-height:normal'><a
-name="user-content-Install_Required_Packages-2"></a><b><span style='font-size:
-13.5pt;font-family:"Times New Roman","serif"'>Install Required Packages </span></b></p>
-
-<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>Install packages listed below: </span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
-java-1.7.0-openjdk</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
-openssl</span></p>
-
-<pre style='line-height:12.0pt;background:white'> # yum install <span
-style='font-size:9.0pt;font-family:Consolas;color:black'>openssl-devel</span></pre>
-
-<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>Also install the following packages: <br>
-Database system: MySQL 5.0 / MariaDB or later, or PostgreSQL <br>
-Java web application container: Glassfish 3.0 or later, or Tomcat 6.0 or later.
-<br>
-Notes: You should install &quot;libopenssl-devel&quot; instead of
-&quot;libssl-dev&quot; on SLES. </span></p>
-
-<p class=MsoNormal style='line-height:normal'><a
-name="user-content-JDK_Configuration"></a><b><span style='font-size:13.5pt;
-font-family:"Times New Roman","serif"'>Deploy</span></b></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'># cd
-$HOME/OpenAttestation/deploy</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'># bash deploy_fedora.sh
---mysql &lt;MySQL passwd of oat server&gt; --ip &lt;IP of oatserver&gt;</span></p>
-
-<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>Note: If you want deploy them manually
-,see below</span></p>
-
 <p class=MsoNormal style='line-height:normal'><b><span style='font-size:13.5pt;
 font-family:"Times New Roman","serif"'>JDK Configuration </span></b></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>Open Attestation 2.1 uses Bouncycastle
-JCE provider, add the provider to the list of trusted in
-$JAVA_HOME/jre/lib/security/java.security like this: </span></p>
+font-family:"Times New Roman","serif"'>Open Attestation 2.2 uses Bouncycastle
+JCE provider, add the provider to the list of trusted in $JAVA_HOME/jre/lib/security/java.security
+like this: </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> security.provider.10=org.bouncycastle.jce.provider.BouncyCastleProvider</span></p>
@@ -375,6 +254,140 @@ target="_blank"><span style='font-size:12.0pt;font-family:"Times New Roman","ser
 Castle</span></a><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>.
 </span></p>
 
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Build_Source_Code"></a><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>Build Source Code </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Open Attestation 2.2 uses maven tool to
+build source code. Run the following commands to build the source code, if the
+code is built behind the firewall, you need explicitly adjust
+&quot;settings.xml&quot; to add proxy for maven. </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+$HOME/OpenAttestation</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # git
+checkout v2.2</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mvn clean
+install      //compile general code</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> or</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mvn clean
+install –Dcompile.xenserver=true  //compile XenServer code</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:115%;font-family:
+"Times New Roman","serif"'>If you want skip our test cases,you can use this
+comma</span><span style='font-size:10.0pt;line-height:115%;font-family:"Courier New"'>nd:</span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;line-height:115%;font-family:
+"Courier New"'> # mvn clean install -DskipTests=true</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Attestation_Server_Installa"></a><b><span style='font-size:
+18.0pt;font-family:"Times New Roman","serif"'>Attestation Server Installation </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-System_Requirement-2"></a><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>System Requirement </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>So far, the server installation has been
+verified on Fedora 20. </span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Firewall_configuration"></a><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>Firewall configuration </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Make sure TCP port 8181, 8080 are not
+blocked by firewall.</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Fedora 20</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -A
+INPUT -p tcp --dport 8181 -j ACCEPT</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -A
+INPUT -p tcp --dport 8080 -j ACCEPT</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -A
+INPUT -p tcp --dport 9999 -j ACCEPT</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -A
+INPUT -p tcp --dport 9998 -j ACCEPT</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-Install_Required_Packages-2"></a><b><span style='font-size:
+13.5pt;font-family:"Times New Roman","serif"'>Install Required Packages </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Install packages listed below: </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
+java-1.7.0-openjdk</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
+openssl</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'>  <span style='font-size:10.0pt;font-family:"Courier New"'># yum
+install openssl-devel</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
+gcc unzip</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Also install the following packages:</span></p>
+
+<p class=MsoNormal style='line-height:normal'><a
+name="user-content-JDK_Configuration"></a><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Database system: MySQL 5.0 / MariaDB or
+later, or PostgreSQL <br>
+Java web application container: Glassfish 3.0 or later, or Tomcat 6.0 or later.
+</span></p>
+
+<p class=MsoNormal style='line-height:normal'><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>Deploy</span></b></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'># cd $HOME/OpenAttestation/deploy</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'># bash deploy_fedora.sh
+--mysql &lt;MySQL passwd of oat server&gt; --ip &lt;IP of oatserver&gt;</span></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Note: If you want deploy them manually
+,see below</span></p>
+
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-Web_Container_Configuration"></a><b><span style='font-size:
 13.5pt;font-family:"Times New Roman","serif"'>Web Container Configuration </span></b></p>
@@ -384,7 +397,8 @@ font-family:"Times New Roman","serif"'>Attestation requires glassfish version
 3.0, or tomcat 6.0 or later. <br>
 Attestation needs install Jackson library into the web container’s endorsed
 modules directory. These libraries’ version must be 1.9 or later, you can find
-them from $HOME/OpenAttestation/services/AttestationService/target/AttestationService-{version}/WEB-INF/lib
+them from
+$HOME/OpenAttestation/services/AttestationService/target/AttestationService-{version}/WEB-INF/lib
 after building the attestation. <br>
 If you use glassfish as the web container, you need copy these jars to
 GLASSFISH_HOME/modules. Do like this: </span></p>
@@ -650,24 +664,24 @@ name="user-content-Install_aikqverify"></a><b><span style='font-size:13.5pt;
 font-family:"Times New Roman","serif"'>Install aikqverify </span></b></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>Attestation service must use “aikqverify”
-program, so you need to compile and install it located in
-$HOME/OpenAttestation/services/aikqverify/target/aikqverify-2.1.zip. Here are
+font-family:"Times New Roman","serif"'>Attestation service must use
+“aikqverify” program, so you need to compile and install it located in
+$HOME/OpenAttestation/services/aikqverify/target/aikqverify-2.2.zip. Here are
 the steps: </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
-$HOME/OpenAttestation/services/aikqverify/target/aikqverify-2.1.zip $HOME</span></p>
+$HOME/OpenAttestation/services/aikqverify/target/aikqverify-2.2.zip $HOME</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # unzip aikqverify-2.1.zip</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # unzip aikqverify-2.2.zip</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
-aikqverify-2.1</span></p>
+aikqverify-2.2</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # make</span></p>
@@ -686,9 +700,9 @@ name="user-content-Create_SAML_Signing_Key"></a><b><span style='font-size:13.5pt
 font-family:"Times New Roman","serif"'>Create SAML Signing Key </span></b></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>In this section, you will create a keystore
-SAML.jks with a signing private key, and this private key must be protected by
-a password.</span></p>
+font-family:"Times New Roman","serif"'>In this section, you will create a
+keystore SAML.jks with a signing private key, and this private key must be
+protected by a password.</span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>You can follow the below commands to
@@ -728,7 +742,7 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # java -jar
-$HOME/OpenAttestation/trust-agent/HisPrivacyCAWebServices2/target/HisPrivacyCAWebServices2-2.1-setup.jar</span></p>
+$HOME/OpenAttestation/trust-agent/HisPrivacyCAWebServices2/target/HisPrivacyCAWebServices2-2.2-setup.jar</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
@@ -793,7 +807,8 @@ mtwilson.tdbp.keystore.password and mtwilson.wlmp.keystore.password from
 trust-dashboard.properties and whitelist-portal.properties. </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd /etc/intel/cloudsecurity</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+/etc/intel/cloudsecurity</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
@@ -840,8 +855,8 @@ C=US&quot; -validity 3650  -keypass password</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
--importcert -file $GLASSFISH/domains/domain1/config/ssl.&lt;server ip&gt;.crt -keystore
-ovirt.jks -storepass password  -alias &quot;attestation server&quot;</span></p>
+-importcert -file $GLASSFISH/domains/domain1/config/ssl.&lt;server ip&gt;.crt
+-keystore ovirt.jks -storepass password  -alias &quot;attestation server&quot;</span></p>
 
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-SSL_Configuration"></a><b><span style='font-size:13.5pt;
@@ -854,7 +869,8 @@ protocol, follow these steps to add suitable ciphers: </span></p>
 <ul type=disc>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
      font-family:"Times New Roman","serif"'>Login glassfish web portal,
-     suggestion to login via localhost, for example, http://*.*.*.*:4848/common/index.jsf</span></li>
+     suggestion to login via localhost, for example,
+     http://*.*.*.*:4848/common/index.jsf</span></li>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
      font-family:"Times New Roman","serif"'>Browse to Configuration &gt;
      server-config &gt; Network Config &gt; Protocols &gt; http-listener-2. </span></li>
@@ -866,14 +882,13 @@ protocol, follow these steps to add suitable ciphers: </span></p>
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>TLS_ECDH_anon_WITH_AES_256_CBC_SHA,
 TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA,
-TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA,
-TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
-TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA,
-TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA,
-TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA,
-TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA,
-TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
-TLS_RSA_WITH_AES_128_CBC_SHA </span></p>
+TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA, TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA,
+TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
+TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA,
+TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA,
+TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA,
+TLS_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA,
+TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA </span></p>
 
 <ul type=disc>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
@@ -893,23 +908,23 @@ please modify tomcat configuration file by executing follow shell scripts: </spa
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> sed -i
 &quot;s/ &lt;\/Service&gt;/&lt;Connector port=\&quot;8181\&quot;
-minSpareThreads=\&quot;5\&quot; maxSpareThreads=\&quot;75\&quot;
-enableLookups=\&quot;false\&quot; disableUploadTimeout=\&quot;true\&quot;
-acceptCount=\&quot;100\&quot; maxThreads=\&quot;200\&quot; scheme=\&quot;https\&quot;
+minSpareThreads=\&quot;5\&quot; maxSpareThreads=\&quot;75\&quot; enableLookups=\&quot;false\&quot;
+disableUploadTimeout=\&quot;true\&quot; acceptCount=\&quot;100\&quot;
+maxThreads=\&quot;200\&quot; scheme=\&quot;https\&quot;
 secure=\&quot;true\&quot; SSLEnabled=\&quot;true\&quot;
 clientAuth=\&quot;want\&quot; sslProtocol=\&quot;TLS\&quot;
 ciphers=\&quot;TLS_ECDH_anon_WITH_AES_256_CBC_SHA,
 TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA,
 TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA,
 TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
-TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA,
-TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA,
-TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA,
-TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA,
-TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
+TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA,
+TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA,
+TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA,
+TLS_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
 TLS_RSA_WITH_AES_128_CBC_SHA\&quot;
 keystoreFile=\&quot;Certificate\/keystore.jks\&quot;
-keystorePass=\&quot;changeit\&quot; truststoreFile=\&quot;Certificate\/keystore.jks\&quot;
+keystorePass=\&quot;changeit\&quot;
+truststoreFile=\&quot;Certificate\/keystore.jks\&quot;
 truststorePass=\&quot;changeit\&quot; \/&gt;&lt;\/Service&gt;/g&quot;
 $TOMCAT_HOME/conf/server.xml</span></p>
 
@@ -940,21 +955,22 @@ HisPrivacyCAWebServices2.war</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
-$HOME/OpenAttestation/services/WLMService/target/WLMService-2.1-core.war WLMService.war</span></p>
+$HOME/OpenAttestation/services/WLMService/target/WLMService-2.2-core.war
+WLMService.war</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
-$HOME/OpenAttestation/portals/WhiteListPortal/target/WhiteListPortal-2.1-core.war
+$HOME/OpenAttestation/portals/WhiteListPortal/target/WhiteListPortal-2.2-core.war
 WhiteListPortal.war</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
-$HOME/OpenAttestation/services/AttestationService/target/AttestationService-2.1-core.war
+$HOME/OpenAttestation/services/AttestationService/target/AttestationService-2.2-core.war
 AttestationService.war</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
-$HOME/OpenAttestation/portals/TrustDashBoard/target/TrustDashBoard-2.1-core.war
+$HOME/OpenAttestation/portals/TrustDashBoard/target/TrustDashBoard-2.2-core.war
 TrustDashBoard.war</span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
@@ -966,10 +982,10 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> /usr/share/gla
 restart-domain</span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>In case of using tomcat as web container,
-you need to copy the compiled war package to $TOMCAT_HOME/webapps directory in
-following order (suppose the build server and attestation server is the same
-host). </span></p>
+font-family:"Times New Roman","serif"'>In case of using tomcat as web
+container, you need to copy the compiled war package to $TOMCAT_HOME/webapps
+directory in following order (suppose the build server and attestation server
+is the same host). </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
@@ -982,12 +998,12 @@ HisPrivacyCAWebServices2.war</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
-$HOME/OpenAttestation/services/WLMService/target/WLMService-2.1-core.war
+$HOME/OpenAttestation/services/WLMService/target/WLMService-2.2-core.war
 WLMService.war</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
-$HOME/OpenAttestation/portals/WhiteListPortal/target/WhiteListPortal-2.1-core.war
+$HOME/OpenAttestation/portals/WhiteListPortal/target/WhiteListPortal-2.2-core.war
 WhiteListPortal.war</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
@@ -997,7 +1013,7 @@ AttestationService.war</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
-$HOME/OpenAttestation/portals/TrustDashBoard/target/TrustDashBoard-2.1-core.war
+$HOME/OpenAttestation/portals/TrustDashBoard/target/TrustDashBoard-2.2-core.war
 TrustDashBoard.war</span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
@@ -1005,15 +1021,12 @@ font-family:"Times New Roman","serif"'>After deploying it, you should manually
 restart tomcat service by running: </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> service
-tomcat6 restart</span></p>
-
-<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>or </span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # service
+tomcat restart</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> service
-tomcat7 restart</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> <a
+name="OLE_LINK4"></a><a name="OLE_LINK3"># chown -R tomcat:tomcat /var/opt/intel/aikverifyhome/</a></span></p>
 
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-Attestation_Client_Installa"></a><b><span style='font-size:
@@ -1032,11 +1045,39 @@ font-family:"Times New Roman","serif"'>Fedora 20</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -A
+INPUT -p tcp --dport 8181 -j ACCEPT</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -A
+INPUT -p tcp --dport 8080 -j ACCEPT</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -A
 INPUT -p tcp --dport 9999 -j ACCEPT</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -A
 INPUT -p tcp --dport 9998 -j ACCEPT</span></p>
+
+<p class=MsoNormal style='line-height:normal'><b><span style='font-size:13.5pt;
+font-family:"Times New Roman","serif"'>Install Required Packages </span></b></p>
+
+<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>Install packages listed below: </span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
+java-1.7.0-openjdk</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
+wget</span></p>
+
+<pre style='line-height:12.0pt;background:white'><span style='font-size:9.0pt;
+font-family:Consolas;color:black'> </span># yum install make gcc-c++</pre>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
 
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-Enable_Intel_TXT_in_BIOS"></a><b><span style='font-size:
@@ -1067,7 +1108,7 @@ name="user-content-JDK_Configuration-2"></a><b><span style='font-size:13.5pt;
 font-family:"Times New Roman","serif"'>JDK Configuration </span></b></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>Open Attestation 2.1 uses Bouncycastle
+font-family:"Times New Roman","serif"'>Open Attestation 2.2 uses Bouncycastle
 JCE provider, add the provider to the list of trusted in
 $JAVA_HOME/jre/lib/security/java.security like this: </span></p>
 
@@ -1116,7 +1157,7 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # rm -rf
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>You just need run the bin file located
 in
-$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.1.bin.
+$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin.
 After installed the bin package, you should make sure tagent service is
 running. If it is inactive, you must manually start it. </span></p>
 
@@ -1126,24 +1167,26 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</sp
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # scp
 &lt;server
-ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.1.bin
+ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin
 .</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> #
-./TrustAgentLinuxInstaller-2.1.bin</span></p>
+./TrustAgentLinuxInstaller-2.2.bin</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # service 
 tagent  status (check service)</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # service  tagent 
-start (start service)</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # service 
+tagent  start (start service)</span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>Note: If TPM's ownership has been taken,
-please run &quot;service tagent fixek&quot; to forcibly generate EC. </span></p>
+please run &quot;</span><span style='color:black'>/usr/local/bin/tagent
+fixek”   or “/etc/init.d/tagent fixek</span><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'>&quot; to forcibly generate EC. </span></p>
 
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-Start_Agent_Service_in_XenS"></a><b><span style='font-size:
@@ -1173,8 +1216,172 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> #
 ./install.sh</span></p>
 
-<p class=MsoNormal style='line-height:normal'><a name=user-content-Examples></a><b><span
-style='font-size:18.0pt;font-family:"Times New Roman","serif"'>Examples </span></b></p>
+<p class=MsoNormal style='line-height:normal'><a name="OLE_LINK2"></a><a
+name="OLE_LINK1"></a><a name=user-content-Examples></a><b><span
+style='font-size:18.0pt;font-family:"Times New Roman","serif"'>How to Reset the
+Client TPM Password</span></b></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Uninstall or disable the tagent on
+     boot up otherwise it would take ownership automatically on startup.</span></li>
+</ul>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:10.0pt;font-family:"Courier New"'># chkconfig –del tagent</span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Clear TPM settings in BIOS, and
+     make sure that TPM is neither owned nor enabled.</span></li>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Check the tpm status by the
+     following commands</span></li>
+</ul>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:10.0pt;font-family:"Courier New"'># cat
+/sys/class/misc/tpm0/device/enabled</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:10.0pt;font-family:"Courier New"'># cat
+/sys/class/misc/tpm0/device/owned&nbsp;</span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Set the TPM password</span></li>
+</ul>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:10.0pt;font-family:"Courier New"'># tpm_takeownership -z </span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:10.0pt;font-family:"Courier New"'># &lt;Input the new TPM
+password&gt;</span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Now the TPM password is set and it
+     could be verified by executing </span></li>
+</ul>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:10.0pt;font-family:"Courier New"'># tpm_getpubek</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:10.0pt;font-family:"Courier New"'># &lt;The TPM Password&gt;</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:10.0pt;font-family:"Courier New"'># The public key will be
+displayed&nbsp;</span></p>
+
+<ul type=disc>
+ <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
+     font-family:"Times New Roman","serif"'>Update the TPM password in OAT</span></li>
+</ul>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:27.0pt;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>On the server
+side, the tpm password template has to be modified for the change.</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;text-indent:-.25in;line-height:normal;
+vertical-align:middle'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>a.<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Reset the password
+in /etc/intel/cloudsecurity/clientfiles/hisprovisioner.properties</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:10.0pt;font-family:"Courier New"'># sed -i 's/TpmOwnerAuth =</span><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>
+1111111111111111111111111111111111111111/TpmOwnerAuth =&lt;replace with your
+TPM password&gt;/g'
+/etc/intel/cloudsecurity/clientfiles/hisprovisioner.properties</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;text-indent:-.25in;line-height:normal;
+vertical-align:middle'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>b.<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Back up the
+original zip package.</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:10.0pt;font-family:"Courier New"'># cp
+/etc/intel/cloudsecurity/clientfiles.zip
+/etc/intel/cloudsecurity/clientfiles_bak.zip</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;text-indent:-.25in;line-height:normal;
+vertical-align:middle'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>c.<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Compress a new
+zip package with the updated TPM password</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:10.0pt;font-family:"Courier New"'># cd
+/etc/intel/cloudsecurity/clientfiles</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:10.0pt;font-family:"Courier New"'># zip clientfiles.zip *</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:10.0pt;font-family:"Courier New"'># mv clientfiles.zip ../</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:27.0pt;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>On the client
+side, </span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;text-indent:-.25in;line-height:normal;
+vertical-align:middle'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>a.<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>If the tagent's
+already installed, remove the current installation by </span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:10.0pt;font-family:"Courier New"'># service tagent uninstall</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;text-indent:-.25in;line-height:normal;
+vertical-align:middle'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>b.<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Install the
+tagent on the client</span></p>
+
+<p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
+style='font-size:10.0pt;font-family:"Courier New"'># ./
+TrustAgentLinuxInstaller-2.2.bin</span></p>
+
+<p class=MsoNormal style='line-height:normal'><b><span style='font-size:18.0pt;
+font-family:"Times New Roman","serif"'>Examples </span></b></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>At least OEM, OS, MLE, and HOST
@@ -1192,7 +1399,7 @@ font-family:"Times New Roman","serif"'>Notes: oatserver.*.com should be the
 host name of attestation server. </span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>OAT2.1 also provides command tools,
+font-family:"Times New Roman","serif"'>OAT2.2 also provides command tools,
 these command tools can be used to create data in the console, for example, add
 OEM by executing follow command in the console, users can read
 &quot;README&quot; for more information. </span></p>
@@ -2022,8 +2229,6 @@ font-family:"Times New Roman","serif"'>Failure Root-causing </span></b></p>
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>Check log file when you met issues:
 client (/var/log/tagent.log), server (catalina.out)</span></p>
-
-<p class=MsoNormal>&nbsp;</p>
 
 </div>
 
