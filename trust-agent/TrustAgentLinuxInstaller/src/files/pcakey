@@ -9,6 +9,8 @@ package_dir=/opt/intel/cloudsecurity/${package_name}
 package_config_filename=${intel_conf_dir}/${package_name}.properties
 package_env_filename=${package_dir}/${package_name}.env
 
+tpm_passwd=$1 #yyj
+
 # FUNCTION LIBRARY, VERSION INFORMATION, and LOCAL CONFIGURATION
 if [ -f "${package_dir}/functions" ]; then . "${package_dir}/functions"; else echo "Missing file: ${package_dir}/functions"; exit 1; fi
 if [ -f "${package_dir}/version" ]; then . "${package_dir}/version"; else echo_warning "Missing file: ${package_dir}/version"; fi
@@ -71,6 +73,13 @@ if [[ -s $zipfile ]]; then
 else
   echo_failure "Unable to download Privacy CA files: try 'pcakey' again, check server address, username, and password"
   exit 1
+fi
+
+#modify value of TpmOwnerAuth in file hisprovisioner.properties
+if [ -f "/etc/intel/cloudsecurity/hisprovisioner.properties" ];then
+  lines=`grep -n "TpmOwnerAuth" /etc/intel/cloudsecurity/hisprovisioner.properties | head -1 | cut -d ":" -f 1` #yyj
+  sed -i -e '/TpmOwnerAuth/d' /etc/intel/cloudsecurity/hisprovisioner.properties #yyj
+  sed -i ''"$lines"' iTpmOwnerAuth = '"$tpm_passwd"'' /etc/intel/cloudsecurity/hisprovisioner.properties #yyj
 fi
 
 chmod 600 /etc/intel/cloudsecurity/hisprovisioner.properties
