@@ -138,7 +138,8 @@ span.HTMLPreformattedChar
 .MsoPapDefault
 	{margin-bottom:10.0pt;
 	line-height:115%;}
-@page WordSection1
+ /* Page Definitions */
+ @page WordSection1
 	{size:8.5in 11.0in;
 	margin:1.0in 1.0in 1.0in 1.0in;}
 div.WordSection1
@@ -158,7 +159,7 @@ ul
 <div class=WordSection1>
 
 <p class=MsoNormal style='line-height:normal'><b><span style='font-size:18.0pt;
-font-family:"Times New Roman","serif"'>Build Open Attestation (2.2) </span></b></p>
+font-family:"Times New Roman","serif"'>Build Open Attestation 2.2</span></b></p>
 
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-System_Requirement"></a><b><span style='font-size:13.5pt;
@@ -166,7 +167,9 @@ font-family:"Times New Roman","serif"'>System Requirement </span></b></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>The build environment has been validated
-in Ubuntu <a name="OLE_LINK2"></a><a name="OLE_LINK1">14.04.1</a>. </span></p>
+</span><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>o</span><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>n Ubuntu <a
+name="OLE_LINK2"></a><a name="OLE_LINK1">14.04.1</a>. </span></p>
 
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-Proxy_Configuration_Setup"></a><b><span style='font-size:
@@ -193,13 +196,9 @@ ftp_proxy= ftp://&lt;proxy_server&gt;:&lt;proxy_port&gt;</span></p>
 name="user-content-Install_Required_Packages"></a><b><span style='font-size:
 13.5pt;font-family:"Times New Roman","serif"'>Install Required Packages </span></b></p>
 
-<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>Take Ubuntu 14.04.1 OS for example, you
-need install follow required packages: </span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # apt-get
-install git maven</span></p>
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;text-indent:
+5.0pt;line-height:normal'><span style='font-size:10.0pt;font-family:"Courier New"'>#
+apt-get install git maven</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # apt-get
@@ -216,7 +215,7 @@ font-family:"Times New Roman","serif"'>Download Source Code </span></b></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>Using git tool to download the source
-code code, suppose your code is located in home directory </span></p>
+code, suppose your code is located in home directory </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</span></p>
@@ -319,7 +318,12 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>If
-you want to skip test case,please use:</span></p>
+you want to skip test case</span><span style='font-size:12.0pt;font-family:
+"Times New Roman","serif"'>s</span><span style='font-size:12.0pt;font-family:
+"Times New Roman","serif"'>,</span><span style='font-size:12.0pt;font-family:
+"Times New Roman","serif"'> </span><span style='font-size:12.0pt;font-family:
+"Times New Roman","serif"'>please use</span><span style='font-size:12.0pt;
+font-family:"Times New Roman","serif"'> below step:</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>&nbsp;</span></p>
@@ -411,11 +415,12 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # bash deploy_
 --mysql &lt;MySQL passwd of oat server&gt; --ip &lt;IP of oatserver&gt;</span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>Note: If you want deploy them manually
-,see below</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+font-family:"Times New Roman","serif"'>Note: If you want deploy </span><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>the server</span><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'> manually</span><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>, </span><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>see below</span><span
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>:</span></p>
 
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-Web_Container_Configuration"></a><b><span style='font-size:
@@ -463,8 +468,8 @@ name="user-content-Create_Configuration_Files"></a><b><span style='font-size:
 font-family:"Times New Roman","serif"'>We need to create some configuration
 files used by the later setup process. These configuration files include
 mtwilson.properties, privacyca-client.properties, PrivacyCA.properties,
-attestation-service.properties, trust-dashboard.properties and whitelist-portal.properties.
-</span></p>
+attestation-service.properties, trust-dashboard.properties and
+whitelist-portal.properties. </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mkdir -p
@@ -700,8 +705,8 @@ $HOME/OpenAttestation/services/aikqverify/target/aikqverify-2.2.zip. Here are
 the steps: </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
-$HOME/OpenAttestation/services/aikqverify/target/aikqverify-2.2.zip $HOME</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp $HOME/OpenAttestation/services/aikqverify/target/aikqverify-2.2.zip
+$HOME</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</span></p>
@@ -723,8 +728,8 @@ install</span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>Besides, you need to make sure glassfish
-or tomcat have the write permission for the directory of
-&quot;/var/opt/intel/aikverifyhome/data&quot;. </span></p>
+or tomcat have the write permission for the directory of &quot;/var/opt/intel/aikverifyhome/data&quot;.
+</span></p>
 
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-Create_SAML_Signing_Key"></a><b><span style='font-size:13.5pt;
@@ -820,9 +825,9 @@ font-family:"Times New Roman","serif"'>Notes: </span></p>
 <ul type=disc>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
      font-family:"Times New Roman","serif"'>please use keytool from
-     &quot;openjdk-7-jre-headless&quot; to generate keystore.jks as keytool from
-     &quot;openjdk-6-jre-headless&quot; doesnot support extension parameter
-     provided in the above command.</span></li>
+     &quot;openjdk-7-jre-headless&quot; to generate keystore.jks as keytool
+     from &quot;openjdk-6-jre-headless&quot; doesnot support extension
+     parameter provided in the above command.</span></li>
 </ul>
 
 <p class=MsoNormal style='line-height:normal'><a
@@ -843,9 +848,9 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
--genkey -alias admin -keyalg RSA -keysize 2048 -keystore portal.jks -storepass
-password -dname &quot;CN=Portal User, OU=Mt Wilson, O=My Org, C=US&quot;
--validity 3650 -keypass password</span></p>
+-genkey -alias admin -keyalg RSA -keysize 2048 -keystore portal.jks -storepass password
+-dname &quot;CN=Portal User, OU=Mt Wilson, O=My Org, C=US&quot; -validity 3650
+-keypass password</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
@@ -900,8 +905,7 @@ protocol, follow these steps to add suitable ciphers: </span></p>
 <ul type=disc>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
      font-family:"Times New Roman","serif"'>Login glassfish web portal,
-     suggestion to login via localhost, for example,
-     http://*.*.*.*:4848/common/index.jsf</span></li>
+     suggestion to login via localhost, for example, http://*.*.*.*:4848/common/index.jsf</span></li>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
      font-family:"Times New Roman","serif"'>Browse to Configuration &gt;
      server-config &gt; Network Config &gt; Protocols &gt; http-listener-2. </span></li>
@@ -919,8 +923,8 @@ TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA,
 TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA,
 TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA,
 TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA,
-TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
-TLS_RSA_WITH_AES_128_CBC_SHA </span></p>
+TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA
+</span></p>
 
 <ul type=disc>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
@@ -942,21 +946,20 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> sed -i
 &quot;s/ &lt;\/Service&gt;/&lt;Connector port=\&quot;8181\&quot;
 minSpareThreads=\&quot;5\&quot; maxSpareThreads=\&quot;75\&quot;
 enableLookups=\&quot;false\&quot; disableUploadTimeout=\&quot;true\&quot;
-acceptCount=\&quot;100\&quot; maxThreads=\&quot;200\&quot;
-scheme=\&quot;https\&quot; secure=\&quot;true\&quot;
-SSLEnabled=\&quot;true\&quot; clientAuth=\&quot;want\&quot;
-sslProtocol=\&quot;TLS\&quot;
-ciphers=\&quot;TLS_ECDH_anon_WITH_AES_256_CBC_SHA,
+acceptCount=\&quot;100\&quot; maxThreads=\&quot;200\&quot; scheme=\&quot;https\&quot;
+secure=\&quot;true\&quot; SSLEnabled=\&quot;true\&quot;
+clientAuth=\&quot;want\&quot; sslProtocol=\&quot;TLS\&quot; ciphers=\&quot;TLS_ECDH_anon_WITH_AES_256_CBC_SHA,
 TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA,
-TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA, TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA,
-TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
-TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA,
-TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA,
-TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA,
-TLS_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA,
-TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA\&quot;
-keystoreFile=\&quot;Certificate\/keystore.jks\&quot; keystorePass=\&quot;changeit\&quot;
-truststoreFile=\&quot;Certificate\/keystore.jks\&quot;
+TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA,
+TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
+TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA,
+TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA,
+TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA,
+TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA,
+TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
+TLS_RSA_WITH_AES_128_CBC_SHA\&quot;
+keystoreFile=\&quot;Certificate\/keystore.jks\&quot;
+keystorePass=\&quot;changeit\&quot; truststoreFile=\&quot;Certificate\/keystore.jks\&quot;
 truststorePass=\&quot;changeit\&quot; \/&gt;&lt;\/Service&gt;/g&quot;
 $TOMCAT_HOME/conf/server.xml</span></p>
 
@@ -1186,8 +1189,9 @@ font-family:"Times New Roman","serif"'>If you install client package before,
 you should uninstall it. </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # service 
-tagent  uninstall  (uninstall service)</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> #
+/etc/init.d/tagent uninstall</span><span style='font-size:12.0pt;font-family:
+"Times New Roman","serif"'> (uninstall service)</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # rm -rf
@@ -1195,8 +1199,7 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # rm -rf
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>You just need run the bin file located
-in
-$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin.
+in $HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin.
 After installed the bin package, you should make sure tagent service is
 running. If it is inactive, you must manually start it. </span></p>
 
@@ -1205,8 +1208,7 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</sp
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # scp
-&lt;server
-ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin
+&lt;server ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin
 .</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
@@ -1318,7 +1320,8 @@ style='font-size:10.0pt;font-family:"Courier New"'># &lt;The TPM Password&gt;</s
 
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
-style='font-size:10.0pt;font-family:"Courier New"'># The public key will be displayed&nbsp;</span></p>
+style='font-size:10.0pt;font-family:"Courier New"'># The public key will be
+displayed&nbsp;</span></p>
 
 <ul type=disc>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
@@ -1358,8 +1361,8 @@ original zip package.</span></p>
 
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
-style='font-size:10.0pt;font-family:"Courier New"'># cp
-/etc/intel/cloudsecurity/clientfiles.zip /etc/intel/cloudsecurity/clientfiles_bak.zip</span></p>
+style='font-size:10.0pt;font-family:"Courier New"'># cp /etc/intel/cloudsecurity/clientfiles.zip
+/etc/intel/cloudsecurity/clientfiles_bak.zip</span></p>
 
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
@@ -1442,7 +1445,8 @@ OEM by executing follow command in the console, users can read
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> bash oat_oem
--a -h his8 '{&quot;Name&quot;:&quot;OEM1&quot;,&quot;Description&quot;:&quot;Newdescription&quot;}'</span></p>
+-a -h his8
+'{&quot;Name&quot;:&quot;OEM1&quot;,&quot;Description&quot;:&quot;Newdescription&quot;}'</span></p>
 
 <p class=MsoNormal style='line-height:normal'><a name="user-content-Add_OEM"></a><b><span
 style='font-size:13.5pt;font-family:"Times New Roman","serif"'>Add OEM </span></b></p>
