@@ -404,7 +404,7 @@ public class TAHelper {
 
     // BUG #497 need to rewrite this to return List<Pcr> ... the Pcr.equals()  does same as (actually more than) IManifest.verify() because Pcr ensures the index is the same and IManifest does not!  and also it is less redundant, because this method returns Map< pcr index as string, manifest object containing pcr index and value >  
     private HashMap<String,PcrManifest> verifyQuoteAndGetPcr(String sessionId) {
-        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        //Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         HashMap<String,PcrManifest> pcrMp = new HashMap<String,PcrManifest>();
         String setUpFile;
 
@@ -424,7 +424,8 @@ public class TAHelper {
                 PropertyFile = new FileInputStream(ResourceFinder.getFile("privacyca-client.properties"));
                 Properties SetupProperties = new Properties();
                 SetupProperties.load(PropertyFile);
-                X509Certificate machineCertificate = pemToX509Certificate(certFileName);
+                //X509Certificate machineCertificate = pemToX509Certificate(certFileName);
+                X509Certificate machineCertificate = certFromFile(certFileName);
                 String clientPath = SetupProperties.getProperty(CLIENT_PATH, "clientfiles");
                 X509Certificate pcaCert = certFromFile(fileLocation + PrivacyCaCertFileName);
                 if (pcaCert !=null)
