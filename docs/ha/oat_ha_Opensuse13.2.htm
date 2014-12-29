@@ -444,14 +444,6 @@ span.str
 	{mso-style-name:str;}
 span.pun
 	{mso-style-name:pun;}
-span.msoIns
-	{mso-style-name:"";
-	text-decoration:underline;
-	color:teal;}
-span.msoDel
-	{mso-style-name:"";
-	text-decoration:line-through;
-	color:red;}
 .MsoChpDefault
 	{font-size:10.5pt;
 	font-family:"Calibri",sans-serif;}
@@ -1400,11 +1392,9 @@ update_alternative ¨Cconfig java</span></p>
 <p class=MsoNormal>And redo it on the other oat web server. </p>
 
 <p class=MsoNormal><span style='color:#FFC000;background:black'># ./deploy_opensuse_ha.sh
-<span class=msoIns><ins cite="mailto:Shan,%20Theresa"
-datetime="2014-12-29T16:59">--</ins></span><span class=msoDel><del
-cite="mailto:Shan,%20Theresa" datetime="2014-12-29T16:59">¨C</del></span>mysql
-&lt;mysql password&gt; --ip &lt;The virtual IP&gt; --port &lt;the oatserver
-port on load balancer&gt; --mysql_port &lt;the mysql port on load balancer&gt;</span></p>
+--mysql &lt;mysql password&gt; --ip &lt;The virtual IP&gt; --port &lt;the
+oatserver port on load balancer&gt; --mysql_port &lt;the mysql port on load
+balancer&gt;</span></p>
 
 <p class=MsoNormal>Notice: the parameter port here is the oat server https port
 on the load balancer. It was set as 443 in /etc/haproxy/haproxy.cfg in our
@@ -1417,11 +1407,8 @@ style='font-size:11.0pt;line-height:110%;color:#FFC000;background:black'>
 OpenAttestation/deploy</span></p>
 
 <p class=MsoNormal><span style='color:#FFC000;background:black'># ./deploy_opensuse_ha.sh
-<span class=msoIns><ins cite="mailto:Shan,%20Theresa"
-datetime="2014-12-29T16:59">--</ins></span><span class=msoDel><del
-cite="mailto:Shan,%20Theresa" datetime="2014-12-29T16:59">¨C</del></span>mysql
-&lt;mysql password&gt; --ip &lt;The virtual IP&gt; --port &lt;the oatserver
-port on load balancer&gt; --ha_master &lt;the first server IP&gt;</span></p>
+--mysql &lt;mysql password&gt; --ip &lt;The virtual IP&gt; --port &lt;the
+oatserver port on load balancer&gt; --ha_master &lt;the first server IP&gt;</span></p>
 
 <p class=MsoNormal>Here the ha_master is the IP/hostname of the first web
 server deployed.</p>

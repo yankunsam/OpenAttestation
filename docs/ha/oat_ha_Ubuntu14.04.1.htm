@@ -1410,9 +1410,9 @@ font-family:"Calibri",sans-serif;color:#FFC000;background:black'># cd deploy</sp
 <p class=MsoNormal>And redo it on the other oat web server. </p>
 
 <p class=MsoNormal><span style='color:#FFC000;background:black'>#
-./deploy_ubuntu_ha.sh ¨Cmysql &lt;mysql password&gt; --ip &lt;The virtual IP&gt;
---port &lt;the oatserver port on load balancer&gt; --mysql_port &lt;the mysql
-port on load balancer&gt;</span></p>
+./deploy_ubuntu_ha.sh --mysql &lt;mysql password&gt; --ip &lt;The virtual
+IP&gt; --port &lt;the oatserver port on load balancer&gt; --mysql_port &lt;the
+mysql port on load balancer&gt;</span></p>
 
 <p class=MsoNormal>Notice: the parameter port here is the oat server https port
 on the load balancer. It was set as 443 in /etc/haproxy/haproxy.cfg in our
@@ -1426,8 +1426,8 @@ style='font-size:11.0pt;line-height:110%;color:#FFC000;background:black'>
 OpenAttestation/deploy</span></p>
 
 <p class=MsoNormal><span style='color:#FFC000;background:black'>#
-./deploy_ubuntu_ha.sh ¨Cmysql &lt;mysql password&gt; --ip &lt;The virtual IP&gt;
---ha_master &lt;the first server IP&gt;</span></p>
+./deploy_ubuntu_ha.sh --mysql &lt;mysql password&gt; --ip &lt;The virtual
+IP&gt; --ha_master &lt;the first server IP&gt;</span></p>
 
 <p class=MsoNormal>Here the ha_master is the IP/hostname of the first web
 server deployed.</p>
