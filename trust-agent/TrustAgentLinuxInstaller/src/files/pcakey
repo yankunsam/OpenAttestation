@@ -9,6 +9,7 @@ package_dir=/opt/intel/cloudsecurity/${package_name}
 package_config_filename=${intel_conf_dir}/${package_name}.properties
 package_env_filename=${package_dir}/${package_name}.env
 
+tpm_passwd=${tpm_passwd:-""} #yyj
 tpm_passwd=$1 #yyj
 
 # FUNCTION LIBRARY, VERSION INFORMATION, and LOCAL CONFIGURATION
@@ -76,10 +77,12 @@ else
 fi
 
 #modify value of TpmOwnerAuth in file hisprovisioner.properties
-if [ -f "/etc/intel/cloudsecurity/hisprovisioner.properties" ];then
-  lines=`grep -n "TpmOwnerAuth" /etc/intel/cloudsecurity/hisprovisioner.properties | head -1 | cut -d ":" -f 1` #yyj
-  sed -i -e '/TpmOwnerAuth/d' /etc/intel/cloudsecurity/hisprovisioner.properties #yyj
-  sed -i ''"$lines"' iTpmOwnerAuth = '"$tpm_passwd"'' /etc/intel/cloudsecurity/hisprovisioner.properties #yyj
+if [ -n "$tpm_passwd" ];then
+  if [ -f "/etc/intel/cloudsecurity/hisprovisioner.properties" ];then
+    lines=`grep -n "TpmOwnerAuth" /etc/intel/cloudsecurity/hisprovisioner.properties | head -1 | cut -d ":" -f 1` #yyj
+    sed -i -e '/TpmOwnerAuth/d' /etc/intel/cloudsecurity/hisprovisioner.properties #yyj
+    sed -i ''"$lines"' iTpmOwnerAuth = '"$tpm_passwd"'' /etc/intel/cloudsecurity/hisprovisioner.properties #yyj
+  fi
 fi
 
 chmod 600 /etc/intel/cloudsecurity/hisprovisioner.properties
