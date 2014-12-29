@@ -1181,6 +1181,48 @@ tagent  status (check service)</span></p>
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # service 
 tagent  start (start service)</span></p>
 
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>If
+you want to install automatic, you should do below.</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # scp
+&lt;server
+ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin
+.</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # scp
+&lt;server ip&gt;:$HOME/OpenAttestation/deploy/tagent_auto_install.sh .</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # bash
+tagent_auto_install.sh --bin_path &lt;Path to
+TrustAgentLinuxInstaller-*.bin&gt; --ip &lt;IP of oatserver&gt; --port &lt;PORT
+of oatserver&gt; --pca_user &lt;PCA User name&gt; --pca_passwd &lt;PCA
+passwd&gt; --tpm_passwd &lt;TPM passwd&gt;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Example</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # bash
+tagent_auto_install.sh --bin_path $HOME/TrustAgentLinuxInstaller-2.2.bin --ip
+192.168.122.95 --port 8181 --pca_user admin --pca_passwd p2 --tpm_passwd
+1111111111111111</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>Note: If TPM's ownership has been taken,
 please run &quot;</span><span style='color:black'>/usr/local/bin/tagent
@@ -1208,8 +1250,7 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mount -o
 loop XenServer-6.2-measured-boot.iso /mnt/xenserver/</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
-/mnt/xenserver/</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd /mnt/xenserver/</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> #
@@ -1303,7 +1344,8 @@ margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
 style='font-size:10.0pt;font-family:"Courier New"'># sed -i 's/TpmOwnerAuth =</span><span
 style='font-size:12.0pt;font-family:"Times New Roman","serif"'>
 1111111111111111111111111111111111111111/TpmOwnerAuth =&lt;replace with your
-TPM password&gt;/g' /etc/intel/cloudsecurity/clientfiles/hisprovisioner.properties</span></p>
+TPM password&gt;/g'
+/etc/intel/cloudsecurity/clientfiles/hisprovisioner.properties</span></p>
 
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
@@ -1398,8 +1440,8 @@ host name of attestation server. </span></p>
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>OAT2.2 also provides command tools,
 these command tools can be used to create data in the console, for example, add
-OEM by executing follow command in the console, users can read &quot;README&quot;
-for more information. </span></p>
+OEM by executing follow command in the console, users can read
+&quot;README&quot; for more information. </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> bash oat_oem

@@ -1193,6 +1193,45 @@ tagent  status (check service)</span></p>
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # service 
 tagent  start (start service)</span></p>
 
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>If
+you want to install automatic, you should do below.</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # scp
+&lt;server
+ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin
+.</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # scp
+&lt;server ip&gt;:$HOME/OpenAttestation/deploy/tagent_auto_install.sh .</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # bash
+tagent_auto_install.sh --bin_path &lt;Path to
+TrustAgentLinuxInstaller-*.bin&gt; --ip &lt;IP of oatserver&gt; --port &lt;PORT
+of oatserver&gt; --pca_user &lt;PCA User name&gt; --pca_passwd &lt;PCA passwd&gt;
+--tpm_passwd &lt;TPM passwd&gt;</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>Example</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # bash
+tagent_auto_install.sh --bin_path $HOME/TrustAgentLinuxInstaller-2.2.bin --ip
+192.168.122.95 --port 8181 --pca_user admin --pca_passwd p2 --tpm_passwd
+1111111111111111</span></p>
+
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>Note: If TPM's ownership has been taken,
 please run &quot;</span><span style='color:black'>/usr/local/bin/tagent
@@ -1348,7 +1387,8 @@ zip package with the updated TPM password</span></p>
 
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
-style='font-size:10.0pt;font-family:"Courier New"'># cd /etc/intel/cloudsecurity/clientfiles</span></p>
+style='font-size:10.0pt;font-family:"Courier New"'># cd
+/etc/intel/cloudsecurity/clientfiles</span></p>
 
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
