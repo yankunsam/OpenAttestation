@@ -68,8 +68,8 @@ public class HisPrivacyCAWebService2ImplTest {
 		X509Certificate pcaCert = TpmUtils.certFromP12(homeFolder + PrivacyCaFileName, PrivacyCaPassword);
 		String EkMod = "12ef45";
 		SecretKey deskey = generateSessionKey();
-		byte[] encryptedEkMod = hisPrivacyCAWebService2Impl.encryptDES(TpmUtils.hexStringToByteArray(EkMod), deskey);
-		byte[] encryptedSessionKey = encryptRSA(deskey.getEncoded(), (RSAPublicKey)pcaCert.getPublicKey());
+		byte[] encryptedEkMod = TpmUtils.encryptDES(TpmUtils.hexStringToByteArray(EkMod), deskey);
+		byte[] encryptedSessionKey = TpmUtils.encryptRSA(deskey.getEncoded(), (RSAPublicKey)pcaCert.getPublicKey());
 		byte[] encryptEkCert = hisPrivacyCAWebService2Impl.requestGetEC(encryptedEkMod, encryptedSessionKey, ValidityDays);
 		assertNotNull(encryptEkCert);
 	}

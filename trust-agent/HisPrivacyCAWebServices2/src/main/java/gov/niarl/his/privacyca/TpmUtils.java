@@ -1098,4 +1098,39 @@ public class TpmUtils {
 		}
 		return hostname;
 	}
+        
+        public static byte[] encryptDES(byte[] text, SecretKey key) throws Exception {            Cipher c = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");
+            c.init(Cipher.ENCRYPT_MODE, key);
+                return c.doFinal(text);
+        }
+        
+        public static byte[] encryptRSA(byte[] text, PublicKey pubRSA) throws Exception {
+            Cipher cipher = Cipher.getInstance("RSA", "BC");
+            cipher.init(Cipher.ENCRYPT_MODE, pubRSA);
+            return cipher.doFinal(text);
+        }               
+                                
+        public static byte[] decryptDES(byte[] text, SecretKey key) throws Exception {
+            Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            return cipher.doFinal(text);
+        } 
+        public static byte[] decryptRSA(byte[] src, PrivateKey rk) throws Exception {
+            Cipher cipher = Cipher.getInstance("RSA", new BouncyCastleProvider());
+            cipher.init(Cipher.DECRYPT_MODE, rk);
+            return cipher.doFinal(src);
+        }
+        // Generate security key via 3DES algorithm
+        public static SecretKey generateSecretKey() throws NoSuchProviderException {
+            KeyGenerator keygen;
+            SecretKey desKey = null;
+            try {
+                keygen = KeyGenerator.getInstance("DESede", "BC");
+                keygen.init(new SecureRandom());
+                desKey = keygen.generateKey();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }   
+            return desKey;
+       }
 }

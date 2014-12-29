@@ -183,11 +183,11 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 			RSAPrivateKey privacyKey = TpmUtils.privKeyFromP12(homeFolder +  "/" + PrivacyCAP12, PrivacyCAP12Pass);
 			
 			//phase 1: construct sessionKey
-			byte[] deskey = decryptRSA(encryptedSessionKey, privacyKey);
+			byte[] deskey = TpmUtils.decryptRSA(encryptedSessionKey, privacyKey);
 			SecretKey sessionKey = new SecretKeySpec(deskey, "DESede");
 			
 			//phase2: recover EK modular
-			ekMod = decryptDES(encryptedEkMod, sessionKey);		
+			ekMod = TpmUtils.decryptDES(encryptedEkMod, sessionKey);		
 	     
 			X509V3CertificateGenerator certGen = new X509V3CertificateGenerator();
 			certGen.setSerialNumber(BigInteger.valueOf(System.currentTimeMillis()));
@@ -208,7 +208,7 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 			X509Certificate cert = certGen.generate(privKey, "BC");	
 					
 			//encrypt endorsement certification by session key, here we propose to use 3DES algorithm
-			byte[] encryptEndorsementCer = encryptDES(cert.getEncoded(), sessionKey);
+			byte[] encryptEndorsementCer = TpmUtils.encryptDES(cert.getEncoded(), sessionKey);
 			return encryptEndorsementCer; 
 			} catch (Exception e){
 				e.printStackTrace();
@@ -319,25 +319,7 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 		byte [] symBlob = TpmUtils.concat(TpmUtils.concat(credSize, keyParms.toByteArray()), encryptedBlob);
 		return TpmUtils.concat(asymBlob, symBlob);
 	}
-	
-	public static byte[] decryptRSA(byte[] src, PrivateKey rk) throws Exception {
-    	Cipher cipher = Cipher.getInstance("RSA", new BouncyCastleProvider());
-        cipher.init(Cipher.DECRYPT_MODE, rk);
-        return cipher.doFinal(src);
-    }
-    
-    public static byte[] decryptDES(byte[] text, SecretKey key) throws Exception {
-        Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");
-    	cipher.init(Cipher.DECRYPT_MODE, key);
-        return cipher.doFinal(text);
-    }
-    
-    public static byte[] encryptDES(byte[] text, SecretKey key) throws Exception {
-    	Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS7Padding", "BC");  
-	cipher.init(Cipher.ENCRYPT_MODE, key);  
-	return cipher.doFinal(text);
-    }
-    
+     
     public void setHomeFolder(String homeFolder) {
     	this.homeFolder = homeFolder;
     }
