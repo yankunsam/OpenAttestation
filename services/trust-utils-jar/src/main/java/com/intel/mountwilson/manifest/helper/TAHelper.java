@@ -416,17 +416,11 @@ public class TAHelper {
         //1. get privacy CA's public key
         //2. verification
         try {
-                setUpFile = ResourceFinder.getFile("privacyca-client.properties").getAbsolutePath();
-                String fileLocation = setUpFile.substring(0, setUpFile.indexOf("privacyca-client.properties"));
-                String CLIENT_PATH = "ClientPath";
+                setUpFile = ResourceFinder.getFile("attestation-service.properties").getAbsolutePath();
+                String fileLocation = setUpFile.substring(0, setUpFile.indexOf("attestation-service.properties"));
                 String PrivacyCaCertFileName = "PrivacyCA.cer";
-                FileInputStream PropertyFile = null;
-                PropertyFile = new FileInputStream(ResourceFinder.getFile("privacyca-client.properties"));
-                Properties SetupProperties = new Properties();
-                SetupProperties.load(PropertyFile);
                 //X509Certificate machineCertificate = pemToX509Certificate(certFileName);
                 X509Certificate machineCertificate = certFromFile(certFileName);
-                String clientPath = SetupProperties.getProperty(CLIENT_PATH, "clientfiles");
                 X509Certificate pcaCert = certFromFile(fileLocation + PrivacyCaCertFileName);
                 if (pcaCert !=null)
                     machineCertificate.verify(pcaCert.getPublicKey());
