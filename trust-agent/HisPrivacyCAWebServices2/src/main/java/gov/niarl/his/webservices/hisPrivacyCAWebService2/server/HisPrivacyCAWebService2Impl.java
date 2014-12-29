@@ -72,6 +72,8 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 			try{
 				if (prepEndorsementCaHashMap())
 					ekCert.verify(endorsementCerts.get(ekCert.getIssuerDN()));
+                                else
+                                        throw new Exception("Problem getting EndorsementCA.cer!");
 				this.identityRequestChallenge = TpmUtils.createRandomBytes(32);
 				System.out.println("Endorsement Certificate passed validity check");
 			} catch (SignatureException se){
@@ -283,10 +285,10 @@ public class HisPrivacyCAWebService2Impl implements IHisPrivacyCAWebService2 {
 	}
 	private boolean prepEndorsementCaHashMap() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, javax.security.cert.CertificateException{
 
-		File endorsementCaDir = new File(homeFolder + "/CaCerts");
+		File endorsementCaDir = new File(homeFolder + "/cacerts");
 		String[] certList = endorsementCaDir.list();
 		if(certList == null){
-			System.out.println("Problem reading CaCerts directory!");
+			System.out.println("Problem reading cacerts directory!");
 			return false;
 		}
 		endorsementCerts = new Hashtable<Principal, RSAPublicKey>();
