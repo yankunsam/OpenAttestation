@@ -1368,6 +1368,15 @@ href="https://github.com/OpenAttestation/OpenAttestation"><span
 style='font-size:11.0pt;line-height:110%'>https://github.com/OpenAttestation/OpenAttestation</span></a>)
 to $HOME folder</p>
 
+<p class=MsoNormal>Switch to openjdk 1.7:</p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Calibri",sans-serif;color:#FFC000;background:black'>#
+update_alternative 每config java</span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
+font-family:"Calibri",sans-serif;color:#FFC000;background:black'>&nbsp;</span></p>
+
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
 font-family:"Calibri",sans-serif;color:#FFC000;background:black'># git checkout
 v2.2</span></p>
@@ -1382,12 +1391,6 @@ install</span></p>
 
 <p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
 font-family:"Calibri",sans-serif;color:#FFC000;background:black'># cd deploy</span></p>
-
-<p class=MsoNormal>Switch to openjdk 1.7:</p>
-
-<p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:11.0pt;
-font-family:"Calibri",sans-serif;color:#FFC000;background:black'>#
-update_alternative 每config java</span></p>
 
 <p class=MsoNormal>And redo it on the other oat web server. </p>
 
@@ -1525,8 +1528,7 @@ restart</span></p>
 the service is up. Let＊s check the wsrep status. </span></p>
 
 <p class=MsoNormal><span style='color:#FFC000;background:black'># mysql 每usst 每p&lt;yourpass&gt;
--e &quot;show status like 'wsrep%';&quot; | egrep
-'wsrep_ready|wsrep_cluster_size'</span></p>
+-e &quot;show status like 'wsrep%';&quot; | egrep 'wsrep_ready|wsrep_cluster_size'</span></p>
 
 <p class=MsoNormal><span style='color:black'>The result should look like this.
 If any of the return values does not match the result below, you will have to
