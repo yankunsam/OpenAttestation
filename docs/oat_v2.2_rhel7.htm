@@ -324,13 +324,15 @@ blocked by firewall.</span></p>
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>RHEL7 </span></p>
 
-<p class=MsoNormal style='line-height:normal'><a name="OLE_LINK4"></a><a
-name="OLE_LINK3"></a><a name="user-content-Install_Required_Packages-2"></a><span
-style='font-size:10.0pt;font-family:"Courier New"'>iptables -I INPUT 1 -p tcp
---dport 8181 -j ACCEPT</span></p>
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><a name="OLE_LINK4"></a><a name="OLE_LINK3"></a><a
+name="user-content-Install_Required_Packages-2"></a><span style='font-size:
+10.0pt;font-family:"Courier New"'> # iptables -I INPUT 1 -p tcp --dport 8181 -j
+ACCEPT</span></p>
 
-<p class=MsoNormal style='line-height:normal'><span style='font-size:10.0pt;
-font-family:"Courier New"'>iptables -I INPUT 1 -p tcp --dport 8080 -j ACCEPT</span></p>
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -I
+INPUT 1 -p tcp --dport 8080 -j ACCEPT</span></p>
 
 <p class=MsoNormal style='line-height:normal'><b><span style='font-size:13.5pt;
 font-family:"Times New Roman","serif"'>Install Required Packages </span></b></p>
@@ -706,8 +708,8 @@ protected by a password.</span></p>
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>You can follow the below commands to
 generate these certificates. But you should modify the some fields according to
-your preference, find the definition in
-/etc/intel/cloudsecurity/attestation-service.properties. </span></p>
+your preference, find the definition in /etc/intel/cloudsecurity/attestation-service.properties.
+</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
@@ -730,10 +732,9 @@ name="user-content-Create_EK_Signing_Certifica"></a><b><span style='font-size:
 13.5pt;font-family:"Times New Roman","serif"'>Create EK Signing Certificate </span></b></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>The jar file will create a file
-/etc/intel/cloudsecurity/EndorsementCA.properties, and store the password in the
-file that defines the password as EndorsementP12Pass. The commands is as
-bellows: </span></p>
+font-family:"Times New Roman","serif"'>The jar file will create a file /etc/intel/cloudsecurity/EndorsementCA.properties,
+and store the password in the file that defines the password as
+EndorsementP12Pass. The commands is as bellows: </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
@@ -789,8 +790,8 @@ font-family:"Times New Roman","serif"'>Notes: </span></p>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
      font-family:"Times New Roman","serif"'>please use keytool from
      &quot;openjdk-7-jre-headless&quot; to generate keystore.jks as keytool
-     from &quot;openjdk-6-jre-headless&quot; doesnot support extension
-     parameter provided in the above command.</span></li>
+     from &quot;openjdk-6-jre-headless&quot; doesnot support extension parameter
+     provided in the above command.</span></li>
 </ul>
 
 <p class=MsoNormal style='line-height:normal'><a
@@ -800,10 +801,10 @@ name="user-content-Create_Portal_Signing_Key"></a><b><span style='font-size:
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>The following commands will create a
 keystore portal.jks, which is used for secure connection between Whitelist
-Portal and Trust Dashboard, and between Whitelist Service and Attestation
-Service. The &quot;password&quot; should be consistent with mtwilson.tdbp.keystore.password
-and mtwilson.wlmp.keystore.password from trust-dashboard.properties and
-whitelist-portal.properties. </span></p>
+Portal and Trust Dashboard, and between Whitelist Service and Attestation Service.
+The &quot;password&quot; should be consistent with
+mtwilson.tdbp.keystore.password and mtwilson.wlmp.keystore.password from
+trust-dashboard.properties and whitelist-portal.properties. </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
@@ -821,8 +822,8 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
 &quot;mtwilson (saml)&quot;</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
--importcert -file $GLASSFISH/domains/domain1/config/ssl.&lt;server ip&gt;.crt -keystore
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool -importcert
+-file $GLASSFISH/domains/domain1/config/ssl.&lt;server ip&gt;.crt -keystore
 portal.jks -storepass password -alias &quot;mtwilson (ssl)&quot;</span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
@@ -898,8 +899,8 @@ TLS_RSA_WITH_AES_128_CBC_SHA </span></p>
 </ul>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> #
-/usr/share/glassfish3/glassfish/bin/asadmin restart-domain</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # /usr/share/glassfish3/glassfish/bin/asadmin
+restart-domain</span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>If using tomcat as the web container,
@@ -913,15 +914,16 @@ enableLookups=\&quot;false\&quot; disableUploadTimeout=\&quot;true\&quot;
 acceptCount=\&quot;100\&quot; maxThreads=\&quot;200\&quot;
 scheme=\&quot;https\&quot; secure=\&quot;true\&quot;
 SSLEnabled=\&quot;true\&quot; clientAuth=\&quot;want\&quot;
-sslProtocol=\&quot;TLS\&quot; ciphers=\&quot;TLS_ECDH_anon_WITH_AES_256_CBC_SHA,
-TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA,
-TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA,
-TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
-TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA,
-TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA,
-TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA,
-TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA,
-TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA\&quot;
+sslProtocol=\&quot;TLS\&quot;
+ciphers=\&quot;TLS_ECDH_anon_WITH_AES_256_CBC_SHA, TLS_ECDH_anon_WITH_AES_128_CBC_SHA,
+TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_RSA_WITH_AES_256_CBC_SHA,
+TLS_ECDH_RSA_WITH_AES_128_CBC_SHA, TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA,
+TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
+TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA,
+TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA,
+TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA,
+TLS_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA,
+TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA\&quot;
 keystoreFile=\&quot;Certificate\/keystore.jks\&quot;
 keystorePass=\&quot;changeit\&quot;
 truststoreFile=\&quot;Certificate\/keystore.jks\&quot;
@@ -1129,8 +1131,8 @@ directory:$JAVA_HOME/lib/ext </span></p>
 
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-Start_Agent_Service_in_Gene"></a><b><span style='font-size:
-13.5pt;font-family:"Times New Roman","serif"'>Start Agent Service in General Client
-</span></b></p>
+13.5pt;font-family:"Times New Roman","serif"'>Start Agent Service in General
+Client </span></b></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>If you install client package before,
@@ -1185,8 +1187,7 @@ normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>&nb
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # scp
-&lt;server
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # scp &lt;server
 ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin
 .</span></p>
 
@@ -1206,9 +1207,8 @@ oatserver&gt; --port &lt;PORT of oatserver&gt; --pca_user &lt;PCA User name&gt;
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # bash
-tagent_auto_install.sh --bin_path $HOME/TrustAgentLinuxInstaller-2.2.bin --ip
-192.168.122.95 --port 8181 --pca_user admin --pca_passwd p2 --tpm_passwd
-1111111111111111</span></p>
+tagent_auto_install.sh --bin_path $HOME/TrustAgentLinuxInstaller-2.2.bin --ip 192.168.122.95
+--port 8181 --pca_user admin --pca_passwd p2 --tpm_passwd 1111111111111111</span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>Note: If TPM's ownership has been taken,
@@ -1229,8 +1229,8 @@ target="_blank"><span style='font-size:12.0pt;font-family:"Times New Roman","ser
 style='font-size:12.0pt;font-family:"Times New Roman","serif"'> </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mkdir
-/mnt/xenserver –p</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mkdir /mnt/xenserver
+–p</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mount -o
@@ -1431,8 +1431,7 @@ OEM by executing follow command in the console, users can read
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> bash oat_oem
--a -h his8
-'{&quot;Name&quot;:&quot;OEM1&quot;,&quot;Description&quot;:&quot;Newdescription&quot;}'</span></p>
+-a -h his8 '{&quot;Name&quot;:&quot;OEM1&quot;,&quot;Description&quot;:&quot;Newdescription&quot;}'</span></p>
 
 <p class=MsoNormal style='line-height:normal'><a name="user-content-Add_OEM"></a><b><span
 style='font-size:13.5pt;font-family:"Times New Roman","serif"'>Add OEM </span></b></p>

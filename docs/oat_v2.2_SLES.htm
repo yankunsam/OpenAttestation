@@ -19,6 +19,9 @@
 	{font-family:Calibri;
 	panose-1:2 15 5 2 2 2 4 3 2 4;}
 @font-face
+	{font-family:Consolas;
+	panose-1:2 11 6 9 2 2 4 3 2 4;}
+@font-face
 	{font-family:"\@SimSun";
 	panose-1:2 1 6 0 3 1 1 1 1 1;}
  /* Style Definitions */
@@ -336,13 +339,11 @@ blocked by firewall.</span></p>
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>SLES 12 </span></p>
 
-<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>iptables -I INPUT 1 -p tcp --dport 8181
--j ACCEPT</span></p>
+<p class=MsoPlainText><span style='font-size:10.0pt;font-family:"Courier New"'> #
+iptables -I INPUT 1 -p tcp --dport 8181 -j ACCEPT</span></p>
 
-<p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>iptables -I INPUT 1 -p tcp --dport 8080
--j ACCEPT</span></p>
+<p class=MsoPlainText><span style='font-size:10.0pt;font-family:"Courier New"'> #
+iptables -I INPUT 1 -p tcp --dport 8080 -j ACCEPT</span></p>
 
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-Install_Required_Packages-2"></a><b><span style='font-size:
@@ -386,7 +387,7 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'># cd
 $HOME/OpenAttestation/deploy</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'># bash undeploy_sles.sh
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'># bash deploy_sles.sh
 --mysql &lt;MySQL passwd of oat server&gt; --ip &lt;IP of oatserver&gt;</span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
@@ -1074,6 +1075,13 @@ zypper install java-1_7_0-openjdk-devel</span></p>
 5.0pt;line-height:normal'><span style='font-size:10.0pt;font-family:"Courier New"'>#
 zypper install unzip gcc-c++</span></p>
 
+<pre style='line-height:12.0pt'> # zypper install <span style='font-size:9.0pt;
+font-family:Consolas;color:black;background:white'>glibc-devel libopenssl-devel libtspi1 linux-glibc-devel trousers</span></pre>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+12.0pt'><span style='font-size:9.0pt;font-family:Consolas;color:black;
+background:white'>trousers-devel&nbsp;zlib-devel&nbsp;</span></p>
+
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
 
@@ -1155,8 +1163,7 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # rm -rf
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>You just need run the bin file located
-in
-$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin.
+in $HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin.
 After installed the bin package, you should make sure tagent service is
 running. If it is inactive, you must manually start it. </span></p>
 
@@ -1165,8 +1172,7 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</sp
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # scp
-&lt;server
-ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin
+&lt;server ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin
 .</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
@@ -1250,7 +1256,8 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mount -o
 loop XenServer-6.2-measured-boot.iso /mnt/xenserver/</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd /mnt/xenserver/</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+/mnt/xenserver/</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> #
@@ -1319,8 +1326,7 @@ style='font-size:10.0pt;font-family:"Courier New"'># &lt;The TPM Password&gt;</s
 
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
-style='font-size:10.0pt;font-family:"Courier New"'># The public key will be
-displayed&nbsp;</span></p>
+style='font-size:10.0pt;font-family:"Courier New"'># The public key will be displayed&nbsp;</span></p>
 
 <ul type=disc>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
@@ -1361,8 +1367,7 @@ original zip package.</span></p>
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
 style='font-size:10.0pt;font-family:"Courier New"'># cp
-/etc/intel/cloudsecurity/clientfiles.zip
-/etc/intel/cloudsecurity/clientfiles_bak.zip</span></p>
+/etc/intel/cloudsecurity/clientfiles.zip /etc/intel/cloudsecurity/clientfiles_bak.zip</span></p>
 
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
@@ -1445,8 +1450,7 @@ OEM by executing follow command in the console, users can read
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> bash oat_oem
--a -h his8
-'{&quot;Name&quot;:&quot;OEM1&quot;,&quot;Description&quot;:&quot;Newdescription&quot;}'</span></p>
+-a -h his8 '{&quot;Name&quot;:&quot;OEM1&quot;,&quot;Description&quot;:&quot;Newdescription&quot;}'</span></p>
 
 <p class=MsoNormal style='line-height:normal'><a name="user-content-Add_OEM"></a><b><span
 style='font-size:13.5pt;font-family:"Times New Roman","serif"'>Add OEM </span></b></p>

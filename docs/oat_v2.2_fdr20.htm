@@ -19,11 +19,11 @@
 	{font-family:Calibri;
 	panose-1:2 15 5 2 2 2 4 3 2 4;}
 @font-face
-	{font-family:Consolas;
-	panose-1:2 11 6 9 2 2 4 3 2 4;}
-@font-face
 	{font-family:"Segoe UI";
 	panose-1:2 11 5 2 4 2 4 2 2 3;}
+@font-face
+	{font-family:Consolas;
+	panose-1:2 11 6 9 2 2 4 3 2 4;}
 @font-face
 	{font-family:"\@SimSun";
 	panose-1:2 1 6 0 3 1 1 1 1 1;}
@@ -179,6 +179,9 @@ name="OLE_LINK20"></a><a name="OLE_LINK8"></a><a name="OLE_LINK7">java-1.7.0-ope
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
 zip make gcc-c++ makeself</span></p>
 
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
 <p class=MsoNormal style='line-height:normal'><b><span style='font-size:13.5pt;
 font-family:"Times New Roman","serif"'>JDK Configuration </span></b></p>
 
@@ -298,9 +301,6 @@ font-family:"Courier New"'>nd:</span></p>
 <p class=MsoNormal><span style='font-size:10.0pt;line-height:115%;font-family:
 "Courier New"'> # mvn clean install -DskipTests=true</span></p>
 
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
-
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-Attestation_Server_Installa"></a><b><span style='font-size:
 18.0pt;font-family:"Times New Roman","serif"'>Attestation Server Installation </span></b></p>
@@ -325,11 +325,11 @@ blocked by firewall.</span></p>
 font-family:"Times New Roman","serif"'>Fedora 20</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'>iptables -I
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -I
 INPUT 1 -p tcp --dport 8181 -j ACCEPT</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'>iptables -I
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # iptables -I
 INPUT 1 -p tcp --dport 8080 -j ACCEPT</span></p>
 
 <p class=MsoNormal style='line-height:normal'><a
@@ -354,6 +354,20 @@ install openssl-devel</span></p>
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
 gcc unzip</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoNormal style='margin-bottom:6.0pt;line-height:110%'><span
+style='font-size:10.5pt;line-height:110%'>Switch to openjdk 1.7:</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # </span><span
+style='font-size:10.0pt;font-family:"Segoe UI","sans-serif";color:black;
+background:white'>update-alternatives --config java</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>Also install the following packages:</span></p>
@@ -391,8 +405,7 @@ font-family:"Times New Roman","serif"'>Attestation requires glassfish version
 3.0, or tomcat 6.0 or later. <br>
 Attestation needs install Jackson library into the web container’s endorsed
 modules directory. These libraries’ version must be 1.9 or later, you can find
-them from
-$HOME/OpenAttestation/services/AttestationService/target/AttestationService-{version}/WEB-INF/lib
+them from $HOME/OpenAttestation/services/AttestationService/target/AttestationService-{version}/WEB-INF/lib
 after building the attestation. <br>
 If you use glassfish as the web container, you need copy these jars to
 GLASSFISH_HOME/modules. Do like this: </span></p>
@@ -659,9 +672,8 @@ font-family:"Times New Roman","serif"'>Install aikqverify </span></b></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>Attestation service must use
-“aikqverify” program, so you need to compile and install it located in
-$HOME/OpenAttestation/services/aikqverify/target/aikqverify-2.2.zip. Here are
-the steps: </span></p>
+“aikqverify” program, so you need to compile and install it located in $HOME/OpenAttestation/services/aikqverify/target/aikqverify-2.2.zip.
+Here are the steps: </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
@@ -782,10 +794,10 @@ font-family:"Times New Roman","serif"'>Notes: </span></p>
 
 <ul type=disc>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-     font-family:"Times New Roman","serif"'>please use keytool from &quot;openjdk-7-jre-headless&quot;
-     to generate keystore.jks as keytool from
-     &quot;openjdk-6-jre-headless&quot; doesnot support extension parameter
-     provided in the above command.</span></li>
+     font-family:"Times New Roman","serif"'>please use keytool from
+     &quot;openjdk-7-jre-headless&quot; to generate keystore.jks as keytool
+     from &quot;openjdk-6-jre-headless&quot; doesnot support extension
+     parameter provided in the above command.</span></li>
 </ul>
 
 <p class=MsoNormal style='line-height:normal'><a
@@ -806,9 +818,9 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
--genkey -alias admin -keyalg RSA -keysize 2048 -keystore portal.jks -storepass
-password -dname &quot;CN=Portal User, OU=Mt Wilson, O=My Org, C=US&quot;
--validity 3650 -keypass password</span></p>
+-genkey -alias admin -keyalg RSA -keysize 2048 -keystore portal.jks -storepass password
+-dname &quot;CN=Portal User, OU=Mt Wilson, O=My Org, C=US&quot; -validity 3650
+-keypass password</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
@@ -838,7 +850,8 @@ needed in oVirt environment. The default password is “password”, you can change
 the value. Follow the following commands to generate the ovirt.jks: </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd /etc/intel/cloudsecurity</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+/etc/intel/cloudsecurity</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
@@ -862,8 +875,7 @@ protocol, follow these steps to add suitable ciphers: </span></p>
 <ul type=disc>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
      font-family:"Times New Roman","serif"'>Login glassfish web portal,
-     suggestion to login via localhost, for example,
-     http://*.*.*.*:4848/common/index.jsf</span></li>
+     suggestion to login via localhost, for example, http://*.*.*.*:4848/common/index.jsf</span></li>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
      font-family:"Times New Roman","serif"'>Browse to Configuration &gt;
      server-config &gt; Network Config &gt; Protocols &gt; http-listener-2. </span></li>
@@ -881,8 +893,8 @@ TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA,
 TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA,
 TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA,
 TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA,
-TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
-TLS_RSA_WITH_AES_128_CBC_SHA </span></p>
+TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA
+</span></p>
 
 <ul type=disc>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
@@ -904,11 +916,9 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> sed -i
 &quot;s/ &lt;\/Service&gt;/&lt;Connector port=\&quot;8181\&quot;
 minSpareThreads=\&quot;5\&quot; maxSpareThreads=\&quot;75\&quot;
 enableLookups=\&quot;false\&quot; disableUploadTimeout=\&quot;true\&quot;
-acceptCount=\&quot;100\&quot; maxThreads=\&quot;200\&quot;
-scheme=\&quot;https\&quot; secure=\&quot;true\&quot;
-SSLEnabled=\&quot;true\&quot; clientAuth=\&quot;want\&quot;
-sslProtocol=\&quot;TLS\&quot;
-ciphers=\&quot;TLS_ECDH_anon_WITH_AES_256_CBC_SHA,
+acceptCount=\&quot;100\&quot; maxThreads=\&quot;200\&quot; scheme=\&quot;https\&quot;
+secure=\&quot;true\&quot; SSLEnabled=\&quot;true\&quot;
+clientAuth=\&quot;want\&quot; sslProtocol=\&quot;TLS\&quot; ciphers=\&quot;TLS_ECDH_anon_WITH_AES_256_CBC_SHA,
 TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA,
 TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA,
 TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
@@ -917,9 +927,9 @@ TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA,
 TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA,
 TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA,
 TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
-TLS_RSA_WITH_AES_128_CBC_SHA\&quot; keystoreFile=\&quot;Certificate\/keystore.jks\&quot;
-keystorePass=\&quot;changeit\&quot;
-truststoreFile=\&quot;Certificate\/keystore.jks\&quot;
+TLS_RSA_WITH_AES_128_CBC_SHA\&quot;
+keystoreFile=\&quot;Certificate\/keystore.jks\&quot;
+keystorePass=\&quot;changeit\&quot; truststoreFile=\&quot;Certificate\/keystore.jks\&quot;
 truststorePass=\&quot;changeit\&quot; \/&gt;&lt;\/Service&gt;/g&quot;
 $TOMCAT_HOME/conf/server.xml</span></p>
 
@@ -1056,7 +1066,19 @@ font-family:"Times New Roman","serif"'>Install packages listed below: </span></p
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
 java-1.7.0-openjdk</span></p>
 
-<pre style='text-indent:5.0pt;line-height:12.0pt;background:white'># yum install make gcc-c++</pre>
+<pre style='text-indent:5.0pt;line-height:12.0pt;background:white'># yum install make gcc-c++</pre><pre
+style='text-indent:5.0pt;line-height:12.0pt;background:white'>&nbsp;</pre>
+
+<p class=MsoNormal style='margin-bottom:6.0pt;line-height:110%'><span
+style='font-size:10.5pt;line-height:110%'>Switch to openjdk 1.7:</span></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # </span><span
+style='font-size:10.0pt;font-family:"Segoe UI","sans-serif";color:black;
+background:white'>update-alternatives --config java</span></p>
+
+<pre style='text-indent:4.5pt;line-height:12.0pt;background:white'><span
+style='font-size:9.0pt;font-family:Consolas;color:black'>&nbsp;</span></pre>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
@@ -1106,8 +1128,7 @@ target="_blank"><span style='font-size:12.0pt;font-family:"Times New Roman","ser
 style='font-size:12.0pt;font-family:"Times New Roman","serif"'>. </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # unzip
-jce_policy-6.zip</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # unzip jce_policy-6.zip</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
@@ -1138,7 +1159,8 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # rm -rf
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>You just need run the bin file located
-in $HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin.
+in
+$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin.
 After installed the bin package, you should make sure tagent service is
 running. If it is inactive, you must manually start it. </span></p>
 
@@ -1147,7 +1169,8 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</sp
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # scp
-&lt;server ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin
+&lt;server
+ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin
 .</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
@@ -1425,7 +1448,8 @@ OEM by executing follow command in the console, users can read
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> bash oat_oem
--a -h his8 '{&quot;Name&quot;:&quot;OEM1&quot;,&quot;Description&quot;:&quot;Newdescription&quot;}'</span></p>
+-a -h his8
+'{&quot;Name&quot;:&quot;OEM1&quot;,&quot;Description&quot;:&quot;Newdescription&quot;}'</span></p>
 
 <p class=MsoNormal style='line-height:normal'><a name="user-content-Add_OEM"></a><b><span
 style='font-size:13.5pt;font-family:"Times New Roman","serif"'>Add OEM </span></b></p>
