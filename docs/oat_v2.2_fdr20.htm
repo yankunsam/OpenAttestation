@@ -22,9 +22,6 @@
 	{font-family:"Segoe UI";
 	panose-1:2 11 5 2 4 2 4 2 2 3;}
 @font-face
-	{font-family:Consolas;
-	panose-1:2 11 6 9 2 2 4 3 2 4;}
-@font-face
 	{font-family:"\@SimSun";
 	panose-1:2 1 6 0 3 1 1 1 1 1;}
  /* Style Definitions */
@@ -202,8 +199,7 @@ target="_blank"><span style='font-size:12.0pt;font-family:"Times New Roman","ser
 style='font-size:12.0pt;font-family:"Times New Roman","serif"'>. </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # unzip
-jce_policy-6.zip</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # unzip jce_policy-6.zip</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
@@ -232,8 +228,7 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</sp
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # <a
-name="OLE_LINK19"></a><a name="OLE_LINK18">git clone
-https://github.com/OpenAttestation/OpenAttestation/</a></span></p>
+name="OLE_LINK19"></a><a name="OLE_LINK18">git clone https://github.com/OpenAttestation/OpenAttestation/</a></span></p>
 
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-Download_XenServer_SDK_opti"></a><b><span style='font-size:
@@ -254,7 +249,8 @@ XenServer-6.2.0-SDK.zip</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
-XenServer-SDK/XenServerJava/bin/xenserver-6.2.0-1.jar $HOME/OpenAttestation/services/citrix-sdk/</span></p>
+XenServer-SDK/XenServerJava/bin/xenserver-6.2.0-1.jar
+$HOME/OpenAttestation/services/citrix-sdk/</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
@@ -274,8 +270,8 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
 $HOME/OpenAttestation</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # git
-checkout v2.2</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # git checkout
+v2.2</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mvn clean
@@ -358,17 +354,6 @@ gcc unzip</span></p>
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
 
-<p class=MsoNormal style='margin-bottom:6.0pt;line-height:110%'><span
-style='font-size:10.5pt;line-height:110%'>Switch to openjdk 1.7:</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # </span><span
-style='font-size:10.0pt;font-family:"Segoe UI","sans-serif";color:black;
-background:white'>update-alternatives --config java</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
-
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>Also install the following packages:</span></p>
 
@@ -405,7 +390,8 @@ font-family:"Times New Roman","serif"'>Attestation requires glassfish version
 3.0, or tomcat 6.0 or later. <br>
 Attestation needs install Jackson library into the web container’s endorsed
 modules directory. These libraries’ version must be 1.9 or later, you can find
-them from $HOME/OpenAttestation/services/AttestationService/target/AttestationService-{version}/WEB-INF/lib
+them from
+$HOME/OpenAttestation/services/AttestationService/target/AttestationService-{version}/WEB-INF/lib
 after building the attestation. <br>
 If you use glassfish as the web container, you need copy these jars to
 GLASSFISH_HOME/modules. Do like this: </span></p>
@@ -440,8 +426,8 @@ name="user-content-Create_Configuration_Files"></a><b><span style='font-size:
 font-family:"Times New Roman","serif"'>We need to create some configuration
 files used by the later setup process. These configuration files include
 mtwilson.properties, privacyca-client.properties, PrivacyCA.properties,
-attestation-service.properties, trust-dashboard.properties and
-whitelist-portal.properties. </span></p>
+attestation-service.properties, trust-dashboard.properties and whitelist-portal.properties.
+</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # mkdir -p
@@ -672,8 +658,9 @@ font-family:"Times New Roman","serif"'>Install aikqverify </span></b></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>Attestation service must use
-“aikqverify” program, so you need to compile and install it located in $HOME/OpenAttestation/services/aikqverify/target/aikqverify-2.2.zip.
-Here are the steps: </span></p>
+“aikqverify” program, so you need to compile and install it located in
+$HOME/OpenAttestation/services/aikqverify/target/aikqverify-2.2.zip. Here are
+the steps: </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
@@ -747,8 +734,7 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
 /etc/intel/cloudsecurity</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # java -jar
-$HOME/OpenAttestation/trust-agent/HisPrivacyCAWebServices2/target/HisPrivacyCAWebServices2-2.2-setup.jar</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # java -jar $HOME/OpenAttestation/trust-agent/HisPrivacyCAWebServices2/target/HisPrivacyCAWebServices2-2.2-setup.jar</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
@@ -808,9 +794,9 @@ name="user-content-Create_Portal_Signing_Key"></a><b><span style='font-size:
 font-family:"Times New Roman","serif"'>The following commands will create a
 keystore portal.jks, which is used for secure connection between Whitelist
 Portal and Trust Dashboard, and between Whitelist Service and Attestation
-Service. The &quot;password&quot; should be consistent with
-mtwilson.tdbp.keystore.password and mtwilson.wlmp.keystore.password from
-trust-dashboard.properties and whitelist-portal.properties. </span></p>
+Service. The &quot;password&quot; should be consistent with mtwilson.tdbp.keystore.password
+and mtwilson.wlmp.keystore.password from trust-dashboard.properties and
+whitelist-portal.properties. </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
@@ -818,9 +804,9 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
--genkey -alias admin -keyalg RSA -keysize 2048 -keystore portal.jks -storepass password
--dname &quot;CN=Portal User, OU=Mt Wilson, O=My Org, C=US&quot; -validity 3650
--keypass password</span></p>
+-genkey -alias admin -keyalg RSA -keysize 2048 -keystore portal.jks -storepass
+password -dname &quot;CN=Portal User, OU=Mt Wilson, O=My Org, C=US&quot;
+-validity 3650 -keypass password</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
@@ -875,7 +861,8 @@ protocol, follow these steps to add suitable ciphers: </span></p>
 <ul type=disc>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
      font-family:"Times New Roman","serif"'>Login glassfish web portal,
-     suggestion to login via localhost, for example, http://*.*.*.*:4848/common/index.jsf</span></li>
+     suggestion to login via localhost, for example,
+     http://*.*.*.*:4848/common/index.jsf</span></li>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
      font-family:"Times New Roman","serif"'>Browse to Configuration &gt;
      server-config &gt; Network Config &gt; Protocols &gt; http-listener-2. </span></li>
@@ -893,8 +880,8 @@ TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA,
 TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA,
 TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA,
 TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA,
-TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA
-</span></p>
+TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
+TLS_RSA_WITH_AES_128_CBC_SHA </span></p>
 
 <ul type=disc>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
@@ -914,11 +901,12 @@ please modify tomcat configuration file by executing follow shell scripts: </spa
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> sed -i
 &quot;s/ &lt;\/Service&gt;/&lt;Connector port=\&quot;8181\&quot;
-minSpareThreads=\&quot;5\&quot; maxSpareThreads=\&quot;75\&quot;
-enableLookups=\&quot;false\&quot; disableUploadTimeout=\&quot;true\&quot;
-acceptCount=\&quot;100\&quot; maxThreads=\&quot;200\&quot; scheme=\&quot;https\&quot;
+minSpareThreads=\&quot;5\&quot; maxSpareThreads=\&quot;75\&quot; enableLookups=\&quot;false\&quot;
+disableUploadTimeout=\&quot;true\&quot; acceptCount=\&quot;100\&quot;
+maxThreads=\&quot;200\&quot; scheme=\&quot;https\&quot;
 secure=\&quot;true\&quot; SSLEnabled=\&quot;true\&quot;
-clientAuth=\&quot;want\&quot; sslProtocol=\&quot;TLS\&quot; ciphers=\&quot;TLS_ECDH_anon_WITH_AES_256_CBC_SHA,
+clientAuth=\&quot;want\&quot; sslProtocol=\&quot;TLS\&quot;
+ciphers=\&quot;TLS_ECDH_anon_WITH_AES_256_CBC_SHA,
 TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA,
 TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA,
 TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
@@ -929,7 +917,8 @@ TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA,
 TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
 TLS_RSA_WITH_AES_128_CBC_SHA\&quot;
 keystoreFile=\&quot;Certificate\/keystore.jks\&quot;
-keystorePass=\&quot;changeit\&quot; truststoreFile=\&quot;Certificate\/keystore.jks\&quot;
+keystorePass=\&quot;changeit\&quot;
+truststoreFile=\&quot;Certificate\/keystore.jks\&quot;
 truststorePass=\&quot;changeit\&quot; \/&gt;&lt;\/Service&gt;/g&quot;
 $TOMCAT_HOME/conf/server.xml</span></p>
 
@@ -1066,22 +1055,7 @@ font-family:"Times New Roman","serif"'>Install packages listed below: </span></p
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # yum install
 java-1.7.0-openjdk</span></p>
 
-<pre style='text-indent:5.0pt;line-height:12.0pt;background:white'># yum install make gcc-c++</pre><pre
-style='text-indent:5.0pt;line-height:12.0pt;background:white'>&nbsp;</pre>
-
-<p class=MsoNormal style='margin-bottom:6.0pt;line-height:110%'><span
-style='font-size:10.5pt;line-height:110%'>Switch to openjdk 1.7:</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # </span><span
-style='font-size:10.0pt;font-family:"Segoe UI","sans-serif";color:black;
-background:white'>update-alternatives --config java</span></p>
-
-<pre style='text-indent:4.5pt;line-height:12.0pt;background:white'><span
-style='font-size:9.0pt;font-family:Consolas;color:black'>&nbsp;</span></pre>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
+<pre style='text-indent:5.0pt;line-height:12.0pt;background:white'># yum install make gcc-c++</pre>
 
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-Enable_Intel_TXT_in_BIOS"></a><b><span style='font-size:
@@ -1097,8 +1071,8 @@ the operation. Below is a example for HP8300 system: </span></p>
      font-family:"Times New Roman","serif"'>Power on, ESC key -&gt; Startup
      Menu -&gt; Computer Setup(F10)</span></li>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-     font-family:"Times New Roman","serif"'>Security-&gt;Setup Password, set
-     setup password as xxxxxx then F10 save it.</span></li>
+     font-family:"Times New Roman","serif"'>Security-&gt;Setup Password, set setup
+     password as xxxxxx then F10 save it.</span></li>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
      font-family:"Times New Roman","serif"'>Security-&gt;System Security,
      enable vtx/vtd/Embeded Security Device/Trusted Execution Technology, F10
@@ -1128,7 +1102,8 @@ target="_blank"><span style='font-size:12.0pt;font-family:"Times New Roman","ser
 style='font-size:12.0pt;font-family:"Times New Roman","serif"'>. </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # unzip jce_policy-6.zip</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # unzip
+jce_policy-6.zip</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
@@ -1159,8 +1134,7 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # rm -rf
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>You just need run the bin file located
-in
-$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin.
+in $HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin.
 After installed the bin package, you should make sure tagent service is
 running. If it is inactive, you must manually start it. </span></p>
 
@@ -1169,8 +1143,7 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</sp
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # scp
-&lt;server
-ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin
+&lt;server ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin
 .</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
@@ -1287,12 +1260,12 @@ style='font-size:10.0pt;font-family:"Courier New"'># chkconfig –del tagent</span
 
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
-style='font-size:10.0pt;font-family:"Courier New"'># cat /sys/class/misc/tpm0/device/enabled</span></p>
+style='font-size:10.0pt;font-family:"Courier New"'># cat
+/sys/class/misc/tpm0/device/enabled</span></p>
 
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
-style='font-size:10.0pt;font-family:"Courier New"'># cat
-/sys/class/misc/tpm0/device/owned&nbsp;</span></p>
+style='font-size:10.0pt;font-family:"Courier New"'># cat /sys/class/misc/tpm0/device/owned&nbsp;</span></p>
 
 <ul type=disc>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
@@ -1347,8 +1320,9 @@ password in /etc/intel/cloudsecurity/clientfiles/hisprovisioner.properties</span
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
 style='font-size:10.0pt;font-family:"Courier New"'># sed -i 's/TpmOwnerAuth =</span><span
-style='font-size:12.0pt;font-family:"Times New Roman","serif"'> 1111111111111111111111111111111111111111/TpmOwnerAuth
-=&lt;replace with your TPM password&gt;/g'
+style='font-size:12.0pt;font-family:"Times New Roman","serif"'>
+1111111111111111111111111111111111111111/TpmOwnerAuth =&lt;replace with your
+TPM password&gt;/g'
 /etc/intel/cloudsecurity/clientfiles/hisprovisioner.properties</span></p>
 
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
@@ -1365,7 +1339,8 @@ original zip package.</span></p>
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
 style='font-size:10.0pt;font-family:"Courier New"'># cp
-/etc/intel/cloudsecurity/clientfiles.zip /etc/intel/cloudsecurity/clientfiles_bak.zip</span></p>
+/etc/intel/cloudsecurity/clientfiles.zip
+/etc/intel/cloudsecurity/clientfiles_bak.zip</span></p>
 
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span

@@ -208,7 +208,14 @@ normal'>Note: For OpenSUSE OS, the package ‘maven’ is missing, you may refer to
 this website to install and configure the maven:</p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'>http://maven.apache.org/download.cgi</p>
+normal'><a href="http://maven.apache.org/download.cgi">http://maven.apache.org/download.cgi</a></p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'>&nbsp;</p>
+
+<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
+normal'>Note: For OpenSUSE OS, the package ‘makeself’ is missing, you need
+download the SPRM and compile the package to install makeself.</p>
 
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-Download_Source_Code"></a><b><span style='font-size:13.5pt;
@@ -243,7 +250,8 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # unzip
 XenServer-6.2.0-SDK.zip</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp XenServer-SDK/XenServerJava/bin/xenserver-6.2.0-1.jar
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cp
+XenServer-SDK/XenServerJava/bin/xenserver-6.2.0-1.jar
 $HOME/OpenAttestation/services/citrix-sdk/</span></p>
 
 <p class=MsoNormal style='line-height:normal'><b><span style='font-size:13.5pt;
@@ -345,15 +353,7 @@ font-family:"Times New Roman","serif"'>Make sure TCP port 8181, 8080 are not
 blocked by firewall.</span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>OpenSUSE 13.2 0</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'>iptables -I
-INPUT 1 -p tcp --dport 9999 -j ACCEPT</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'>iptables -I
-INPUT 1 -p tcp --dport 9998 -j ACCEPT</span></p>
+font-family:"Times New Roman","serif"'>OpenSUSE 13.2 </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'>iptables -I
@@ -440,8 +440,7 @@ font-family:"Times New Roman","serif"'>Attestation requires glassfish version
 3.0, or tomcat 6.0 or later. <br>
 Attestation needs install Jackson library into the web container’s endorsed
 modules directory. These libraries’ version must be 1.9 or later, you can find
-them from
-$HOME/OpenAttestation/services/AttestationService/target/AttestationService-{version}/WEB-INF/lib
+them from $HOME/OpenAttestation/services/AttestationService/target/AttestationService-{version}/WEB-INF/lib
 after building the attestation. <br>
 If you use glassfish as the web container, you need copy these jars to
 GLASSFISH_HOME/modules. Do like this: </span></p>
@@ -781,7 +780,8 @@ the file that defines the password as EndorsementP12Pass. The commands is as
 bellows: </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd /etc/intel/cloudsecurity</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
+/etc/intel/cloudsecurity</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # java -jar
@@ -807,9 +807,9 @@ $GLASSFISH_HOME/domains/domain1/config </span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>In case using tomcat as web container,
-please create a directory named &quot;Certificate&quot; in the $TOMCAT_HOME directory
-and go to &quot;Certificate&quot; instead. The default password is “changeit”,
-you can change the value. </span></p>
+please create a directory named &quot;Certificate&quot; in the $TOMCAT_HOME
+directory and go to &quot;Certificate&quot; instead. The default password is
+“changeit”, you can change the value. </span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # rm -rf
@@ -870,9 +870,9 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
 -keystore portal.jks -storepass password -alias &quot;mtwilson (ssl)&quot;</span></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>Note: For the last command of this section,
-replace the ssl certification directory with the corresponding directory in
-tomcat if using tomcat as the web container,
+font-family:"Times New Roman","serif"'>Note: For the last command of this
+section, replace the ssl certification directory with the corresponding
+directory in tomcat if using tomcat as the web container,
 &quot;$TOMCAT_HOME/Certificate&quot; for example. </span></p>
 
 <p class=MsoNormal style='line-height:normal'><a
@@ -891,10 +891,10 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd
 /etc/intel/cloudsecurity</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool -genkey
--alias ovirtssl -keyalg RSA  -keysize 2048 -keystore ovirt.jks -storepass
-password -dname &quot;CN=&lt;server ip&gt;, OU=Mt Wilson, O=My Org, C=US&quot;
--validity 3650  -keypass password</span></p>
+normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
+-genkey -alias ovirtssl -keyalg RSA  -keysize 2048 -keystore ovirt.jks
+-storepass password -dname &quot;CN=&lt;server ip&gt;, OU=Mt Wilson, O=My Org,
+C=US&quot; -validity 3650  -keypass password</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # keytool
@@ -927,10 +927,11 @@ normal'><span style='font-size:12.0pt;font-family:"Times New Roman","serif"'>TLS
 TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA,
 TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA,
 TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
-TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA,
-TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA,
-TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA,
-TLS_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
+TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA,
+TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA,
+TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA,
+TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA,
+TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
 TLS_RSA_WITH_AES_128_CBC_SHA </span></p>
 
 <ul type=disc>
@@ -956,18 +957,19 @@ enableLookups=\&quot;false\&quot; disableUploadTimeout=\&quot;true\&quot;
 acceptCount=\&quot;100\&quot; maxThreads=\&quot;200\&quot;
 scheme=\&quot;https\&quot; secure=\&quot;true\&quot;
 SSLEnabled=\&quot;true\&quot; clientAuth=\&quot;want\&quot;
-sslProtocol=\&quot;TLS\&quot;
-ciphers=\&quot;TLS_ECDH_anon_WITH_AES_256_CBC_SHA,
+sslProtocol=\&quot;TLS\&quot; ciphers=\&quot;TLS_ECDH_anon_WITH_AES_256_CBC_SHA,
 TLS_ECDH_anon_WITH_AES_128_CBC_SHA, TLS_ECDH_anon_WITH_3DES_EDE_CBC_SHA,
 TLS_ECDH_RSA_WITH_AES_256_CBC_SHA, TLS_ECDH_RSA_WITH_AES_128_CBC_SHA,
 TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA, TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
 TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_ECDSA_WITH_3DES_EDE_CBC_SHA,
 TLS_ECDH_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDH_ECDSA_WITH_AES_128_CBC_SHA,
-TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_DSS_WITH_AES_256_CBC_SHA,
-TLS_RSA_WITH_AES_256_CBC_SHA, TLS_DHE_RSA_WITH_AES_128_CBC_SHA,
-TLS_DHE_DSS_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA\&quot;
+TLS_ECDH_ECDSA_WITH_3DES_EDE_CBC_SHA, TLS_DHE_RSA_WITH_AES_256_CBC_SHA,
+TLS_DHE_DSS_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA,
+TLS_DHE_RSA_WITH_AES_128_CBC_SHA, TLS_DHE_DSS_WITH_AES_128_CBC_SHA,
+TLS_RSA_WITH_AES_128_CBC_SHA\&quot;
 keystoreFile=\&quot;Certificate\/keystore.jks\&quot;
-keystorePass=\&quot;changeit\&quot; truststoreFile=\&quot;Certificate\/keystore.jks\&quot;
+keystorePass=\&quot;changeit\&quot;
+truststoreFile=\&quot;Certificate\/keystore.jks\&quot;
 truststorePass=\&quot;changeit\&quot; \/&gt;&lt;\/Service&gt;/g&quot;
 $TOMCAT_HOME/conf/server.xml</span></p>
 
@@ -1083,8 +1085,8 @@ name="user-content-Firewall_configuration-2"></a><b><span style='font-size:
 13.5pt;font-family:"Times New Roman","serif"'>Firewall configuration </span></b></p>
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-font-family:"Times New Roman","serif"'>Make sure TCP port 9999, 9998 are not blocked
-by firewall.<br>
+font-family:"Times New Roman","serif"'>Make sure TCP port 9999, 9998 are not
+blocked by firewall.<br>
 <br>
 </span></p>
 
@@ -1098,20 +1100,6 @@ INPUT 1 -p tcp --dport 9999 -j ACCEPT</span></p>
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'>iptables -I
 INPUT 1 -p tcp --dport 9998 -j ACCEPT</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'>iptables -I
-INPUT 1 -p tcp --dport 8181 -j ACCEPT</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'>iptables -I
-INPUT 1 -p tcp --dport 8080 -j ACCEPT</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
-
-<p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
-normal'><span style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;</span></p>
 
 <p class=MsoNormal style='line-height:normal'><b><span style='font-size:13.5pt;
 font-family:"Times New Roman","serif"'>Install Required Packages </span></b></p>
@@ -1162,8 +1150,8 @@ the operation. Below is a example for HP8300 system: </span></p>
 
 <ul type=disc>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
-     font-family:"Times New Roman","serif"'>Power on, ESC key -&gt; Startup
-     Menu -&gt; Computer Setup(F10)</span></li>
+     font-family:"Times New Roman","serif"'>Power on, ESC key -&gt; Startup Menu
+     -&gt; Computer Setup(F10)</span></li>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
      font-family:"Times New Roman","serif"'>Security-&gt;Setup Password, set
      setup password as xxxxxx then F10 save it.</span></li>
@@ -1206,8 +1194,8 @@ jce/*.jar  JAVA_HOME/jre/lib/security</span></p>
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>Notes: Some JDK, especially openJDK 1.6
 haven't integrated with bouncy castle, so you need copy the binary of bouncy
-castle, in some case named as &quot;bcprov-jdk*.jar&quot; to this
-directory:$JAVA_HOME/lib/ext </span></p>
+castle, in some case named as &quot;bcprov-jdk*.jar&quot; to this directory:$JAVA_HOME/lib/ext
+</span></p>
 
 <p class=MsoNormal style='line-height:normal'><a
 name="user-content-Start_Agent_Service_in_Gene"></a><b><span style='font-size:
@@ -1229,7 +1217,8 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # rm -rf
 
 <p class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
 font-family:"Times New Roman","serif"'>You just need run the bin file located
-in $HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin.
+in
+$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin.
 After installed the bin package, you should make sure tagent service is
 running. If it is inactive, you must manually start it. </span></p>
 
@@ -1238,7 +1227,8 @@ normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # cd $HOME</sp
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
 normal'><span style='font-size:10.0pt;font-family:"Courier New"'> # scp
-&lt;server ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin
+&lt;server
+ip&gt;:$HOME/OpenAttestation/trust-agent/TrustAgentLinuxInstaller/target/TrustAgentLinuxInstaller-2.2.bin
 .</span></p>
 
 <p class=MsoNormal style='margin-bottom:0in;margin-bottom:.0001pt;line-height:
@@ -1389,7 +1379,8 @@ style='font-size:10.0pt;font-family:"Courier New"'># &lt;The TPM Password&gt;</s
 
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
-style='font-size:10.0pt;font-family:"Courier New"'># The public key will be displayed&nbsp;</span></p>
+style='font-size:10.0pt;font-family:"Courier New"'># The public key will be
+displayed&nbsp;</span></p>
 
 <ul type=disc>
  <li class=MsoNormal style='line-height:normal'><span style='font-size:12.0pt;
@@ -1430,7 +1421,8 @@ original zip package.</span></p>
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
 style='font-size:10.0pt;font-family:"Courier New"'># cp
-/etc/intel/cloudsecurity/clientfiles.zip /etc/intel/cloudsecurity/clientfiles_bak.zip</span></p>
+/etc/intel/cloudsecurity/clientfiles.zip
+/etc/intel/cloudsecurity/clientfiles_bak.zip</span></p>
 
 <p class=MsoNormal style='margin-top:0in;margin-right:0in;margin-bottom:0in;
 margin-left:.75in;margin-bottom:.0001pt;line-height:normal'><span
