@@ -16,6 +16,12 @@ if [ $# -lt 3 ];then
   exit 0
 fi
 
+if [ ! -z $OAT_CERTFILE ] && [ -e $OAT_CERTFILE ];then
+  echo " "
+else
+  OAT_CERTFILE="certfile.cer"
+fi
+
 if [ $1 != $HOST_PARM ];then
   echo "-h parm error!"
   ShowMleSearchExample
@@ -30,7 +36,7 @@ INFO="`echo "$3" | awk -F{ '{print $2}'| awk -F} '{print $1}'\
 
 oat_mle_search()
 {
-     curl --cacert ./certfile.cer -H "Content-Type: application/json" \
+     curl --cacert ./$OAT_CERTFILE -H "Content-Type: application/json" \
      -X GET "https://$HOST_NAME:$PORT/WLMService/resources/mles?searchCriteria=$INFO"
 }
 

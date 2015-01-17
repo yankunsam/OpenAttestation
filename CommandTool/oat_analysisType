@@ -22,6 +22,12 @@ if [ $# -lt 3 ];then
   exit 0
 fi
 
+if [ ! -z $OAT_CERTFILE ] && [ -e $OAT_CERTFILE ];then
+  echo " "
+else
+  OAT_CERTFILE="certfile.cer"
+fi
+
 if [ $2 != $HOST_PARM ];then
   echo "-h parm error!"
   ShowAnalysisTypeExample
@@ -39,20 +45,20 @@ fi
 
 addAnalysisType() 
 {
-  curl --cacert certfile.cer -H "Content-Type: application/json" \
-       -X POST -d "$INFO" "https://$HOST_NAME:$PORT/WLMService/resources/analysisTypes" -ssl3
+  curl --cacert $OAT_CERTFILE -H "Content-Type: application/json" \
+       -X POST -d "$INFO" "https://$HOST_NAME:$PORT/WLMService/resources/analysisTypes" 
 }
 
 delAnalysisType()
 {
-  curl --cacert certfile.cer \
-        -X DELETE  "https://$HOST_NAME:$PORT/WLMService/resources/analysisTypes?$INFO"  -ssl3
+  curl --cacert $OAT_CERTFILE \
+        -X DELETE  "https://$HOST_NAME:$PORT/WLMService/resources/analysisTypes?$INFO"  
 }
 
 getAnalysisType()
 {
-  curl --cacert certfile.cer \
-        -X GET  "https://$HOST_NAME:$PORT/WLMService/resources/analysisTypes"  -ssl3 | python -mjson.tool
+  curl --cacert $OAT_CERTFILE \
+        -X GET  "https://$HOST_NAME:$PORT/WLMService/resources/analysisTypes"   | python -mjson.tool
 }
 
 case $1 in

@@ -15,6 +15,12 @@ if [ $# -lt 3 ];then
   exit 0
 fi
 
+if [ ! -z $OAT_CERTFILE ] && [ -e $OAT_CERTFILE ];then
+  echo " "
+else
+  OAT_CERTFILE="certfile.cer"
+fi
+
 if [ $1 != $HOST_PARM ];then
   echo "-h parm error!"
   ShowPollHostExample
@@ -27,7 +33,7 @@ INFO="$3"
 
 pollHosts()
 {
-  curl --cacert certfile.cer -H "Content-Type: application/json" \
+  curl --cacert $OAT_CERTFILE -H "Content-Type: application/json" \
         -X POST -d "$INFO" "https://$HOST_NAME:$PORT/AttestationService/resources/PollHosts"
 }
 pollHosts

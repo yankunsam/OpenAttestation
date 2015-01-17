@@ -22,6 +22,12 @@ if [ $# -lt 4 ];then
   exit 0
 fi
 
+if [ ! -z $OAT_CERTFILE ] && [ -e $OAT_CERTFILE ];then
+  echo " "
+else
+  OAT_CERTFILE="certfile.cer"
+fi
+
 if [ $2 != $HOST_PARM ];then
   echo "-h parm error!"
   ShowPostHostExample
@@ -34,20 +40,20 @@ INFO="$4"
 
 addRequest()
 {
-  curl --cacert certfile.cer -H "Content-Type: application/json" \
-        -X POST -d "$INFO" "https://$HOST_NAME:$PORT/AttestationService/resources/PostHosts" -ssl3
+  curl --cacert $OAT_CERTFILE -H "Content-Type: application/json" \
+        -X POST -d "$INFO" "https://$HOST_NAME:$PORT/AttestationService/resources/PostHosts" 
 }
 
 delRequest()
 {
-  curl --cacert certfile.cer -H "Content-Type: application/json" \
-        -X DELETE -d "$INFO" "https://$HOST_NAME:$PORT/AttestationService/resources/PostHosts" -ssl3
+  curl --cacert $OAT_CERTFILE -H "Content-Type: application/json" \
+        -X DELETE -d "$INFO" "https://$HOST_NAME:$PORT/AttestationService/resources/PostHosts" 
 }
 
 getResult()
 {
-  curl --cacert certfile.cer -H "Content-Type: application/json" \
-        -X GET -d "$INFO" "https://$HOST_NAME:$PORT/AttestationService/resources/PostHosts" -ssl3
+  curl --cacert $OAT_CERTFILE -H "Content-Type: application/json" \
+        -X GET -d "$INFO" "https://$HOST_NAME:$PORT/AttestationService/resources/PostHosts" 
 }
 
 case $1 in

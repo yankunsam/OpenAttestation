@@ -12,6 +12,13 @@ if [ $# -lt 2 ];then
   ShowOSViewExample
   exit 0
 fi
+
+if [ ! -z $OAT_CERTFILE ] && [ -e $OAT_CERTFILE ];then
+  echo " "
+else
+  OAT_CERTFILE="certfile.cer"
+fi
+
 if [ $1 != $PARM ];then
   echo "parm error!"
   ShowOSViewExample
@@ -35,7 +42,7 @@ view_os()
        echo "size of host name exceeds the max number allowed"
        exit 0
      fi
-     curl --cacert ./certfile.cer -H "Content-Type: application/json" \
+     curl --cacert ./$OAT_CERTFILE -H "Content-Type: application/json" \
      -X GET https://$HOST_NAME:$PORT/WLMService/resources/os
 }
 
