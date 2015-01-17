@@ -31,7 +31,7 @@ bash oat_mle -a -h his8 '{"Name":"NewMLE2","Version":"v123","OsName":"OS1","OsVe
 #BIOS
 bash oat_mle -a -h his8 '{"Name":"NewMLE1","Version":"v123","OemName":"OEM1","Attestation_Type": "PCR","MLE_Type":"BIOS","Description":"MLETest1111","MLE_Manifests": [{"Name": "0",  "Value": "31B97D97B4679917EC3C1D943635693FFBAB4143"}]}'
 
-bash oat_mle -e -h his8 '{"Name":"NewMLE1","Version":"v123","OemName":"OEM1","Attestation_Type": "PCR","MLE_Type":"BIOS","Description":"###############","MLE_Manifests": [{"Name": "0",  "Value": "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"}]}'
+bash oat_mle -e -h his8 '{"Name":"NewMLE1","Version":"v123","OemName":"OEM1","Attestation_Type": "PCR","MLE_Type":"BIOS","Description":"03JR84","MLE_Manifests": [{"Name": "0",  "Value": "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"}]}'
 
 bash oat_mle -d -h his8 '{"mleName":"NewMLE1","mleVersion":"v123","oemName":"OEM1"}'
 
