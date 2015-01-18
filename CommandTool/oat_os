@@ -10,9 +10,9 @@ PORT=8443
 
 ShowExample()
 {
-  echo -e "Add  OS example:\033[31;49;5;1m bash oat_os -a -h HOSTNAME_OF_OAT-APPRAISER '{"Name":"OS_NAME","Version":"OS_VERSION","Description":"DESCRIPTION"}'\033[0m"
-  echo -e "Edit OS example:\033[31;49;5;1m bash oat_os -e -h HOSTNAME_OF_OAT-APPRAISER '{"Name":"OS_NAME","Version":"OS_VERSION","Description":"Mooooooooodify"}'\033[0m"
-  echo -e "Del  OS example:\033[31;49;5;1m bash oat_os -d -h HOSTNAME_OF_OAT-APPRAISER '{"Name":"OS_NAME","Version":"OS_VERSION"}'\033[0m"
+  echo -e "Add  OS example:\033[31;49;5;1m bash oat_os -a -h HOSTNAME_OF_OAT-APPRAISER '{\"Name\":\"OS_NAME\",\"Version\":\"OS_VERSION\",\"Description\":\"DESCRIPTION\"}'\033[0m"
+  echo -e "Edit OS example:\033[31;49;5;1m bash oat_os -e -h HOSTNAME_OF_OAT-APPRAISER '{\"Name\":\"OS_NAME\",\"Version\":\"OS_VERSION\",\"Description\":\"Mooooooooodify\"}'\033[0m"
+  echo -e "Del  OS example:\033[31;49;5;1m bash oat_os -d -h HOSTNAME_OF_OAT-APPRAISER '{\"Name\":\"OS_NAME\",\"Version\":\"OS_VERSION\"}'\033[0m"
 }
 
 if [ $# -lt 4 ];then

@@ -6,7 +6,7 @@ INFO=""
 PORT=8443
 ShowPollHostExample()
 {
-   echo -e "PollHost example:\n\033[31;49;5;1m bash oat_pollhosts -h HOSTNAME_OF_OAT-APPRAISER '{"hosts":["HOSTNAME_OF_OAT-CLIENT"]}' \033[0m"
+   echo -e "PollHost example:\n\033[31;49;5;1m bash oat_pollhosts -h HOSTNAME_OF_OAT-APPRAISER '{\"hosts\":[\"HOSTNAME_OF_OAT-CLIENT\"]}' \033[0m"
 }
 
 if [ $# -lt 3 ];then
