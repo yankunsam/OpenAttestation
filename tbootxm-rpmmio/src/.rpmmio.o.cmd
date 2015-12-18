@@ -1,0 +1,1 @@
+cmd_/root/tbootxm/tbootxm-rpmmio/src/rpmmio.o := ld -m elf_x86_64   -r -o /root/tbootxm/tbootxm-rpmmio/src/rpmmio.o /root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.o /root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.o ; scripts/mod/modpost /root/tbootxm/tbootxm-rpmmio/src/rpmmio.o

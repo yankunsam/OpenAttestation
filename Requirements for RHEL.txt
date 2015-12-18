@@ -1,0 +1,48 @@
+Requirements for RHEL:
+1. Required packages : trousers, tboot
+2. RHEL versions supported : 7.0+ 
+
+Installing tbootxm on RHEL : 
+tbootxm binary for RHEL kernel 3.10.0-123.el7.x86_64 has been included - /tbootxm/packages/tbootxm/target/tbootxm-0.1-SNAPSHOT-rhel.bin
+In case you want to build the installer binary again please follow the below instructions. Else, skip to step #7.  
+
+1. Clone the tbootxm repository. 
+2. We would be using ant and maven to build the installer, so we would require their packages along with some other utilities  :
+a. $> yum install ant
+b. $> yum install maven 
+c. $> yum install makeself
+d. $> yum install zip unzip 
+3. Create a directory called ‘.m2’ in the home folder
+a. $> mkdir ~/.m2/
+4. Copy settings.xml file from the tboot folder to this newly created directory 
+a. $> cp settings.xml ~/.m2/
+b. In case your network uses a proxy, please configure the proxy in the settings.xml file. For example: 
+<localRepository>/root/.m2/repository</localRepository>
+<proxies>
+<proxy>
+   <id>--some id here --</id>
+   <active>true</active>
+   <protocol>http</protocol>
+   <host>--host name here--</host>
+   <port>--port number here--</port>
+   <nonProxyHosts>--hosts where proxy is not needed here, separated by ‘|’--</nonProxyHosts>
+ </proxy>
+</proxies>
+……
+5. Run the installer builder :
+a. $> ant 
+6. Once the maven builds the installer, it could be found at : /tbootxm/packages/tbootxm/target/tbootxm-0.1-SNAPSHOT-rhel.bin 
+7. Copy the installer to the home directory, and run $> ./tbootxm-0.1-SNAPSHOT-rhel.bin
+8. Tbootxm is now installed. 
+9. Installer may create a default ‘Manifest’ file – which specifies the file path to measure at the time of boot at /boot/trust/manifest.xml. In case you don’t find this file created, you would have to manually create one. For example: 
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Manifest xmlns="mtwilson:trustdirector:manifest:1.1" DigestAlg="sha1">
+<File Path="/usr/bin/qemu-system-x86_64"/>
+</Manifest>
+
+The <File Path> tag specifies the path to measure. You can add as any files as you may need. 
+It is also possible to add the entire directory to measure by using <Dir Path> tag instead. 
+
+Booting using tbootxm
+
+Once tbootxm is installed, it creates a new initrd with measurement and tpm extension hooks with a separate grub entry to boot using the same. At the time of boot, if you wish to measure the manifest files, select the TCB Protection grub menu option. This is when tbootxm takes over and you achieve the desired ‘measured’ boot. 

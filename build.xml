@@ -32,8 +32,17 @@
 		</fail>
 		<!-- the maven archetypes depend on root pom -->
 		<!-- the root pom -->
+                 <exec executable="${cmd.maven}" dir="maven" resultproperty="mavenExitInstallMavenPom">
+                          <arg value="-DskipTests=true"/>
+                          <arg value="install"/>
+
+                  </exec>
+                  <fail message="Cannot install maven projects" status="${mavenExitInstallMavenPom}">
+                          <condition><not><equals arg1="${mavenExitInstallMavenPom}" arg2="0"/></not></condition>
+                  </fail>
 
 		<!-- permissions -->
+	        	
 		<chmod file="build_components.sh" perm="700"/>
 		
 		<!-- run the build script to install prerequisite packages -->

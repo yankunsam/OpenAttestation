@@ -45,6 +45,7 @@
                         </goals>
                         <configuration>
                             <target>
+                                  
                                 <exec executable="/bin/bash" failonerror="true">
                                     <arg value="${project.basedir}/build-rpmmio.sh" />
                                     <arg value="${project.build.directory}/application/rpmmios" />

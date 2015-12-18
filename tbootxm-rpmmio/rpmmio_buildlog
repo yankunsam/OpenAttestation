@@ -1,0 +1,416 @@
+rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c .tmp_versions Module.symvers modules.order
+make -C /lib/modules/3.13.0-24-generic/build M=/root/tbootxm/tbootxm-rpmmio/src modules
+make[1]: Entering directory `/usr/src/linux-headers-3.13.0-24-generic'
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_read’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:91:5: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+     printk(KERN_ERR "rpmmio: read error, buff null or size %d > %d\n", size, TPMMAXBUF);
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:115:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   tpm_pcr_value_t out= {{0,}};
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:118:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: read, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:88:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0; 
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:87:8: warning: unused variable ‘_kbuff’ [-Wunused-variable]
+   char _kbuff[TPMMAXBUF];
+        ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_write’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:132:4: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+    printk(KERN_ERR "rpmmio: write error, buff null or size %d > %d\n", size, TPMMAXBUF);
+    ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:155:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: write, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:126:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0;
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: At top level:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:58:13: warning: ‘device_buffer’ defined but not used [-Wunused-variable]
+ static char device_buffer[BUFFER_SIZE];
+             ^
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:141:5: warning: built-in function ‘log’ declared as non-function [enabled by default]
+ int log=1;
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c: In function ‘tpm_pcr_extend’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:620:2: warning: passing argument 2 of ‘PrintBytes’ discards ‘const’ qualifier from pointer target type [enabled by default]
+  PrintBytes("in-digest:", in->digest, 20);
+  ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:66:6: note: expected ‘unsigned char *’ but argument is of type ‘const uint8_t *’
+ void PrintBytes(const char* szMsg, unsigned char* pbData, int iSize)
+      ^
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /root/tbootxm/tbootxm-rpmmio/src/rpmmio.mod.o
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.ko
+make[1]: Leaving directory `/usr/src/linux-headers-3.13.0-24-generic'
+rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c .tmp_versions Module.symvers modules.order
+make -C /lib/modules/3.13.0-24-generic/build M=/root/tbootxm/tbootxm-rpmmio/src modules
+make[1]: Entering directory `/usr/src/linux-headers-3.13.0-24-generic'
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_read’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:91:5: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+     printk(KERN_ERR "rpmmio: read error, buff null or size %d > %d\n", size, TPMMAXBUF);
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:115:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   tpm_pcr_value_t out= {{0,}};
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:118:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: read, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:88:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0; 
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:87:8: warning: unused variable ‘_kbuff’ [-Wunused-variable]
+   char _kbuff[TPMMAXBUF];
+        ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_write’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:132:4: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+    printk(KERN_ERR "rpmmio: write error, buff null or size %d > %d\n", size, TPMMAXBUF);
+    ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:155:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: write, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:126:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0;
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: At top level:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:58:13: warning: ‘device_buffer’ defined but not used [-Wunused-variable]
+ static char device_buffer[BUFFER_SIZE];
+             ^
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:141:5: warning: built-in function ‘log’ declared as non-function [enabled by default]
+ int log=1;
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c: In function ‘tpm_pcr_extend’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:620:2: warning: passing argument 2 of ‘PrintBytes’ discards ‘const’ qualifier from pointer target type [enabled by default]
+  PrintBytes("in-digest:", in->digest, 20);
+  ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:66:6: note: expected ‘unsigned char *’ but argument is of type ‘const uint8_t *’
+ void PrintBytes(const char* szMsg, unsigned char* pbData, int iSize)
+      ^
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /root/tbootxm/tbootxm-rpmmio/src/rpmmio.mod.o
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.ko
+make[1]: Leaving directory `/usr/src/linux-headers-3.13.0-24-generic'
+rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c .tmp_versions Module.symvers modules.order
+make -C /lib/modules/3.13.0-24-generic/build M=/root/tbootxm/tbootxm-rpmmio/src modules
+make[1]: Entering directory `/usr/src/linux-headers-3.13.0-24-generic'
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_read’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:91:5: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+     printk(KERN_ERR "rpmmio: read error, buff null or size %d > %d\n", size, TPMMAXBUF);
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:115:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   tpm_pcr_value_t out= {{0,}};
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:118:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: read, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:88:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0; 
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:87:8: warning: unused variable ‘_kbuff’ [-Wunused-variable]
+   char _kbuff[TPMMAXBUF];
+        ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_write’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:132:4: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+    printk(KERN_ERR "rpmmio: write error, buff null or size %d > %d\n", size, TPMMAXBUF);
+    ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:155:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: write, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:126:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0;
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: At top level:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:58:13: warning: ‘device_buffer’ defined but not used [-Wunused-variable]
+ static char device_buffer[BUFFER_SIZE];
+             ^
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:141:5: warning: built-in function ‘log’ declared as non-function [enabled by default]
+ int log=1;
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c: In function ‘tpm_pcr_extend’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:620:2: warning: passing argument 2 of ‘PrintBytes’ discards ‘const’ qualifier from pointer target type [enabled by default]
+  PrintBytes("in-digest:", in->digest, 20);
+  ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:66:6: note: expected ‘unsigned char *’ but argument is of type ‘const uint8_t *’
+ void PrintBytes(const char* szMsg, unsigned char* pbData, int iSize)
+      ^
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /root/tbootxm/tbootxm-rpmmio/src/rpmmio.mod.o
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.ko
+make[1]: Leaving directory `/usr/src/linux-headers-3.13.0-24-generic'
+rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c .tmp_versions Module.symvers modules.order
+make -C /lib/modules/3.13.0-24-generic/build M=/root/tbootxm/tbootxm-rpmmio/src modules
+make[1]: Entering directory `/usr/src/linux-headers-3.13.0-24-generic'
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_read’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:91:5: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+     printk(KERN_ERR "rpmmio: read error, buff null or size %d > %d\n", size, TPMMAXBUF);
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:115:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   tpm_pcr_value_t out= {{0,}};
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:118:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: read, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:88:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0; 
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:87:8: warning: unused variable ‘_kbuff’ [-Wunused-variable]
+   char _kbuff[TPMMAXBUF];
+        ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_write’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:132:4: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+    printk(KERN_ERR "rpmmio: write error, buff null or size %d > %d\n", size, TPMMAXBUF);
+    ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:155:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: write, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:126:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0;
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: At top level:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:58:13: warning: ‘device_buffer’ defined but not used [-Wunused-variable]
+ static char device_buffer[BUFFER_SIZE];
+             ^
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:141:5: warning: built-in function ‘log’ declared as non-function [enabled by default]
+ int log=1;
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c: In function ‘tpm_pcr_extend’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:620:2: warning: passing argument 2 of ‘PrintBytes’ discards ‘const’ qualifier from pointer target type [enabled by default]
+  PrintBytes("in-digest:", in->digest, 20);
+  ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:66:6: note: expected ‘unsigned char *’ but argument is of type ‘const uint8_t *’
+ void PrintBytes(const char* szMsg, unsigned char* pbData, int iSize)
+      ^
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /root/tbootxm/tbootxm-rpmmio/src/rpmmio.mod.o
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.ko
+make[1]: Leaving directory `/usr/src/linux-headers-3.13.0-24-generic'
+rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c .tmp_versions Module.symvers modules.order
+make -C /lib/modules/3.13.0-24-generic/build M=/root/tbootxm/tbootxm-rpmmio/src modules
+make[1]: Entering directory `/usr/src/linux-headers-3.13.0-24-generic'
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_read’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:91:5: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+     printk(KERN_ERR "rpmmio: read error, buff null or size %d > %d\n", size, TPMMAXBUF);
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:115:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   tpm_pcr_value_t out= {{0,}};
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:118:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: read, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:88:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0; 
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:87:8: warning: unused variable ‘_kbuff’ [-Wunused-variable]
+   char _kbuff[TPMMAXBUF];
+        ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_write’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:132:4: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+    printk(KERN_ERR "rpmmio: write error, buff null or size %d > %d\n", size, TPMMAXBUF);
+    ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:155:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: write, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:126:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0;
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: At top level:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:58:13: warning: ‘device_buffer’ defined but not used [-Wunused-variable]
+ static char device_buffer[BUFFER_SIZE];
+             ^
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:141:5: warning: built-in function ‘log’ declared as non-function [enabled by default]
+ int log=1;
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c: In function ‘tpm_pcr_extend’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:620:2: warning: passing argument 2 of ‘PrintBytes’ discards ‘const’ qualifier from pointer target type [enabled by default]
+  PrintBytes("in-digest:", in->digest, 20);
+  ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:66:6: note: expected ‘unsigned char *’ but argument is of type ‘const uint8_t *’
+ void PrintBytes(const char* szMsg, unsigned char* pbData, int iSize)
+      ^
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /root/tbootxm/tbootxm-rpmmio/src/rpmmio.mod.o
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.ko
+make[1]: Leaving directory `/usr/src/linux-headers-3.13.0-24-generic'
+rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c .tmp_versions Module.symvers modules.order
+make -C /lib/modules/3.13.0-24-generic/build M=/root/tbootxm/tbootxm-rpmmio/src modules
+make[1]: Entering directory `/usr/src/linux-headers-3.13.0-24-generic'
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_read’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:91:5: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+     printk(KERN_ERR "rpmmio: read error, buff null or size %d > %d\n", size, TPMMAXBUF);
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:115:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   tpm_pcr_value_t out= {{0,}};
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:118:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: read, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:88:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0; 
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:87:8: warning: unused variable ‘_kbuff’ [-Wunused-variable]
+   char _kbuff[TPMMAXBUF];
+        ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_write’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:132:4: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+    printk(KERN_ERR "rpmmio: write error, buff null or size %d > %d\n", size, TPMMAXBUF);
+    ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:155:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: write, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:126:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0;
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: At top level:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:58:13: warning: ‘device_buffer’ defined but not used [-Wunused-variable]
+ static char device_buffer[BUFFER_SIZE];
+             ^
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:141:5: warning: built-in function ‘log’ declared as non-function [enabled by default]
+ int log=1;
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c: In function ‘tpm_pcr_extend’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:620:2: warning: passing argument 2 of ‘PrintBytes’ discards ‘const’ qualifier from pointer target type [enabled by default]
+  PrintBytes("in-digest:", in->digest, 20);
+  ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:66:6: note: expected ‘unsigned char *’ but argument is of type ‘const uint8_t *’
+ void PrintBytes(const char* szMsg, unsigned char* pbData, int iSize)
+      ^
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /root/tbootxm/tbootxm-rpmmio/src/rpmmio.mod.o
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.ko
+make[1]: Leaving directory `/usr/src/linux-headers-3.13.0-24-generic'
+rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c .tmp_versions Module.symvers modules.order
+make -C /lib/modules/3.13.0-24-generic/build M=/root/tbootxm/tbootxm-rpmmio/src modules
+make[1]: Entering directory `/usr/src/linux-headers-3.13.0-24-generic'
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_read’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:91:5: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+     printk(KERN_ERR "rpmmio: read error, buff null or size %d > %d\n", size, TPMMAXBUF);
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:115:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   tpm_pcr_value_t out= {{0,}};
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:118:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: read, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:88:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0; 
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:87:8: warning: unused variable ‘_kbuff’ [-Wunused-variable]
+   char _kbuff[TPMMAXBUF];
+        ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_write’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:132:4: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+    printk(KERN_ERR "rpmmio: write error, buff null or size %d > %d\n", size, TPMMAXBUF);
+    ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:155:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: write, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:126:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0;
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: At top level:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:58:13: warning: ‘device_buffer’ defined but not used [-Wunused-variable]
+ static char device_buffer[BUFFER_SIZE];
+             ^
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:141:5: warning: built-in function ‘log’ declared as non-function [enabled by default]
+ int log=1;
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c: In function ‘tpm_pcr_extend’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:620:2: warning: passing argument 2 of ‘PrintBytes’ discards ‘const’ qualifier from pointer target type [enabled by default]
+  PrintBytes("in-digest:", in->digest, 20);
+  ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:66:6: note: expected ‘unsigned char *’ but argument is of type ‘const uint8_t *’
+ void PrintBytes(const char* szMsg, unsigned char* pbData, int iSize)
+      ^
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /root/tbootxm/tbootxm-rpmmio/src/rpmmio.mod.o
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.ko
+make[1]: Leaving directory `/usr/src/linux-headers-3.13.0-24-generic'
+rm -rf *.o *~ core .depend .*.cmd *.ko *.mod.c .tmp_versions Module.symvers modules.order
+make -C /lib/modules/3.10.0-123.el7.x86_64/build M=/root/tbootxm/tbootxm-rpmmio/src modules
+make[1]: Entering directory `/usr/src/kernels/3.10.0-123.el7.x86_64'
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_read’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:91:5: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+     printk(KERN_ERR "rpmmio: read error, buff null or size %d > %d\n", size, TPMMAXBUF);
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:115:3: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   tpm_pcr_value_t out= {{0,}};
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:118:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: read, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:88:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0; 
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:87:8: warning: unused variable ‘_kbuff’ [-Wunused-variable]
+   char _kbuff[TPMMAXBUF];
+        ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_write’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:132:4: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+    printk(KERN_ERR "rpmmio: write error, buff null or size %d > %d\n", size, TPMMAXBUF);
+    ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:155:3: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘size_t’ [-Wformat=]
+   printk(KERN_ALERT "rpmmio: write, size %d\n", size);
+   ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:126:10: warning: unused variable ‘i’ [-Wunused-variable]
+   size_t i= 0;
+          ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: At top level:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:58:13: warning: ‘device_buffer’ defined but not used [-Wunused-variable]
+ static char device_buffer[BUFFER_SIZE];
+             ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_write’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:136:17: warning: ignoring return value of ‘copy_from_user’, declared with attribute warn_unused_result [-Wunused-result]
+   copy_from_user(in.digest, buff, size);
+                 ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c: In function ‘device_read’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_main.c:117:15: warning: ignoring return value of ‘copy_to_user’, declared with attribute warn_unused_result [-Wunused-result]
+   copy_to_user(buff, out.digest, TPM_DIGEST_SIZE );
+               ^
+  CC [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.o
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:141:5: warning: built-in function ‘log’ declared as non-function [enabled by default]
+ int log=1;
+     ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c: In function ‘tpm_pcr_extend’:
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:620:2: warning: passing argument 2 of ‘PrintBytes’ discards ‘const’ qualifier from pointer target type [enabled by default]
+  PrintBytes("in-digest:", in->digest, 20);
+  ^
+/root/tbootxm/tbootxm-rpmmio/src/rpmmio_tpm.c:66:6: note: expected ‘unsigned char *’ but argument is of type ‘const uint8_t *’
+ void PrintBytes(const char* szMsg, unsigned char* pbData, int iSize)
+      ^
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.o
+  Building modules, stage 2.
+  MODPOST 1 modules
+  CC      /root/tbootxm/tbootxm-rpmmio/src/rpmmio.mod.o
+  LD [M]  /root/tbootxm/tbootxm-rpmmio/src/rpmmio.ko
+make[1]: Leaving directory `/usr/src/kernels/3.10.0-123.el7.x86_64'

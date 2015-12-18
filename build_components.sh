@@ -42,7 +42,7 @@ function install_pkg()
 	echo "installing required packages $os_flavour ..."
 	if [ $os_flavour == "ubuntu" ]
 	then
-		sudo -n apt-get update
+		#sudo -n apt-get update
 		sudo -n apt-get install --force-yes -y make gcc g++ libxml2-dev libssl-dev "linux-headers-`uname -r`" dos2unix
 	elif [ $os_flavour == "rhel" ] || [ $os_flavour == "fedora" ] || [ $os_flavour == "centos" ]
 	then

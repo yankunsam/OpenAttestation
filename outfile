@@ -1,0 +1,26 @@
+rm -rf ../bin
+mkdir -p ../bin
+gcc -g -Wformat -Wformat-security -fPIE -fPIC -fstack-protector -O2 -D FORTIFY_SOURCE=2 verifier.c  -I/usr/include/libxml2/ -I`pwd` -lxml2 -lcrypto -o ../bin/verifier -pie -z noexecstack -z relro -z now
+rm -rf ../bin/debug/tpmextend
+mkdir -p ../bin/debug
+tpmextend
+g++ -fPIE -fPIC -fstack-protector -O2 -D FORTIFY_SOURCE=2 -D LINUX  -D TEST -D TIXML_USE_STL -D __FLUSHIO__ -D RPMMIO -Wall -Wno-unknown-pragmas -Wno-format -O3 -Wformat -Wformat-security ./tpmextend.cpp -I. -o ../bin/debug/tpmextend -pie -z noexecstack -z relro -z now  
+./tpmextend.cpp: In function ‘int main(int, char**)’:
+./tpmextend.cpp:42:13: warning: unused variable ‘rgRandom’ [-Wunused-variable]
+     byte    rgRandom[BUFSIZE];
+             ^
+./tpmextend.cpp:43:13: warning: variable ‘size’ set but not used [-Wunused-but-set-variable]
+     int     size;
+             ^
+./tpmextend.cpp:47:13: warning: unused variable ‘hash_bytes’ [-Wunused-variable]
+     uint8_t hash_bytes[TPM_DIGEST_SIZE];
+             ^
+./tpmextend.cpp:87:21: warning: unused variable ‘out’ [-Wunused-variable]
+     tpm_pcr_value_t out = {{0,}};
+                     ^
+./tpmextend.cpp:90:9: warning: unused variable ‘returnSize’ [-Wunused-variable]
+     int returnSize=TPM_DIGEST_SIZE;
+         ^
+./tpmextend.cpp:91:10: warning: unused variable ‘returnDigest’ [-Wunused-variable]
+     byte returnDigest[TPM_DIGEST_SIZE];
+          ^
