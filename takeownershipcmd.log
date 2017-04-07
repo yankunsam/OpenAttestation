@@ -1,0 +1,5 @@
+|->TakeOwnershipCmd
+ |->ProvisionTPM
+  |->TpmUtils
+  |->TpmModule[The TpmModule class is a Java front end for C++ utilities that work directly with TSS for interfacing with the TPM]
+   |->executeVer2Command()[ Process p = Runtime.getRuntime().exec() ]
